@@ -36,14 +36,12 @@
     /* ─── Segmented Control (design system) ─── */
     .ds-seg {
       --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
-      --seg-bg: #ffffff; --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
-      --seg-pill-bg: var(--grey-6);
-      --seg-shadow: none;
+      --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
+      --seg-pill-bg: #ffffff;
+      --seg-shadow: 0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.08);
       display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
       border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
       font-family:var(--font-sans); user-select:none; position:relative;
-      border:1px solid var(--grey-5);
-      box-shadow:0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.06);
     }
     .ds-seg[data-size="mobile"] { --seg-radius:12px; --seg-gap:3px; }
     .ds-seg__item {
@@ -54,7 +52,7 @@
       transition: background 160ms var(--ease-standard), color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
       -webkit-tap-highlight-color:transparent;
     }
-    .ds-seg[data-size="mobile"] .ds-seg__item { font-size:14px; padding:0 14px; gap:6px; }
+    .ds-seg[data-size="mobile"] .ds-seg__item { font-size:14px; padding:0 24px; gap:6px; }
     .ds-seg .ds-seg__item:not([aria-checked="true"]):hover { color:var(--black); }
     .ds-seg .ds-seg__item:not([aria-checked="true"]):active { color:var(--black); }
     .ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
@@ -176,9 +174,8 @@
       </div>
     </section>
 
-    <!-- ─── LINE ITEMS: flat Robocizna list + Towar list in one grey card ─── -->
-    <section style="background:var(--grey-6);border:1px solid var(--grey-4);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box;">
-
+    <!-- Przełącznik wartości stoi nad kartą, 8 px od niej -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
       <!-- Card header: Segmented Control — wartości netto / brutto -->
       <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
         <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
@@ -186,6 +183,8 @@
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
         </div>
       </div>
+    <!-- ─── LINE ITEMS: flat Robocizna list + Towar list in one grey card ─── -->
+    <section style="background:var(--grey-6);border:1px solid var(--grey-4);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box;overflow-x:{{ itemsOverflow }};flex:none;">
 
       <!-- ROBOCIZNA LIST -->
       <div style="display:flex;flex-direction:column;gap:8px;">
@@ -395,13 +394,13 @@
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
-            <!-- Cena zakupu — informacyjna, nieedytowalna -->
-            <div style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--grey-6);border:1px solid var(--grey-4);border-radius:10px;">
+            <!-- Cena zakupu — edytowalna -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.kosztLabel }}</div>
-                <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-3);">{{ row.kosztValue }}</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
-            </div>
+            </label>
             <!-- Grupa cenowa -->
             <div style="position:relative;">
               <div onClick="{{ row.toggleGrupa }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.grupaOpenStyle }}">
@@ -480,6 +479,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- ─── BOTTOM: notes + summary ─────────────────────────── -->
     <section style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,0.85fr); gap: 12px; align-items: stretch; margin-top: 10px">
@@ -577,15 +577,15 @@
               </div>
               <sc-if value="{{ doc.open }}" hint-placeholder-val="{{ true }}">
                 <div style="border-top:1px solid var(--grey-5);">
-                  <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 140px 130px;gap:12px;padding:10px 20px;background:#fff;border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
+                  <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;padding:10px 20px;background:#fff;border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
                     <span onClick="{{ doc.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ doc.allBorder }};border-radius:4px;background: {{ doc.allBg }} ;display:grid;place-items:center;cursor:pointer;">
                       <sc-if value="{{ doc.someChecked }}" hint-placeholder-val="{{ false }}">
                         <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ doc.allIconPath }}" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                       </sc-if>
-                    </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Sug. cena prod.</span><span style="text-align:right;">Wartość brutto</span>
+                    </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Sug. cena prod.</span><span style="text-align:right;">Wartość netto</span><span style="text-align:right;">Wartość brutto</span>
                   </div>
                   <sc-for list="{{ doc.items }}" as="it" hint-placeholder-count="3">
-                    <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 140px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
+                    <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
                       <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ it.boxBorder }};border-radius:4px;background: {{ it.boxBg }} ;display:grid;place-items:center;">
                         <sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}">
                           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -595,6 +595,7 @@
                       <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.indeks }}</span>
                       <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.producent }}</span>
                       <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.netto }}</span>
                       <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.brutto }}</span>
                     </div>
                   </sc-for>
@@ -734,6 +735,13 @@ class Component extends DCLogic {
     return isNaN(n) ? 0 : n;
   }
   static fmt(n) { return (Math.round(n * 100) / 100).toFixed(2).replace('.', ','); }
+  // Cena jednostkowa wyliczana wstecz z wartości pozycji: dwa miejsca nie wystarczają
+  // (1000 / 7 = 142,86 -> 7 × 142,86 = 1000,02). Trzymamy cztery, gdy to konieczne.
+  static fmtPrice(n) {
+    const two = Math.round(n * 100) / 100;
+    const four = Math.round(n * 10000) / 10000;
+    return two === four ? Component.fmt(n) : String(four).replace('.', ',');
+  }
   static computeRow(r, showRabat) {
     const q = Component.parseNum(r.qty);
     const c = Component.parseNum(r.cena);
@@ -883,7 +891,7 @@ class Component extends DCLogic {
       const q = Component.parseNum(x.qty) || 1;
       const rb = showRabat ? Component.parseNum(x.rabat) : 0;
       const gross = rb === 100 ? netto : netto / (1 - rb / 100);
-      return { ...x, cena: Component.fmt(gross / q), nettoEditing: null };
+      return { ...x, cena: Component.fmtPrice(gross / q), nettoEditing: null };
     });
     const commitBrutto = () => this._patchRow(collection, r.id, (x) => {
       if (x.bruttoEditing == null) return x;
@@ -894,7 +902,7 @@ class Component extends DCLogic {
       const netto = b / (1 + v / 100);
       const gross = rb === 100 ? netto : netto / (1 - rb / 100);
       const cena = gross / q;
-      return { ...x, cena: Component.fmt(cena), bruttoEditing: null };
+      return { ...x, cena: Component.fmtPrice(cena), bruttoEditing: null };
     });
 
     const row = {
@@ -928,10 +936,14 @@ class Component extends DCLogic {
         ? (e) => this._patchRow(collection, r.id, { cena: Component.fmt(Component.parseNum(e.target.value) / vRate) })
         : set('cena'),
       kosztLabel: isBrutto ? 'Cena zakupu brutto' : 'Cena zakupu netto',
-      kosztValue: (isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00')) + ' zł',
-      sumaLabel: collection === 'robociznas'
-        ? (isBrutto ? 'Suma brutto (zł)' : 'Suma netto (zł)')
-        : (isBrutto ? 'Wartość brutto' : 'Wartość netto'),
+      kosztValue: isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00'),
+      setKosztValue: (e) => {
+        const val = Component.parseNum(e.target.value);
+        this._patchRow(collection, r.id, isBrutto
+          ? { kosztBrutto: e.target.value, koszt: Component.fmtPrice(val / vRate) }
+          : { koszt: e.target.value, kosztBrutto: Component.fmt(val * vRate) });
+      },
+      sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
       setSumaInput: isBrutto ? set('bruttoEditing') : set('nettoEditing'),
       commitSuma: isBrutto ? commitBrutto : commitNetto,
 
@@ -1125,15 +1137,17 @@ class Component extends DCLogic {
     // Grid template dla wierszy — z / bez kolumny Rabat (%)
     // [drag 16 | label 2fr | osoba/indeks 1.3fr | jednostka 1.15fr | ilość 92 | cena 1fr | vat 1fr | (rabat 92)? | suma/wartość netto 1fr | suma/wartość brutto 1fr | trash 30]
     // Robocizna: name | osoba | jednostka | ilość | przeprac.czas | cena | vat | (rabat)? | wNetto | wBrutto | trash
+    // Obie siatki mają tę samą min-width i elastyczny spacer przed wartością,
+    // dzięki czemu kolumny usług i towarów stoją w jednej linii przy każdej szerokości.
     const robGridStyle =
-      'display:grid;grid-template-columns:minmax(0,2.3fr) minmax(0,1.3fr) 168px 110px 80px minmax(0,1fr)' +
-      (showRabat ? ' 84px' : '') +
-      ' minmax(0,1fr) 30px;gap:8px;align-items:center;';
+      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px' +
+      (showRabat ? ' 80px' : '') +
+      ' 154px 30px;gap:8px;align-items:center;';
     // Towar: name | indeks | producent | jednostka | ilość | cena | koszt | vat | (rabat)? | wNetto | wBrutto | trash
     const towGridStyle =
-      'display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,0.9fr) 104px 72px minmax(0,0.95fr) minmax(0,1fr) minmax(0,1.15fr)' +
-      (showRabat ? ' 76px' : '') +
-      ' minmax(0,1fr) 30px;gap:8px;align-items:center;';
+      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 154px 154px' +
+      (showRabat ? ' 80px' : '') +
+      ' 154px 30px;gap:8px;align-items:center;';
 
     const robociznas = this.state.robociznas.map((r) =>
       this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat)
@@ -1186,6 +1200,10 @@ class Component extends DCLogic {
       segBrutto: this.state.valueMode === 'brutto' ? 'true' : 'false',
       pickNetto: () => this.setState({ valueMode: 'netto' }),
       pickBrutto: () => this.setState({ valueMode: 'brutto' }),
+      // dopóki któraś lista jest rozwinięta, karta nie może przycinać — inaczej
+      // ucina wysuwane menu, tak jak overflow-x podnosi oś pionową do auto
+      itemsOverflow: [].concat(this.state.robociznas || [], this.state.towars || [])
+        .some((r) => r && r.openField) ? 'visible' : 'auto',
       showFieldMenu: this.state.showFieldMenu,
       toggleFieldMenu: () => this.setState((s) => ({ showFieldMenu: !s.showFieldMenu })),
 
@@ -1287,7 +1305,7 @@ class Component extends DCLogic {
       if (k === 'year') return car.year || null;
       if (k === 'markaYear') return car.name ? (car.name + (car.year ? ', ' + car.year : '')) : null;
       if (k === 'service') return car.service || null;
-      if (k === 'opis') return car.opis || null;
+      if (k === 'opis') return car.opis || '---';
       return null;
     }
     function apply(){
@@ -1296,11 +1314,6 @@ class Component extends DCLogic {
         var w = want(el.getAttribute('data-car'));
         if (w && el.textContent.trim() !== w) { el.textContent = w; if (el.tagName === 'A') el.setAttribute('href', 'tel:' + String(w).replace(/\s/g,'')); }
       });
-      if (!car.opis) {
-        var _sep = document.querySelector('[data-opis-sep]'); if (_sep) _sep.style.display = 'none';
-        var _ob = document.querySelector('[data-opis-block]'); if (_ob) _ob.style.display = 'none';
-        var _g = document.querySelector('[data-svc-grid]'); if (_g) _g.style.gridTemplateColumns = '1fr';
-      }
       return true;
     }
     var tries = 0;

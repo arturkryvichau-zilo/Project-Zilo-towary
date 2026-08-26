@@ -3259,7 +3259,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         Edytuj
                       </button>
                     </div>
-                    <div style="font-size:16px;line-height:22px;padding:6px 4px" style-hover="background:#F6F6FC">{{ evd.notes }}</div>
+                    <div style="font-size:16px;line-height:22px;padding:6px 4px;color:{{ evd.notesColor }}" style-hover="background:#F6F6FC">{{ evd.notes }}</div>
                   </div>
 
                   <div style="height:1px;background:#DCE0E6;margin:0 4px"></div>
@@ -4323,8 +4323,10 @@ class Component extends DCLogic {
       year: car && car.year ? car.year : '-',
       engine: car && car.engine ? car.engine : '-',
       notes: NOTES[ev.id] || 'Edytuj opis zlecenia',
-      price: visit && visit.price ? visit.price + ' zł' : 'Edytuj cenę',
-      priceColor: visit && visit.price ? '#242629' : '#979DB0',
+      notesColor: NOTES[ev.id] ? '#242629' : '#6B707D',   // podpowiedź w grey-2, treść normalnie
+      // kwota żyje w wycenie — tu zawsze zachęta do edycji
+      price: 'Edytuj cenę',
+      priceColor: '#6B707D',
       tabs: [
         { key: 'details', label: 'Szczegóły zlecenia', icon: 'assets/icons/tab-details.svg' },
         { key: 'wycena', label: 'Wyceny', icon: 'assets/icons/tab-price.svg' },
@@ -5111,11 +5113,11 @@ class Component extends DCLogic {
     if (st && Array.isArray(st.groups)) {
       st.groups.forEach((g) => {
         const r = g.robocizna || {};
-        uslugi.push({ name: r.name, person: r.person || r.osoba || '', c: this.qcalc(r) });
+        uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r) });
         (g.towars || []).forEach((t) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t) }));
       });
     } else if (st && Array.isArray(st.robociznas)) {
-      st.robociznas.forEach((r) => uslugi.push({ name: r.name, person: r.person || r.osoba || '', c: this.qcalc(r) }));
+      st.robociznas.forEach((r) => uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r) }));
       (st.towars || []).forEach((t) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t) }));
     }
     return { uslugi: uslugi, towary: towary };
@@ -5173,6 +5175,13 @@ class Component extends DCLogic {
     }));
     const goods = rows.towary.concat(parts);
     const towaryCount = rows.towary.length;
+    // Konfigurator zawsze trzyma jeden pusty wiersz zalążkowy. To nie jest pozycja
+    // wyceny — nie ma nazwy, kwoty ani czasu — więc nie pokazujemy go w szczegółach.
+    const pustaUsluga = (r) => !String(r.name || '').trim() && !r.c.net && !r.c.gross && !this.qnum(r.czas);
+    const pustyTowar = (g) => !String(g.name || '').trim() && !g.c.net && !g.c.gross;
+    // indeks źródłowy trzeba zachować — służy do usuwania właściwego wiersza
+    const uslugiList = rows.uslugi.map((r, i) => ({ r, i })).filter((x) => !pustaUsluga(x.r));
+    const goodsList = goods.map((g, i) => ({ g, i })).filter((x) => !pustyTowar(x.g));
     const hasQuote = !!saved || goods.length > 0;
     const initials = (n) => String(n || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase();
     const sum = (list, k) => list.reduce((a, x) => a + (x.c[k] || 0), 0);
@@ -5184,7 +5193,7 @@ class Component extends DCLogic {
       hasQuote: true,
       empty: false,
       servicesOverflow: s.rowPeopleMenu ? 'visible' : 'auto',
-      services: (rows.uslugi.length ? rows.uslugi : [null]).map((r, ri) => {
+      services: uslugiList.map(({ r, i: ri }) => {
         const picked = (s.rowPeople || {})[id + ':' + ri];
         const personName = picked !== undefined ? picked : ((r && r.person) || '');
         const key = id + ':' + ri;
@@ -5210,7 +5219,7 @@ class Component extends DCLogic {
             },
           })),
         };
-        return Object.assign(menu, r ? {
+        return Object.assign(menu, {
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'name' }); },
         openPerson: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'person' }); },
         openNet: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'netto' }); },
@@ -5219,32 +5228,15 @@ class Component extends DCLogic {
         nameColor: '#242629',
         hasPerson: !!r.person,
         hasPersonLabel: true,
-        isPlaceholder: false,
         initials: initials(personName),
         person: personName || '— brak —',
         personColor: personName ? '#242629' : '#6B707D',
         net: this.moneyPl(r.c.net),
         gross: this.moneyPl(r.c.gross),
         remove: () => this.removeQuoteRow(id, 'usluga', ri),
-      } : {
-        openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'name' }); },
-        openPerson: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'person' }); },
-        openNet: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'netto' }); },
-        openGross: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'brutto' }); },
-        name: '+ Dodaj usługę',
-        nameColor: '#979DB0',
-        hasPerson: false,
-        hasPersonLabel: false,
-        isPlaceholder: true,
-        initials: '',
-        person: personName || '— brak —',
-        personColor: personName ? '#242629' : '#6B707D',
-        net: '0,00 zł',
-        gross: '0,00 zł',
-        remove: () => this.openWycConfig(id, { field: 'name' }),
       });
       }),
-      goods: (goods.length ? goods : [null]).map((g, gi) => (g ? {
+      goods: goodsList.map(({ g, i: gi }) => ({
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: gi, field: 'towar' }); },
         doc: g.doc || '',
         docColor: g.doc ? '#6B707D' : '#979DB0',
@@ -5257,19 +5249,8 @@ class Component extends DCLogic {
         remove: () => (gi < towaryCount
           ? this.removeQuoteRow(id, 'towar', gi)
           : this.removeVisitPart(id, gi - towaryCount)),
-      } : {
-        openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'towar' }); },
-        doc: '',
-        docColor: '#979DB0',
-        openNet: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'towar' }); },
-        openGross: (e) => { e.stopPropagation(); this.openWycConfig(id, { field: 'towar' }); },
-        name: '+ Dodaj towar',
-        nameColor: '#979DB0',
-        net: '0,00 zł',
-        gross: '0,00 zł',
-        remove: () => this.openWycConfig(id, { field: 'towar' }),
       })),
-      noGoods: goods.length === 0,
+      noGoods: goodsList.length === 0,
       servicesNet: this.moneyPl(uN),
       servicesGross: this.moneyPl(uB),
       goodsNet: this.moneyPl(tN),
@@ -5394,7 +5375,7 @@ class Component extends DCLogic {
       if (saved && saved.state) src += '#state=' + encodeURIComponent(JSON.stringify(saved.state));
       if (opts && opts.preview) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'preview=1';
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
-      const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '' };
+      const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '' };
       src += (src.indexOf('#') >= 0 ? '&' : '#') + 'car=' + encodeURIComponent(JSON.stringify(car));
       const groups = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).map((g) => ({ name: g.name, pct: g.pct, mode: g.mode }));
       src += '&groups=' + encodeURIComponent(JSON.stringify(groups));
