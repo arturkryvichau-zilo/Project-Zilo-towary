@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zilo — tagi stanowisk + lista wizyt (podgląd 1:1 z kodu)</title>
+<style>
+  /* ===== zmienne z src/styles/_colors.scss (dokładne hexy) ===== */
+  :root{
+    --black:#000000; --white:#FFFFFF;
+    --blue-1:#222693; --blue-2:#1D207C; --blue-5:#F3F3FF; --blue-6:#F6F6FC;
+    --grey-1:#242629; --grey-2:#6B707D; --grey-3:#979DB0; --grey-4:#DCE0E6; --grey-5:#E9ECF1; --grey-6:#F0F1F5;
+    --yellow:#F6AE2D; --green-1:#008161; --green-2:#00B286; --green-3:#DEF3E7; --red:#EA4335;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--grey-6); color:var(--black); -webkit-font-smoothing:antialiased; padding:32px; }
+  .doc-title{ font-size:22px; font-weight:700; margin-bottom:4px; }
+  .doc-sub{ font-size:13px; color:var(--grey-2); margin-bottom:26px; max-width:900px; line-height:1.5; }
+  .doc-sub code{ background:#fff; border:1px solid var(--grey-4); border-radius:4px; padding:1px 5px; font-size:12px; }
+  .section{ background:var(--white); border:1px solid var(--grey-4); border-radius:12px; padding:22px 24px; margin-bottom:24px; max-width:1000px; }
+  .section-h{ font-size:15px; font-weight:700; color:var(--grey-1); margin-bottom:4px; }
+  .section-note{ font-size:12px; color:var(--grey-3); margin-bottom:16px; }
+  .spec{ font-size:11.5px; color:var(--grey-2); line-height:1.7; margin-top:14px; padding-top:12px; border-top:1px dashed var(--grey-4); }
+  .spec b{ color:var(--grey-1); }
+  .spec code{ background:var(--grey-6); border-radius:3px; padding:0 4px; font-family:"JetBrains Mono",monospace; font-size:10.5px; }
+
+  /* =========================================================
+     1) TAG STANOWISKA — nagłówek kolumny (DesktopDayView)
+     .desktop-day__column-header / -title-row / -marker / -title
+     ========================================================= */
+  .col-headers{ display:flex; gap:14px; flex-wrap:wrap; }
+  .col-header{ min-width:300px; border:1px solid var(--grey-4); border-radius:10px; overflow:hidden; background:var(--white); }
+  .col-header__top{ padding:10px; border-bottom:1px solid var(--grey-5); display:flex; flex-direction:column; gap:4px; }
+  .col-title-row{ display:flex; align-items:center; gap:8px; }
+  .col-marker{ width:4px; height:16px; border-radius:2px; flex-shrink:0; }
+  .col-title{ font-size:14px; font-weight:500; color:var(--black); }        /* nazwa stanowiska */
+  .col-add{ margin-left:auto; width:26px; height:26px; border:1px solid var(--grey-4); border-radius:8px; background:#fff; color:var(--grey-2); display:grid; place-items:center; font-size:15px; }
+  .col-meta{ display:flex; align-items:center; gap:8px; }
+  .col-counter{ padding:0 10px; border-radius:10px; background:var(--blue-5); color:var(--blue-1); font-size:12px; font-weight:400; height:20px; display:inline-flex; align-items:center; width:fit-content; }
+
+  /* =========================================================
+     2) TAG STANOWISKA — chip filtra (CalendarWorkspaceFilter)
+     ========================================================= */
+  .filter{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--grey-4); border-radius:8px; background:var(--white); font-size:13px; font-weight:400; color:var(--black); white-space:nowrap; cursor:pointer; }
+  .chip:hover{ border-color:var(--blue-2); }
+  .chip--active{ border-color:var(--blue-1); background:var(--blue-5); }
+  .chip-marker{ width:4px; height:16px; border-radius:2px; flex-shrink:0; }
+
+  /* =========================================================
+     3) LISTA WIZYT (DesktopListView) — grupa dnia
+     ========================================================= */
+  .list{ display:flex; flex-direction:column; gap:16px; max-width:760px; }
+  .group{ background:var(--white); border-radius:8px; border:1px solid var(--grey-4); }
+  .group-header{ padding:12px 16px; border-bottom:1px solid var(--grey-4); font-size:14px; font-weight:500; color:var(--black); display:flex; align-items:center; gap:8px; }
+  .group-count{ font-size:11px; color:var(--blue-1); background:var(--blue-5); padding:4px; border-radius:15px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-weight:400; }
+  .group-events{ display:flex; flex-direction:column; gap:8px; padding:12px; }
+
+  /* =========================================================
+     4) WIZYTA (SchedulerEvent, list-layout)
+     tło = jasny kolor stanowiska; pasek = kolor stanowiska; tekst = --tc
+     ========================================================= */
+  .ev{ border-radius:6px; font-size:12px; line-height:16px; color:var(--black); cursor:pointer; overflow:hidden; transition:box-shadow 150ms ease; }
+  .ev:hover{ box-shadow:0 4px 12px rgba(0,0,0,.08); }
+  .ev-main{ display:flex; gap:8px; padding:6px 6px 6px 4px; }
+  .ev-bar{ width:3px; border-radius:2px; flex-shrink:0; }
+  .ev-body{ flex:1; display:flex; flex-direction:row; align-items:center; gap:12px; min-width:0; }   /* list-layout: row */
+  .ev-time{ font-weight:400; color:var(--tc,var(--grey-1)); flex:0 0 auto; }
+  .ev-title{ font-weight:500; color:var(--tc,var(--black)); white-space:nowrap; flex:0 1 auto; }       /* marka+model */
+  .ev-reason{ color:var(--tc,var(--grey-2)); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 auto; min-width:0; }
+  .ev-footer{ margin-left:auto; flex:0 0 auto; }
+  .ev-status{ display:inline-flex; align-items:center; gap:8px; font-size:12px; background:rgba(0,0,0,.04); padding:4px 8px; border-radius:2px; }
+  .ev-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .ev-status-label{ color:var(--tc,var(--grey-2)); white-space:nowrap; }
+  .ev--issued{ opacity:.5; }   /* wydane */
+</style>
+</head>
+<body>
+
+<div class="doc-title">Zilo — tagi stanowisk + lista wizyt · podgląd 1:1 z kodu</div>
+<div class="doc-sub">Odwzorowanie 1:1 z <code>zilo-front-v2</code>: <code>DesktopDayView.vue</code>, <code>CalendarWorkspaceFilter.vue</code>, <code>DesktopListView.vue</code>, <code>SchedulerEvent.vue</code> (list-layout) oraz palet z <code>helpers/calendar.ts</code>, <code>helpers/colors.ts</code>, <code>styles/_colors.scss</code>. Wszystkie px, wagi fontów i hexy pochodzą wprost z kodu.</div>
+
+<!-- ================= 1) TAG STANOWISKA — chip filtra ================= -->
+<div class="section">
+  <div class="section-h">1. Tag stanowiska — chip filtra (nad kalendarzem)</div>
+  <div class="section-note">„Wszystkie stanowiska" (bez markera) + chipy per stanowisko z markerem koloru. Aktywny = obwódka blue-1 + tło blue-5.</div>
+  <div class="filter">
+    <span class="chip chip--active">Wszystkie stanowiska</span>
+    <span class="chip"><span class="chip-marker" style="background:#2563EB"></span>Pan Aleksander</span>
+    <span class="chip"><span class="chip-marker" style="background:#16A34A"></span>Pan Paweł</span>
+    <span class="chip"><span class="chip-marker" style="background:#EA580C"></span>Podnośnik 2</span>
+    <span class="chip"><span class="chip-marker" style="background:#7C3AED"></span>Lakiernia</span>
+  </div>
+  <div class="spec">
+    <b>Chip:</b> <code>padding:8px 12px</code> <code>border:1px #DCE0E6</code> <code>radius:8px</code> <code>bg:#fff</code> <code>font:13px/400</code> <code>color:#000</code> <code>gap:8px</code>.
+    <b>Hover:</b> border <code>#1D207C</code> (blue-2). <b>Aktywny:</b> border <code>#222693</code> (blue-1) + tło <code>#F3F3FF</code> (blue-5).
+    <b>Marker:</b> <code>4×16 radius:2px</code>, tło = border koloru stanowiska. „Wszystkie stanowiska" — bez markera.
+  </div>
+</div>
+
+<!-- ================= 3) LISTA WIZYT ================= -->
+<div class="section">
+  <div class="section-h">2. Lista wizyt (widok listy)</div>
+  <div class="section-note">Grupa per dzień: nagłówek (dzień + data) z licznikiem, pod nim wizyty. Każda wizyta = kolor stanowiska (tło + pasek), status jako kropka + etykieta.</div>
+  <div class="list">
+    <div class="group">
+      <div class="group-header">
+        <span class="group-label">Poniedziałek 5 sierpnia</span>
+        <span class="group-count">4</span>
+      </div>
+      <div class="group-events">
+
+        <!-- Pan Aleksander (blue) · Potwierdzone (order2) -->
+        <div class="ev" style="background:#EFF4FE; --tc:#112B63">
+          <div class="ev-main">
+            <span class="ev-bar" style="background:#2563EB"></span>
+            <div class="ev-body">
+              <span class="ev-time">09:00–10:30</span>
+              <span class="ev-title">Audi A1</span>
+              <span class="ev-reason">Wymiana oleju i filtrów</span>
+              <span class="ev-footer">
+                <span class="ev-status"><span class="ev-dot" style="background:#2597E7"></span><span class="ev-status-label">Potwierdzone</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pan Paweł (green) · Nowe (order1) -->
+        <div class="ev" style="background:#F0FDF4; --tc:#052E16">
+          <div class="ev-main">
+            <span class="ev-bar" style="background:#16A34A"></span>
+            <div class="ev-body">
+              <span class="ev-time">10:30–12:00</span>
+              <span class="ev-title">BMW X3</span>
+              <span class="ev-reason">Wymiana klocków i tarcz — przód</span>
+              <span class="ev-footer">
+                <span class="ev-status"><span class="ev-dot" style="background:#F6AE2D"></span><span class="ev-status-label">Nowe</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Podnośnik 2 (orange) · Zakończone (order3) -->
+        <div class="ev" style="background:#FFF7ED; --tc:#5C1A03">
+          <div class="ev-main">
+            <span class="ev-bar" style="background:#EA580C"></span>
+            <div class="ev-body">
+              <span class="ev-time">12:00–13:00</span>
+              <span class="ev-title">VW Golf</span>
+              <span class="ev-reason">Przegląd okresowy</span>
+              <span class="ev-footer">
+                <span class="ev-status"><span class="ev-dot" style="background:#31CF73"></span><span class="ev-status-label">Zakończone</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lakiernia (violet) · Wydane (issued, opacity .5) -->
+        <div class="ev ev--issued" style="background:#F5F3FF; --tc:#2E0650">
+          <div class="ev-main">
+            <span class="ev-bar" style="background:#7C3AED"></span>
+            <div class="ev-body">
+              <span class="ev-time">13:00</span>
+              <span class="ev-title">---- ----</span>
+              <span class="ev-reason">Diagnostyka komputerowa</span>
+              <span class="ev-footer">
+                <span class="ev-status"><span class="ev-dot" style="background:#979DB0"></span><span class="ev-status-label">Wydane</span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="spec">
+    <b>Kontener listy:</b> <code>flex-column gap:16px</code>, <code>overflow-y:auto</code>, <code>padding-right:12px</code>.<br>
+    <b>Grupa (dzień):</b> <code>bg:#fff</code> <code>border:1px #DCE0E6</code> <code>radius:8px</code>.
+    <b>Nagłówek grupy:</b> <code>padding:12px 16px</code> <code>border-bottom:1px #DCE0E6</code> <code>font:14px/500</code> <code>color:#000</code> <code>gap:8px</code>. Etykieta = „Dzień D miesiąc" (np. „Poniedziałek 5 sierpnia").
+    <b>Licznik:</b> <code>font:11px/400</code> kolor <code>#222693</code> tło <code>#F3F3FF</code> <code>22×22</code> <code>radius:15px</code> <code>padding:4px</code>.
+    <b>Lista wizyt:</b> <code>flex-column gap:8px</code> <code>padding:12px</code>.<br>
+    <b>Wizyta:</b> <code>radius:6px</code> <code>font:12px/16px</code>. Tło = <b>color</b> stanowiska (jasny), tekst = <b>text</b> stanowiska.
+    <b>Main:</b> <code>flex gap:8px</code> <code>padding:6px 6px 6px 4px</code>. <b>Pasek:</b> <code>width:3px radius:2px</code> = <b>border</b> stanowiska.
+    <b>Body (list-layout):</b> <code>flex-row align-center gap:12px</code>.
+    <b>Czas:</b> <code>font-weight:400</code>. <b>Tytuł (marka+model):</b> <code>font-weight:500</code>. <b>Opis:</b> ellipsis. <b>Status:</b> chip <code>bg:rgba(0,0,0,.04)</code> <code>padding:4px 8px</code> <code>radius:2px</code> <code>font:12px</code>, kropka <code>8×8</code> = <b>border</b> statusu.
+    <b>Wydane:</b> <code>opacity:.5</code>.
+  </div>
+</div>
+
+<!-- ================= PALETY ================= -->
+<div class="section">
+  <div class="section-h">Palety (dokładne hexy z kodu)</div>
+  <div class="spec" style="border-top:none; padding-top:0; margin-top:6px;">
+    <b>Kolory stanowisk</b> (<code>WORKSPACE_COLORS</code>, każdy = border / color-tło / text), domyślny = blue:<br>
+    blue <code>#2563EB / #EFF4FE / #112B63</code> · yellow <code>#D97706 / #FEF9EC / #4A2801</code> · red <code>#DC2626 / #FEF2F2 / #5C0A0A</code> · green <code>#16A34A / #F0FDF4 / #052E16</code> · violet <code>#7C3AED / #F5F3FF / #2E0650</code> · pink <code>#DB2777 / #FDF2F8 / #610B33</code> · orange <code>#EA580C / #FFF7ED / #5C1A03</code> · turquoise <code>#0891B2 / #ECFEFF / #06414F</code> · lime <code>#65A30D / #F7FEE7 / #1F3301</code> · gray <code>#4B5563 / #F9FAFB / #0D1117</code> · navy <code>#1E3A8A / #EEF2FF / #0D1545</code>.<br><br>
+    <b>Kolory statusu</b> (<code>getStatusColor</code>, order → tło / kropka-border):
+    1 <code>#FDF4E2 / #F6AE2D</code> · 2 <code>#C8E9FB / #2597E7</code> · 3 <code>#D8FDF3 / #31CF73</code> · 4 <code>#F0F1F5 / #979DB0</code> · 5 <code>#FEE9E5 / #EA4335</code>. (Nazwy statusów pochodzą z danych — w kodzie renderowana jest tylko kropka w kolorze statusu + etykieta.)<br><br>
+    <b>Zmienne bazowe:</b> blue-1 <code>#222693</code> · blue-2 <code>#1D207C</code> · blue-5 <code>#F3F3FF</code> · grey-1 <code>#242629</code> · grey-2 <code>#6B707D</code> · grey-3 <code>#979DB0</code> · grey-4 <code>#DCE0E6</code> · grey-5 <code>#E9ECF1</code> · grey-6 <code>#F0F1F5</code> · black <code>#000000</code>.
+  </div>
+</div>
+
+</body>
+</html>

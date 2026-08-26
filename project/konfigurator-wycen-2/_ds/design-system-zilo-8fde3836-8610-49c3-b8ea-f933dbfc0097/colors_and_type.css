@@ -1,0 +1,293 @@
+/* ========================================================================
+   Zilo Design System — Tokens
+   ------------------------------------------------------------------------
+   Fonts: Rubik (self-hosted from /fonts/)
+   ======================================================================== */
+
+/* Rubik — normal */
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('fonts/Rubik-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Rubik-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/Rubik-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/Rubik-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Rubik-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Rubik-ExtraBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('fonts/Rubik-Black.ttf') format('truetype');
+}
+
+/* Rubik — italic */
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('fonts/Rubik-LightItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Rubik-Italic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/Rubik-MediumItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/Rubik-SemiBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Rubik-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Rubik-ExtraBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url('fonts/Rubik-BlackItalic.ttf') format('truetype');
+}
+
+:root {
+  /* ─── Brand: Zilo (indigo family) ──────────────────────────── */
+  --zilo-blue-1:  #222693;
+  --zilo-blue-2:  #1D207C;
+  --zilo-blue-3:  #8386E2;
+  --zilo-blue-4:  #D5D7F8;
+  --zilo-blue-5:  #F3F3FF;
+  --zilo-blue-6:  #F6F6FC;
+
+  /* Zilo — action-state tokens (buttons, interactive) */
+  --zilo-primary:        rgb(34, 38, 147);   /* = --zilo-blue-1 */
+  --zilo-primary-hover:  rgb(28, 32, 130);
+  --zilo-primary-press:  rgb(22, 26, 110);
+  --zilo-primary-5:      rgb(243, 243, 255); /* tint (ghost bg)   = --zilo-blue-5 */
+  --zilo-primary-4:      rgb(233, 233, 255); /* tint hover */
+  --zilo-primary-3:      rgb(220, 220, 250); /* tint pressed */
+
+  /* ─── Semantic ─────────────────────────────────────────────────── */
+  --red:          #EA4335;
+  --red-1:        #F9C0BB;
+  --red-2:        #FFDED7;
+  --red-3:        #FEE9E5;
+  --red-4:        #FFF3F3;
+
+  --green-1:      #00B286;   /* success */
+  --green-2:      #00B286;
+  --green-3:      #DEF3E7;
+
+  --yellow:       #F6AE2D;
+  --yellow-3:     #FFE7D7;
+
+  /* ─── Neutrals ─────────────────────────────────────────────────── */
+  --grey-1:       #242629;   /* primary text, near-black */
+  --grey-2:       #6B707D;   /* secondary text */
+  --grey-3:       #979DB0;   /* muted text, icons off */
+  --grey-4:       #DCE0E6;   /* borders */
+  --grey-5:       #E9ECF1;   /* dividers, table lines */
+  --grey-6:       #F0F1F5;   /* subtle surface */
+  --grey-7:       #FBFBFB;   /* page background */
+  --black:        #000000;
+  --white:        #FFFFFF;
+
+  --sidebar-dark: #0A0B29;   /* Zilo app left sidebar */
+
+  /* ─── Semantic tokens ──────────────────────────────────────────── */
+  --fg-1:         var(--grey-1);
+  --fg-2:         var(--grey-2);
+  --fg-3:         var(--grey-3);
+  --fg-inverse:   var(--white);
+  --fg-brand:     var(--zilo-blue-1);
+
+  --bg-page:      var(--white);
+  --bg-surface:   var(--white);
+  --bg-subtle:    var(--grey-7);
+  --bg-tint:      var(--zilo-blue-6);
+  --bg-tint-strong: var(--zilo-blue-5);
+
+  --border-1:     var(--grey-4);
+  --border-2:     var(--grey-5);
+  --border-focus: var(--zilo-blue-1);
+
+  --link:         var(--zilo-blue-1);
+  --link-hover:   var(--zilo-blue-2);
+
+  /* ─── Shadows ──────────────────────────────────────────────────── */
+  --shadow-sm:         0 1px 2px rgba(36, 38, 41, 0.06);
+  --shadow:            0 10px 4px -4px rgba(36, 38, 41, 0.25);
+  --shadow-top:       0 -4px 14px rgba(36, 38, 41, 0.08);
+  --shadow-light-blue: 0 0 0 1px rgba(36, 112, 224, 0.18), 0 4px 10px rgba(36, 112, 224, 0.08);
+  --shadow-card:       0 1px 3px rgba(36, 38, 41, 0.08), 0 4px 14px rgba(36, 38, 41, 0.06);
+
+  /* ─── Radii ────────────────────────────────────────────────────── */
+  --radius-xs:  4px;
+  --radius-sm:  5px;
+  --radius:     8px;
+  --radius-md:  10px;
+  --radius-lg:  20px;
+  --radius-xl:  25px;
+  --radius-2xl: 40px;
+  --radius-pill: 999px;
+
+  /* ─── Spacing (4px base) ───────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  14px;
+  --space-5:  16px;
+  --space-6:  20px;
+  --space-7:  24px;
+  --space-8:  32px;
+  --space-9:  40px;
+  --space-10: 48px;
+  --space-12: 64px;
+
+  /* ─── Type ─────────────────────────────────────────────────────── */
+  --font-sans: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Base scale (from Typography page) */
+  --fz-xs:   12px;  --lh-xs:   16px;
+  --fz-sm:   14px;  --lh-sm:   22px;
+  --fz-base: 16px;  --lh-base: 22px;
+  --fz-md:   18px;  --lh-md:   28px;
+  --fz-lg:   20px;  --lh-lg:   28px;
+  --fz-xl:   22px;  --lh-xl:   28px;
+  --fz-2xl:  24px;  --lh-2xl:  34px;
+  --fz-3xl:  26px;  --lh-3xl:  36px;
+  --fz-4xl:  30px;  --lh-4xl:  40px;
+  --fz-5xl:  36px;  --lh-5xl:  45px;
+
+  /* Weights */
+  --fw-light:    300;   /* @kind font */
+  --fw-regular:  400;   /* @kind font */
+  --fw-medium:   500;   /* @kind font */
+  --fw-semibold: 600;   /* @kind font */
+  --fw-bold:     700;   /* @kind font */
+
+  /* ─── Motion ───────────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* @kind other */
+  --duration-fast: 120ms; /* @kind other */
+  --duration:      200ms; /* @kind other */
+  --duration-slow: 320ms; /* @kind other */
+}
+
+/* ─── Base typography ─────────────────────────────────────────────── */
+html, body {
+  font-family: var(--font-sans);
+  font-size:   var(--fz-base);
+  line-height: var(--lh-base);
+  color:       var(--fg-1);
+  background:  var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fz-5xl);
+  line-height: var(--lh-5xl);
+  color: var(--fg-1);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h2, .h2 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-4xl); line-height: var(--lh-4xl);
+  color: var(--fg-1); margin: 0;
+}
+h3, .h3 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-2xl); line-height: var(--lh-2xl);
+  color: var(--fg-1); margin: 0;
+}
+h4, .h4 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-lg); line-height: var(--lh-lg);
+  color: var(--fg-1); margin: 0;
+}
+h5, .h5 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-md); line-height: var(--lh-md);
+  color: var(--fg-1); margin: 0;
+}
+
+p, .p {
+  font-size: var(--fz-base); line-height: var(--lh-base);
+  color: var(--fg-1); margin: 0;
+}
+.p-sm   { font-size: var(--fz-sm); line-height: var(--lh-sm); }
+.p-lg   { font-size: var(--fz-md); line-height: var(--lh-md); }
+.caption{ font-size: var(--fz-xs); line-height: var(--lh-xs); color: var(--fg-2); }
+.muted  { color: var(--fg-2); }
+.dim    { color: var(--fg-3); }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--duration) var(--ease-standard);
+}
+a:hover { color: var(--link-hover); text-decoration: underline; }
+
+code, pre, .mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.95em;
+}

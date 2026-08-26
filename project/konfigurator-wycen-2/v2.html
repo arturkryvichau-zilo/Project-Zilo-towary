@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/colors_and_type.css">
+  <script src="_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; background: #fff; }
+    a { color: var(--zilo-blue-1); text-decoration: none; }
+    /* Editable cell focus indicator */
+    .z-input-cell { transition: box-shadow 200ms var(--ease-standard); }
+    .z-input-cell:focus-within { box-shadow: inset 0 0 0 1px var(--zilo-blue-1); border-color: var(--zilo-blue-1); }
+    /* Inputs w komórkach — dziedziczą typografię, bez własnego bordera/tła */
+    input.z-input, textarea.z-input { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 20px; color: var(--grey-1); background: transparent; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; box-sizing: border-box; }
+    input.z-input::placeholder, textarea.z-input::placeholder { color: var(--grey-3); opacity: 1; }
+    textarea.z-input { resize: none; }
+    /* Tri-state cell: default (label 16 na środku, pusty) / filled (label 12 na górze + wartość) / focus wymusza filled */
+    .z-tri-cell .z-tri-body { display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; flex:1; min-width:0; padding:20px 13px; gap:0; }
+    .z-tri-cell .z-tri-label { font-family:var(--font-sans); font-weight:400; font-size:16px; line-height:20px; color:var(--grey-3); transition: font-size 160ms var(--ease-standard); }
+    .z-tri-cell .z-tri-value { opacity:0; height:0; padding:0; margin:0; border:0; pointer-events:none; }
+    .z-tri-cell.is-filled .z-tri-body, .z-tri-cell:focus-within .z-tri-body { padding:9px 13px; gap:2px; }
+    .z-tri-cell.is-filled .z-tri-label, .z-tri-cell:focus-within .z-tri-label { font-size:12px; line-height:16px; }
+    .z-tri-cell.is-filled .z-tri-value, .z-tri-cell:focus-within .z-tri-value { opacity:1; height:auto; pointer-events:auto; }
+    a:hover { color: var(--zilo-blue-2); text-decoration: underline; }
+    /* Ikona „i" w polu „Przeprac. czas" + tooltip (hover tylko na ikonę) */
+    .z-czas-info { position:absolute; right:11px; top:50%; transform:translateY(-50%); width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--grey-3); cursor:help; z-index:5; }
+    .z-czas-info:hover { color:var(--zilo-blue-1); }
+    .z-czas-info__tip { position:absolute; bottom:calc(100% + 8px); right:-4px; width:230px; background:var(--grey-1); color:#fff; font-size:12px; line-height:16px; font-weight:400; padding:9px 11px; border-radius:8px; box-shadow:0 10px 28px rgba(10,11,41,0.20); opacity:0; visibility:hidden; transition:opacity 120ms var(--ease-standard); pointer-events:none; z-index:40; white-space:normal; text-align:left; }
+    .z-czas-info:hover .z-czas-info__tip { opacity:1; visibility:visible; }
+    /* ─── Segmented Control (design system) ─── */
+    .ds-seg {
+      --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
+      --seg-bg: #ffffff; --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
+      --seg-pill-bg: var(--grey-6);
+      --seg-shadow: none;
+      display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
+      border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
+      font-family:var(--font-sans); user-select:none; position:relative;
+      border:1px solid var(--grey-5);
+      box-shadow:0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.06);
+    }
+    .ds-seg[data-size="mobile"] { --seg-radius:12px; --seg-gap:3px; }
+    .ds-seg__item {
+      flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:0 18px; border:0; background:transparent; border-radius:8px;
+      color:var(--seg-fg-off); font-family:inherit; font-size:15px; font-weight:400; line-height:1;
+      cursor:pointer; white-space:nowrap;
+      transition: background 160ms var(--ease-standard), color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .ds-seg[data-size="mobile"] .ds-seg__item { font-size:14px; padding:0 14px; gap:6px; }
+    .ds-seg .ds-seg__item:not([aria-checked="true"]):hover { color:var(--black); }
+    .ds-seg .ds-seg__item:not([aria-checked="true"]):active { color:var(--black); }
+    .ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
+    .ds-seg__item:focus { outline:none; }
+  </style>
+</helmet>
+
+<div class="{{ rootClass }}" style="height:100vh;background:#fff;font-family:var(--font-sans);color:var(--grey-1);display:flex;flex-direction:column;">
+
+  <!-- ─── HEADER ───────────────────────────────────────────── -->
+  <header style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5);background:#fff;min-height:70px;box-sizing:border-box;flex:none;">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button aria-label="Zamknij" style="width:40px;height:40px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+      </button>
+      <div style="width:1px;height:40px;background:var(--grey-5);"></div>
+    </div>
+    <h1 style="font-size:22px;line-height:28px;font-weight:500;color:var(--grey-1);margin:0;">Wycena zlecenia</h1>
+    <div class="wyc-hdr-actions" style="display:flex;align-items:center;justify-content:flex-end;gap:12px;">
+      <button style="font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;height:46px;border-radius:8px;background:var(--zilo-primary);color:#fff;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-hover);">Zapisz wycenę</button>
+    </div>
+  </header>
+
+  <!-- ─── BODY ─────────────────────────────────────────────── -->
+  <main style="padding:24px 40px 48px;display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;overflow-y:auto;box-sizing:border-box;">
+
+    <!-- Info: Pojazd + Klient cards, then Nazwa usługi + Opis zlecenia -->
+    <section style="display: flex; flex-direction: column; gap: 12px">
+
+      <!-- Row 1: Pojazd + Klient cards -->
+      <div style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px">
+
+        <!-- Pojazd card -->
+        <div style="display: flex; gap: 20px; align-items: center; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; padding: 20px 24px; padding-top: 12px; padding-bottom: 12px; padding-left: 20px; padding-right: 20px">
+          <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <!-- Ikonka Pojazd (Custom) -->
+            <svg width="44" height="44" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M14.4387 33.4566C11.6271 29.554 23.2425 27.0628 23.4465 24.088C23.7085 20.2657 20.6694 14.1413 25.8519 14.0041C31.0343 13.8668 33.2353 17.2145 34.7953 22.1672C37.17 29.7059 18.1762 38.6442 14.4387 33.4566Z" fill="#D5D7F8"></path>
+              <g clip-path="url(#pojazd-clip)">
+                <path d="M10.9883 26.7826H7.83938C7.0489 26.7826 6.40806 25.5003 6.40806 23.9186C6.40806 23.6022 6.53624 23.3457 6.69432 23.3457H10.9883V24.2049H7.07115C7.1034 24.7272 7.2219 25.1674 7.37429 25.4723C7.5575 25.8389 7.7358 25.9234 7.83938 25.9234H10.9883V26.7826Z" fill="#242629"></path>
+                <path d="M27.126 9.77148C28.4551 9.77148 29.9278 10.7195 30.4775 11.9297L30.6094 12.2197C30.2044 12.1352 29.7908 12.0755 29.3701 12.0391C28.8871 11.3374 27.9374 10.792 27.126 10.792H14.876C13.9477 10.7922 12.839 11.506 12.4541 12.3516L11.5918 14.248C11.5025 14.445 11.3849 14.6581 11.2568 14.875H21.2344C20.8972 15.1944 20.5806 15.5351 20.2881 15.8965H10.5684C10.0738 16.5502 9.50899 17.1691 9.00781 17.5713L8.39355 18.0615L12.0049 19.5059C12.0666 19.5308 12.1248 19.5682 12.1748 19.6182L13.5566 21H18.0605C18.0126 21.3357 17.9793 21.6763 17.9639 22.0215H13.3447C13.2097 22.0214 13.0797 21.9677 12.9844 21.8721L12.3242 21.2119L11.6641 21.8721C11.5682 21.9677 11.4387 22.0214 11.3037 22.0215H7.21973C6.55954 22.0214 6.08442 21.789 5.75781 21.4482C5.71752 21.6467 5.68848 21.8414 5.68848 22.0215V27.125C5.68848 27.9691 6.37565 28.6561 7.21973 28.6562H10.8369L12.0068 27.4863C12.5034 26.9898 13.4081 26.6154 14.1104 26.6152H18.791C18.9407 26.9661 19.1113 27.3058 19.2969 27.6357H14.1104C13.6867 27.6359 13.0281 27.9085 12.7285 28.208L12.2803 28.6562H19.9502C20.2102 29.0145 20.4918 29.3556 20.7939 29.6777H11.8135V30.6982C11.8135 31.5425 11.1265 32.2295 10.2822 32.2295H6.19922C5.35499 32.2295 4.66797 31.5425 4.66797 30.6982V22.0215C4.66797 20.7393 5.45269 19.107 6.4541 18.3057L8.36914 16.7734C8.37297 16.7704 8.37703 16.7661 8.38086 16.7627C8.38464 16.7593 8.38879 16.756 8.39258 16.7529L6.60938 16.3965C6.3707 16.349 6.19937 16.1398 6.19922 15.8965V14.3652C6.19922 14.0835 6.42821 13.8545 6.70996 13.8545H9.2627C9.54423 13.8547 9.77246 14.0836 9.77246 14.3652V15.2588L9.80762 15.2119C9.84026 15.1232 9.89733 15.0508 9.96973 14.9932C10.257 14.5865 10.5028 14.1783 10.6631 13.8262L11.5254 11.9297C12.0751 10.7196 13.5469 9.77164 14.876 9.77148H27.126ZM5.68848 30.6982C5.68848 30.9795 5.91798 31.209 6.19922 31.209H10.2822C10.5635 31.209 10.793 30.9795 10.793 30.6982V29.6777H7.21973C6.64308 29.6777 6.11613 29.4778 5.68848 29.1543V30.6982ZM7.0918 19.1025C6.76821 19.3613 6.46989 19.7549 6.22949 20.1934C6.33207 20.7266 6.66256 20.9999 7.21973 21H11.0918L11.6025 20.4902L11.5273 20.4141L7.47656 18.7939L7.0918 19.1025ZM7.21973 15.4775L8.75098 15.7842V14.875H7.21973V15.4775Z" fill="#242629"></path>
+                <path d="M18.0498 21C18.0045 21.3358 17.9747 21.6764 17.9619 22.0215H14.8896C14.94 22.6418 15.1256 23.1651 15.3633 23.5273C15.649 23.9625 15.9273 24.0625 16.0889 24.0625H18.082C18.1366 24.4089 18.2074 24.7497 18.2949 25.084H16.0889C14.8556 25.084 13.8555 23.5599 13.8555 21.6807C13.8556 21.3051 14.0553 21.0003 14.3018 21H18.0498Z" fill="#242629"></path>
+                <path d="M28.4503 14.1562C23.5215 14.1562 19.5117 18.1425 19.5117 23.0418C19.5117 27.941 23.5215 31.9273 28.4503 31.9273C33.3792 31.9273 37.389 27.941 37.389 23.0418C37.389 18.1425 33.3792 14.1562 28.4503 14.1562ZM28.4503 30.94C24.0693 30.94 20.5049 27.3968 20.5049 23.0418C20.5049 18.6867 24.0693 15.1435 28.4503 15.1435C32.8314 15.1435 36.3958 18.6867 36.3958 23.0418C36.3958 27.3968 32.8314 30.94 28.4503 30.94Z" fill="#242629"></path>
+                <path d="M27.5135 17.8885C27.3883 17.8036 27.2293 17.786 27.0886 17.8416C25.6632 18.4061 24.7422 19.7609 24.7422 21.2932C24.7422 22.6531 25.4894 23.8996 26.669 24.5475V28.426C26.669 28.6783 26.8735 28.8828 27.1258 28.8828H29.7827C30.035 28.8828 30.2395 28.6783 30.2395 28.426V24.5475C31.4191 23.8996 32.1663 22.653 32.1663 21.2932C32.1663 19.7609 31.2453 18.4061 29.8199 17.8416C29.6793 17.786 29.5201 17.8036 29.395 17.8885C29.2699 17.9736 29.1949 18.1151 29.1949 18.2663V21.5105H27.7136V18.2663C27.7135 18.1151 27.6386 17.9736 27.5135 17.8885ZM29.6517 22.4241C29.904 22.4241 30.1085 22.2196 30.1085 21.9673V19.0345C30.8198 19.5524 31.2527 20.3811 31.2527 21.2932C31.2527 22.3946 30.6024 23.3974 29.596 23.848C29.4317 23.9216 29.3259 24.0849 29.3259 24.265V27.9692H27.5826V24.265C27.5826 24.0849 27.4768 23.9216 27.3124 23.848C26.306 23.3974 25.6558 22.3946 25.6558 21.2932C25.6558 20.3811 26.0887 19.5524 26.8 19.0345V21.9673C26.8 22.2196 27.0045 22.4241 27.2568 22.4241H29.6517Z" fill="#242629"></path>
+              </g>
+              <defs><clipPath id="pojazd-clip"><rect width="32.6667" height="32.6667" fill="white" transform="translate(4.66797 4.66699)"></rect></clipPath></defs>
+            </svg>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+            <div data-car="markaYear" style="font-size:16px;line-height:24px;color:var(--grey-1);">Mersedes-Benz Klasa S, 2020</div>
+            <div data-car="engine" style="font-size:16px;line-height:24px;color:var(--grey-1);">Diesel, S 350 BlueTEC 3.0</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;color:var(--grey-1);">
+              WAUZZZ4B74N05832
+              <button aria-label="Kopiuj VIN" style="width:22px;height:22px;border:0;background:transparent;color:var(--zilo-blue-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;border-radius:4px;" style-hover="background:var(--zilo-blue-5);">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="width: 18px; height: 18px">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 0.9375H8.20769C6.82937 0.937488 5.73764 0.937479 4.88323 1.05235C4.00392 1.17057 3.29221 1.41966 2.73093 1.98093C2.16966 2.54221 1.92057 3.25392 1.80235 4.13323C1.68748 4.98764 1.68749 6.07936 1.6875 7.45768V12C1.6875 13.4042 2.71654 14.568 4.06164 14.7785C4.16511 15.3515 4.36315 15.8406 4.76126 16.2387C5.2127 16.6902 5.78111 16.8843 6.45619 16.9751C7.10641 17.0625 7.93315 17.0625 8.95885 17.0625H11.2912C12.3168 17.0625 13.1436 17.0625 13.7938 16.9751C14.4689 16.8843 15.0373 16.6902 15.4887 16.2387C15.9402 15.7873 16.1343 15.2189 16.2251 14.5438C16.3125 13.8936 16.3125 13.0668 16.3125 12.0412V8.20885C16.3125 7.18315 16.3125 6.35641 16.2251 5.70619C16.1343 5.03111 15.9402 4.4627 15.4887 4.01126C15.0906 3.61315 14.6015 3.41511 14.0285 3.31164C13.818 1.96654 12.6542 0.9375 11.25 0.9375ZM12.847 3.20338C12.6199 2.53968 11.9907 2.0625 11.25 2.0625H8.25C6.81989 2.0625 5.80389 2.0637 5.03314 2.16732C4.27857 2.26877 3.84384 2.45902 3.52643 2.77643C3.20902 3.09384 3.01877 3.52857 2.91732 4.28314C2.8137 5.05389 2.8125 6.06988 2.8125 7.5V12C2.8125 12.7407 3.28968 13.3699 3.95338 13.597C3.93748 13.1395 3.93749 12.6223 3.9375 12.0412V8.20884C3.93748 7.18315 3.93747 6.35641 4.02489 5.70619C4.11566 5.03111 4.30983 4.4627 4.76126 4.01126C5.2127 3.55983 5.78111 3.36566 6.45619 3.27489C7.10641 3.18747 7.93315 3.18748 8.95884 3.1875H11.2912C11.8723 3.18749 12.3895 3.18748 12.847 3.20338ZM5.55676 4.80676C5.76433 4.59919 6.05576 4.46385 6.60609 4.38986C7.1726 4.3137 7.92344 4.3125 9 4.3125H11.25C12.3266 4.3125 13.0774 4.3137 13.6439 4.38986C14.1942 4.46385 14.4857 4.59919 14.6932 4.80676C14.9008 5.01433 15.0362 5.30576 15.1101 5.85609C15.1863 6.4226 15.1875 7.17344 15.1875 8.25V12C15.1875 13.0766 15.1863 13.8274 15.1101 14.3939C15.0362 14.9442 14.9008 15.2357 14.6932 15.4432C14.4857 15.6508 14.1942 15.7862 13.6439 15.8601C13.0774 15.9363 12.3266 15.9375 11.25 15.9375H9C7.92344 15.9375 7.1726 15.9363 6.60609 15.8601C6.05576 15.7862 5.76433 15.6508 5.55676 15.4432C5.34919 15.2357 5.21385 14.9442 5.13986 14.3939C5.0637 13.8274 5.0625 13.0766 5.0625 12V8.25C5.0625 7.17344 5.0637 6.4226 5.13986 5.85609C5.21385 5.30576 5.34919 5.01433 5.55676 4.80676Z" fill="currentColor"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Klient card -->
+        <div style="display: flex; gap: 20px; align-items: center; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; padding: 20px 24px; padding-top: 12px; padding-bottom: 12px; padding-left: 20px; padding-right: 20px">
+          <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <!-- Ikonka Klient (Custom) -->
+            <svg width="44" height="44" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M14.4387 33.4566C11.6271 29.554 23.2425 27.0628 23.4465 24.088C23.7085 20.2657 20.6694 14.1413 25.8519 14.0041C31.0343 13.8668 33.2353 17.2145 34.7953 22.1672C37.17 29.7059 18.1762 38.6442 14.4387 33.4566Z" fill="#D5D7F8"></path>
+              <g clip-path="url(#klient-clip)">
+                <path d="M17.9902 15.8532C18.2544 15.8532 18.4688 15.6389 18.4688 15.3747V14.8633C18.4688 14.5989 18.2544 14.3848 17.9902 14.3848C17.7258 14.3848 17.5117 14.5989 17.5117 14.8633V15.3747C17.5117 15.6389 17.7258 15.8532 17.9902 15.8532Z" fill="#242629"></path>
+                <path d="M24.127 15.8532C24.3914 15.8532 24.6055 15.6389 24.6055 15.3747V14.8633C24.6055 14.5989 24.3914 14.3848 24.127 14.3848C23.8628 14.3848 23.6484 14.5989 23.6484 14.8633V15.3747C23.6484 15.6389 23.8628 15.8532 24.127 15.8532Z" fill="#242629"></path>
+                <path d="M32.5635 27.9802L28.0104 26.2291L26.8557 24.6894C26.5653 24.3023 26.0522 24.1874 25.6315 24.3936V22.3733C27.1934 21.0649 28.1886 19.101 28.1886 16.9088V16.8756C28.1995 16.8759 28.2105 16.8759 28.2215 16.8759C29.3315 16.8759 30.2345 15.9729 30.2345 14.8631C30.2345 14.1129 29.8217 13.4577 29.2114 13.1115V9.74848C29.2114 6.94667 26.932 4.66699 24.1299 4.66699H17.9927C17.2425 4.66699 16.5873 5.07971 16.2411 5.68982H15.9468C14.273 5.68982 12.9112 7.05184 12.9112 8.72565V13.1115C12.3008 13.4577 11.8881 14.1129 11.8881 14.8631C11.8881 15.9729 12.7911 16.8759 13.9011 16.8759C13.9121 16.8759 13.9231 16.8759 13.934 16.8756V16.9088C13.934 19.101 14.9292 21.0649 16.4911 22.3733V24.3936C16.0704 24.1877 15.5572 24.3023 15.2669 24.6894L14.1122 26.2291L9.5591 27.9802C8.19907 28.5033 7.28516 29.8339 7.28516 31.2909V36.8551C7.28516 37.1193 7.49949 37.3337 7.76367 37.3337C8.02785 37.3337 8.24219 37.1193 8.24219 36.8551V31.2909C8.24219 30.9789 8.30001 30.6751 8.40618 30.3914L11.2613 32.5328C11.6539 32.8271 11.8881 33.2959 11.8881 33.7864V36.8551C11.8881 37.1193 12.1025 37.3337 12.3666 37.3337C12.6308 37.3337 12.8452 37.1193 12.8452 36.8551V33.7864C12.8452 32.9961 12.4678 32.2412 11.8355 31.7669L8.90314 29.5677C9.17205 29.2654 9.512 29.0237 9.90254 28.8734L14.2939 27.1844L17.4424 30.3329C17.726 30.6165 18.1031 30.7725 18.5041 30.7725C18.9051 30.7725 19.2822 30.6165 19.5658 30.3329L20.5829 29.3158V36.8551C20.5829 37.1193 20.797 37.3337 21.0614 37.3337C21.3256 37.3337 21.5399 37.1193 21.5399 36.8551V29.3158L22.5568 30.3329C22.8404 30.6165 23.2175 30.7725 23.6185 30.7725C24.0195 30.7725 24.3966 30.6165 24.6802 30.3329L26.0026 29.0105C26.1895 28.8236 26.1895 28.5205 26.0026 28.3336C25.8159 28.1469 25.5129 28.1469 25.3259 28.3336L24.0035 29.6562C23.9006 29.7589 23.764 29.8155 23.6185 29.8155C23.4732 29.8155 23.3364 29.7589 23.2337 29.6562L21.8031 28.2254L26.0447 25.2564C26.0594 25.2462 26.0791 25.2491 26.0898 25.2636L27.0783 26.5813L26.8602 26.7993C26.6735 26.9863 26.6735 27.2893 26.8602 27.476C27.0471 27.6629 27.3502 27.6629 27.5371 27.476L27.8284 27.1844L32.2201 28.8734C32.6106 29.0237 32.9503 29.2654 33.2195 29.5677L30.2871 31.7672C29.6548 32.2412 29.2772 32.9961 29.2772 33.7864V36.8551C29.2772 37.1193 29.4915 37.3337 29.7557 37.3337C30.0201 37.3337 30.2342 37.1193 30.2342 36.8551V33.7864C30.2342 33.2957 30.4687 32.8269 30.8613 32.5326L33.7164 30.3912C33.8226 30.6748 33.8804 30.9789 33.8804 31.2909V36.8551C33.8804 37.1193 34.0945 37.3337 34.3589 37.3337C34.6231 37.3337 34.8374 37.1193 34.8374 36.8551V31.2909C34.8374 29.8339 33.9235 28.5033 32.5635 27.9802ZM18.8889 29.6562C18.7862 29.7589 18.6494 29.8155 18.5041 29.8155C18.3586 29.8155 18.222 29.7589 18.119 29.6562L15.0443 26.5813L16.0328 25.2636C16.0432 25.2494 16.0632 25.2462 16.0779 25.2564L20.3197 28.2254L18.8889 29.6562ZM24.6742 25.0473L21.0614 27.5764L17.4481 25.0473V23.05C18.5083 23.676 19.7435 24.0359 21.0614 24.0359C22.3791 24.0359 23.6143 23.676 24.6742 23.05V25.0473ZM21.0004 23.0786C17.6036 23.0457 14.8911 20.2272 14.8911 16.83V16.3164C14.8911 16.2092 14.8609 16.102 14.7961 16.0165C14.6653 15.8441 14.4449 15.784 14.2523 15.8525C14.1267 15.8972 14.0118 15.9188 13.9011 15.9188C13.3189 15.9188 12.8452 15.4453 12.8452 14.8631C12.8452 14.2809 13.3189 13.8071 13.9011 13.8071C14.0118 13.8071 14.1267 13.8288 14.2523 13.8737C14.3737 13.9168 14.5107 13.9081 14.6261 13.851C16.0515 13.1405 16.6232 11.7435 16.6469 11.6845C16.7451 11.439 16.6257 11.1606 16.3802 11.0624C16.1347 10.9642 15.8563 11.0836 15.7584 11.3291C15.7541 11.3395 15.3454 12.3367 14.3592 12.9077C14.2047 12.8695 14.0534 12.8504 13.9011 12.8504C13.8902 12.8504 13.8792 12.8509 13.8682 12.8511V8.72565C13.8682 7.57746 14.7988 6.64685 15.947 6.64685H15.9807C15.9804 6.65782 15.9799 6.66878 15.9799 6.67975C15.9799 6.95913 16.2192 7.18244 16.5038 7.15627C16.7508 7.13334 16.9342 6.91626 16.937 6.66828C16.9432 6.09132 17.4142 5.62402 17.9927 5.62402H24.1299C26.4078 5.62402 28.2544 7.47055 28.2544 9.74848V12.8509C28.2434 12.8509 28.2324 12.8501 28.2215 12.8501C28.0582 12.8501 27.8957 12.8718 27.7297 12.9159C26.7425 12.48 26.2937 11.2222 26.1688 10.8027C26.2409 10.7666 26.3129 10.7292 26.3847 10.6908C26.6164 10.5669 26.7216 10.2786 26.6027 10.0441C26.4806 9.80306 26.185 9.71134 25.9488 9.8387C24.0085 10.8835 21.9016 11.0632 19.6862 10.3728C18.0161 9.85241 16.9038 9.00553 16.8796 8.98709C16.671 8.82484 16.3705 8.86273 16.2085 9.07108C16.0462 9.27968 16.0839 9.58025 16.2925 9.7425C16.3421 9.78138 17.5321 10.697 19.3669 11.2757C20.3377 11.5818 21.3059 11.7341 22.2557 11.7341C23.2952 11.7341 24.3121 11.5506 25.2853 11.1873C25.4877 11.8193 26.0704 13.2364 27.3529 13.7959C27.469 13.8468 27.5952 13.8709 27.7218 13.8719H27.722C27.8125 13.8729 27.9025 13.859 27.9904 13.837C28.0707 13.8169 28.1469 13.8071 28.2215 13.8071C28.8037 13.8071 29.2774 14.2807 29.2774 14.8629C29.2774 15.4451 28.8037 15.9186 28.2215 15.9186C28.1118 15.9186 27.9982 15.8974 27.8738 15.8535C27.7776 15.8196 27.6717 15.8144 27.574 15.8441C27.3644 15.9079 27.2315 16.097 27.2315 16.3031V16.9085C27.2315 20.3314 24.4305 23.112 21.0004 23.0786Z" fill="#242629"></path>
+                <path d="M23.0566 19.9554C23.2978 19.8475 23.4057 19.5643 23.2978 19.3232C23.1898 19.082 22.9067 18.9739 22.6655 19.0819C21.0553 19.803 19.4813 19.0957 19.4583 19.0851C19.2195 18.9735 18.9351 19.0764 18.823 19.3151C18.7105 19.5542 18.8131 19.8393 19.0523 19.9517C19.1051 19.9766 19.9522 20.3657 21.1048 20.3657C21.6969 20.3657 22.3696 20.2629 23.0566 19.9554Z" fill="#242629"></path>
+              </g>
+              <defs><clipPath id="klient-clip"><rect width="32.6667" height="32.6667" fill="white" transform="translate(4.66797 4.66699)"></rect></clipPath></defs>
+            </svg>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">Marek Kowalski</div>
+            <a data-car="phone" href="tel:+48516375467" style="font-size:16px;line-height:24px;color:var(--zilo-blue-1);text-decoration:underline;text-underline-offset:3px;font-weight:400;">+48 516 375 467</a>
+            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">marek.kowalski@gmail.com</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Nazwa usługi + Opis zlecenia (z pionowym separatorem grey-4) -->
+      <div data-svc-grid style="display: grid; grid-template-columns: minmax(0,1fr) 1px minmax(0,1fr); gap: 40px; align-items: stretch; padding-bottom: 12px">
+        <!-- Nazwa usługi -->
+        <div style="display: flex; gap: 16px; align-items: flex-start">
+          <div style="width: 24px; height: 24px; flex-shrink: 0; color: var(--black); margin-top: 22px">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" style="display:block;width:100%;height:100%;">
+              <path d="M9.5152 12.6417L14.3735 17.5C14.7902 17.9033 15.3487 18.1268 15.9286 18.1221C16.5085 18.1173 17.0633 17.8849 17.4734 17.4748C17.8834 17.0648 18.1159 16.51 18.1206 15.9301C18.1253 15.3502 17.9019 14.7917 17.4985 14.375L12.601 9.4775M9.5152 12.6417L11.5952 10.1167C11.8594 9.79667 12.2119 9.595 12.6019 9.47833M9.5152 12.6417L5.63603 17.3525C5.44803 17.5817 5.21412 17.7689 4.94936 17.9023C4.68461 18.0356 4.39487 18.112 4.09881 18.1265C3.80274 18.1411 3.50691 18.0935 3.23034 17.9869C2.95377 17.8802 2.70261 17.7168 2.493 17.5072C2.2834 17.2976 2.12001 17.0464 2.01334 16.7699C1.90667 16.4933 1.85909 16.1975 1.87366 15.9014C1.88823 15.6053 1.96463 15.3156 2.09795 15.0508C2.23126 14.7861 2.41853 14.5522 2.6477 14.3642L8.3452 9.6725M12.6019 9.47833C13.0602 9.34167 13.571 9.32167 14.0544 9.36167C14.7059 9.41761 15.3607 9.30222 15.9539 9.02693C16.547 8.75164 17.0579 8.32603 17.4357 7.79234C17.8136 7.25864 18.0453 6.63542 18.108 5.9845C18.1706 5.33358 18.0619 4.67761 17.7927 4.08167L15.0627 6.8125C14.606 6.70688 14.188 6.47514 13.8566 6.14365C13.5251 5.81216 13.2933 5.39425 13.1877 4.9375L15.9177 2.2075C15.3218 1.9383 14.6658 1.82962 14.0149 1.89224C13.364 1.95485 12.7407 2.18659 12.207 2.56446C11.6733 2.94232 11.2477 3.45318 10.9724 4.04633C10.6972 4.63948 10.5818 5.29431 10.6377 5.94583C10.7135 6.8425 10.5785 7.8325 9.88437 8.40417L9.79937 8.475M8.3452 9.6725L4.9227 6.25H3.74853L1.87353 3.125L3.12353 1.875L6.24853 3.75V4.92417L9.79853 8.47417M8.34437 9.67167L9.79853 8.47417ZM15.311 15.3125L13.1235 13.125ZM4.05437 15.9375H4.06103V15.9442H4.05437V15.9375Z" fill="#fff"></path>
+              <path d="M9.5152 12.6417L14.3735 17.5C14.7902 17.9033 15.3487 18.1268 15.9286 18.1221C16.5085 18.1173 17.0633 17.8849 17.4734 17.4748C17.8834 17.0648 18.1159 16.51 18.1206 15.9301C18.1253 15.3502 17.9019 14.7917 17.4985 14.375L12.601 9.4775M8.34437 9.67167L9.79853 8.47417L6.24853 4.92417V3.75L3.12353 1.875L1.87353 3.125L3.74853 6.25H4.9227L8.3452 9.6725L2.6477 14.3642C2.41853 14.5522 2.23126 14.7861 2.09795 15.0508C1.96463 15.3156 1.88823 15.6053 1.87366 15.9014C1.85909 16.1975 1.90667 16.4933 2.01334 16.7699C2.12001 17.0464 2.2834 17.2976 2.493 17.5072C2.70261 17.7168 2.95377 17.8802 3.23034 17.9869C3.50691 18.0935 3.80274 18.1411 4.09881 18.1265C4.39487 18.112 4.68461 18.0356 4.94936 17.9023C5.21412 17.7689 5.44803 17.5817 5.63603 17.3525L9.5152 12.6417L11.5952 10.1167C11.8594 9.79667 12.2119 9.595 12.6019 9.47833C13.0602 9.34167 13.571 9.32167 14.0544 9.36167C14.7059 9.41761 15.3607 9.30222 15.9539 9.02693C16.547 8.75164 17.0579 8.32603 17.4357 7.79234C17.8136 7.25864 18.0453 6.63542 18.108 5.9845C18.1706 5.33358 18.0619 4.67761 17.7927 4.08167L15.0627 6.8125C14.606 6.70688 14.188 6.47514 13.8566 6.14365C13.5251 5.81216 13.2933 5.39425 13.1877 4.9375L15.9177 2.2075C15.3218 1.9383 14.6658 1.82962 14.0149 1.89224C13.364 1.95485 12.7407 2.18659 12.207 2.56446C11.6733 2.94232 11.2477 3.45318 10.9724 4.04633C10.6972 4.63948 10.5818 5.29431 10.6377 5.94583C10.7135 6.8425 10.5785 7.8325 9.88437 8.40417L9.79937 8.475M15.311 15.3125L13.1235 13.125M4.05437 15.9375H4.06103V15.9442H4.05437V15.9375Z" stroke="var(--black)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 10px; padding-bottom: 10px">
+            <div style="font-size:14px;line-height:20px;color:var(--grey-2);">Nazwa usługi:</div>
+            <div data-car="service" style="font-size:16px;line-height:26px;color:var(--grey-1);font-weight:400;">Wymiana opon - felga aluminiowa 18”</div>
+          </div>
+        </div>
+        <!-- Separator pionowy grey-4 między sekcjami -->
+        <div data-opis-sep style="align-self:stretch;background:var(--grey-4);"></div>
+
+        <!-- Opis zlecenia -->
+        <div data-opis-block style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width: 24px; height: 24px; flex-shrink: 0; color: var(--black); margin-top: 22px">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" style="display:block;width:100%;height:100%;">
+              <path d="M9.5152 12.6417L14.3735 17.5C14.7902 17.9033 15.3487 18.1268 15.9286 18.1221C16.5085 18.1173 17.0633 17.8849 17.4734 17.4748C17.8834 17.0648 18.1159 16.51 18.1206 15.9301C18.1253 15.3502 17.9019 14.7917 17.4985 14.375L12.601 9.4775M9.5152 12.6417L11.5952 10.1167C11.8594 9.79667 12.2119 9.595 12.6019 9.47833M9.5152 12.6417L5.63603 17.3525C5.44803 17.5817 5.21412 17.7689 4.94936 17.9023C4.68461 18.0356 4.39487 18.112 4.09881 18.1265C3.80274 18.1411 3.50691 18.0935 3.23034 17.9869C2.95377 17.8802 2.70261 17.7168 2.493 17.5072C2.2834 17.2976 2.12001 17.0464 2.01334 16.7699C1.90667 16.4933 1.85909 16.1975 1.87366 15.9014C1.88823 15.6053 1.96463 15.3156 2.09795 15.0508C2.23126 14.7861 2.41853 14.5522 2.6477 14.3642L8.3452 9.6725M12.6019 9.47833C13.0602 9.34167 13.571 9.32167 14.0544 9.36167C14.7059 9.41761 15.3607 9.30222 15.9539 9.02693C16.547 8.75164 17.0579 8.32603 17.4357 7.79234C17.8136 7.25864 18.0453 6.63542 18.108 5.9845C18.1706 5.33358 18.0619 4.67761 17.7927 4.08167L15.0627 6.8125C14.606 6.70688 14.188 6.47514 13.8566 6.14365C13.5251 5.81216 13.2933 5.39425 13.1877 4.9375L15.9177 2.2075C15.3218 1.9383 14.6658 1.82962 14.0149 1.89224C13.364 1.95485 12.7407 2.18659 12.207 2.56446C11.6733 2.94232 11.2477 3.45318 10.9724 4.04633C10.6972 4.63948 10.5818 5.29431 10.6377 5.94583C10.7135 6.8425 10.5785 7.8325 9.88437 8.40417L9.79937 8.475M8.3452 9.6725L4.9227 6.25H3.74853L1.87353 3.125L3.12353 1.875L6.24853 3.75V4.92417L9.79853 8.47417M8.34437 9.67167L9.79853 8.47417ZM15.311 15.3125L13.1235 13.125ZM4.05437 15.9375H4.06103V15.9442H4.05437V15.9375Z" fill="#fff"></path>
+              <path d="M9.5152 12.6417L14.3735 17.5C14.7902 17.9033 15.3487 18.1268 15.9286 18.1221C16.5085 18.1173 17.0633 17.8849 17.4734 17.4748C17.8834 17.0648 18.1159 16.51 18.1206 15.9301C18.1253 15.3502 17.9019 14.7917 17.4985 14.375L12.601 9.4775M8.34437 9.67167L9.79853 8.47417L6.24853 4.92417V3.75L3.12353 1.875L1.87353 3.125L3.74853 6.25H4.9227L8.3452 9.6725L2.6477 14.3642C2.41853 14.5522 2.23126 14.7861 2.09795 15.0508C1.96463 15.3156 1.88823 15.6053 1.87366 15.9014C1.85909 16.1975 1.90667 16.4933 2.01334 16.7699C2.12001 17.0464 2.2834 17.2976 2.493 17.5072C2.70261 17.7168 2.95377 17.8802 3.23034 17.9869C3.50691 18.0935 3.80274 18.1411 4.09881 18.1265C4.39487 18.112 4.68461 18.0356 4.94936 17.9023C5.21412 17.7689 5.44803 17.5817 5.63603 17.3525L9.5152 12.6417L11.5952 10.1167C11.8594 9.79667 12.2119 9.595 12.6019 9.47833C13.0602 9.34167 13.571 9.32167 14.0544 9.36167C14.7059 9.41761 15.3607 9.30222 15.9539 9.02693C16.547 8.75164 17.0579 8.32603 17.4357 7.79234C17.8136 7.25864 18.0453 6.63542 18.108 5.9845C18.1706 5.33358 18.0619 4.67761 17.7927 4.08167L15.0627 6.8125C14.606 6.70688 14.188 6.47514 13.8566 6.14365C13.5251 5.81216 13.2933 5.39425 13.1877 4.9375L15.9177 2.2075C15.3218 1.9383 14.6658 1.82962 14.0149 1.89224C13.364 1.95485 12.7407 2.18659 12.207 2.56446C11.6733 2.94232 11.2477 3.45318 10.9724 4.04633C10.6972 4.63948 10.5818 5.29431 10.6377 5.94583C10.7135 6.8425 10.5785 7.8325 9.88437 8.40417L9.79937 8.475M15.311 15.3125L13.1235 13.125M4.05437 15.9375H4.06103V15.9442H4.05437V15.9375Z" stroke="var(--black)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 10px; padding-bottom: 10px">
+            <div style="font-size:14px;line-height:20px;color:var(--grey-2);">Opis zlecenia:</div>
+            <div data-car="opis" style="font-size: 16px; line-height: 22px; color: var(--grey-1); font-weight: 400">Do wykonania wymiana kompletu rozrządu z pompą wody. Przy okazji sprawdzić stan paska osprzętu, rolek i napinaczy. Jeżeli podczas demontażu wyjdą dodatkowe elementy wymagające wymiany, proszę skontaktować się z klientem przed montażem. Po zakończeniu prac sprawdzić szczelność.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── LINE ITEMS: flat Robocizna list + Towar list in one grey card ─── -->
+    <section style="background:var(--grey-6);border:1px solid var(--grey-4);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box;">
+
+      <!-- Card header: Segmented Control — wartości netto / brutto -->
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
+        <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
+        </div>
+      </div>
+
+      <!-- ROBOCIZNA LIST -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <sc-for list="{{ robociznas }}" as="row" hint-placeholder-count="1">
+          <div style="{{ robGridStyle }}">
+            <!-- Robocizna (nazwa — edytowalne, tri-state z DS) -->
+            <label class="z-input-cell z-tri-cell {{ row.nameCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div class="z-tri-body">
+                <div class="z-tri-label">Usługi</div>
+                <input data-wyc-field="name" class="z-input z-tri-value" type="text" value="{{ row.name }}" onChange="{{ row.setName }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Osoba select -->
+            <div style="position:relative;">
+              <div data-wyc-field="person" onClick="{{ row.toggleOsoba }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.osobaOpenStyle }}">
+                <sc-if value="{{ row.noOsoba }}" hint-placeholder-val="{{ true }}">
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:20px 13px;box-sizing:border-box;">
+                    <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-3);">Osoba</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ row.osobaHasValue }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                    <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Osoba</div>
+                    <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ row.osoba }}</div>
+                  </div>
+                </sc-if>
+                <div style="display:flex;align-items:center;justify-content:center;width:28px;color:var(--grey-2);flex-shrink:0;transform: {{ row.osobaChevronRotation }} ;transition:transform 160ms var(--ease-standard);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <sc-if value="{{ row.osobaOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--grey-4);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:25;max-height:280px;overflow-y:auto;">
+                  <sc-for list="{{ row.osobaOptions }}" as="opt" hint-placeholder-count="6">
+                    <div onClick="{{ opt.select }}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:15px;line-height:22px;color: {{ opt.textColor }} ;cursor:pointer;background: {{ opt.selectedBg }} ;" style-hover="background:var(--grey-6);">
+                      {{ opt.label }}
+                      <sc-if value="{{ opt.isSelected }}" hint-placeholder-val="{{ false }}">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--zilo-blue-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <!-- Przeprac. czas (tri-state: domyślnie etykieta; po fokusie/uzupełnieniu pole + „h" obok liczby) -->
+            <label class="z-input-cell z-tri-cell {{ row.czasCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;position:relative;">
+              <div class="z-tri-body">
+                <div class="z-tri-label">Przeprac. czas</div>
+                <div class="z-tri-value" style="display:flex;align-items:baseline;gap:2px;">
+                  <input data-wyc-field="czas" class="z-input" type="text" inputMode="decimal" value="{{ row.czas }}" onChange="{{ row.setCzas }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}" style="field-sizing:content;width:auto;min-width:1ch;max-width:6ch;">
+                  <span style="font-size:16px;line-height:20px;color:var(--grey-1);flex-shrink:0;">h</span>
+                </div>
+              </div>
+              <span class="z-czas-info" aria-label="Informacja">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.4" stroke="currentColor" stroke-width="1.4"></circle><rect x="9.1" y="8.7" width="1.8" height="5.2" rx="0.9" fill="currentColor"></rect><circle cx="10" cy="6.3" r="1.05" fill="currentColor"></circle></svg>
+                <span class="z-czas-info__tip">Nie wpływa na ceny w wycenie. Służy do rozliczenia czasu pracy osoby w Raportach</span>
+              </span>
+            </label>
+            <!-- Jednostka select -->
+            <div style="position:relative;">
+              <div onClick="{{ row.toggleUnit }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.unitOpenStyle }}">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Jednostka</div>
+                  <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-1);">{{ row.unit }}</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;width:36px;color:var(--grey-2);flex-shrink:0;transform: {{ row.unitChevronRotation }} ;transition:transform 160ms var(--ease-standard);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <sc-if value="{{ row.unitOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--grey-4);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:25;">
+                  <sc-for list="{{ row.unitOptions }}" as="opt" hint-placeholder-count="2">
+                    <div onClick="{{ opt.select }}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:15px;line-height:22px;color:var(--grey-1);cursor:pointer;background: {{ opt.selectedBg }} ;" style-hover="background:var(--grey-6);">
+                      {{ opt.value }}
+                      <sc-if value="{{ opt.isSelected }}" hint-placeholder-val="{{ false }}">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--zilo-blue-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <!-- Ilość (edytowalne) -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Ilość</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Cena netto (edytowalne) -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Rabat (%) — edytowalne, widoczne gdy pole aktywne -->
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Rabat (%)</div>
+                  <input class="z-input" type="text" inputMode="decimal" value="{{ row.rabat }}" onChange="{{ row.setRabat }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                </div>
+              </label>
+            </sc-if>
+            <!-- Wartość pozycji — netto albo brutto, zależnie od przełącznika -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.sumaLabel }}</div>
+                <input data-wyc-field="brutto" class="z-input" type="text" inputMode="decimal" value="{{ row.sumaValue }}" onChange="{{ row.setSumaInput }}" onBlur="{{ row.commitSuma }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- trash -->
+            <button aria-label="Usuń robociznę" onClick="{{ row.remove }}" style="width:30px;height:30px;border:0;background:transparent;color: {{ row.trashColor }} ;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6127 2.00002H11.3872C11.5648 1.9999 11.7194 1.9998 11.8655 2.02313C12.4426 2.11528 12.9419 2.4752 13.2118 2.99351C13.2802 3.1247 13.329 3.27147 13.385 3.43995L13.4766 3.71474C13.4921 3.76125 13.4965 3.77442 13.5003 3.78479C13.644 4.18201 14.0165 4.45053 14.4388 4.46124C14.4499 4.46152 14.4635 4.46157 14.5128 4.46157H16.9743C17.3142 4.46157 17.5897 4.73708 17.5897 5.07695C17.5897 5.41682 17.3142 5.69233 16.9743 5.69233H3.02554C2.68567 5.69233 2.41016 5.41682 2.41016 5.07695C2.41016 4.73708 2.68567 4.46157 3.02554 4.46157H5.48714C5.53641 4.46157 5.55001 4.46152 5.56111 4.46124C5.98339 4.45053 6.35592 4.18203 6.4996 3.78481C6.50338 3.77437 6.50773 3.76148 6.52331 3.71474L6.61488 3.43997C6.67092 3.2715 6.71975 3.1247 6.78806 2.99351C7.05797 2.4752 7.55733 2.11528 8.13439 2.02313C8.28046 1.9998 8.43514 1.9999 8.6127 2.00002ZM7.54504 4.46157C7.5873 4.37867 7.62476 4.29254 7.65698 4.20347C7.66676 4.17642 7.67636 4.14762 7.68869 4.11063L7.77058 3.86496C7.84538 3.64054 7.86261 3.59477 7.87969 3.56196C7.96966 3.38919 8.13611 3.26921 8.32847 3.2385C8.365 3.23266 8.41386 3.2308 8.65043 3.2308H11.3495C11.586 3.2308 11.6349 3.23266 11.6714 3.2385C11.8638 3.26921 12.0302 3.38919 12.1202 3.56196C12.1373 3.59477 12.1545 3.64053 12.2293 3.86496L12.3112 4.11048L12.3429 4.20348C12.3752 4.29255 12.4126 4.37868 12.4549 4.46157H7.54504Z" fill="currentColor"></path>
+                <path d="M5.00715 7.08729C4.98454 6.74818 4.69131 6.4916 4.35219 6.51421C4.01308 6.53681 3.7565 6.83005 3.77911 7.16916L4.15937 12.8731C4.22952 13.9256 4.28619 14.7758 4.41909 15.4429C4.55726 16.1365 4.79227 16.7159 5.27768 17.17C5.76309 17.6241 6.35677 17.8201 7.05802 17.9118C7.7325 18 8.58454 18 9.63935 18H10.3605C11.4153 18 12.2674 18 12.9419 17.9118C13.6431 17.8201 14.2368 17.6241 14.7222 17.17C15.2076 16.7159 15.4426 16.1365 15.5808 15.4429C15.7137 14.7758 15.7704 13.9256 15.8405 12.8732L16.2208 7.16916C16.2434 6.83005 15.9868 6.53681 15.6477 6.51421C15.3086 6.4916 15.0154 6.74818 14.9928 7.08729L14.6154 12.7481C14.5416 13.854 14.4891 14.6235 14.3738 15.2025C14.2619 15.7641 14.1057 16.0613 13.8814 16.2712C13.657 16.4811 13.35 16.6172 12.7823 16.6914C12.1969 16.768 11.4256 16.7692 10.3172 16.7692H9.68268C8.5743 16.7692 7.80301 16.768 7.21766 16.6914C6.64986 16.6172 6.34286 16.4811 6.11852 16.2712C5.89418 16.0613 5.73801 15.7641 5.62614 15.2025C5.5108 14.6235 5.45826 13.854 5.38453 12.7481L5.00715 7.08729Z" fill="currentColor"></path>
+                <path d="M7.88745 8.56718C8.22563 8.53336 8.52719 8.78009 8.56101 9.11827L8.97127 13.2208C9.00509 13.559 8.75835 13.8606 8.42017 13.8944C8.08199 13.9282 7.78043 13.6815 7.74661 13.3433L7.33635 9.24074C7.30253 8.90256 7.54927 8.60099 7.88745 8.56718Z" fill="currentColor"></path>
+                <path d="M12.1125 8.56718C12.4507 8.60099 12.6974 8.90256 12.6636 9.24074L12.2533 13.3433C12.2195 13.6815 11.9179 13.8606 11.5797 13.8944C11.2416 13.8606 10.9948 13.559 11.0287 13.2208L11.4389 9.11827C11.4727 8.78009 11.7743 8.53336 12.1125 8.56718Z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+        </sc-for>
+
+        <!-- Footer: + Dodaj robociznę | totals -->
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-left: 0px">
+          <button onClick="{{ addRobocizna }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            Dodaj robociznę
+          </button>
+          <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <span>Rabat: <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
+            </sc-if>
+            <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
+              <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
+            </sc-if>
+            <sc-if value="{{ showBrutto }}" hint-placeholder-val="{{ true }}">
+              <span>Suma brutto: <span style="font-weight:500;">{{ robBruttoDisplay }} zł</span></span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- Separator poziomy grey-4 między listą Robocizna i Towar -->
+      <div style="height: 1px; background-color: var(--grey-4); margin-top: 8px; margin-bottom: 8px"></div>
+
+      <!-- TOWAR LIST -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <sc-for list="{{ towars }}" as="row" hint-placeholder-count="1">
+          <div style="{{ towGridStyle }}">
+            <!-- Towar (nazwa — edytowalne, tri-state z DS) -->
+            <label class="z-input-cell z-tri-cell {{ row.nameCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div class="z-tri-body">
+                <div class="z-tri-label">Towar</div>
+                <input data-wyc-field="towar" class="z-input z-tri-value" type="text" value="{{ row.name }}" onChange="{{ row.setName }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Indeks -->
+            <label class="z-input-cell z-tri-cell {{ row.indeksCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div class="z-tri-body">
+                <div class="z-tri-label">Indeks</div>
+                <input class="z-input z-tri-value" type="text" value="{{ row.indeks }}" onChange="{{ row.setIndeks }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Producent -->
+            <label class="z-input-cell z-tri-cell {{ row.producentCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div class="z-tri-body">
+                <div class="z-tri-label">Producent</div>
+                <input class="z-input z-tri-value" type="text" value="{{ row.producent }}" onChange="{{ row.setProducent }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Jednostka select -->
+            <div style="position:relative;">
+              <div onClick="{{ row.toggleUnit }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.unitOpenStyle }}">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-1);">Jednostka</div>
+                  <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-1);">{{ row.unit }}</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;width:36px;color:var(--grey-2);flex-shrink:0;transform: {{ row.unitChevronRotation }} ;transition:transform 160ms var(--ease-standard);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <sc-if value="{{ row.unitOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--grey-4);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:25;">
+                  <sc-for list="{{ row.unitOptions }}" as="opt" hint-placeholder-count="3">
+                    <div onClick="{{ opt.select }}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:15px;line-height:22px;color:var(--grey-1);cursor:pointer;background: {{ opt.selectedBg }} ;" style-hover="background:var(--grey-6);">
+                      {{ opt.value }}
+                      <sc-if value="{{ opt.isSelected }}" hint-placeholder-val="{{ false }}">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--zilo-blue-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <!-- Ilość (edytowalne) -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Ilość</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Cena netto (edytowalne) -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Cena zakupu — informacyjna, nieedytowalna -->
+            <div style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--grey-6);border:1px solid var(--grey-4);border-radius:10px;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.kosztLabel }}</div>
+                <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-3);">{{ row.kosztValue }}</div>
+              </div>
+            </div>
+            <!-- Grupa cenowa -->
+            <div style="position:relative;">
+              <div onClick="{{ row.toggleGrupa }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.grupaOpenStyle }}">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Grupa cenowa</div>
+                  <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ row.grupa }}</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;width:36px;color:var(--grey-2);flex-shrink:0;transform: {{ row.grupaChevronRotation }} ;transition:transform 160ms var(--ease-standard);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <sc-if value="{{ row.grupaOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:320px;background:#fff;border:1px solid var(--grey-4);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:26;">
+                  <sc-for list="{{ row.grupaOptions }}" as="opt" hint-placeholder-count="4">
+                    <div onClick="{{ opt.select }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:15px;line-height:22px;color:var(--grey-1);cursor:pointer;background: {{ opt.selectedBg }} ;" style-hover="background:var(--grey-6);">
+                      {{ opt.label }}
+                      <sc-if value="{{ opt.isSelected }}" hint-placeholder-val="{{ false }}">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--zilo-blue-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <!-- Rabat (%) — edytowalne, widoczne gdy pole aktywne -->
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Rabat (%)</div>
+                  <input class="z-input" type="text" inputMode="decimal" value="{{ row.rabat }}" onChange="{{ row.setRabat }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                </div>
+              </label>
+            </sc-if>
+            <!-- Wartość pozycji — netto albo brutto, zależnie od przełącznika -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.sumaLabel }}</div>
+                <input data-wyc-field="towarBrutto" class="z-input" type="text" inputMode="decimal" value="{{ row.sumaValue }}" onChange="{{ row.setSumaInput }}" onBlur="{{ row.commitSuma }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- trash -->
+            <button aria-label="Usuń towar" onClick="{{ row.remove }}" style="width:30px;height:30px;border:0;background:transparent;color:var(--grey-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6127 2.00002H11.3872C11.5648 1.9999 11.7194 1.9998 11.8655 2.02313C12.4426 2.11528 12.9419 2.4752 13.2118 2.99351C13.2802 3.1247 13.329 3.27147 13.385 3.43995L13.4766 3.71474C13.4921 3.76125 13.4965 3.77442 13.5003 3.78479C13.644 4.18201 14.0165 4.45053 14.4388 4.46124C14.4499 4.46152 14.4635 4.46157 14.5128 4.46157H16.9743C17.3142 4.46157 17.5897 4.73708 17.5897 5.07695C17.5897 5.41682 17.3142 5.69233 16.9743 5.69233H3.02554C2.68567 5.69233 2.41016 5.41682 2.41016 5.07695C2.41016 4.73708 2.68567 4.46157 3.02554 4.46157H5.48714C5.53641 4.46157 5.55001 4.46152 5.56111 4.46124C5.98339 4.45053 6.35592 4.18203 6.4996 3.78481C6.50338 3.77437 6.50773 3.76148 6.52331 3.71474L6.61488 3.43997C6.67092 3.2715 6.71975 3.1247 6.78806 2.99351C7.05797 2.4752 7.55733 2.11528 8.13439 2.02313C8.28046 1.9998 8.43514 1.9999 8.6127 2.00002ZM7.54504 4.46157C7.5873 4.37867 7.62476 4.29254 7.65698 4.20347C7.66676 4.17642 7.67636 4.14762 7.68869 4.11063L7.77058 3.86496C7.84538 3.64054 7.86261 3.59477 7.87969 3.56196C7.96966 3.38919 8.13611 3.26921 8.32847 3.2385C8.365 3.23266 8.41386 3.2308 8.65043 3.2308H11.3495C11.586 3.2308 11.6349 3.23266 11.6714 3.2385C11.8638 3.26921 12.0302 3.38919 12.1202 3.56196C12.1373 3.59477 12.1545 3.64053 12.2293 3.86496L12.3112 4.11048L12.3429 4.20348C12.3752 4.29255 12.4126 4.37868 12.4549 4.46157H7.54504Z" fill="currentColor"></path>
+                <path d="M5.00715 7.08729C4.98454 6.74818 4.69131 6.4916 4.35219 6.51421C4.01308 6.53681 3.7565 6.83005 3.77911 7.16916L4.15937 12.8731C4.22952 13.9256 4.28619 14.7758 4.41909 15.4429C4.55726 16.1365 4.79227 16.7159 5.27768 17.17C5.76309 17.6241 6.35677 17.8201 7.05802 17.9118C7.7325 18 8.58454 18 9.63935 18H10.3605C11.4153 18 12.2674 18 12.9419 17.9118C13.6431 17.8201 14.2368 17.6241 14.7222 17.17C15.2076 16.7159 15.4426 16.1365 15.5808 15.4429C15.7137 14.7758 15.7704 13.9256 15.8405 12.8732L16.2208 7.16916C16.2434 6.83005 15.9868 6.53681 15.6477 6.51421C15.3086 6.4916 15.0154 6.74818 14.9928 7.08729L14.6154 12.7481C14.5416 13.854 14.4891 14.6235 14.3738 15.2025C14.2619 15.7641 14.1057 16.0613 13.8814 16.2712C13.657 16.4811 13.35 16.6172 12.7823 16.6914C12.1969 16.768 11.4256 16.7692 10.3172 16.7692H9.68268C8.5743 16.7692 7.80301 16.768 7.21766 16.6914C6.64986 16.6172 6.34286 16.4811 6.11852 16.2712C5.89418 16.0613 5.73801 15.7641 5.62614 15.2025C5.5108 14.6235 5.45826 13.854 5.38453 12.7481L5.00715 7.08729Z" fill="currentColor"></path>
+                <path d="M7.88745 8.56718C8.22563 8.53336 8.52719 8.78009 8.56101 9.11827L8.97127 13.2208C9.00509 13.559 8.75835 13.8606 8.42017 13.8944C8.08199 13.9282 7.78043 13.6815 7.74661 13.3433L7.33635 9.24074C7.30253 8.90256 7.54927 8.60099 7.88745 8.56718Z" fill="currentColor"></path>
+                <path d="M12.1125 8.56718C12.4507 8.60099 12.6974 8.90256 12.6636 9.24074L12.2533 13.3433C12.2195 13.6815 11.9179 13.8606 11.5797 13.8944C11.2416 13.8606 10.9948 13.559 11.0287 13.2208L11.4389 9.11827C11.4727 8.78009 11.7743 8.53336 12.1125 8.56718Z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+        </sc-for>
+
+        <!-- Footer: + Dodaj towar | totals -->
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-left: 0px">
+          <div style="display:flex;align-items:center;gap:16px;flex:none">
+          <button onClick="{{ addTowar }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            Dodaj towar
+          </button>
+          <button onClick="{{ openDocPicker }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; margin-left: -8px" style-hover="background:var(--zilo-primary-5);">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            Przepisz towar z dokumentu
+          </button>
+          </div>
+          <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <span>Rabat: <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
+            </sc-if>
+            <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
+              <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
+            </sc-if>
+            <sc-if value="{{ showBrutto }}" hint-placeholder-val="{{ true }}">
+              <span>Suma brutto: <span style="font-weight:500;">{{ towBruttoDisplay }} zł</span></span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── BOTTOM: notes + summary ─────────────────────────── -->
+    <section style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,0.85fr); gap: 12px; align-items: stretch; margin-top: 10px">
+
+      <!-- Notatka wewnętrzna -->
+      <div style="display: flex; flex-direction: column; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: #979DB0">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; padding-left: 14px; padding-right: 14px">
+          <button aria-label="Pogrubienie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">B</button>
+          <button aria-label="Kursywa" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">I</button>
+          <button aria-label="Podkreślenie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">U</button>
+          <button aria-label="Lista" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <textarea class="z-input" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" value="{{ notatka }}" onChange="{{ setNotatka }}" style="flex:1;padding:16px;font-family:var(--font-sans);font-size:16px;line-height:22px;color:var(--grey-1);background:transparent;border:0;outline:0;width:100%;box-sizing:border-box;resize:none;"></textarea>
+      </div>
+
+      <!-- Komentarz dla klienta -->
+      <div style="display: flex; flex-direction: column; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: #979DB0">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; border-color: #DCE0E6">
+          <button aria-label="Pogrubienie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">B</button>
+          <button aria-label="Kursywa" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">I</button>
+          <button aria-label="Podkreślenie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">U</button>
+          <button aria-label="Lista" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <textarea class="z-input" placeholder="Komentarz dla klienta" value="{{ komentarz }}" onChange="{{ setKomentarz }}" style="flex:1;padding:16px;font-family:var(--font-sans);font-size:16px;line-height:22px;color:var(--grey-1);background:transparent;border:0;outline:0;width:100%;box-sizing:border-box;resize:none;"></textarea>
+      </div>
+
+      <!-- Summary card -->
+      <div style="background: var(--grey-6); border-radius: 10px; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; justify-content: center; border-width: 1px; border-style: solid; border-color: #DCE0E6">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
+          <span style="color:var(--grey-1);">Suma netto:</span>
+          <span style="color:var(--grey-1);font-weight:400;">{{ totalNettoDisplay }} zł</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
+          <span style="color:var(--grey-1);">Suma VAT:</span>
+          <span style="color:var(--grey-1);font-weight:400;">{{ totalVatDisplay }} zł</span>
+        </div>
+
+        <!-- Rabat globalny (suma rabatów z wszystkich grup) -->
+        <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
+            <span style="color:var(--grey-1);">Rabat:</span>
+            <span style="color:var(--grey-1);font-weight:400;">{{ totalRabatDisplay }} zł</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:26px;padding-top:4px;">
+          <span style="color: var(--zilo-blue-1); font-weight: 500">Suma brutto:</span>
+          <span style="color: var(--zilo-blue-1); font-weight: 500">{{ totalBruttoDisplay }} zł</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{ docPicker.open }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(10,11,41,0.35);">
+      <div onClick="{{ closeDocPicker }}" style="position:absolute;inset:0;"></div>
+      <div style="position:relative;width:100%;max-width:1000px;height:100%;max-height:760px;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(10,11,41,0.24);display:flex;flex-direction:column;overflow:hidden;">
+        <div style="flex:none;display:flex;align-items:center;gap:16px;padding:24px 30px 20px;border-bottom:1px solid var(--grey-5);">
+          <div style="flex:1;min-width:0;display:flex;align-items:center;">
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">Przepisz towar z dokumentu</span>
+          </div>
+          <button type="button" onClick="{{ closeDocPicker }}" title="Zamknij" style="width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);">
+            <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><path d="M2 2 L10 10 M10 2 L2 10"></path></svg>
+          </button>
+        </div>
+
+        <div style="flex:none;padding:16px 30px 0;">
+          <label style="display:flex;align-items:stretch;height:56px;width:100%;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+            <span style="display:flex;align-items:center;padding-left:13px;flex:none;color:var(--grey-2);">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="6.25" stroke="currentColor" stroke-width="1.5"></circle><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+            </span>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+              <input class="z-input" type="text" placeholder="Szukaj — nazwa, indeks, producent, numer dokumentu" value="{{ docPicker.query }}" onInput="{{ setDocQuery }}">
+            </span>
+          </label>
+        </div>
+
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 30px 24px;display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ docPicker.docs }}" as="doc" hint-placeholder-count="3">
+            <div style="flex:none;border:1px solid var(--grey-5);border-radius:12px;background:#fff;overflow:hidden;">
+              <div onClick="{{ doc.toggle }}" style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:var(--grey-7);" style-hover="background:var(--grey-6);">
+                <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ doc.chevron }} ;transition:transform 160ms var(--ease-standard);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </span>
+                <span style="font-size:16px;line-height:22px;font-weight:600;color:var(--grey-1);white-space:nowrap;">{{ doc.nr }}</span>
+                <span style="font-size:15px;line-height:22px;color:var(--grey-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ doc.supplier }} · {{ doc.date }}</span>
+                <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ doc.count }}</span>
+              </div>
+              <sc-if value="{{ doc.open }}" hint-placeholder-val="{{ true }}">
+                <div style="border-top:1px solid var(--grey-5);">
+                  <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 140px 130px;gap:12px;padding:10px 20px;background:#fff;border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
+                    <span onClick="{{ doc.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ doc.allBorder }};border-radius:4px;background: {{ doc.allBg }} ;display:grid;place-items:center;cursor:pointer;">
+                      <sc-if value="{{ doc.someChecked }}" hint-placeholder-val="{{ false }}">
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ doc.allIconPath }}" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </sc-if>
+                    </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Sug. cena prod.</span><span style="text-align:right;">Wartość brutto</span>
+                  </div>
+                  <sc-for list="{{ doc.items }}" as="it" hint-placeholder-count="3">
+                    <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 140px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
+                      <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ it.boxBorder }};border-radius:4px;background: {{ it.boxBg }} ;display:grid;place-items:center;">
+                        <sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}">
+                          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </sc-if>
+                      </span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.name }}</span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.indeks }}</span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.producent }}</span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
+                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.brutto }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ docPicker.empty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:48px 16px;text-align:center;font-size:16px;line-height:22px;color:var(--grey-2);">Brak towarów dla tej frazy.</div>
+          </sc-if>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:center;gap:8px;padding:16px 30px;border-top:1px solid var(--grey-5);">
+          <span style="flex:1;min-width:0;display:inline-flex;align-items:center;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
+            {{ docPicker.countLabel }}
+            <sc-if value="{{ docPicker.hasPicked }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ clearDocPicked }}" title="Odznacz wszystkie" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:var(--zilo-primary-5);color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);">
+                <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><path d="M2 2 L10 10 M10 2 L2 10"></path></svg>
+              </button>
+            </sc-if>
+          </span>
+          <button type="button" onClick="{{ addFromDocs }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:#fff;font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor: {{ docPicker.ctaCursor }} ;opacity: {{ docPicker.ctaOpacity }} ;pointer-events: {{ docPicker.ctaEvents }} ;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-hover, #1C2082);" style-active="background:var(--zilo-primary-press, #161A6E);">Dodaj do wyceny</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+  static mkRobocizna(id) {
+    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', rabat: '0', unit: 'Sztuka', vat: '23', bruttoEditing: null, openField: null };
+  }
+  static rawGroups() {
+    let list = null;
+    try {
+      const m = (location.hash || '').match(/[#&]groups=([^&]*)/);
+      if (m) list = JSON.parse(decodeURIComponent(m[1]));
+    } catch (e) { list = null; }
+    if (!Array.isArray(list) || !list.length) {
+      list = [
+        { name: 'Klient detaliczny', pct: 45 },
+        { name: 'Flota', pct: 35 },
+        { name: 'Cennik producenta', pct: 0, mode: 'msrp' },
+      ];
+    }
+    return list;
+  }
+
+  static priceGroups() {
+    let list = null;
+    try {
+      const m = (location.hash || '').match(/[#&]groups=([^&]*)/);
+      if (m) list = JSON.parse(decodeURIComponent(m[1]));
+    } catch (e) { list = null; }
+    if (!Array.isArray(list) || !list.length) {
+      list = [
+        { name: 'Klient detaliczny', pct: 45 },
+        { name: 'Flota', pct: 35 },
+        { name: 'Cennik producenta', pct: 0, mode: 'msrp' },
+      ];
+    }
+    return [{ value: '', label: '— brak —' }].concat(list.map((g) => ({
+      value: g.name,
+      label: g.mode === 'msrp' ? g.name + ' — sug. cena prod.' : g.name + ' +' + (g.pct || 0) + ' %',
+    })));
+  }
+
+  static docSource() {
+    let list = null;
+    try {
+      const m = (location.hash || '').match(/[#&]docs=([^&]*)/);
+      if (m) list = JSON.parse(decodeURIComponent(m[1]));
+    } catch (e) { list = null; }
+    if (!Array.isArray(list) || !list.length) {
+      list = [
+        { nr: 'ZM/2026/0213', supplier: 'Inter Cars', date: '12.08.2026', items: [
+          { name: 'Klocki hamulcowe przód', indeks: 'GDB1330', producent: 'TRW', cena: '184,00', vat: '23', msrp: '289,00' },
+          { name: 'Tarcze hamulcowe przód', indeks: '24.0122-0187.1', producent: 'ATE', cena: '146,00', vat: '23', msrp: '219,00' },
+          { name: 'Filtr oleju', indeks: 'HU 719/7 x', producent: 'MANN', cena: '38,00', vat: '23', msrp: '' },
+          { name: 'Olej silnikowy 5W30 5L', indeks: 'EDGE 5W30 LL', producent: 'Castrol', cena: '248,00', vat: '23', msrp: '379,00' },
+        ] },
+        { nr: 'ZM/2026/0212', supplier: 'Auto Partner', date: '08.08.2026', items: [
+          { name: 'Filtr powietrza', indeks: 'C 30 130', producent: 'MANN', cena: '52,00', vat: '23', msrp: '' },
+          { name: 'Świece zapłonowe (zestaw 4)', indeks: 'ZKR7A-10', producent: 'NGK', cena: '84,00', vat: '23', msrp: '129,00' },
+        ] },
+        { nr: 'ZM/2026/0211', supplier: 'Inter Cars', date: '01.08.2026', items: [
+          { name: 'Pasek rozrządu — zestaw', indeks: 'KP15607XS', producent: 'Gates', cena: '412,00', vat: '23', msrp: '' },
+          { name: 'Pompa wody', indeks: 'VKPC 81416', producent: 'SKF', cena: '189,00', vat: '23', msrp: '249,00' },
+        ] },
+      ];
+    }
+    return list;
+  }
+
+  static defaultGroup() {
+    const list = Component.priceGroups().filter((g) => g.value);
+    return list[0] || null;
+  }
+
+  static groupPct(name) {
+    const raw = Component.rawGroups().filter((g) => g.name === name)[0];
+    return raw ? (Number(raw.pct) || 0) : 0;
+  }
+
+  static priceFromCost(koszt, grupa) {
+    const base = Component.parseNum(koszt);
+    return Component.fmt(base * (1 + Component.groupPct(grupa) / 100));
+  }
+
+  static normalizeTowar(r) {
+    const out = Object.assign({}, r);
+    const def = Component.defaultGroup();
+    if (!out.grupa && def) out.grupa = def.value;
+    const pct = Component.groupPct(out.grupa);
+    let kosztNet = Component.parseNum(out.koszt);
+    // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży i narzutu grupy,
+    // żeby „Cena zakupu brutto", grupa cenowa i cena netto były spójne.
+    if (!(kosztNet > 0)) {
+      kosztNet = Component.parseNum(out.cena) / (1 + pct / 100);
+      out.koszt = Component.fmt(kosztNet);
+    }
+    if (out.kosztBrutto == null || Component.parseNum(out.kosztBrutto) === 0) {
+      out.kosztBrutto = Component.fmt(kosztNet * (1 + Component.parseNum(out.vat || '23') / 100));
+    }
+    return out;
+  }
+
+  static mkTowar(id) {
+    const def = Component.defaultGroup();
+    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', koszt: '0,00', kosztBrutto: '0,00', rabat: '0', unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, openField: null };
+  }
+  static parseNum(v) {
+    if (v == null || v === '') return 0;
+    const n = parseFloat(String(v).replace(/\s/g, '').replace(',', '.'));
+    return isNaN(n) ? 0 : n;
+  }
+  static fmt(n) { return (Math.round(n * 100) / 100).toFixed(2).replace('.', ','); }
+  static computeRow(r, showRabat) {
+    const q = Component.parseNum(r.qty);
+    const c = Component.parseNum(r.cena);
+    const rb = showRabat ? Component.parseNum(r.rabat) : 0;
+    const v = Component.parseNum(r.vat);
+    const gross = q * c;
+    const rabatAmt = gross * (rb / 100);
+    const netto = gross - rabatAmt;
+    const vatAmt = netto * (v / 100);
+    const brutto = netto + vatAmt;
+    return { netto, brutto, rabatAmt, vatAmt };
+  }
+  static __initState(def){
+    var base = def;
+    try {
+      var h = location.hash || '';
+      var m = h.match(/state=([^&]+)/);
+      if (m) { var s = JSON.parse(decodeURIComponent(m[1])); if (s && typeof s === 'object') base = s; }
+      base.mode = /(?:^|[#&])preview=1(?:&|$)/.test(h) ? 'preview' : 'normal';
+    } catch (e) {}
+    try {
+      // Stan z #state= (i z zapisu konfiguratora) może nie mieć id wierszy — bez nich
+      // _patchRow dopasowuje po undefined i edytuje wszystkie wiersze naraz.
+      let seq = 0;
+      const withId = (r) => {
+        const out = (r && r.id != null) ? r : Object.assign({}, r, { id: 'h' + (seq += 1) });
+        if (out.id != null && typeof out.id === 'number') seq = Math.max(seq, out.id);
+        return out;
+      };
+      // Zakładka Wyceny trzyma przypisanie w polu `person`, konfigurator czyta `osoba` —
+      // normalizujemy w obie strony, żeby round-trip nie gubił osoby.
+      const withOsoba = (r) => {
+        const out = withId(r);
+        const who = out.osoba || out.person || '';
+        return Object.assign({}, out, { osoba: who, person: who });
+      };
+      if (Array.isArray(base.robociznas)) base.robociznas = base.robociznas.map(withOsoba);
+      if (Array.isArray(base.towars)) base.towars = base.towars.map((r) => Component.normalizeTowar(withId(r)));
+      if (Array.isArray(base.groups)) {
+        base.groups = base.groups.map((g) => Object.assign({}, g, {
+          robocizna: g.robocizna ? withOsoba(g.robocizna) : g.robocizna,
+          towars: Array.isArray(g.towars) ? g.towars.map((r) => Component.normalizeTowar(withId(r))) : g.towars,
+        }));
+      }
+      base.nextRobociznaId = Math.max(Number(base.nextRobociznaId) || 1, seq + 1);
+      base.nextTowarId = Math.max(Number(base.nextTowarId) || 1, seq + 1);
+    } catch (e) {}
+    return base;
+  }
+  state = Component.__initState({
+    robociznas: [Component.mkRobocizna(1)],
+    towars: [Component.mkTowar(1)],
+    nextRobociznaId: 2,
+    nextTowarId: 2,
+    extraFields: [],
+    valueMode: 'netto',
+    showFieldMenu: false,
+    notatka: '',
+    komentarz: '',
+    docPickerOpen: false,
+    docQuery: '',
+    docOpenMap: null,
+    docPicked: [],
+  });
+
+  static FIELD_CATALOG = {
+    rabat: { menuLabel: 'Rabat (%)' },
+  };
+
+  static ROBOCIZNA_UNITS = ['Sztuka', 'Godzina'];
+  static TOWAR_UNITS     = ['Sztuka', 'Gramy', 'Litry'];
+  static VAT_OPTIONS     = ['0', '5', '8', '23'];
+  static OSOBA_OPTIONS   = [
+    'Aleksander Kowalski',
+    'Andrzej Kowalski',
+    'Paweł Nowak',
+    'Filip Domański',
+    'Aleksander Wójcik',
+  ];
+  // Model rozliczenia pracownika (cecha pracownika). Godzinowy → domyślna jednostka „Godzina".
+
+  // Drag&drop state — trzymamy poza React state, żeby nie triggerować re-renderów w trakcie dragowania
+  _draggingRow = null;
+  _startDrag(collection, id) {
+    return (e) => {
+      this._draggingRow = { collection, id };
+      if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+    };
+  }
+  _allowDrop(collection) {
+    return (e) => {
+      if (this._draggingRow && this._draggingRow.collection === collection) e.preventDefault();
+    };
+  }
+  _handleDrop(collection, targetId) {
+    return (e) => {
+      if (!this._draggingRow || this._draggingRow.collection !== collection) return;
+      e.preventDefault();
+      const srcId = this._draggingRow.id;
+      this._draggingRow = null;
+      if (srcId === targetId) return;
+      this.setState((s) => {
+        const list = [...s[collection]];
+        const src = list.findIndex((x) => x.id === srcId);
+        const dst = list.findIndex((x) => x.id === targetId);
+        if (src < 0 || dst < 0) return null;
+        const [item] = list.splice(src, 1);
+        list.splice(dst, 0, item);
+        return { [collection]: list };
+      });
+    };
+  }
+  _patchRow(collection, id, patch) {
+    this.setState((s) => ({
+      [collection]: s[collection].map((x) =>
+        x.id === id ? (typeof patch === 'function' ? patch(x) : { ...x, ...patch }) : x
+      ),
+    }));
+  }
+
+  _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat) {
+    const openField = r.openField;
+
+    const unitOpen  = openField === 'unit';
+    const vatOpen   = openField === 'vat';
+    const osobaOpen = openField === 'osoba';
+
+    const chev = (open) => (open ? 'rotate(180deg)' : 'rotate(0deg)');
+    const obord = (open) => (open ? 'border-color:var(--zilo-blue-1);box-shadow:inset 0 0 0 1px var(--zilo-blue-1);' : '');
+    const bg   = (isSel) => (isSel ? 'var(--zilo-blue-5)' : 'transparent');
+
+    const setField = (field) => this._patchRow(collection, r.id, (x) => ({
+      ...x,
+      openField: x.openField === field ? null : field,
+    }));
+
+    // Setter for a scalar field on this row
+    const set = (field) => (e) => this._patchRow(collection, r.id, { [field]: e.target.value });
+
+    // Compute & brutto commit (back-calc cena from brutto)
+    const cmp = Component.computeRow(r, showRabat);
+    const isBrutto = this.state.valueMode === 'brutto';
+    const vRate = 1 + Component.parseNum(r.vat) / 100;
+    const commitNetto = () => this._patchRow(collection, r.id, (x) => {
+      if (x.nettoEditing == null) return x;
+      const netto = Component.parseNum(x.nettoEditing);
+      const q = Component.parseNum(x.qty) || 1;
+      const rb = showRabat ? Component.parseNum(x.rabat) : 0;
+      const gross = rb === 100 ? netto : netto / (1 - rb / 100);
+      return { ...x, cena: Component.fmt(gross / q), nettoEditing: null };
+    });
+    const commitBrutto = () => this._patchRow(collection, r.id, (x) => {
+      if (x.bruttoEditing == null) return x;
+      const b = Component.parseNum(x.bruttoEditing);
+      const q = Component.parseNum(x.qty) || 1;
+      const rb = showRabat ? Component.parseNum(x.rabat) : 0;
+      const v = Component.parseNum(x.vat);
+      const netto = b / (1 + v / 100);
+      const gross = rb === 100 ? netto : netto / (1 - rb / 100);
+      const cena = gross / q;
+      return { ...x, cena: Component.fmt(cena), bruttoEditing: null };
+    });
+
+    const row = {
+      id: r.id,
+
+      // Edytowalne pola
+      name: r.name || '',
+      indeks: r.indeks || '',
+      producent: r.producent || '',
+      czas: r.czas != null ? r.czas : '0',
+      koszt: r.koszt != null ? r.koszt : '0,00',
+      kosztBrutto: (r.kosztBrutto != null ? r.kosztBrutto : '0,00') + ' zł',
+      qty: r.qty,
+      cena: r.cena,
+      rabat: r.rabat,
+      setName:   set('name'),
+      setIndeks: set('indeks'),
+      setProducent: set('producent'),
+      setCzas: set('czas'),
+      setKoszt: set('koszt'),
+      setQty:    set('qty'),
+      setCena:   set('cena'),
+      setRabat:  set('rabat'),
+      setBruttoInput: set('bruttoEditing'),
+      commitBrutto,
+
+      // Przełącznik Netto / Brutto — jedna komórka ceny, zakupu i wartości
+      cenaLabel: isBrutto ? 'Cena brutto' : 'Cena netto',
+      cenaValue: isBrutto ? Component.fmt(Component.parseNum(r.cena) * vRate) : r.cena,
+      setCenaValue: isBrutto
+        ? (e) => this._patchRow(collection, r.id, { cena: Component.fmt(Component.parseNum(e.target.value) / vRate) })
+        : set('cena'),
+      kosztLabel: isBrutto ? 'Cena zakupu brutto' : 'Cena zakupu netto',
+      kosztValue: (isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00')) + ' zł',
+      sumaLabel: collection === 'robociznas'
+        ? (isBrutto ? 'Suma brutto (zł)' : 'Suma netto (zł)')
+        : (isBrutto ? 'Wartość brutto' : 'Wartość netto'),
+      setSumaInput: isBrutto ? set('bruttoEditing') : set('nettoEditing'),
+      commitSuma: isBrutto ? commitBrutto : commitNetto,
+
+      // Wyliczone
+      nettoDisplay:  Component.fmt(cmp.netto),
+      bruttoDisplay: Component.fmt(cmp.brutto),
+      bruttoValue:   r.bruttoEditing != null ? r.bruttoEditing : Component.fmt(cmp.brutto),
+      sumaValue: isBrutto
+        ? (r.bruttoEditing != null ? r.bruttoEditing : Component.fmt(cmp.brutto))
+        : (r.nettoEditing != null ? r.nettoEditing : Component.fmt(cmp.netto)),
+      netto:  cmp.netto,
+      brutto: cmp.brutto,
+      vatAmt: cmp.vatAmt,
+      rabatAmt: cmp.rabatAmt,
+
+      // Klasy dla tri-state (default / filled)
+      nameCellClass:   r.name   ? 'is-filled' : '',
+      czasCellClass:   (r.czas != null && String(r.czas).trim() !== '' && Component.parseNum(r.czas) > 0) ? 'is-filled' : '',
+      indeksCellClass: r.indeks ? 'is-filled' : '',
+      producentCellClass: r.producent ? 'is-filled' : '',
+
+      unit: r.unit,
+      unitOpen,
+      unitChevronRotation: chev(unitOpen),
+      unitOpenStyle: obord(unitOpen),
+      toggleUnit: () => setField('unit'),
+      unitOptions: unitList.map((u) => ({
+        value: u,
+        isSelected: r.unit === u,
+        selectedBg: bg(r.unit === u),
+        select: () => this._patchRow(collection, r.id, { unit: u, openField: null, unitManual: true }),
+      })),
+
+      grupa: r.grupa || '— brak —',
+      grupaOpen: openField === 'grupa',
+      grupaChevronRotation: chev(openField === 'grupa'),
+      grupaOpenStyle: obord(openField === 'grupa'),
+      toggleGrupa: () => setField('grupa'),
+      grupaOptions: Component.priceGroups().map((g) => ({
+        label: g.label,
+        isSelected: (r.grupa || '') === g.value,
+        selectedBg: bg((r.grupa || '') === g.value),
+        select: () => this._patchRow(collection, r.id, { grupa: g.value, openField: null, cena: g.value ? Component.priceFromCost(r.koszt, g.value) : r.cena }),
+      })),
+
+      vat: r.vat,
+      vatOpen,
+      vatChevronRotation: chev(vatOpen),
+      vatOpenStyle: obord(vatOpen),
+      toggleVat: () => setField('vat'),
+      vatOptions: Component.VAT_OPTIONS.map((v) => ({
+        value: v,
+        label: v + '%',
+        isSelected: r.vat === v,
+        selectedBg: bg(r.vat === v),
+        select: () => this._patchRow(collection, r.id, { vat: v, openField: null }),
+      })),
+
+      trashColor: 'var(--grey-2)',
+
+      // Drag-and-drop reorder
+      onDragStart: this._startDrag(collection, r.id),
+      onDragOver:  this._allowDrop(collection),
+      onDrop:      this._handleDrop(collection, r.id),
+
+      remove: () => this.setState((s) => ({
+        [collection]: s[collection].length > 1
+          ? s[collection].filter((x) => x.id !== r.id)
+          : s[collection],
+      })),
+    };
+
+    if (includeOsoba) {
+      row.osoba = r.osoba;
+      row.osobaHasValue = !!r.osoba;
+      row.noOsoba = !r.osoba;
+      row.osobaOpen = osobaOpen;
+      row.osobaChevronRotation = chev(osobaOpen);
+      row.osobaOpenStyle = obord(osobaOpen);
+      row.toggleOsoba = () => setField('osoba');
+      row.osobaOptions = [
+        {
+          value: null,
+          label: '— wybierz —',
+          isSelected: false,
+          selectedBg: 'transparent',
+          textColor: 'var(--grey-3)',
+          select: () => this._patchRow(collection, r.id, { osoba: null, person: '', openField: null }),
+        },
+        ...Component.OSOBA_OPTIONS.map((name) => ({
+          value: name,
+          label: name,
+          isSelected: r.osoba === name,
+          selectedBg: bg(r.osoba === name),
+          textColor: 'var(--grey-1)',
+          select: () => this._patchRow(collection, r.id, { osoba: name, person: name, openField: null }),
+        })),
+      ];
+    }
+
+    return row;
+  }
+
+  _docPickerVals() {
+    const s = this.state;
+    const q = (s.docQuery || '').toLowerCase();
+    const source = Component.docSource();
+    const openMap = s.docOpenMap || (() => {
+      const m = {};
+      source.forEach((d, i) => { m[d.nr] = i < 1; });
+      return m;
+    })();
+    const picked = s.docPicked || [];
+    const money = (v) => Component.fmt(Component.parseNum(v));
+    const docs = [];
+    source.forEach((d) => {
+      const items = (d.items || []).map((it, i) => ({ it: it, key: d.nr + '#' + i }))
+        .filter(({ it }) => !q
+          || (it.name || '').toLowerCase().indexOf(q) !== -1
+          || (it.indeks || '').toLowerCase().indexOf(q) !== -1
+          || (it.producent || '').toLowerCase().indexOf(q) !== -1
+          || (d.nr || '').toLowerCase().indexOf(q) !== -1);
+      if (!items.length) return;
+      const isOpen = q ? true : !!openMap[d.nr];
+      const keys = items.map((x) => x.key);
+      const onCount = keys.filter((k) => picked.indexOf(k) !== -1).length;
+      const allOn = onCount > 0 && onCount === keys.length;
+      docs.push({
+        allBorder: onCount > 0 ? 'var(--zilo-primary)' : 'var(--grey-3)',
+        allBg: onCount > 0 ? 'var(--zilo-primary)' : '#fff',
+        someChecked: onCount > 0,
+        allIconPath: allOn ? 'M4 10.5l4 4L16 6' : 'M5 10H15',
+        toggleAll: (e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          this.setState((st) => {
+            const cur = st.docPicked || [];
+            const rest = cur.filter((k) => keys.indexOf(k) === -1);
+            return { docPicked: allOn ? rest : rest.concat(keys) };
+          });
+        },
+        nr: d.nr,
+        supplier: d.supplier,
+        date: d.date,
+        count: String(items.length),
+        open: isOpen,
+        chevron: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+        toggle: () => this.setState((st) => {
+          const cur = st.docOpenMap || (() => { const m = {}; source.forEach((x, i) => { m[x.nr] = i < 1; }); return m; })();
+          return { docOpenMap: Object.assign({}, cur, { [d.nr]: !cur[d.nr] }) };
+        }),
+        items: items.map(({ it, key }) => {
+          const on = picked.indexOf(key) !== -1;
+          const netto = Component.parseNum(it.cena);
+          return {
+            name: it.name,
+            indeks: it.indeks || '—',
+            producent: it.producent || '—',
+            netto: money(netto) + ' zł',
+            brutto: money(netto * (1 + Component.parseNum(it.vat || '23') / 100)) + ' zł',
+            msrp: it.msrp ? money(it.msrp) + ' zł' : '—',
+            checked: on,
+            bg: on ? 'var(--zilo-primary-5)' : '#fff',
+            boxBorder: on ? 'var(--zilo-primary)' : 'var(--grey-3)',
+            boxBg: on ? 'var(--zilo-primary)' : '#fff',
+            toggle: () => this.setState((st) => {
+              const cur = st.docPicked || [];
+              return { docPicked: cur.indexOf(key) !== -1 ? cur.filter((k) => k !== key) : cur.concat([key]) };
+            }),
+          };
+        }),
+      });
+    });
+    const n = picked.length;
+    return {
+      open: !!s.docPickerOpen,
+      query: s.docQuery || '',
+      docs: docs,
+      empty: docs.length === 0,
+      countLabel: n ? ('Zaznaczono: ' + n) : '',
+      hasPicked: n > 0,
+      ctaCursor: n ? 'pointer' : 'not-allowed',
+      ctaOpacity: n ? '1' : '0.5',
+      ctaEvents: n ? 'auto' : 'none',
+    };
+  }
+
+  renderVals() {
+    const activeSet = new Set(this.state.extraFields);
+    const showRabat = activeSet.has('rabat');
+
+    // Grid template dla wierszy — z / bez kolumny Rabat (%)
+    // [drag 16 | label 2fr | osoba/indeks 1.3fr | jednostka 1.15fr | ilość 92 | cena 1fr | vat 1fr | (rabat 92)? | suma/wartość netto 1fr | suma/wartość brutto 1fr | trash 30]
+    // Robocizna: name | osoba | jednostka | ilość | przeprac.czas | cena | vat | (rabat)? | wNetto | wBrutto | trash
+    const robGridStyle =
+      'display:grid;grid-template-columns:minmax(0,2.3fr) minmax(0,1.3fr) 168px 110px 80px minmax(0,1fr)' +
+      (showRabat ? ' 84px' : '') +
+      ' minmax(0,1fr) 30px;gap:8px;align-items:center;';
+    // Towar: name | indeks | producent | jednostka | ilość | cena | koszt | vat | (rabat)? | wNetto | wBrutto | trash
+    const towGridStyle =
+      'display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,0.9fr) 104px 72px minmax(0,0.95fr) minmax(0,1fr) minmax(0,1.15fr)' +
+      (showRabat ? ' 76px' : '') +
+      ' minmax(0,1fr) 30px;gap:8px;align-items:center;';
+
+    const robociznas = this.state.robociznas.map((r) =>
+      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat)
+    );
+    const towars = this.state.towars.map((r) =>
+      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat)
+    );
+    // Totals per-list + global
+    const sumBy = (list, key) => list.reduce((s, x) => s + x[key], 0);
+    const robNetto  = sumBy(robociznas, 'netto');
+    const robBrutto = sumBy(robociznas, 'brutto');
+    const robVat    = sumBy(robociznas, 'vatAmt');
+    const robRabat  = sumBy(robociznas, 'rabatAmt');
+    const towNetto  = sumBy(towars, 'netto');
+    const towBrutto = sumBy(towars, 'brutto');
+    const towVat    = sumBy(towars, 'vatAmt');
+    const towRabat  = sumBy(towars, 'rabatAmt');
+
+    // Dodatkowe pola menu
+    const catalog = Component.FIELD_CATALOG;
+    const allFields = Object.keys(catalog).map((k) => {
+      const isActive = activeSet.has(k);
+      return {
+        key: k,
+        label: catalog[k].menuLabel,
+        isActive,
+        checkBg: isActive ? 'var(--zilo-primary)' : '#fff',
+        checkBorder: isActive ? 'var(--zilo-primary)' : 'var(--grey-3)',
+        toggle: () => this.setState((s) => ({
+          extraFields: s.extraFields.includes(k)
+            ? s.extraFields.filter((x) => x !== k)
+            : [...s.extraFields, k],
+        })),
+      };
+    });
+
+    try { window.__wycData = robociznas.map(function (r) { return { name: r.name, person: r.osoba, brutto: r.bruttoDisplay }; }); } catch (e) {}
+    try { window.__wycState = this.state; } catch (e) {}
+    return {
+      robociznas,
+      towars,
+      rootClass: this.state.mode === 'preview' ? 'z-preview' : '',
+      robGridStyle,
+      towGridStyle,
+      showRabat,
+      allFields,
+      showNetto: this.state.valueMode !== 'brutto',
+      showBrutto: this.state.valueMode === 'brutto',
+      segNetto: this.state.valueMode !== 'brutto' ? 'true' : 'false',
+      segBrutto: this.state.valueMode === 'brutto' ? 'true' : 'false',
+      pickNetto: () => this.setState({ valueMode: 'netto' }),
+      pickBrutto: () => this.setState({ valueMode: 'brutto' }),
+      showFieldMenu: this.state.showFieldMenu,
+      toggleFieldMenu: () => this.setState((s) => ({ showFieldMenu: !s.showFieldMenu })),
+
+      // Textareas
+      notatka: this.state.notatka,
+      komentarz: this.state.komentarz,
+      setNotatka:   (e) => this.setState({ notatka: e.target.value }),
+      setKomentarz: (e) => this.setState({ komentarz: e.target.value }),
+
+      // Utility helpers
+      selectOnFocus:  (e) => e.target.select && e.target.select(),
+      commitOnEnter:  (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
+
+      // Totals — per lista i globalnie
+      robNettoDisplay:   Component.fmt(robNetto),
+      robBruttoDisplay:  Component.fmt(robBrutto),
+      robVatDisplay:     Component.fmt(robVat),
+      robRabatDisplay:   Component.fmt(robRabat),
+      towNettoDisplay:   Component.fmt(towNetto),
+      towBruttoDisplay:  Component.fmt(towBrutto),
+      towVatDisplay:     Component.fmt(towVat),
+      towRabatDisplay:   Component.fmt(towRabat),
+      totalNettoDisplay:  Component.fmt(robNetto  + towNetto),
+      totalBruttoDisplay: Component.fmt(robBrutto + towBrutto),
+      totalVatDisplay:    Component.fmt(robVat    + towVat),
+      totalRabatDisplay:  Component.fmt(robRabat  + towRabat),
+
+      addRobocizna: () => this.setState((s) => ({
+        robociznas: [...s.robociznas, Component.mkRobocizna(s.nextRobociznaId)],
+        nextRobociznaId: s.nextRobociznaId + 1,
+      })),
+
+      addTowar: () => this.setState((s) => ({
+        towars: [...s.towars, Component.mkTowar(s.nextTowarId)],
+        nextTowarId: s.nextTowarId + 1,
+      })),
+
+      openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null }),
+      closeDocPicker: () => this.setState({ docPickerOpen: false, docPicked: [] }),
+      clearDocPicked: () => this.setState({ docPicked: [] }),
+      setDocQuery: (e) => this.setState({ docQuery: e.target.value }),
+      docPicker: this._docPickerVals(),
+      addFromDocs: () => {
+        const picked = this.state.docPicked || [];
+        if (!picked.length) return;
+        const flat = [];
+        Component.docSource().forEach((d) => (d.items || []).forEach((it, i) => flat.push({ key: d.nr + '#' + i, doc: d, it: it })));
+        const rows = picked.map((key) => flat.filter((x) => x.key === key)[0]).filter(Boolean);
+        this.setState((s) => {
+          let nextId = s.nextTowarId;
+          const fresh = rows.map(({ doc, it }) => {
+            const row = Component.mkTowar(nextId);
+            nextId += 1;
+            const def = Component.defaultGroup();
+            const grupa = def ? def.value : '';
+            const vat = it.vat || '23';
+            const kosztNet = Component.parseNum(it.cena);
+            return Object.assign(row, {
+              name: it.name || '',
+              indeks: it.indeks || '',
+              producent: it.producent || '',
+              koszt: it.cena || '0,00',
+              kosztBrutto: Component.fmt(kosztNet * (1 + Component.parseNum(vat) / 100)),
+              grupa: grupa,
+              cena: grupa ? Component.priceFromCost(it.cena, grupa) : (it.cena || '0,00'),
+              vat: vat,
+              msrp: it.msrp || '',
+              doc: doc.nr,
+            });
+          });
+          const base = s.towars.filter((t) => (t.name || '').trim() || (t.indeks || '').trim());
+          return {
+            towars: base.concat(fresh),
+            nextTowarId: nextId,
+            docPickerOpen: false,
+            docPicked: [],
+          };
+        });
+      },
+    };
+  }
+}
+</script>
+<script>
+/* Zilo bridge — reports edits + close/ESC intent to the parent (calendar) via postMessage.
+   Uses delegated listeners on document so they survive the DC runtime's React re-renders,
+   and postMessage so it also works when embedded from a local file:// origin. */
+(function () {
+  var dirty = false;
+  var isPreview = /(?:^|[#&])preview=1(?:&|$)/.test(location.hash);
+  // Dane pojazdu/klienta z wizyty (przekazane w hash #car=…) → wypełnij statyczne pola „Pojazd i klient".
+  (function fillCar(){
+    var m = (location.hash || '').match(/car=([^&]+)/); if (!m) return;
+    var car; try { car = JSON.parse(decodeURIComponent(m[1])); } catch (e) { return; }
+    function want(k){
+      if (k === 'phone') return car.phone || null;
+      if (k === 'marka') return car.name || null;
+      if (k === 'engine') return car.engine || null;
+      if (k === 'year') return car.year || null;
+      if (k === 'markaYear') return car.name ? (car.name + (car.year ? ', ' + car.year : '')) : null;
+      if (k === 'service') return car.service || null;
+      if (k === 'opis') return car.opis || null;
+      return null;
+    }
+    function apply(){
+      var els = document.querySelectorAll('[data-car]'); if (!els.length) return false;
+      els.forEach(function(el){
+        var w = want(el.getAttribute('data-car'));
+        if (w && el.textContent.trim() !== w) { el.textContent = w; if (el.tagName === 'A') el.setAttribute('href', 'tel:' + String(w).replace(/\s/g,'')); }
+      });
+      if (!car.opis) {
+        var _sep = document.querySelector('[data-opis-sep]'); if (_sep) _sep.style.display = 'none';
+        var _ob = document.querySelector('[data-opis-block]'); if (_ob) _ob.style.display = 'none';
+        var _g = document.querySelector('[data-svc-grid]'); if (_g) _g.style.gridTemplateColumns = '1fr';
+      }
+      return true;
+    }
+    var tries = 0;
+    (function go(){
+      if (apply()) {
+        // Sekcja „Pojazd i klient" jest w drzewie React (re-render resetuje statyczne węzły) → re-aplikuj przy mutacjach.
+        try { new MutationObserver(function(){ apply(); }).observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (e) {}
+        return;
+      }
+      if (tries++ < 25) setTimeout(go, 100);
+    })();
+  })();
+  (function(){ try { var st=document.createElement('style'); st.textContent='.z-preview .wyc-hdr-actions{display:none !important;} body.z-dirty .z-preview .wyc-hdr-actions{display:flex !important;}'; document.head.appendChild(st); } catch(e){} })();
+  function md() { dirty = true; if (isPreview) { try { document.body.classList.add('z-dirty'); } catch (e) {} } }
+  function post(kind, extra) { try { parent.postMessage(Object.assign({ __wyc: kind, dirty: dirty }, extra || {}), '*'); } catch (_) {} }
+  document.addEventListener('input', md, true);
+  document.addEventListener('change', md, true);
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    if (t.closest('[aria-label="Zamknij"]')) { e.preventDefault(); post('x'); return; }
+    var hb = t.closest('header button');
+    if (hb) {
+      var tx = (hb.textContent || '').replace(/\s+/g, ' ').trim();
+      if (tx.indexOf('Podgląd') === 0) { e.preventDefault(); post('preview', { items: (window.__wycData || []), state: (window.__wycState || null) }); return; }
+      if (tx.indexOf('Zapisz') === 0) { e.preventDefault(); post('save', { items: (window.__wycData || []), state: (window.__wycState || null) }); return; }
+      if (tx.indexOf('Wyślij ofert') === 0 || tx.indexOf('Wyslij ofert') === 0) { e.preventDefault(); post('save', { send: true, items: (window.__wycData || []), state: (window.__wycState || null) }); return; }
+      return;  // inne przyciski w headerze (np. X już obsłużony) — nie liczą się jako zmiana
+    }
+    if (t.closest('header')) return;
+    if (t.closest('button')) md();          // Dodaj / usuń wiersz / narzędzia notatki
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') post('esc'); });
+  // Fokus konkretnego pola pozycji (klik w tabeli po stronie kalendarza).
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || d.__wycFocus == null) return;
+    var f = d.__wycFocus, tries = 0;
+    (function go(){
+      var els = document.querySelectorAll('[data-wyc-field="' + f.field + '"]');
+      var el = els[f.index || 0] || els[0];
+      if (el) { try { el.scrollIntoView({ block: 'center' }); } catch (_) {} if (el.tagName === 'INPUT') { el.focus(); try { el.select(); } catch (_) {} } else { el.click(); } return; }
+      if (tries++ < 25) setTimeout(go, 100);
+    })();
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/Magazyn%20czesci%20-%20High%20Fidelity.dc.html" },
+    { "source": "/oferta", "destination": "/konfigurator-ofert/v1.html" },
+    { "source": "/wycena", "destination": "/konfigurator-wycen-2/v2.html" }
+  ]
+}

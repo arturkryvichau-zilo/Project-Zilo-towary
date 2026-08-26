@@ -1,0 +1,2701 @@
+/* ============================================================
+   Visit details modal — styles imported from Claude Design pack
+   Tokens stay global; component styles scoped via @scope
+   to avoid collisions with calendar.html (e.g. .tab, .tabs, .btn)
+   ============================================================ */
+/* ========================================================================
+   DM (Dobry Mechanik) Design System — Tokens
+   ------------------------------------------------------------------------
+   Source of truth: Figma "Design System.fig"
+   Fonts: Rubik (self-hosted from /fonts/)
+   ======================================================================== */
+
+/* Rubik — loaded from Google Fonts (font files were not copied) */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* (legacy @font-face entries kept for parity but unused) */
+@font-face {
+  font-family: 'Rubik-Local';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('fonts/Rubik-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Rubik-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/Rubik-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/Rubik-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Rubik-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Rubik-ExtraBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('fonts/Rubik-Black.ttf') format('truetype');
+}
+
+/* Rubik — italic */
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('fonts/Rubik-LightItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Rubik-Italic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/Rubik-MediumItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/Rubik-SemiBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Rubik-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Rubik-ExtraBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url('fonts/Rubik-BlackItalic.ttf') format('truetype');
+}
+
+:root {
+  /* ─── Brand: DM (primary blue family) ──────────────────────────── */
+  --dm-blue-dark: #1458BC;
+  --dm-blue-1:    #2470E0;   /* primary brand, CTAs, links */
+  --dm-blue-2:    #3E7BEE;   /* interactive wash */
+  --dm-blue-3:    #7BA9EC;   /* light accent */
+  --dm-blue-4:    #D3E2F9;   /* tint, chips */
+  --dm-blue-5:    #EAF1FC;   /* softer tint */
+  --dm-blue-6:    #F8FAFE;   /* subtle surface tint */
+
+  /* Liner gradients (circular buttons, badges) */
+  --dm-liner-1:    linear-gradient(180deg, #2470E0 0%, #1458BC 100%);
+  --dm-liner-ai:   linear-gradient(180deg, #7B61FF 0%, #222693 100%);
+
+  /* ─── Sub-brand: Zilo (indigo family) ──────────────────────────── */
+  --zilo-blue-1:  #222693;
+  --zilo-blue-2:  #1D207C;
+  --zilo-blue-3:  #8386E2;
+  --zilo-blue-4:  #D5D7F8;
+  --zilo-blue-5:  #F3F3FF;
+  --zilo-blue-6:  #F6F6FC;
+
+  /* Zilo — action-state tokens (buttons, interactive) */
+  --zilo-primary:        rgb(34, 38, 147);   /* = --zilo-blue-1 */
+  --zilo-primary-hover:  rgb(28, 32, 130);
+  --zilo-primary-press:  rgb(22, 26, 110);
+  --zilo-primary-5:      rgb(243, 243, 255); /* tint (ghost bg)   = --zilo-blue-5 */
+  --zilo-primary-4:      rgb(233, 233, 255); /* tint hover */
+  --zilo-primary-3:      rgb(220, 220, 250); /* tint pressed */
+
+  /* ─── Semantic ─────────────────────────────────────────────────── */
+  --red:          #EA4335;
+  --red-1:        #F9C0BB;
+  --red-2:        #FFDED7;
+  --red-3:        #FEE9E5;
+  --red-4:        #FFF3F3;
+
+  --green-1:      #00B286;   /* success */
+  --green-2:      #00B286;
+  --green-3:      #DEF3E7;
+
+  --yellow:       #F6AE2D;
+  --yellow-3:     #FFE7D7;
+
+  /* ─── Neutrals ─────────────────────────────────────────────────── */
+  --grey-1:       #242629;   /* primary text, near-black */
+  --grey-2:       #6B707D;   /* secondary text */
+  --grey-3:       #979DB0;   /* muted text, icons off */
+  --grey-4:       #DCE0E6;   /* borders */
+  --grey-5:       #E9ECF1;   /* dividers, table lines */
+  --grey-6:       #F0F1F5;   /* subtle surface */
+  --grey-7:       #FBFBFB;   /* page background */
+  --black:        #000000;
+  --white:        #FFFFFF;
+
+  --sidebar-dark: #0A0B29;   /* DM app left sidebar */
+
+  /* ─── Semantic tokens ──────────────────────────────────────────── */
+  --fg-1:         var(--grey-1);
+  --fg-2:         var(--grey-2);
+  --fg-3:         var(--grey-3);
+  --fg-inverse:   var(--white);
+  --fg-brand:     var(--dm-blue-1);
+
+  --bg-page:      var(--white);
+  --bg-surface:   var(--white);
+  --bg-subtle:    var(--grey-7);
+  --bg-tint:      var(--dm-blue-6);
+  --bg-tint-strong: var(--dm-blue-5);
+
+  --border-1:     var(--grey-4);
+  --border-2:     var(--grey-5);
+  --border-focus: var(--dm-blue-1);
+
+  --link:         var(--dm-blue-1);
+  --link-hover:   var(--dm-blue-dark);
+
+  /* ─── Shadows ──────────────────────────────────────────────────── */
+  --shadow-sm:         0 1px 2px rgba(36, 38, 41, 0.06);
+  --shadow:            0 10px 4px -4px rgba(36, 38, 41, 0.25);
+  --shadow-top:       0 -4px 14px rgba(36, 38, 41, 0.08);
+  --shadow-light-blue: 0 0 0 1px rgba(36, 112, 224, 0.18), 0 4px 10px rgba(36, 112, 224, 0.08);
+  --shadow-card:       0 1px 3px rgba(36, 38, 41, 0.08), 0 4px 14px rgba(36, 38, 41, 0.06);
+
+  /* ─── Radii ────────────────────────────────────────────────────── */
+  --radius-xs:  4px;
+  --radius-sm:  5px;
+  --radius:     8px;
+  --radius-md:  10px;
+  --radius-lg:  20px;
+  --radius-xl:  25px;
+  --radius-2xl: 40px;
+  --radius-pill: 999px;
+
+  /* ─── Spacing (4px base) ───────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  14px;
+  --space-5:  16px;
+  --space-6:  20px;
+  --space-7:  24px;
+  --space-8:  32px;
+  --space-9:  40px;
+  --space-10: 48px;
+  --space-12: 64px;
+
+  /* ─── Type ─────────────────────────────────────────────────────── */
+  --font-sans: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Base scale (from Typography page) */
+  --fz-xs:   12px;  --lh-xs:   16px;
+  --fz-sm:   14px;  --lh-sm:   22px;
+  --fz-base: 16px;  --lh-base: 22px;
+  --fz-md:   18px;  --lh-md:   28px;
+  --fz-lg:   20px;  --lh-lg:   28px;
+  --fz-xl:   22px;  --lh-xl:   28px;
+  --fz-2xl:  24px;  --lh-2xl:  34px;
+  --fz-3xl:  26px;  --lh-3xl:  36px;
+  --fz-4xl:  30px;  --lh-4xl:  40px;
+  --fz-5xl:  36px;  --lh-5xl:  45px;
+
+  /* Weights */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* ─── Motion ───────────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration:      200ms;
+  --duration-slow: 320ms;
+}
+
+/* ============================================================
+   Scoped styles — apply ONLY inside .vd-modal-scope wrapper
+   ============================================================ */
+@scope (.vd-modal-scope) {
+
+  /* Base typography from colors_and_type.css (html/body → :scope) */
+/* ─── Base typography ─────────────────────────────────────────────── */
+:scope {
+  font-family: var(--font-sans);
+  font-size:   var(--fz-base);
+  line-height: var(--lh-base);
+  color:       var(--fg-1);
+  background:  var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fz-5xl);
+  line-height: var(--lh-5xl);
+  color: var(--fg-1);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h2, .h2 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-4xl); line-height: var(--lh-4xl);
+  color: var(--fg-1); margin: 0;
+}
+h3, .h3 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-2xl); line-height: var(--lh-2xl);
+  color: var(--fg-1); margin: 0;
+}
+h4, .h4 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-lg); line-height: var(--lh-lg);
+  color: var(--fg-1); margin: 0;
+}
+h5, .h5 {
+  font-weight: var(--fw-medium);
+  font-size: var(--fz-md); line-height: var(--lh-md);
+  color: var(--fg-1); margin: 0;
+}
+
+p, .p {
+  font-size: var(--fz-base); line-height: var(--lh-base);
+  color: var(--fg-1); margin: 0;
+}
+.p-sm   { font-size: var(--fz-sm); line-height: var(--lh-sm); }
+.p-lg   { font-size: var(--fz-md); line-height: var(--lh-md); }
+.caption{ font-size: var(--fz-xs); line-height: var(--lh-xs); color: var(--fg-2); }
+.muted  { color: var(--fg-2); }
+.dim    { color: var(--fg-3); }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--duration) var(--ease-standard);
+}
+a:hover { color: var(--link-hover); text-decoration: underline; }
+
+code, pre, .mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.95em;
+}
+
+  /* Components from styles.css (lines 5+ of source, html/body skipped) */
+* { box-sizing: border-box; }
+
+/* ── Stage: scales 1366×768 to viewport ───────────────────────── */
+.stage {
+  width: 1366px;
+  height: 768px;
+  position: relative;
+  transform-origin: top center;
+  background: #FFF;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   App shell (background under modal)
+   ============================================================ */
+.app {
+  position: absolute;
+  inset: 0;
+  background: #FFF;
+}
+
+/* Top nav bar */
+.top-nav {
+  position: absolute;
+  left: 84px;
+  top: 0;
+  right: 0;
+  height: 70px;
+  background: #FFF;
+  border-bottom: 1px solid #F0F1F5;
+  display: flex;
+  align-items: center;
+  padding: 0 21px 0 24px;
+}
+.top-nav__contact {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  color: #242629;
+}
+.top-nav__contact a {
+  color: var(--zilo-primary);
+  text-decoration: none;
+}
+.top-nav__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.top-nav__notification {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  color: #000;
+}
+.top-nav__notification-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #EA4335;
+}
+.top-nav__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #F3F3FF;
+  border: 1px solid #E9ECF1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zilo-primary);
+}
+.top-nav__divider {
+  width: 1px;
+  height: 50px;
+  background: #F4F4FA;
+}
+
+/* Left sidebar */
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 84px;
+  background: #0A0B29;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar__logo {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar__logo svg { width: 56px; height: auto; }
+.sidebar__logo svg path { fill: #FFF; }
+.sidebar__menu {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 2px;
+}
+.sidebar__item {
+  height: 80px;
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  position: relative;
+  transition: background 200ms;
+}
+.sidebar__item:hover { background: rgba(255,255,255,0.04); }
+.sidebar__item--active {
+  color: #FFF;
+}
+.sidebar__item--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 3px;
+  background: var(--zilo-primary);
+  border-radius: 0 2px 2px 0;
+}
+.sidebar__item svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+}
+.sidebar__item span {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sidebar__notif-dot {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #EA4335;
+}
+
+/* ============================================================
+   Modal (Szczegóły zlecenia)
+   ============================================================ */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+.modal {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  right: 40px;
+  bottom: 40px;
+  border-radius: 12px;
+  background: #FBFBFB;
+  z-index: 10;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  grid-template-rows: 70px 1fr;
+}
+
+/* Modal header — full-width top bar above both columns */
+.modal__header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  background: #FFF;
+  border-bottom: 1px solid #EAEBFA;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  height: 70px;
+  position: relative;
+  z-index: 3;
+}
+.modal__header-actions {
+  display: flex;
+  align-items: stretch;
+}
+.icon-btn {
+  width: 70px;
+  height: 70px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  color: #242629;
+  transition: background 200ms;
+}
+.icon-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: #F3F3FF;
+}
+.icon-btn:hover { background: #F8F9FF; }
+.icon-btn svg { width: 24px; height: 24px; }
+.icon-btn--download:hover { background: #F3F3FF; }
+
+/* Sidebar of modal (left panel) — sits BELOW the top bar */
+.modal__panel {
+  grid-column: 1;
+  grid-row: 2;
+  background: #FFF;
+  /* Drop shadow per Figma effect: X4 Y0 Blur48 Spread0 #8C8EAA @12% */
+  box-shadow: 4px 0px 48px 0px rgba(140, 142, 170, 0.12);
+  padding: 28px 24px 32px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+.modal__main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Section: Szczegóły wizyty list */
+.visit-fields {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.visit-fields::before {
+  content: none;
+}
+.visit-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 0;
+  position: relative;
+}
+.visit-field__bullet {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  flex-shrink: 0;
+  color: #242629;
+}
+.visit-field__bullet svg { width: 20px; height: 20px; }
+.visit-field__bullet--rail { color: #242629; }
+.visit-field__bullet--status {
+  /* Soft round chip whose fill is the status bg */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--status-bg, #F0F1F5);
+  border: 1px solid color-mix(in srgb, var(--status-color, #6B707D) 35%, #FFF);
+  margin-left: 4px;
+  margin-top: 18px;
+}
+.visit-field__body { flex: 1; min-width: 0; }
+.visit-field__label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #6B707D;
+  margin-bottom: 6px;
+}
+.visit-field__value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: #242629;
+}
+.visit-field__edit {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #F3F3FF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--zilo-primary);
+  transition: background 200ms;
+}
+.visit-field__edit:hover { background: #E9E9FF; }
+.visit-field__edit svg { width: 18px; height: 18px; }
+
+/* Status dropdown — pill + chevron, chevron column aligns with edit pencil below */
+.status-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--status-bg, #EAF1FC);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--status-fg, #1B3D6E);
+  font-weight: 500;
+  cursor: default;       /* read-only — status change disabled */
+  pointer-events: none;
+  border: none;
+  line-height: 1;
+}
+.status-pill::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--status-color, var(--zilo-primary));
+}
+.status-chevron {
+  display: none !important; /* status change disabled for now */
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #F3F3FF;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--zilo-primary);
+  transition: background 200ms, transform 200ms;
+}
+.status-chevron:hover { background: #E9E9FF; }
+.status-chevron svg { width: 18px; height: 18px; }
+.status-dropdown.is-open .status-chevron { transform: rotate(180deg); }
+
+.status-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -8px;
+  right: -8px;
+  background: #FFF;
+  border: 1px solid #EAEBFA;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(10, 11, 41, 0.10);
+  padding: 6px 0;
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+}
+.status-dropdown.is-open .status-menu { display: flex; }
+.status-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #F0F1F5;
+  text-align: left;
+  width: 100%;
+}
+.status-menu__item:last-child { border-bottom: none; }
+.status-menu__item:hover { background: #FAFAFD; }
+.status-menu__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+.status-menu__pill::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--dot);
+  flex-shrink: 0;
+}
+.status-menu__check {
+  color: var(--zilo-primary, #3F66D9);
+  display: inline-flex;
+  align-items: center;
+}
+.status-menu__check svg { width: 20px; height: 20px; }
+
+/* Service tag */
+.service-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #FEF9EC;
+  color: #4A2801;
+  border-radius: 4px;
+  font-size: 16px;
+  position: relative;
+  margin-top: 6px;
+}
+.service-tag::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--st-accent, #D97706);
+  border-radius: 2px 0 0 2px;
+}
+.service-tag { padding-left: 14px; }
+
+/* Pojazd i klient section */
+.panel-section {
+  border-top: 1px solid #E9ECF1;
+  padding-top: 20px;
+}
+.panel-section__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.panel-section__title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  color: #242629;
+  flex: 1;
+}
+.panel-section__toggle {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B707D;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 140ms;
+}
+.panel-section__toggle:hover { background: #EEF0F5; }
+.panel-section__toggle svg { width: 20px; height: 20px; transform: rotate(180deg); transition: transform 200ms; }
+.panel-section.is-collapsed .panel-section__toggle svg { transform: rotate(0deg); }
+.panel-section.is-collapsed > *:not(.panel-section__head) { display: none; }
+
+.client-card {
+  background: #FBFBFD;
+  border-left: 3px solid #D5D7F8;
+  border-radius: 4px;
+  padding: 14px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.client-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.client-card__phone {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--zilo-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(34,38,147,0.3);
+  text-underline-offset: 3px;
+}
+.client-card__name {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  color: #242629;
+  flex: 1;
+}
+.client-card__edit {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #242629;
+}
+.client-card__edit:hover { background: #F3F3FF; color: var(--zilo-primary); }
+.client-card__edit svg { width: 18px; height: 18px; }
+
+.car-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  background: #FFF;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.car-grid__field { display: flex; flex-direction: column; gap: 2px; }
+.car-grid__label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #6B707D;
+}
+.car-grid__value {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: #242629;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.car-grid__field--full { grid-column: 1 / -1; }
+
+/* ── VIN states ─────────────────────────────────────────────── */
+.car-grid__vin { gap: 8px; }
+.vin-request {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ECECFA;
+  color: var(--zilo-primary, #222693);
+  border: none;
+  height: 30px;
+  padding: 4px 8px 4px 12px;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 1;
+}
+.vin-request:hover { background: #DEDEF7; }
+.vin-request svg { width: 16px; height: 16px; color: currentColor; }
+.vin-value {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: #242629;
+}
+.vin-copy {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--zilo-primary, #222693);
+  padding: 0;
+}
+.vin-copy svg { width: 20px; height: 20px; }
+/* State toggling */
+.car-grid[data-vin-state="missing"] .vin-value,
+.car-grid[data-vin-state="missing"] .vin-copy { display: none; }
+.car-grid[data-vin-state="present"] .vin-request { display: none; }
+
+/* ============================================================
+   Modal main content (right column)
+   ============================================================ */
+.modal__main {
+  grid-column: 2;
+  grid-row: 2;
+  background: #FBFBFB;
+  padding: 0 32px 32px 32px;
+  overflow-y: auto;
+}
+
+/* Tabs — overrides for calendar.html's global .tabs/.tab styles that bleed in */
+.tabs {
+  display: flex;
+  gap: 36px;
+  border-bottom: 1px solid #E9ECF1;
+  margin-bottom: 28px;
+  /* explicit resets — calendar.html global .tabs sets these */
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  height: auto;
+  align-items: stretch;
+}
+.tab {
+  padding: 18px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--grey-1);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+  position: relative;
+  /* explicit resets — calendar.html global .tab sets these */
+  flex: initial;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+.tab:hover:not(.tab--active) { color: var(--zilo-primary); }
+.tab svg { width: 20px; height: 20px; }
+.tab--active {
+  color: #222693;
+  border-bottom-color: #222693;
+}
+/* Detail rows in main */
+.detail-row {
+  padding: 20px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: 1px solid #E9ECF1;
+}
+.detail-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.detail-row__title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  color: #242629;
+}
+.detail-row__value {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: #242629;
+}
+/* Empty state: show data-placeholder text in light gray when no content */
+.detail-row__value--placeholder:empty::before {
+  content: attr(data-placeholder);
+  color: var(--grey-3);
+  font-style: normal;
+}
+.detail-row__placeholder {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: #6B707D;
+  font-style: italic;
+}
+
+/* Btn — DM/Zilo style */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background 200ms, color 200ms;
+}
+.btn svg { width: 18px; height: 18px; }
+.btn--ghost {
+  background: #F3F3FF;
+  color: var(--zilo-primary);
+}
+.btn--ghost:hover { background: #E9E9FF; }
+.btn--primary {
+  background: var(--zilo-primary);
+  color: #FFF;
+  padding: 12px 20px;
+  font-size: 15px;
+}
+.btn--primary:hover { background: var(--zilo-primary-hover); }
+.btn--secondary {
+  background: #F3F3FF;
+  color: var(--zilo-primary);
+  padding: 12px 20px;
+  font-size: 15px;
+}
+.btn--secondary:hover { background: #E9E9FF; }
+.btn--text {
+  background: transparent;
+  color: var(--zilo-primary);
+}
+.btn--text:hover { background: #F3F3FF; }
+
+/* Attachment dropzone */
+.attachment-zone {
+  background: #FFF;
+  border: 1px dashed #DCE0E6;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+/* Tooltip — DS style, JS-positioned (fixed) so it escapes clipping ancestors */
+.zilo-tooltip {
+  position: fixed;
+  background: #0A0B29;
+  color: #FFF;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 99999;
+  box-shadow: 0 6px 16px rgba(10, 11, 41, 0.18);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.zilo-tooltip[data-show="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.attachment-zone__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-primary);
+}
+.attachment-zone__icon svg { width: 36px; height: 36px; }
+.attachment-zone__title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: #242629;
+}
+.attachment-zone__desc {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #6B707D;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   VIN modal (Prośba o VIN)
+   ============================================================ */
+.vin-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms;
+  z-index: 50;
+}
+.vin-modal-backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
+.vin-modal {
+  margin: 28px;
+  width: min(960px, calc(100% - 56px));
+  background: #FFF;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 20px 60px -20px rgba(0,0,0,0.35);
+  transform: translateY(8px);
+  transition: transform 200ms;
+}
+.vin-modal-backdrop[data-open="true"] .vin-modal { transform: translateY(0); }
+.vin-modal__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px 22px 0 22px;
+}
+.vin-modal__body {
+  flex: 1;
+  padding: 12px 40px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.vin-modal__title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 8px 0 4px 0;
+}
+.vin-modal__title {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 500;
+  color: #242629;
+  margin: 0;
+  line-height: 28px;
+}
+.vin-modal__desc {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  color: #6B707D;
+  margin: 0;
+  max-width: 460px;
+}
+.vin-modal__divider {
+  height: 1px;
+  background: #E9ECF1;
+  margin: 0 -40px;
+}
+.vin-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 460px;
+  margin: 0 auto;
+  width: 100%;
+}
+.vin-modal__label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: #242629;
+}
+.vin-phone {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #DCE0E6;
+  border-radius: 8px;
+  background: #FFF;
+  height: 60px;
+  transition: border-color 160ms, box-shadow 160ms;
+}
+.vin-phone:focus-within {
+  border-color: var(--zilo-primary, #3F66D9);
+  box-shadow: 0 0 0 3px rgba(63,102,217,0.12);
+}
+.vin-phone__country {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px 0 16px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #242629;
+}
+.vin-phone__country-code { letter-spacing: 0.02em; }
+.vin-phone__country svg { color: #6B707D; }
+.vin-phone__divider {
+  width: 1px;
+  background: #DCE0E6;
+  margin: 12px 0;
+}
+.vin-phone__field {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 8px 16px 10px 16px;
+}
+.vin-phone__floating-label {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #6B707D;
+  letter-spacing: 0.01em;
+}
+.vin-phone__input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: #242629;
+  padding: 0;
+  letter-spacing: 0.02em;
+}
+.vin-modal__footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 28px 24px 28px;
+  border-top: 1px solid #E9ECF1;
+}
+.vin-modal__footer .z-btn { width: 242px; }
+
+/* ============================================================
+   Dialog (confirmation)
+   ============================================================ */
+.dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 11, 41, 0.55);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms;
+}
+.dialog-backdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.dialog {
+  width: 480px;
+  background: #FFF;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(10, 11, 41, 0.25);
+  padding: 28px;
+  transform: translateY(8px);
+  transition: transform 200ms;
+}
+.dialog-backdrop[data-open="true"] .dialog { transform: translateY(0); }
+.dialog__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #F3F3FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zilo-primary);
+  margin-bottom: 18px;
+}
+.dialog__icon svg { width: 24px; height: 24px; }
+.dialog__title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: #242629;
+  text-align: center;
+  margin: 16px 0 12px 0;
+}
+.dialog__desc {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  color: #6B707D;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.dialog__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.dlg-btn {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+.dlg-btn--primary {
+  width: 100%;
+  height: 56px;
+  border-radius: 8px;
+  background: var(--zilo-primary);
+  color: #FFF;
+  padding: 14px 24px;
+}
+.dlg-btn--primary:hover { background: #1a1d75; }
+.dlg-btn--text {
+  width: 100%;
+  height: 56px;
+  border-radius: 8px;
+  background: #F3F3FF;
+  color: var(--zilo-primary);
+  padding: 14px 24px;
+}
+.dlg-btn--text:hover { background: #E4E5FA; }
+.dialog__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #F0F1F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #242629;
+  transition: background 150ms;
+}
+.dialog__close:hover { background: #E9ECF1; }
+.dialog { position: relative; }
+
+/* Dialog — checkbox options */
+.dialog__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.dlg-option {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1px solid #DCE0E6;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+  background: #FFF;
+}
+.dlg-option:hover {
+  background: #FBFBFD;
+  border-color: #C7CBE0;
+}
+.dlg-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.dlg-option__box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid #C7CBE0;
+  background: #FFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  margin-top: 1px;
+  transition: background 120ms, border-color 120ms, color 120ms;
+}
+.dlg-option__box svg { width: 14px; height: 14px; }
+.dlg-option input:checked + .dlg-option__box {
+  background: var(--zilo-primary);
+  border-color: var(--zilo-primary);
+  color: #FFF;
+}
+.dlg-option input:checked ~ .dlg-option__body .dlg-option__title { color: #242629; }
+.dlg-option__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.dlg-option__title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: #242629;
+}
+.dlg-option__sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #6B707D;
+  line-height: 18px;
+}
+.dlg-option__sub em { font-style: normal; font-weight: 500; color: #242629; }
+
+/* ============================================================
+   PDF viewer (Karta zlecenia)
+   ============================================================ */
+.pdf-viewer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #2D2F4D 0%, #1A1B33 100%);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+}
+.pdf-viewer[data-open="true"] { display: flex; }
+
+.pdf-viewer__topbar {
+  height: 64px;
+  flex-shrink: 0;
+  background: rgba(10, 11, 41, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  color: #FFF;
+}
+.pdf-viewer__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  color: #FFF;
+  border: none;
+  padding: 8px 14px 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+}
+.pdf-viewer__back:hover { background: rgba(255,255,255,0.15); }
+.pdf-viewer__back svg { width: 18px; height: 18px; color: #FFF; }
+.pdf-viewer__title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+}
+.pdf-viewer__title strong { color: #FFF; font-weight: 500; margin-left: 6px; }
+.pdf-viewer__variant-tag {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(123, 97, 255, 0.16);
+  color: #B6A6FF;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+}
+.pdf-viewer__variant-tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #B6A6FF;
+  border-radius: 50%;
+}
+.pdf-viewer__layout-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.pdf-viewer__layout-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms, color 160ms;
+}
+.pdf-viewer__layout-btn:hover { color: #FFF; }
+.pdf-viewer__layout-btn.is-active {
+  background: #FFF;
+  color: #242629;
+}
+.pdf-viewer__actions {
+  display: flex;
+  gap: 10px;
+}
+.pdf-viewer__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--zilo-primary);
+  color: #FFF;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+}
+.pdf-viewer__action:hover { background: var(--zilo-primary-hover); }
+.pdf-viewer__action--ghost {
+  background: rgba(255,255,255,0.08);
+  color: #FFF;
+}
+.pdf-viewer__action--ghost:hover { background: rgba(255,255,255,0.15); }
+
+.pdf-viewer__stage {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 64px 24px;
+  gap: 24px;
+}
+
+  /* === Calendar.html overrides — full-viewport overlay === */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+  }
+  .modal {
+    position: fixed;
+    left: 40px;
+    top: 40px;
+    right: 40px;
+    bottom: 40px;
+    z-index: 9999;
+  }
+}
+
+/* Hide wrapper when closed (outside @scope so the rule applies to the host element itself) */
+.vd-modal-scope[hidden] { display: none; }
+.vd-modal-scope { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
+.vd-modal-scope > * { pointer-events: auto; }
+
+/* Prevent body scroll when modal open */
+body.vd-modal-open { overflow: hidden; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   TAB PANELS — only one panel visible at a time
+   ════════════════════════════════════════════════════════════════════════ */
+.tab-panel[hidden] { display: none; }
+.tab-panel { display: block; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   WYCENY — quotes tab UI
+   ════════════════════════════════════════════════════════════════════════ */
+#wyc-panel {
+  font-family: var(--font-sans);
+  color: #242629;
+}
+
+/* Section header: title (left) + Importuj / Dodaj buttons (right) */
+.wyc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.wyc-section-head__title {
+  font: 500 16px/1.2 var(--font-sans);
+  color: #242629;
+  margin: 0;
+}
+.wyc-section-head__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* List — single white container holding header + all data rows.
+   Internal rows share the same column grid, separated by horizontal lines. */
+.wyc-list {
+  background: #FFF;
+  border: 1px solid #E9ECF1;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Empty state — shown when the visit's service has no SERVICE_PRICES match
+   AND the user hasn't manually added a quote. Mirrors .zad-empty style. */
+.wyc-empty {
+  color: #6B707D;
+  font: 400 14px/1.4 var(--font-sans);
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed #E9ECF1;
+  border-radius: 12px;
+}
+
+/* Empty state — CTA card: ikona + tytuł + podtytuł (wersja 2.0) */
+.wyc-empty-card {
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; text-align: left; cursor: pointer;
+  padding: 18px 22px; border: 1px solid #E9ECF1; border-radius: 12px;
+  background: #fff; font-family: var(--font-sans);
+  transition: background 120ms, border-color 120ms;
+}
+.wyc-empty-card:hover { background: #FBFBFE; border-color: #DCE0E6; }
+.wyc-empty-card__icon { flex: none; width: 44px; height: 44px; display: grid; place-items: center; }
+.wyc-empty-card__icon svg { width: 44px; height: 44px; display: block; }
+.wyc-empty-card__text { display: flex; flex-direction: column; min-width: 0; }
+.wyc-empty-card__title { display: block; font: 500 16px/22px var(--font-sans); color: #242629; }
+.wyc-empty-card__sub { display: block; font: 400 14px/20px var(--font-sans); color: #6B707D; margin-top: 2px; }
+
+/* Row — table-like grid: Sygnatura | Data | Status | Kwota | Actions
+   No per-row border or radius; the .wyc-list parent owns those.
+   The action column is a FIXED width (not auto) so the header row's empty
+   cell takes the same space as the data row's three action buttons —
+   otherwise fr columns drift and labels stop aligning above their values. */
+.wyc-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.4fr 1.2fr 1fr 110px;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 28px;
+  background: transparent;
+}
+.wyc-row + .wyc-row { border-top: 1px solid #E9ECF1; }
+
+.wyc-row--head {
+  padding: 20px 28px 14px;
+  font: 400 13px/1.2 var(--font-sans);
+  color: #6B707D;
+  border-bottom: 1px solid #E9ECF1;
+}
+.wyc-row--head + .wyc-row { border-top: none; }
+
+.wyc-row__sig,
+.wyc-row__date,
+.wyc-row__amount {
+  font: 400 15px/1.2 var(--font-sans);
+  color: #242629;
+}
+
+/* Status pill — wraps a <select> styled like a chip with chevron */
+.wyc-status-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 6px;
+  font: 500 13px/1.2 var(--font-sans);
+  max-width: max-content;
+  cursor: pointer;
+}
+.wyc-status-pill__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  cursor: pointer;
+  padding: 0 4px 0 0;
+  margin: 0;
+}
+.wyc-status-pill__select:focus { outline: none; }
+.wyc-status-pill__chev {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* Action icons (download / edit / preview) */
+.wyc-row__actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.wyc-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6B707D;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 150ms, background 150ms;
+}
+.wyc-action-btn:hover { color: var(--zilo-primary); background: #F3F3FF; }
+.wyc-action-btn svg { width: 18px; height: 18px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   ZADANIA — tasks tab UI
+   ════════════════════════════════════════════════════════════════════════ */
+#zad-panel {
+  font-family: var(--font-sans);
+  color: #242629;
+}
+
+/* A/B version toggle — pinned at the top of #zad-panel.
+   Lets the user switch between current design (A) and legacy prod (B). */
+.zad-version-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: #F8F9FB;
+  border: 1px solid #E9ECF1;
+  border-radius: 8px;
+}
+.zad-version-toggle__label {
+  font: 400 13px/1 var(--font-sans);
+  color: var(--grey-2);
+  margin-right: 4px;
+}
+.zad-version-toggle__btn {
+  background: #FFF;
+  border: 1px solid #DCE0E6;
+  color: #242629;
+  font: 500 13px/1 var(--font-sans);
+  padding: 6px 14px;
+  min-width: 36px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.zad-version-toggle__btn:hover { border-color: var(--zilo-primary); color: var(--zilo-primary); }
+.zad-version-toggle__btn.is-active {
+  background: var(--zilo-primary);
+  border-color: var(--zilo-primary);
+  color: #FFF;
+}
+
+/* Top 3-card summary — grid layout; each card is a .ds-field */
+.zad-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 1280px) {
+  .zad-summary { grid-template-columns: 1fr 1fr; }
+  .zad-summary > *:last-child { grid-column: 1 / -1; }
+}
+.zad-summary > .ds-field { height: 56px; }
+
+/* Remainder counter (visible only in 'from sum' mode) */
+.zad-remainder {
+  background: #FBFBFB;
+  border: 1px solid #E9ECF1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+.zad-remainder__bar {
+  height: 4px;
+  background: #F0F1F5;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.zad-remainder__fill {
+  height: 100%;
+  background: var(--zilo-primary);
+  transition: width 200ms;
+}
+.zad-remainder__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #242629;
+}
+.zad-remainder__row strong { font-weight: 500; }
+.zad-remainder__over { color: #EA4335; }
+.zad-link {
+  background: transparent;
+  border: none;
+  color: var(--zilo-primary);
+  font: 500 13px/1.2 var(--font-sans);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.zad-link:hover { background: #F3F3FF; }
+
+/* Task list */
+.zad-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.zad-empty {
+  color: #6B707D;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+  border: 1px dashed #E9ECF1;
+  border-radius: 8px;
+}
+
+/* Wycena → Zadania suggestion banner.
+   Horizontal layout: [icon] [content (title+select, description)] [button].
+   Conditional parts-note sits OUTSIDE the banner, below it. */
+.zad-wyc-suggest {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #F3F3FF;
+  border: 1px solid #DDE0F0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.zad-wyc-suggest__icon {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zilo-primary);
+}
+.zad-wyc-suggest__content { flex: 1; min-width: 0; }
+.zad-wyc-suggest__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 500 14px/1.3 var(--font-sans);
+  color: #242629;
+}
+.zad-wyc-suggest__select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.zad-wyc-suggest__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #FFF;
+  border: 1px solid #DCE0E6;
+  border-radius: 6px;
+  padding: 5px 26px 5px 10px;
+  font: 400 13px/1.2 var(--font-sans);
+  color: #242629;
+  cursor: pointer;
+  outline: none;
+}
+.zad-wyc-suggest__select:focus { border-color: var(--zilo-primary); }
+.zad-wyc-suggest__select-chev {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  color: #6B707D;
+  pointer-events: none;
+}
+.zad-wyc-suggest__desc {
+  margin: 4px 0 0;
+  font: 400 13px/1.45 var(--font-sans);
+  color: #6B707D;
+}
+.zad-wyc-suggest__desc strong { color: #242629; font-weight: 500; }
+.zad-wyc-import {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.zad-wyc-import:disabled,
+.zad-wyc-import[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Task row — responsive: single row wide, 2 rows narrow (name on top).
+   Grid areas:
+     - Wide:   [check name del fields] in one row
+     - Narrow: row 1 = [check name del],  row 2 = [fields fields fields]
+*/
+.zad-row {
+  position: relative;
+  display: grid;
+  /* Wide: [check] [name] [6-field grid] [del] — delete sits at the END of the row */
+  grid-template-columns: auto minmax(180px, 1.6fr) minmax(380px, 4.7fr) auto;
+  grid-template-areas: "check name fields del";
+  align-items: center;
+  gap: 10px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF1;
+  border-radius: 8px;
+  padding: 12px;
+  transition: opacity 150ms, box-shadow 150ms, transform 150ms;
+}
+.zad-row__done-wrap { grid-area: check; }
+.zad-field--name    { grid-area: name; min-width: 0; }
+.zad-row__delete    { grid-area: del; }
+.zad-row__fields    { grid-area: fields; min-width: 0; }
+
+@media (max-width: 1280px) {
+  .zad-row {
+    grid-template-columns: auto 1fr auto;
+    /* Narrow: delete stays at end of name row, 6 fields wrap below */
+    grid-template-areas:
+      "check name del"
+      "fields fields fields";
+    row-gap: 10px;
+  }
+}
+.zad-row--done { opacity: 0.55; }
+.zad-row--done .zad-row__name { text-decoration: line-through; }
+
+/* Done checkbox — aligned with inputs (not labels) */
+.zad-row__done-wrap {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.zad-row__done { position: absolute; opacity: 0; width: 0; height: 0; }
+.zad-row__done-box {
+  width: 18px; height: 18px;
+  border: 1.5px solid #DCE0E6;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  color: transparent;
+  transition: all 120ms;
+}
+.zad-row__done-box svg { width: 12px; height: 12px; }
+.zad-row__done:checked + .zad-row__done-box {
+  background: var(--zilo-primary);
+  border-color: var(--zilo-primary);
+  color: #FFF;
+}
+
+/* Field grid — 6 inputs (Osoba, Jednostka, Ilość, Cena, SumNet, SumBrutto) */
+.zad-row__fields {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.7fr 1fr 1fr 1fr;
+  gap: 8px;
+  min-width: 0;
+}
+/* ─────────────────────────────────────────────────────────────────────
+   .ds-field — port of Storybook DS .input component (zilo.dev).
+   Exact spec from https://storybook.zilo.dev/assets/style.<hash>.css
+   ───────────────────────────────────────────────────────────────────── */
+.ds-field {
+  position: relative;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Input element — fills the wrapper */
+.ds-field__input {
+  border: none;
+  border: 1px solid #979DB0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  width: 100%;
+  min-height: 100%;
+  padding: 0 15px;
+  border-radius: 10px;
+  cursor: text;
+  background-color: #FFF;
+  color: var(--grey-1);
+  outline: none;
+  transition: border-color 150ms, border-width 150ms, padding 150ms, box-shadow 150ms;
+  box-sizing: border-box;
+}
+.ds-field__input::placeholder { color: #979DB0; opacity: 0; }
+.ds-field__input:hover { border-color: #000; }
+.ds-field__input:focus {
+  outline: none;
+  box-shadow: 2px 2px 10px #E0E7F0;
+  border-color: #222693;
+  border-width: 2px;
+  padding: 18px 14px 0;
+}
+.ds-field__input:focus::placeholder { opacity: 1; }
+/* Filled (has value): match DS .input--filled — same border as default,
+   padding-top: 18px so the floated label fits on top. */
+.ds-field__input:not(:placeholder-shown) {
+  padding-top: 18px;
+  border-color: #979DB0;
+}
+
+/* Label */
+.ds-field__label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #979DB0;
+  position: absolute;
+  top: 18px;
+  left: 0;
+  transition: all .2s ease-in-out;
+  z-index: 1;
+  padding: 0 16px;
+  cursor: text;
+  white-space: nowrap;
+  pointer-events: none;
+  background: transparent;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+/* Floated label (focus or filled) */
+.ds-field__input:focus ~ .ds-field__label,
+.ds-field__input:not(:placeholder-shown) ~ .ds-field__label {
+  font-size: 13px;
+  top: 6px;
+  left: 0;
+}
+
+/* Static (readonly / disabled) — for Łączny czas pracy.
+   Disabled-state border (#E9ECF1) signals the field is read-only.
+   Layout uses normal block flow (no flex) so value sits in the same
+   vertical position as inputs in their filled state. */
+.ds-field--readonly .ds-field__input--static {
+  border: 1px solid #E9ECF1;
+  border-radius: 10px;
+  background: #FFF;
+  width: 100%;
+  min-height: 100%;
+  padding: 18px 14px 0;
+  font: 400 16px/20px var(--font-sans);
+  color: var(--grey-1);
+  box-sizing: border-box;
+}
+.ds-field--readonly .ds-field__label {
+  font-size: 13px;
+  top: 6px;
+  left: 0;
+}
+
+/* ──────────────  Select variant  ────────────── */
+.ds-field--select { /* same wrapper height */ }
+.ds-field__select {
+  border: 1px solid #979DB0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  width: 100%;
+  min-height: 100%;
+  padding: 18px 38px 0 14px;       /* label space on top, chevron on right */
+  border-radius: 10px;
+  background: #FFF;
+  color: var(--grey-1);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  transition: border-color 150ms, border-width 150ms, box-shadow 150ms;
+}
+.ds-field__select:hover { border-color: #000; }
+.ds-field__select:focus {
+  outline: none;
+  box-shadow: 2px 2px 10px #E0E7F0;
+  border-color: #222693;
+  border-width: 2px;
+  padding: 18px 37px 0 13px;
+}
+/* Select always shows label on top */
+.ds-field--select .ds-field__label {
+  font-size: 13px;
+  top: 6px;
+  left: 0;
+}
+/* Empty placeholder option ('— wybierz —') → label centered, select text hidden */
+.ds-field--select:has(select option[value=""]:checked):not(:focus-within) .ds-field__label {
+  font-size: 16px;
+  top: 18px;
+}
+.ds-field--select:has(select option[value=""]:checked):not(:focus-within) .ds-field__select {
+  padding-top: 0;
+  color: transparent;
+}
+
+/* Custom chevron */
+.ds-field__chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  color: #979DB0;
+  pointer-events: none;
+  transition: color 150ms;
+}
+.ds-field__select:focus ~ .ds-field__chevron { color: #222693; }
+
+
+/* Drag handle — absolute-positioned OUTSIDE the row on the LEFT side.
+   Visible on row hover; appearance does NOT shift inputs. */
+.zad-row__drag {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #FFFFFF;
+  border: none;
+  cursor: grab;
+  color: var(--grey-3);
+  padding: 0;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 150ms, color 150ms;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.zad-row:hover .zad-row__drag,
+.zad-row--dragging .zad-row__drag { opacity: 1; }
+.zad-row__drag:hover { color: var(--zilo-primary); }
+.zad-row__drag:active { cursor: grabbing; }
+.zad-row__drag svg { width: 20px; height: 20px; }
+
+/* Delete button — sits at end of row, vertically centered with inputs */
+.zad-row__delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--grey-3);
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 150ms, background 150ms;
+  flex-shrink: 0;
+}
+.zad-row__delete:hover { color: #EA4335; background: #FFF3F3; }
+.zad-row__delete svg { width: 16px; height: 16px; }
+
+
+/* Section header — title (left), optional progress (middle), '+ Dodaj zadanie' (right).
+   Rendered ABOVE the task list / empty state. Bottom bar removed. */
+.zad-section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.zad-section-head__title {
+  font: 600 16px/1.2 var(--font-sans);
+  color: #242629;
+  margin: 0;
+}
+.zad-section-head__spacer { flex: 1; }
+/* .zad-add-task is a .btn .btn--ghost — styling comes from those base classes */
+.zad-add-task { white-space: nowrap; flex-shrink: 0; }
+
+/* Empty state — icon + title + description card. Shown when state.tasks is
+   empty (replaces the old plain '.zad-empty' text). */
+.zad-empty-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF1;
+  border-radius: 12px;
+}
+.zad-empty-state__icon {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.zad-empty-state__icon svg { width: 36px; height: 36px; display: block; }
+.zad-empty-state__body { flex: 1; min-width: 0; }
+.zad-empty-state__title {
+  font: 500 15px/1.3 var(--font-sans);
+  color: #242629;
+  margin-bottom: 4px;
+}
+.zad-empty-state__desc {
+  font: 400 13px/1.4 var(--font-sans);
+  color: var(--grey-2);
+}
+
+.zad-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 13px/1.2 var(--font-sans);
+  color: var(--grey-2);
+}
+.zad-progress__bar {
+  width: 60px;
+  height: 4px;
+  background: var(--grey-5);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.zad-progress__fill {
+  height: 100%;
+  background: var(--zilo-primary);
+  border-radius: 2px;
+  transition: width 200ms;
+}
+.zad-progress__text { white-space: nowrap; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Wersja B — legacy / production layout (preserved verbatim from 8b615c8).
+   Scoped under .zad-panel-inner--b so it never bleeds into Wersja A.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Summary 3-card — light box with label + value (no DS floating-label) */
+.zad-panel-inner--b .zad-summary-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid #E9ECF1;
+  border-radius: 8px;
+  background: #FFF;
+}
+.zad-panel-inner--b .zad-summary-field label {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6B707D;
+}
+.zad-panel-inner--b .zad-summary-field input,
+.zad-panel-inner--b .zad-summary-field .zad-time-value {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  color: #242629;
+  border: none;
+  outline: none;
+  padding: 0;
+  background: transparent;
+}
+.zad-panel-inner--b .zad-summary-field input:focus {
+  outline: 1px solid var(--zilo-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Task row — card layout (overrides A's responsive grid) */
+.zad-panel-inner--b .zad-row {
+  display: block;
+  grid-template-columns: none;
+  grid-template-areas: none;
+  border: 1px solid #E9ECF1;
+  border-radius: 8px;
+  padding: 12px;
+  background: #FFF;
+}
+
+.zad-panel-inner--b .zad-row__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Name input — plain inline-edit style (B has no DS-field wrapper) */
+.zad-panel-inner--b .zad-row__name {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #242629;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 4px 0;
+}
+.zad-panel-inner--b .zad-row__name::placeholder { color: #979DB0; font-weight: 400; }
+.zad-panel-inner--b .zad-row__name:focus {
+  outline: 1px solid var(--zilo-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+  padding: 4px 6px;
+}
+
+/* Delete trash — sits in header row, not at end of grid */
+.zad-panel-inner--b .zad-row__delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #979DB0;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.zad-panel-inner--b .zad-row__delete:hover { color: #EA4335; background: #FFF3F3; }
+
+/* Field grid — fixed 6 columns (B has no Mini/Max responsive mode) */
+.zad-panel-inner--b .zad-row__fields {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.8fr 1fr 1fr 1fr;
+  grid-template-areas: none;
+  gap: 8px;
+}
+
+.zad-panel-inner--b .zad-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.zad-panel-inner--b .zad-field label {
+  font-size: 11px;
+  font-weight: 400;
+  color: #6B707D;
+}
+.zad-panel-inner--b .zad-field input,
+.zad-panel-inner--b .zad-field select {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: #242629;
+  border: 1px solid #DCE0E6;
+  border-radius: 6px;
+  padding: 7px 10px;
+  background: #FFF;
+  outline: none;
+  min-width: 0;
+}
+.zad-panel-inner--b .zad-field input:focus,
+.zad-panel-inner--b .zad-field select:focus {
+  border-color: var(--zilo-primary);
+  box-shadow: 0 0 0 2px rgba(34, 38, 147, 0.12);
+}
+.zad-panel-inner--b .zad-field input::placeholder { color: #979DB0; }
+.zad-panel-inner--b .zad-field select { cursor: pointer; }
+
+/* '+ Dodaj zadanie' — full-width dashed button at the very bottom (no progress bar) */
+.zad-panel-inner--b .zad-add-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px dashed #DCE0E6;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--zilo-primary);
+  font: 500 14px/1.2 var(--font-sans);
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  transition: all 150ms;
+}
+.zad-panel-inner--b .zad-add-task:hover {
+  border-color: var(--zilo-primary);
+  background: #F3F3FF;
+}
+.zad-panel-inner--b .zad-add-task svg { width: 14px; height: 14px; }
+
+/* 'Przypisani do zlecenia' — rendered as a .visit-field row in left panel,
+   styled to match Status / Nazwa usługi / Termin sections. Chips inside the
+   .visit-field__value slot. */
+#zad-assigned-field { cursor: pointer; }
+#zad-assigned-field:hover .visit-field__label { color: var(--zilo-primary); }
+
+.zad-person-chips {
+  display: inline-flex;
+  align-items: center;
+}
+.zad-person-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #EEEDFE;
+  color: #3C3489;
+  font: 600 11px/1 var(--font-sans);
+  border: 2px solid #FFF;
+  margin-left: -6px;
+  flex-shrink: 0;
+}
+.zad-person-chips .zad-person-chip:first-child { margin-left: 0; }
+.zad-person-chip--more {
+  background: #F0F1F5;
+  color: #6B707D;
+}
+#zad-assigned-field { cursor: default; }
+#zad-assigned-field:hover .visit-field__label { color: var(--grey-2); }
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   OSOBY PRZYPISANE — interactive list inside .visit-field
+   ════════════════════════════════════════════════════════════════════════ */
+.zad-assigned-value {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Empty state: dashed button '+ Przypisz mechanika' */
+.zad-assign-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px dashed #DCE0E6;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--grey-2);
+  font: 400 14px/1.2 var(--font-sans);
+  cursor: pointer;
+  transition: all 150ms;
+}
+.zad-assign-empty:hover {
+  border-color: var(--zilo-primary);
+  color: var(--zilo-primary);
+  background: var(--zilo-blue-5);
+}
+.zad-assign-empty__plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Person list (filled state) */
+.zad-person-list {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.zad-person-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  background: transparent;
+  position: relative;
+  transition: background 150ms;
+}
+.zad-person-item:hover {
+  background: var(--zilo-blue-5);
+}
+.zad-person-item .zad-person-chip {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+  border: none;
+  margin-left: 0;
+}
+.zad-person-name {
+  font: 400 14px/1.2 var(--font-sans);
+  color: var(--grey-1);
+  white-space: nowrap;
+}
+/* Note: hover-× on chip removed in favor of dropdown-toggle interaction.
+   The .zad-person-remove rule is intentionally omitted now (no DOM element). */
+
+/* Add (+) button after the list */
+.zad-assign-plus-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--grey-5);
+  border-radius: 6px;
+  background: var(--zilo-blue-5);
+  color: var(--zilo-primary);
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 150ms;
+  flex-shrink: 0;
+}
+.zad-assign-plus-btn:hover {
+  background: var(--zilo-primary-4);
+  border-color: var(--zilo-primary);
+}
+
+/* Dropdown menu (same patterns as status-menu) */
+.zad-assign-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: #FFF;
+  border: 1px solid #EAEBFA;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(10, 11, 41, 0.10);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+.zad-assign-menu.is-open { display: flex; }
+.zad-assign-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font: 400 14px/1.2 var(--font-sans);
+  color: var(--grey-1);
+  width: 100%;
+}
+.zad-assign-item:hover { background: var(--zilo-blue-5); }
+.zad-assign-item .zad-person-chip {
+  width: 28px; height: 28px;
+  font-size: 11px;
+  border: none;
+  margin-left: 0;
+}
+/* Assigned-state: name slightly bolder, check icon on the right */
+.zad-assign-item.is-assigned .zad-person-name { font-weight: 500; }
+.zad-assign-item__check {
+  width: 16px; height: 16px;
+  color: var(--zilo-primary);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.zad-assign-item:hover.is-assigned { background: var(--zilo-primary-4); }
+.zad-assign-empty-state {
+  padding: 12px 10px;
+  text-align: center;
+  font: 400 13px/1.2 var(--font-sans);
+  color: var(--grey-2);
+}
+.zad-assign-menu__sep {
+  height: 1px;
+  background: var(--grey-5);
+  margin: 4px -6px;
+}
+.zad-assign-add-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font: 500 14px/1.2 var(--font-sans);
+  color: var(--zilo-primary);
+  width: 100%;
+  text-align: left;
+}
+.zad-assign-add-new:hover { background: var(--zilo-blue-5); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Szacowana cena — editable input inside .detail-row__value
+   ════════════════════════════════════════════════════════════════════════ */
+.estimated-price-input {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: #242629;
+  border: 1px solid var(--grey-4);
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #FFF;
+  outline: none;
+  width: 100%;
+  max-width: 240px;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+.estimated-price-input::placeholder { color: var(--grey-3); font-weight: 300; }
+.estimated-price-input:focus {
+  border-color: var(--zilo-primary);
+  box-shadow: 0 0 0 2px rgba(34, 38, 147, 0.12);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Szacowana cena — display-style (matches Opis pattern)
+   ════════════════════════════════════════════════════════════════════════ */
+.estimated-price-display {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: #242629;
+  cursor: text;
+  min-height: 22px;
+  display: inline-block;
+  width: 100%;
+}
+.estimated-price-display:empty::before {
+  content: attr(data-placeholder);
+  color: var(--grey-3);
+  font-style: normal;
+}
+.estimated-price-input[hidden] { display: none; }
+.estimated-price-input {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: #242629;
+  border: 1px solid var(--zilo-primary);
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #FFF;
+  outline: none;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Osoby przypisane: chevron-down button (replaces '+' in filled state)
+   ════════════════════════════════════════════════════════════════════════ */
+.zad-assign-chevron-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--grey-5);
+  border-radius: 6px;
+  background: var(--zilo-blue-5);
+  color: var(--zilo-primary);
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: all 150ms;
+}
+.zad-assign-chevron-btn:hover {
+  background: var(--zilo-primary-4);
+  border-color: var(--zilo-primary);
+}
+.zad-chevron-icon { transition: transform 200ms; }
+.zad-assign-chevron-btn.is-open .zad-chevron-icon { transform: rotate(180deg); }
