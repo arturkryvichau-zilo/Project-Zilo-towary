@@ -31,9 +31,10 @@
     /* Ikona „i" w polu „Przeprac. czas" + tooltip (hover tylko na ikonę) */
     .z-czas-info { position:absolute; right:11px; top:50%; transform:translateY(-50%); width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--grey-3); cursor:help; z-index:5; }
     .z-czas-info:hover { color:var(--zilo-blue-1); }
-    .z-czas-info__tip { position:absolute; bottom:calc(100% + 8px); right:-4px; width:230px; background:var(--grey-1); color:#fff; font-size:12px; line-height:16px; font-weight:400; padding:9px 11px; border-radius:8px; box-shadow:0 10px 28px rgba(10,11,41,0.20); opacity:0; visibility:hidden; transition:opacity 120ms var(--ease-standard); pointer-events:none; z-index:40; white-space:normal; text-align:left; }
-    .z-czas-info:hover .z-czas-info__tip { opacity:1; visibility:visible; }
     /* ─── Segmented Control (design system) ─── */
+    .o-add { display:inline-flex; align-items:center; gap:6px; height:32px; padding:4px 8px; border:0; border-radius:4px; background:transparent; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:16px; line-height:22px; cursor:pointer; }
+    .o-add:hover { background:#E9E9FF; }
+    .o-add i { width:20px; height:20px; display:block; background-color:var(--zilo-blue-1, #222693); -webkit-mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; }
     .ds-seg {
       --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
       --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
@@ -57,7 +58,13 @@
     .ds-seg .ds-seg__item:not([aria-checked="true"]):active { color:var(--black); }
     .ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
     .ds-seg__item:focus { outline:none; }
-  </style>
+  
+/* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
+   więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
+.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:#fff; font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
+.zilo-tt.is-multiline { white-space:normal; width:260px; }
+.zilo-tt.is-on { opacity:1; transform:translate(0,0); }
+</style>
 </helmet>
 
 <div class="{{ rootClass }}" style="height:100vh;background:#fff;font-family:var(--font-sans);color:var(--grey-1);display:flex;flex-direction:column;">
@@ -65,7 +72,7 @@
   <!-- ─── HEADER ───────────────────────────────────────────── -->
   <header style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5);background:#fff;min-height:70px;box-sizing:border-box;flex:none;">
     <div style="display:flex;align-items:center;gap:16px;">
-      <button aria-label="Zamknij" style="width:40px;height:40px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;">
+      <button style="position:relative;width:40px;height:40px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
         </svg>
@@ -108,7 +115,7 @@
             <div data-car="engine" style="font-size:16px;line-height:24px;color:var(--grey-1);">Diesel, S 350 BlueTEC 3.0</div>
             <div style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;color:var(--grey-1);">
               WAUZZZ4B74N05832
-              <button aria-label="Kopiuj VIN" style="width:22px;height:22px;border:0;background:transparent;color:var(--zilo-blue-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;border-radius:4px;" style-hover="background:var(--zilo-blue-5);">
+              <button style="position:relative;width:22px;height:22px;border:0;background:transparent;color:var(--zilo-blue-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;border-radius:4px;" style-hover="background:var(--zilo-blue-5);" data-tt="Kopiuj VIN" aria-label="Kopiuj VIN">
                 <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="width: 18px; height: 18px">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 0.9375H8.20769C6.82937 0.937488 5.73764 0.937479 4.88323 1.05235C4.00392 1.17057 3.29221 1.41966 2.73093 1.98093C2.16966 2.54221 1.92057 3.25392 1.80235 4.13323C1.68748 4.98764 1.68749 6.07936 1.6875 7.45768V12C1.6875 13.4042 2.71654 14.568 4.06164 14.7785C4.16511 15.3515 4.36315 15.8406 4.76126 16.2387C5.2127 16.6902 5.78111 16.8843 6.45619 16.9751C7.10641 17.0625 7.93315 17.0625 8.95885 17.0625H11.2912C12.3168 17.0625 13.1436 17.0625 13.7938 16.9751C14.4689 16.8843 15.0373 16.6902 15.4887 16.2387C15.9402 15.7873 16.1343 15.2189 16.2251 14.5438C16.3125 13.8936 16.3125 13.0668 16.3125 12.0412V8.20885C16.3125 7.18315 16.3125 6.35641 16.2251 5.70619C16.1343 5.03111 15.9402 4.4627 15.4887 4.01126C15.0906 3.61315 14.6015 3.41511 14.0285 3.31164C13.818 1.96654 12.6542 0.9375 11.25 0.9375ZM12.847 3.20338C12.6199 2.53968 11.9907 2.0625 11.25 2.0625H8.25C6.81989 2.0625 5.80389 2.0637 5.03314 2.16732C4.27857 2.26877 3.84384 2.45902 3.52643 2.77643C3.20902 3.09384 3.01877 3.52857 2.91732 4.28314C2.8137 5.05389 2.8125 6.06988 2.8125 7.5V12C2.8125 12.7407 3.28968 13.3699 3.95338 13.597C3.93748 13.1395 3.93749 12.6223 3.9375 12.0412V8.20884C3.93748 7.18315 3.93747 6.35641 4.02489 5.70619C4.11566 5.03111 4.30983 4.4627 4.76126 4.01126C5.2127 3.55983 5.78111 3.36566 6.45619 3.27489C7.10641 3.18747 7.93315 3.18748 8.95884 3.1875H11.2912C11.8723 3.18749 12.3895 3.18748 12.847 3.20338ZM5.55676 4.80676C5.76433 4.59919 6.05576 4.46385 6.60609 4.38986C7.1726 4.3137 7.92344 4.3125 9 4.3125H11.25C12.3266 4.3125 13.0774 4.3137 13.6439 4.38986C14.1942 4.46385 14.4857 4.59919 14.6932 4.80676C14.9008 5.01433 15.0362 5.30576 15.1101 5.85609C15.1863 6.4226 15.1875 7.17344 15.1875 8.25V12C15.1875 13.0766 15.1863 13.8274 15.1101 14.3939C15.0362 14.9442 14.9008 15.2357 14.6932 15.4432C14.4857 15.6508 14.1942 15.7862 13.6439 15.8601C13.0774 15.9363 12.3266 15.9375 11.25 15.9375H9C7.92344 15.9375 7.1726 15.9363 6.60609 15.8601C6.05576 15.7862 5.76433 15.6508 5.55676 15.4432C5.34919 15.2357 5.21385 14.9442 5.13986 14.3939C5.0637 13.8274 5.0625 13.0766 5.0625 12V8.25C5.0625 7.17344 5.0637 6.4226 5.13986 5.85609C5.21385 5.30576 5.34919 5.01433 5.55676 4.80676Z" fill="currentColor"></path>
                 </svg>
@@ -177,7 +184,8 @@
     <!-- Przełącznik wartości stoi nad kartą, 8 px od niej -->
     <div style="display:flex;flex-direction:column;gap:8px;">
       <!-- Card header: Segmented Control — wartości netto / brutto -->
-      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;">
+        <button type="button" class="o-add" onClick="{{ toggleRabat }}" style="background:{{ rabatBg }}"><i style="{{ rabatIcon }}"></i>Rabat</button>
         <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
@@ -237,9 +245,8 @@
                   <span style="font-size:16px;line-height:20px;color:var(--grey-1);flex-shrink:0;">h</span>
                 </div>
               </div>
-              <span class="z-czas-info" aria-label="Informacja">
+              <span class="z-czas-info" aria-label="Informacja" data-tt="Nie wpływa na ceny w wycenie. Służy do rozliczenia czasu pracy osoby w Raportach" data-tt-pos="top">
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.4" stroke="currentColor" stroke-width="1.4"></circle><rect x="9.1" y="8.7" width="1.8" height="5.2" rx="0.9" fill="currentColor"></rect><circle cx="10" cy="6.3" r="1.05" fill="currentColor"></circle></svg>
-                <span class="z-czas-info__tip">Nie wpływa na ceny w wycenie. Służy do rozliczenia czasu pracy osoby w Raportach</span>
               </span>
             </label>
             <!-- Jednostka select -->
@@ -297,7 +304,7 @@
               </div>
             </label>
             <!-- trash -->
-            <button aria-label="Usuń robociznę" onClick="{{ row.remove }}" style="width:30px;height:30px;border:0;background:transparent;color: {{ row.trashColor }} ;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);">
+            <button onClick="{{ row.remove }}" style="position:relative;width:30px;height:30px;border:0;background:transparent;color: {{ row.trashColor }} ;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);" data-tt="Usuń robociznę" aria-label="Usuń robociznę" data-tt-pos="left">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6127 2.00002H11.3872C11.5648 1.9999 11.7194 1.9998 11.8655 2.02313C12.4426 2.11528 12.9419 2.4752 13.2118 2.99351C13.2802 3.1247 13.329 3.27147 13.385 3.43995L13.4766 3.71474C13.4921 3.76125 13.4965 3.77442 13.5003 3.78479C13.644 4.18201 14.0165 4.45053 14.4388 4.46124C14.4499 4.46152 14.4635 4.46157 14.5128 4.46157H16.9743C17.3142 4.46157 17.5897 4.73708 17.5897 5.07695C17.5897 5.41682 17.3142 5.69233 16.9743 5.69233H3.02554C2.68567 5.69233 2.41016 5.41682 2.41016 5.07695C2.41016 4.73708 2.68567 4.46157 3.02554 4.46157H5.48714C5.53641 4.46157 5.55001 4.46152 5.56111 4.46124C5.98339 4.45053 6.35592 4.18203 6.4996 3.78481C6.50338 3.77437 6.50773 3.76148 6.52331 3.71474L6.61488 3.43997C6.67092 3.2715 6.71975 3.1247 6.78806 2.99351C7.05797 2.4752 7.55733 2.11528 8.13439 2.02313C8.28046 1.9998 8.43514 1.9999 8.6127 2.00002ZM7.54504 4.46157C7.5873 4.37867 7.62476 4.29254 7.65698 4.20347C7.66676 4.17642 7.67636 4.14762 7.68869 4.11063L7.77058 3.86496C7.84538 3.64054 7.86261 3.59477 7.87969 3.56196C7.96966 3.38919 8.13611 3.26921 8.32847 3.2385C8.365 3.23266 8.41386 3.2308 8.65043 3.2308H11.3495C11.586 3.2308 11.6349 3.23266 11.6714 3.2385C11.8638 3.26921 12.0302 3.38919 12.1202 3.56196C12.1373 3.59477 12.1545 3.64053 12.2293 3.86496L12.3112 4.11048L12.3429 4.20348C12.3752 4.29255 12.4126 4.37868 12.4549 4.46157H7.54504Z" fill="currentColor"></path>
                 <path d="M5.00715 7.08729C4.98454 6.74818 4.69131 6.4916 4.35219 6.51421C4.01308 6.53681 3.7565 6.83005 3.77911 7.16916L4.15937 12.8731C4.22952 13.9256 4.28619 14.7758 4.41909 15.4429C4.55726 16.1365 4.79227 16.7159 5.27768 17.17C5.76309 17.6241 6.35677 17.8201 7.05802 17.9118C7.7325 18 8.58454 18 9.63935 18H10.3605C11.4153 18 12.2674 18 12.9419 17.9118C13.6431 17.8201 14.2368 17.6241 14.7222 17.17C15.2076 16.7159 15.4426 16.1365 15.5808 15.4429C15.7137 14.7758 15.7704 13.9256 15.8405 12.8732L16.2208 7.16916C16.2434 6.83005 15.9868 6.53681 15.6477 6.51421C15.3086 6.4916 15.0154 6.74818 14.9928 7.08729L14.6154 12.7481C14.5416 13.854 14.4891 14.6235 14.3738 15.2025C14.2619 15.7641 14.1057 16.0613 13.8814 16.2712C13.657 16.4811 13.35 16.6172 12.7823 16.6914C12.1969 16.768 11.4256 16.7692 10.3172 16.7692H9.68268C8.5743 16.7692 7.80301 16.768 7.21766 16.6914C6.64986 16.6172 6.34286 16.4811 6.11852 16.2712C5.89418 16.0613 5.73801 15.7641 5.62614 15.2025C5.5108 14.6235 5.45826 13.854 5.38453 12.7481L5.00715 7.08729Z" fill="currentColor"></path>
@@ -308,15 +315,15 @@
           </div>
         </sc-for>
 
-        <!-- Footer: + Dodaj robociznę | totals -->
+        <!-- Footer: + Dodaj usługę | totals -->
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-left: 0px">
           <button onClick="{{ addRobocizna }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-            Dodaj robociznę
+            Dodaj usługę
           </button>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat: <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
+              <span>Rabat ({{ robRabatPct }}%): <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
             </sc-if>
             <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
               <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
@@ -442,7 +449,7 @@
               </div>
             </label>
             <!-- trash -->
-            <button aria-label="Usuń towar" onClick="{{ row.remove }}" style="width:30px;height:30px;border:0;background:transparent;color:var(--grey-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);">
+            <button onClick="{{ row.remove }}" style="position:relative;width:30px;height:30px;border:0;background:transparent;color:var(--grey-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-5);color:var(--red);" data-tt="Usuń towar" aria-label="Usuń towar" data-tt-pos="left">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6127 2.00002H11.3872C11.5648 1.9999 11.7194 1.9998 11.8655 2.02313C12.4426 2.11528 12.9419 2.4752 13.2118 2.99351C13.2802 3.1247 13.329 3.27147 13.385 3.43995L13.4766 3.71474C13.4921 3.76125 13.4965 3.77442 13.5003 3.78479C13.644 4.18201 14.0165 4.45053 14.4388 4.46124C14.4499 4.46152 14.4635 4.46157 14.5128 4.46157H16.9743C17.3142 4.46157 17.5897 4.73708 17.5897 5.07695C17.5897 5.41682 17.3142 5.69233 16.9743 5.69233H3.02554C2.68567 5.69233 2.41016 5.41682 2.41016 5.07695C2.41016 4.73708 2.68567 4.46157 3.02554 4.46157H5.48714C5.53641 4.46157 5.55001 4.46152 5.56111 4.46124C5.98339 4.45053 6.35592 4.18203 6.4996 3.78481C6.50338 3.77437 6.50773 3.76148 6.52331 3.71474L6.61488 3.43997C6.67092 3.2715 6.71975 3.1247 6.78806 2.99351C7.05797 2.4752 7.55733 2.11528 8.13439 2.02313C8.28046 1.9998 8.43514 1.9999 8.6127 2.00002ZM7.54504 4.46157C7.5873 4.37867 7.62476 4.29254 7.65698 4.20347C7.66676 4.17642 7.67636 4.14762 7.68869 4.11063L7.77058 3.86496C7.84538 3.64054 7.86261 3.59477 7.87969 3.56196C7.96966 3.38919 8.13611 3.26921 8.32847 3.2385C8.365 3.23266 8.41386 3.2308 8.65043 3.2308H11.3495C11.586 3.2308 11.6349 3.23266 11.6714 3.2385C11.8638 3.26921 12.0302 3.38919 12.1202 3.56196C12.1373 3.59477 12.1545 3.64053 12.2293 3.86496L12.3112 4.11048L12.3429 4.20348C12.3752 4.29255 12.4126 4.37868 12.4549 4.46157H7.54504Z" fill="currentColor"></path>
                 <path d="M5.00715 7.08729C4.98454 6.74818 4.69131 6.4916 4.35219 6.51421C4.01308 6.53681 3.7565 6.83005 3.77911 7.16916L4.15937 12.8731C4.22952 13.9256 4.28619 14.7758 4.41909 15.4429C4.55726 16.1365 4.79227 16.7159 5.27768 17.17C5.76309 17.6241 6.35677 17.8201 7.05802 17.9118C7.7325 18 8.58454 18 9.63935 18H10.3605C11.4153 18 12.2674 18 12.9419 17.9118C13.6431 17.8201 14.2368 17.6241 14.7222 17.17C15.2076 16.7159 15.4426 16.1365 15.5808 15.4429C15.7137 14.7758 15.7704 13.9256 15.8405 12.8732L16.2208 7.16916C16.2434 6.83005 15.9868 6.53681 15.6477 6.51421C15.3086 6.4916 15.0154 6.74818 14.9928 7.08729L14.6154 12.7481C14.5416 13.854 14.4891 14.6235 14.3738 15.2025C14.2619 15.7641 14.1057 16.0613 13.8814 16.2712C13.657 16.4811 13.35 16.6172 12.7823 16.6914C12.1969 16.768 11.4256 16.7692 10.3172 16.7692H9.68268C8.5743 16.7692 7.80301 16.768 7.21766 16.6914C6.64986 16.6172 6.34286 16.4811 6.11852 16.2712C5.89418 16.0613 5.73801 15.7641 5.62614 15.2025C5.5108 14.6235 5.45826 13.854 5.38453 12.7481L5.00715 7.08729Z" fill="currentColor"></path>
@@ -467,7 +474,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat: <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
+              <span>Rabat ({{ towRabatPct }}%): <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
             </sc-if>
             <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
               <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
@@ -487,10 +494,10 @@
       <!-- Notatka wewnętrzna -->
       <div style="display: flex; flex-direction: column; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: #979DB0">
         <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; padding-left: 14px; padding-right: 14px">
-          <button aria-label="Pogrubienie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">B</button>
-          <button aria-label="Kursywa" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">I</button>
-          <button aria-label="Podkreślenie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">U</button>
-          <button aria-label="Lista" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);">
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
             </svg>
@@ -502,10 +509,10 @@
       <!-- Komentarz dla klienta -->
       <div style="display: flex; flex-direction: column; background: #fff; border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: #979DB0">
         <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; border-color: #DCE0E6">
-          <button aria-label="Pogrubienie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">B</button>
-          <button aria-label="Kursywa" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">I</button>
-          <button aria-label="Podkreślenie" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);">U</button>
-          <button aria-label="Lista" style="width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);">
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
             </svg>
@@ -528,7 +535,7 @@
         <!-- Rabat globalny (suma rabatów z wszystkich grup) -->
         <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
-            <span style="color:var(--grey-1);">Rabat:</span>
+            <span style="color:var(--grey-1);">Rabat ({{ totalRabatPct }}%):</span>
             <span style="color:var(--grey-1);font-weight:400;">{{ totalRabatDisplay }} zł</span>
           </div>
         </sc-if>
@@ -548,7 +555,7 @@
           <div style="flex:1;min-width:0;display:flex;align-items:center;">
             <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">Przepisz towar z dokumentu</span>
           </div>
-          <button type="button" onClick="{{ closeDocPicker }}" title="Zamknij" style="width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);">
+          <button type="button" onClick="{{ closeDocPicker }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
             <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><path d="M2 2 L10 10 M10 2 L2 10"></path></svg>
           </button>
         </div>
@@ -612,7 +619,7 @@
           <span style="flex:1;min-width:0;display:inline-flex;align-items:center;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
             {{ docPicker.countLabel }}
             <sc-if value="{{ docPicker.hasPicked }}" hint-placeholder-val="{{ false }}">
-              <button type="button" onClick="{{ clearDocPicked }}" title="Odznacz wszystkie" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:var(--zilo-primary-5);color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);">
+              <button type="button" onClick="{{ clearDocPicked }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:var(--zilo-primary-5);color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);" data-tt="Odznacz wszystkie" aria-label="Odznacz wszystkie">
                 <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><path d="M2 2 L10 10 M10 2 L2 10"></path></svg>
               </button>
             </sc-if>
@@ -628,7 +635,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
 class Component extends DCLogic {
   static mkRobocizna(id) {
-    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', rabat: '0', unit: 'Sztuka', vat: '23', bruttoEditing: null, openField: null };
+    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', rabat: '', unit: 'Sztuka', vat: '23', bruttoEditing: null, openField: null };
   }
   static rawGroups() {
     let list = null;
@@ -727,7 +734,7 @@ class Component extends DCLogic {
 
   static mkTowar(id) {
     const def = Component.defaultGroup();
-    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', koszt: '0,00', kosztBrutto: '0,00', rabat: '0', unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, openField: null };
+    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', koszt: '0,00', kosztBrutto: '0,00', rabat: '', unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, openField: null };
   }
   static parseNum(v) {
     if (v == null || v === '') return 0;
@@ -735,6 +742,8 @@ class Component extends DCLogic {
     return isNaN(n) ? 0 : n;
   }
   static fmt(n) { return (Math.round(n * 100) / 100).toFixed(2).replace('.', ','); }
+  // procent bez zbędnych zer: 10 zamiast 10,00; przy mieszanych stawkach wychodzi średnia ważona
+  static pct(n) { return String(Math.round(n * 100) / 100).replace('.', ','); }
   // Cena jednostkowa wyliczana wstecz z wartości pozycji: dwa miejsca nie wystarczają
   // (1000 / 7 = 142,86 -> 7 × 142,86 = 1000,02). Trzymamy cztery, gdy to konieczne.
   static fmtPrice(n) {
@@ -958,6 +967,7 @@ class Component extends DCLogic {
       brutto: cmp.brutto,
       vatAmt: cmp.vatAmt,
       rabatAmt: cmp.rabatAmt,
+      bazaAmt: cmp.rabatAmt > 0 ? cmp.netto + cmp.rabatAmt : 0,
 
       // Klasy dla tri-state (default / filled)
       nameCellClass:   r.name   ? 'is-filled' : '',
@@ -1141,12 +1151,12 @@ class Component extends DCLogic {
     // dzięki czemu kolumny usług i towarów stoją w jednej linii przy każdej szerokości.
     const robGridStyle =
       'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px' +
-      (showRabat ? ' 80px' : '') +
+      (showRabat ? ' 154px' : '') +
       ' 154px 30px;gap:8px;align-items:center;';
     // Towar: name | indeks | producent | jednostka | ilość | cena | koszt | vat | (rabat)? | wNetto | wBrutto | trash
     const towGridStyle =
       'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 154px 154px' +
-      (showRabat ? ' 80px' : '') +
+      (showRabat ? ' 154px' : '') +
       ' 154px 30px;gap:8px;align-items:center;';
 
     const robociznas = this.state.robociznas.map((r) =>
@@ -1161,10 +1171,12 @@ class Component extends DCLogic {
     const robBrutto = sumBy(robociznas, 'brutto');
     const robVat    = sumBy(robociznas, 'vatAmt');
     const robRabat  = sumBy(robociznas, 'rabatAmt');
+    const robBaza   = sumBy(robociznas, 'bazaAmt');
     const towNetto  = sumBy(towars, 'netto');
     const towBrutto = sumBy(towars, 'brutto');
     const towVat    = sumBy(towars, 'vatAmt');
     const towRabat  = sumBy(towars, 'rabatAmt');
+    const towBaza   = sumBy(towars, 'bazaAmt');
 
     // Dodatkowe pola menu
     const catalog = Component.FIELD_CATALOG;
@@ -1193,6 +1205,13 @@ class Component extends DCLogic {
       robGridStyle,
       towGridStyle,
       showRabat,
+      rabatBg: showRabat ? '#E9E9FF' : 'transparent',
+      rabatIcon: showRabat ? '-webkit-mask-image:url(../assets/icons/i-close.svg);mask-image:url(../assets/icons/i-close.svg)' : '',
+      toggleRabat: () => this.setState((st) => ({
+        extraFields: st.extraFields.includes('rabat')
+          ? st.extraFields.filter((x) => x !== 'rabat')
+          : st.extraFields.concat(['rabat']),
+      })),
       allFields,
       showNetto: this.state.valueMode !== 'brutto',
       showBrutto: this.state.valueMode === 'brutto',
@@ -1222,14 +1241,17 @@ class Component extends DCLogic {
       robBruttoDisplay:  Component.fmt(robBrutto),
       robVatDisplay:     Component.fmt(robVat),
       robRabatDisplay:   Component.fmt(robRabat),
+      robRabatPct:       Component.pct(robBaza ? (robRabat / robBaza) * 100 : 0),
       towNettoDisplay:   Component.fmt(towNetto),
       towBruttoDisplay:  Component.fmt(towBrutto),
       towVatDisplay:     Component.fmt(towVat),
       towRabatDisplay:   Component.fmt(towRabat),
+      towRabatPct:       Component.pct(towBaza ? (towRabat / towBaza) * 100 : 0),
       totalNettoDisplay:  Component.fmt(robNetto  + towNetto),
       totalBruttoDisplay: Component.fmt(robBrutto + towBrutto),
       totalVatDisplay:    Component.fmt(robVat    + towVat),
       totalRabatDisplay:  Component.fmt(robRabat  + towRabat),
+      totalRabatPct:      Component.pct((robBaza + towBaza) ? ((robRabat + towRabat) / (robBaza + towBaza)) * 100 : 0),
 
       addRobocizna: () => this.setState((s) => ({
         robociznas: [...s.robociznas, Component.mkRobocizna(s.nextRobociznaId)],
@@ -1360,5 +1382,127 @@ class Component extends DCLogic {
 })();
 </script>
 
+<script>
+/* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
+   position:fixed omija overflow rodziców, a pozycja przeskakuje na stronę,
+   po której jest miejsce, i tak czy siak jest docinana do viewportu.
+   Myszka czeka DELAY ms, klawiatura pokazuje od razu. */
+(function () {
+  var GAP = 10, EDGE = 8, DELAY = 500;
+  var bubble = null, host = null, pending = null, timer = 0, watch = 0;
+
+  function box() {
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'zilo-tt';
+      bubble.setAttribute('role', 'tooltip');
+    }
+    if (!bubble.isConnected) document.body.appendChild(bubble);
+    return bubble;
+  }
+
+  function fits(p, r, w, h) {
+    if (p === 'top') return r.top - h - GAP >= EDGE;
+    if (p === 'bottom') return r.bottom + h + GAP <= innerHeight - EDGE;
+    if (p === 'left') return r.left - w - GAP >= EDGE;
+    return r.right + w + GAP <= innerWidth - EDGE;
+  }
+
+  function show(el) {
+    var text = el.getAttribute('data-tt');
+    if (!text) return;
+    var b = box();
+    b.textContent = text;
+    b.classList.toggle('is-multiline', text.length > 40);
+    b.classList.remove('is-on');
+    b.style.transform = 'none';
+    b.style.left = '0px';
+    b.style.top = '0px';
+
+    var r = el.getBoundingClientRect();
+    var w = b.offsetWidth, h = b.offsetHeight;
+    var want = el.getAttribute('data-tt-pos') || 'top';
+    var order = [want, 'top', 'bottom', 'right', 'left'];
+    var pos = want, i;
+    for (i = 0; i < order.length; i++) {
+      if (fits(order[i], r, w, h)) { pos = order[i]; break; }
+    }
+
+    var x, y, from;
+    if (pos === 'top') { x = r.left + r.width / 2 - w / 2; y = r.top - h - GAP; from = 'translateY(4px)'; }
+    else if (pos === 'bottom') { x = r.left + r.width / 2 - w / 2; y = r.bottom + GAP; from = 'translateY(-4px)'; }
+    else if (pos === 'left') { x = r.left - w - GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(4px)'; }
+    else { x = r.right + GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(-4px)'; }
+
+    x = Math.max(EDGE, Math.min(x, innerWidth - w - EDGE));
+    y = Math.max(EDGE, Math.min(y, innerHeight - h - EDGE));
+
+    b.style.left = Math.round(x) + 'px';
+    b.style.top = Math.round(y) + 'px';
+    b.style.transform = from;
+    host = el;
+    requestAnimationFrame(function () {
+      if (host === el) b.classList.add('is-on');
+    });
+
+    clearInterval(watch);
+    watch = setInterval(function () {
+      if (!host || !host.isConnected) hide();
+    }, 200);
+  }
+
+  function cancel() {
+    clearTimeout(timer);
+    timer = 0;
+    pending = null;
+  }
+
+  function hide() {
+    cancel();
+    clearInterval(watch);
+    watch = 0;
+    host = null;
+    if (bubble) { bubble.classList.remove('is-on'); bubble.style.transform = 'none'; }
+  }
+
+  function queue(el) {
+    cancel();
+    if (host && host !== el) hide();
+    pending = el;
+    timer = setTimeout(function () {
+      timer = 0;
+      pending = null;
+      show(el);
+    }, DELAY);
+  }
+
+  function trigger(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) { hide(); return; }
+    if (el === host || el === pending) return;
+    queue(el);
+  }
+
+  document.addEventListener('mouseover', trigger, true);
+  document.addEventListener('mouseout', function (e) {
+    var cur = host || pending;
+    if (cur && !cur.contains(e.relatedTarget)) hide();
+  }, true);
+  document.addEventListener('focusin', function (e) {
+    /* tylko fokus z klawiatury — inaczej dymek wraca zaraz po kliknieciu przycisku */
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) return;
+    try { if (!el.matches(':focus-visible')) return; } catch (err) { return; }
+    if (el === host) return;
+    cancel();
+    show(el);
+  }, true);
+  document.addEventListener('focusout', hide, true);
+  document.addEventListener('mousedown', hide, true);
+  document.addEventListener('scroll', hide, true);
+  addEventListener('resize', hide);
+  addEventListener('blur', hide);
+})();
+</script>
 </body>
 </html>

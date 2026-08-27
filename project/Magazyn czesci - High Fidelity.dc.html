@@ -20,9 +20,18 @@ html, body { margin:0; padding:0; font-family:'Rubik', -apple-system, 'Segoe UI'
 * { box-sizing:border-box; }
 button { font-family:inherit; }
 input::placeholder, textarea::placeholder { color:#979DB0; opacity:1; }
+.z-field { transition:border-color 160ms cubic-bezier(.2,0,0,1), box-shadow 160ms cubic-bezier(.2,0,0,1); }
+.z-field:focus-within { border-color:#222693 !important; box-shadow:inset 0 0 0 1px #222693; }
+.z-field input:focus, .z-field select:focus { outline:none; }
 a { color:#222693; text-decoration:none; }
 a:hover { color:#1D207C; text-decoration:underline; }
 @keyframes docBulkIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+/* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
+   więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
+.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:#fff; font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
+.zilo-tt.is-multiline { white-space:normal; width:260px; }
+.zilo-tt.is-on { opacity:1; transform:translate(0,0); }
 </style>
 </helmet>
 
@@ -64,7 +73,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
         <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a>
       </div>
       <div style="flex:1"></div>
-      <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;transition:background 150ms" style-hover="background:#F0F1F5">
+      <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;transition:background 150ms" style-hover="background:#F0F1F5" data-tt="Powiadomienia" aria-label="Powiadomienia" data-tt-pos="bottom">
         <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#6B707D;stroke-width:1.8;fill:none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         <span style="position:absolute;top:6px;right:7px;width:8px;height:8px;border-radius:50%;background:#EA4335;border:2px solid #fff"></span>
       </div>
@@ -76,7 +85,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ isFeatureSettings }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:#fff">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
-          <button type="button" onClick="{{ closeFeatureSettings }}" title="Wróć" style="width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0">
+          <button type="button" onClick="{{ closeFeatureSettings }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
             <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="font-weight: 500; font-size: 26px; line-height: 36px; color: #0D1619">Interface</div>
@@ -110,7 +119,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
           <div style="position:relative;background:#fff;border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
               <span style="font-size:20px;line-height:28px;font-weight:600;color:#0A0B29">Przechowalnia opon</span>
-              <button type="button" onClick="{{ cancelFeatureDialog }}" title="Zamknij" style="width:32px;height:32px;flex:none;border:0;border-radius:50%;background:#F6F6FC;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+              <button type="button" onClick="{{ cancelFeatureDialog }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:#F6F6FC;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
                 <span style="width:16px;height:16px;display:block;background-color:#0A0B29;-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
               </button>
             </div>
@@ -221,7 +230,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ isDocDetail }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:#fff">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
-          <button type="button" onClick="{{ backToDocs }}" title="Wróć" style="width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0">
+          <button type="button" onClick="{{ backToDocs }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
             <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="display:flex;align-items:center;gap:12px;min-width:0">
@@ -300,8 +309,8 @@ a:hover { color:#1D207C; text-decoration:underline; }
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Wartość brutto</span>
                 </div>
                 <sc-for list="{{ docDetail.rows }}" as="p" hint-placeholder-count="5">
-                  <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 120px 130px 90px 130px 130px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: #242629; background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px">
-                    <span onClick="{{ p.toggle }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ p.boxBorder }};border-radius:4px;background:{{ p.boxBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
+                  <div onClick="{{ p.toggle }}" style="cursor:pointer;min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 120px 130px 90px 130px 130px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: #242629; background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px" style-hover="background:#FBFBFB">
+                    <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ p.boxBorder }};border-radius:4px;background:{{ p.boxBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
                     <span style="width:14px;height:14px;display:block;background-color:#fff;-webkit-mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;opacity:{{ p.boxOpacity }}"></span>
                   </span>
                     <span style="font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px">{{ p.name }}</span>
@@ -331,7 +340,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ bulkBar }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;left:84px;right:0;bottom:0;z-index:40;padding:0 28px 24px;display:flex;justify-content:center;pointer-events:none">
         <div style="width: 400px; max-width: 100%; pointer-events: auto; background: #fff; border: 1px solid #DCE0E6; border-radius: 12px; box-shadow: 0 16px 40px rgba(10,11,41,0.20), 0 4px 12px rgba(10,11,41,0.12); padding: 12px 16px; display: flex; align-items: center; gap: 12px; animation: docBulkIn 220ms cubic-bezier(.2,0,0,1); justify-content: space-between">
-          <button type="button" onClick="{{ clearDocSel }}" title="Odznacz wszystkie" style="height:46px;width:46px;padding:12px;flex:none;border:0;border-radius:8px;background:#F3F3FF;color:#222693;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF" style-active="background:#DCDCFA">
+          <button type="button" onClick="{{ clearDocSel }}" style="position:relative;height:46px;width:46px;padding:12px;flex:none;border:0;border-radius:8px;background:#F3F3FF;color:#222693;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF" style-active="background:#DCDCFA" data-tt="Odznacz wszystkie" aria-label="Odznacz wszystkie">
             <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
           </button>
           <span style="font-size:16px;line-height:22px;font-weight:400;color:#242629;white-space:nowrap">{{ bulkLabel }}</span>
@@ -350,7 +359,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
               <span style="font-size:20px;line-height:28px;font-weight:600;color:#0A0B29">Przypisz do wizyty</span>
               
             </div>
-            <button type="button" onClick="{{ closeAssign }}" title="Zamknij" style="width: 32px; height: 32px; flex: none; border: 0; border-radius: 90px; cursor: pointer; display: grid; place-items: center; background-color: var(--grey-5)" style-hover="background:#F0F1F5">
+            <button type="button" onClick="{{ closeAssign }}" style="position:relative;width: 32px; height: 32px; flex: none; border: 0; border-radius: 90px; cursor: pointer; display: grid; place-items: center; background-color: var(--grey-5)" style-hover="background:#F0F1F5" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:16px;height:16px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
             </button>
           </div>
@@ -442,12 +451,20 @@ a:hover { color:#1D207C; text-decoration:underline; }
       </div>
     </sc-if>
 
+    <sc-if value="{{ fvConfigOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:12020;background:#FBFBFB;display:flex;flex-direction:column">
+        <iframe src="{{ fvConfigSrc }}" title="Wystaw fakturę" style="flex:1;width:100%;height:100%;border:0;display:block;background:#fff"></iframe>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ assignToast }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:70;max-width:640px;width:max-content">
         <div role="status" style="display:flex;align-items:center;gap:14px;padding:14px 14px 14px 18px;border-radius:10px;background:#00B286;color:#fff;font-size:14px;line-height:20px;box-shadow:0 1px 3px rgba(36,38,41,0.08), 0 4px 14px rgba(36,38,41,0.06)">
           <span style="flex:1;min-width:0">{{ assignToast }}</span>
-          <button type="button" onClick="{{ openAssignedVisit }}" style="flex:none;height:32px;padding:0 12px;border:0;border-radius:6px;background:rgba(255,255,255,0.18);color:#fff;font-family:inherit;font-size:14px;line-height:20px;white-space:nowrap;cursor:pointer;transition:background 200ms cubic-bezier(.2,0,0,1)" style-hover="background:rgba(255,255,255,0.30)">Zobacz wycenę</button>
-          <button type="button" onClick="{{ closeAssignToast }}" aria-label="Zamknij" style="position:relative;width:32px;height:32px;flex:none;display:grid;place-items:center;background:transparent;border:0;padding:0;cursor:pointer;color:inherit">
+          <sc-if value="{{ hasToastAction }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ openAssignedVisit }}" style="flex:none;height:32px;padding:0 12px;border:0;border-radius:6px;background:rgba(255,255,255,0.18);color:#fff;font-family:inherit;font-size:14px;line-height:20px;white-space:nowrap;cursor:pointer;transition:background 200ms cubic-bezier(.2,0,0,1)" style-hover="background:rgba(255,255,255,0.30)">Zobacz wycenę</button>
+          </sc-if>
+          <button type="button" onClick="{{ closeAssignToast }}" style="position:relative;width:32px;height:32px;flex:none;display:grid;place-items:center;background:transparent;border:0;padding:0;cursor:pointer;color:inherit" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
             <svg viewBox="0 0 32 32" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform:rotate(-90deg)">
               <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"></circle>
               <circle cx="16" cy="16" r="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="{{ assignToastRing }}" style="transition:stroke-dashoffset 10s linear"></circle>
@@ -464,7 +481,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden">
         <div style="min-height:70px;max-height:70px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #DCE0E6">
           <div style="display:flex;align-items:center;min-width:0">
-            <button type="button" onClick="{{ closeDocFlow }}" title="Zamknij" style="width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeDocFlow }}" style="position:relative;width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:#242629;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
@@ -512,7 +529,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:20;background:#FBFBFB;display:flex;flex-direction:column;overflow:hidden">
         <div style="min-height:70px;max-height:70px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #DCE0E6">
           <div style="display:flex;align-items:center;min-width:0">
-            <button type="button" onClick="{{ closeDocFlow }}" title="Zamknij" style="width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeDocFlow }}" style="position:relative;width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:#242629;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
@@ -624,7 +641,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <span style="font-size:12px;line-height:16px;color:#979DB0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Wartość brutto</span>
                         <input value="{{ r.grossPlain }}" onChange="{{ r.setGross }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:#242629">
                       </label>
-                      <button type="button" onClick="{{ r.remove }}" title="Usuń pozycję" style="width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center;justify-self:end" style-hover="background:#E4E6EC">
+                      <button type="button" onClick="{{ r.remove }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center;justify-self:end" style-hover="background:#E4E6EC" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
                         <span style="width:20px;height:20px;display:block;background-color:#6B707D;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                       </button>
                     </div>
@@ -650,7 +667,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
           <div style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:30;max-width:460px;width:max-content">
             <div role="status" style="display:flex;align-items:center;gap:14px;padding:14px 14px 14px 18px;border-radius:10px;background:#00B286;color:#fff;font-size:14px;line-height:20px;box-shadow:0 1px 3px rgba(36,38,41,0.08), 0 4px 14px rgba(36,38,41,0.06)">
               <span style="flex:1;min-width:0">{{ docSnack.text }}</span>
-              <button type="button" onClick="{{ closeDocSnack }}" aria-label="Zamknij" style="position:relative;width:32px;height:32px;flex:none;display:grid;place-items:center;background:transparent;border:0;padding:0;cursor:pointer;color:inherit">
+              <button type="button" onClick="{{ closeDocSnack }}" style="position:relative;width:32px;height:32px;flex:none;display:grid;place-items:center;background:transparent;border:0;padding:0;cursor:pointer;color:inherit" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
                 <svg viewBox="0 0 32 32" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform:rotate(-90deg)">
                   <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"></circle>
                   <circle cx="16" cy="16" r="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="{{ docSnack.ringOffset }}" style="transition:stroke-dashoffset 10s linear"></circle>
@@ -668,7 +685,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ isGoods }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:#fff">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
-          <button type="button" onClick="{{ goSettings }}" title="Wróć" style="width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0">
+          <button type="button" onClick="{{ goSettings }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
             <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="font-weight: 500; font-size: 26px; line-height: 36px; color: #0D1619">Ustawienia towarów</div>
@@ -760,7 +777,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:20;background:#FBFBFB;display:flex;flex-direction:column;overflow:hidden">
         <div style="min-height:70px;max-height:70px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #DCE0E6">
           <div style="display:flex;align-items:center;min-width:0">
-            <button type="button" onClick="{{ goGoods }}" title="Zamknij" style="width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ goGoods }}" style="position:relative;width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:#242629;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
@@ -842,7 +859,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden">
         <div style="min-height:70px;max-height:70px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #DCE0E6">
           <div style="display:flex;align-items:center;min-width:0">
-            <button type="button" onClick="{{ closeSupplierFlow }}" title="Zamknij" style="width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeSupplierFlow }}" style="position:relative;width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:#242629;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
@@ -884,7 +901,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:20;background:#FBFBFB;display:flex;flex-direction:column;overflow:hidden">
         <div style="min-height:70px;max-height:70px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #DCE0E6">
           <div style="display:flex;align-items:center;min-width:0">
-            <button type="button" onClick="{{ closeSupplierFlow }}" title="Zamknij" style="width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeSupplierFlow }}" style="position:relative;width:70px;height:70px;flex:none;border:0;border-right:1px solid #DCE0E6;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:#242629;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
@@ -982,11 +999,11 @@ a:hover { color:#1D207C; text-decoration:underline; }
               <button type="button" style="border:0;background:transparent;padding:0 16px;height:100%;font-size:14px;font-weight:500;color:#222693;cursor:pointer" style-hover="background:#F6F6FC">Dzisiaj</button>
               <div style="width:1px;height:100%;background:#E9ECF1"></div>
               <div style="display:flex;align-items:center">
-                <button type="button" title="Poprzedni" style="width:44px;height:44px;border:0;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+                <button type="button" style="position:relative;width:44px;height:44px;border:0;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Poprzedni tydzień" aria-label="Poprzedni tydzień" data-tt-pos="bottom">
                   <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
                 </button>
                 <div style="width:1px;height:16px;background:#E9ECF1"></div>
-                <button type="button" title="Następny" style="width:44px;height:44px;border:0;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+                <button type="button" style="position:relative;width:44px;height:44px;border:0;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Następny tydzień" aria-label="Następny tydzień" data-tt-pos="bottom">
                   <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                 </button>
               </div>
@@ -1040,7 +1057,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                   <button type="button" style="font-size:13px;font-weight:{{ day.titleWeight }};color:{{ day.titleColor }};background:transparent;border:0;padding:0;cursor:pointer" style-hover="text-decoration:underline">{{ day.label }}</button>
                   <span style="font-size:11px;color:#222693;width:22px;height:22px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:#F3F3FF">{{ day.count }}</span>
                 </div>
-                <button type="button" title="Nowe zlecenie" style="width:28px;height:28px;flex:none;border:0;border-radius:6px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+                <button type="button" style="position:relative;width:28px;height:28px;flex:none;border:0;border-radius:6px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt-off="Nowe zlecenie" aria-label="Nowe zlecenie" data-tt-pos="bottom">
                   <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                 </button>
               </div>
@@ -1167,7 +1184,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <span style="font-size:16px;line-height:22px;color:#242629;display:inline-flex;align-items:center;gap:8px;word-break:break-all">
                           {{ car.vinLabel }}
                           <sc-if value="{{ car.hasVin }}" hint-placeholder-val="{{ true }}">
-                            <button type="button" title="Kopiuj VIN" style="border:0;background:transparent;padding:4px;cursor:pointer;display:inline-grid;place-items:center;border-radius:4px" style-hover="background:#F3F3FF">
+                            <button type="button" style="position:relative;border:0;background:transparent;padding:4px;cursor:pointer;display:inline-grid;place-items:center;border-radius:4px" style-hover="background:#F3F3FF" data-tt="Kopiuj VIN" aria-label="Kopiuj VIN">
                               <span style="width:16px;height:16px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat"></span>
                             </button>
                           </sc-if>
@@ -1257,7 +1274,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ isClientDetail }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:auto">
         <div style="position: sticky; top: 0; z-index: 3; background: #fff; min-height: 70px; display: flex; align-items: center; gap: 14px; padding: 0 28px; border-bottom: 1px solid #E9ECF1">
-          <button type="button" onClick="{{ goClients }}" title="Wróć" style="min-width:46px;height:46px;flex:none;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+          <button type="button" onClick="{{ goClients }}" style="position:relative;min-width:46px;height:46px;flex:none;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
             <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="font-size:24px;line-height:34px;font-weight:500">Klient: {{ detail.name }}</div>
@@ -1276,6 +1293,25 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     <div style="font-size:12px;color:#979DB0;margin-bottom:4px">E-mail</div>
                     <div style="font-size:16px;line-height:22px;color:#242629">{{ detail.email }}</div>
                   </div>
+                  <div>
+                    <div style="font-size:12px;color:#979DB0;margin-bottom:4px">Grupa cenowa</div>
+                    <div style="font-size:16px;line-height:22px;color:#242629">{{ detail.priceGroup }}</div>
+                  </div>
+                  <sc-if value="{{ detail.hasInvoice }}" hint-placeholder-val="{{ true }}">
+                    <div style="width:1px;align-self:stretch;background:#DCE0E6;flex:none"></div>
+                  </sc-if>
+                  <sc-if value="{{ detail.hasInvoice }}" hint-placeholder-val="{{ true }}">
+                    <div>
+                      <div style="font-size:12px;color:#979DB0;margin-bottom:4px">Nazwa firmy</div>
+                      <div style="font-size:16px;line-height:22px;color:#242629">{{ detail.invCompany }}</div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ detail.hasInvoice }}" hint-placeholder-val="{{ true }}">
+                    <div>
+                      <div style="font-size:12px;color:#979DB0;margin-bottom:4px">NIP</div>
+                      <div style="font-size:16px;line-height:22px;color:#242629;font-variant-numeric:tabular-nums">{{ detail.invNip }}</div>
+                    </div>
+                  </sc-if>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                   <sc-for list="{{ detail.consents }}" as="chip" hint-placeholder-count="3">
@@ -1413,12 +1449,9 @@ a:hover { color:#1D207C; text-decoration:underline; }
                             <span style="font-size:15px;line-height:22px;color:{{ set.releasedColor }}">{{ set.released }}</span>
                             <span style="display:flex;align-items:center;gap:8px;margin-left:auto;flex:none">
                               <span style="position:relative;display:flex">
-                                <button type="button" data-set-key="{{ set.key }}" data-tip="menu" onClick="{{ toggleTireMenu }}" onMouseEnter="{{ showBtnTip }}" onMouseLeave="{{ hideBtnTip }}" aria-describedby="tip-more" style="width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF">
+                                <button type="button" data-set-key="{{ set.key }}" onClick="{{ toggleTireMenu }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF" data-tt="Więcej opcji" aria-label="Więcej opcji">
                                   <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat"></span>
                                 </button>
-                                <sc-if value="{{ set.tipMenu }}" hint-placeholder-val="{{ false }}">
-                                  <span role="tooltip" id="tip-more" style="position:absolute;bottom:calc(100% + 8px);right:0;z-index:40;background:rgba(10,11,41,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;font-size:14px;line-height:20px;padding:10px 16px;border-radius:8px;white-space:nowrap;pointer-events:none">Więcej opcji</span>
-                                </sc-if>
                                 <sc-if value="{{ set.menuOpen }}" hint-placeholder-val="{{ false }}">
                                   <span style="position:absolute;top:calc(100% + 8px);right:0;min-width:260px;display:flex;flex-direction:column;background:#fff;border:1px solid #DCE0E6;border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
                                     <span style="padding:12px 20px;font-size:15px;line-height:22px;color:#242629;cursor:pointer" style-hover="background:#F6F6FC">Pobierz etykietę na opony</span>
@@ -1429,20 +1462,14 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                 </sc-if>
                               </span>
                               <span style="position:relative;display:flex">
-                                <button type="button" data-set-key="{{ set.key }}" data-tip="download" onMouseEnter="{{ showBtnTip }}" onMouseLeave="{{ hideBtnTip }}" aria-describedby="tip-pdf" style="width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF">
+                                <button type="button" data-set-key="{{ set.key }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF" data-tt="Pobierz protokół przyjęcia" aria-label="Pobierz protokół przyjęcia">
                                   <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
                                 </button>
-                                <sc-if value="{{ set.tipDownload }}" hint-placeholder-val="{{ false }}">
-                                  <span role="tooltip" id="tip-pdf" style="position:absolute;bottom:calc(100% + 8px);right:0;z-index:40;background:rgba(10,11,41,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;font-size:14px;line-height:20px;padding:10px 16px;border-radius:8px;white-space:nowrap;pointer-events:none">Pobierz protokół przyjęcia</span>
-                                </sc-if>
                               </span>
                               <span style="position:relative;display:flex">
-                                <button type="button" data-set-key="{{ set.key }}" data-tip="edit" onClick="{{ editTireSet }}" onMouseEnter="{{ showBtnTip }}" onMouseLeave="{{ hideBtnTip }}" aria-describedby="tip-edit" style="width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF">
+                                <button type="button" data-set-key="{{ set.key }}" onClick="{{ editTireSet }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:#F3F3FF" data-tt="Edytuj komplet" aria-label="Edytuj komplet">
                                   <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                                 </button>
-                                <sc-if value="{{ set.tipEdit }}" hint-placeholder-val="{{ false }}">
-                                  <span role="tooltip" id="tip-edit" style="position:absolute;bottom:calc(100% + 8px);right:0;z-index:40;background:rgba(10,11,41,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;font-size:14px;line-height:20px;padding:10px 16px;border-radius:8px;white-space:nowrap;pointer-events:none">Edytuj komplet</span>
-                                </sc-if>
                               </span>
                             </span>
                           </div>
@@ -1549,7 +1576,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:8;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="background:#FFFFFF;border-radius:8px;width:calc(100vw - 80px);height:calc(100vh - 80px);max-width:1840px;max-height:1120px;display:flex;flex-direction:column;overflow:hidden">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;gap:14px;padding:0 14px">
-            <button type="button" onClick="{{ closeRelease }}" title="Wróć" style="min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeRelease }}" style="position:relative;min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
             </button>
           </div>
@@ -1799,7 +1826,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:8;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="background:#FFFFFF;border-radius:8px;width:calc(100vw - 80px);height:calc(100vh - 80px);max-width:1840px;max-height:1120px;display:flex;flex-direction:column;overflow:hidden">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;justify-content:flex-start;gap:14px;padding:0 14px">
-            <button type="button" onClick="{{ closeVisitClient }}" title="Wróć" style="min-width: 46px; height: 46px; border: 1px solid #DCE0E6; border-radius: 10px; background: #fff; cursor: pointer; display: none; place-items: center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeVisitClient }}" style="position:relative;min-width: 46px; height: 46px; border: 1px solid #DCE0E6; border-radius: 10px; background: #fff; cursor: pointer; display: none; place-items: center" style-hover="background:#F6F6FC" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
             </button>
           </div>
@@ -1807,7 +1834,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
           <div style="flex:1;min-height:0;overflow-y:auto">
             <div style="display:flex;flex-direction:column;padding:24px 0;gap:24px">
               <div style="display:flex;flex-direction:column;gap:14px;padding:0 28px">
-                <div style="font-size:18px;line-height:28px;font-weight:500;color:#242629">Klient</div>
+                <div style="font-size:18px;line-height:28px;font-weight:500;color:#242629">Podstawowe dane</div>
                 <div style="display:flex;flex-direction:column;gap:16px">
                   <div style="display:flex;gap:16px;align-items:flex-start">
                     <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:#242629">
@@ -1843,8 +1870,88 @@ a:hover { color:#1D207C; text-decoration:underline; }
                       </div>
                     </sc-for>
                   </div>
+
+                    <!-- Dane do faktury — karta jak karta pojazdu -->
+                    <div style="height:1px;background:#DCE0E6"></div>
+                    <div style="display:flex;flex-direction:column;gap:14px">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:30px">
+                        <div style="font-size:18px;line-height:28px;font-weight:500;color:#242629">Dane do faktury</div>
+                        <sc-if value="{{ visitClient.inv.showAdd }}" hint-placeholder-val="{{ true }}">
+                          <button type="button" onClick="{{ visitClient.inv.add }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:#F3F3FF;color:#222693;font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:#E9E9FF">
+                            <span style="width:20px;height:20px;flex:none;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                            Dane firmowe
+                          </button>
+                        </sc-if>
+                      </div>
+                      <sc-if value="{{ visitClient.inv.on }}" hint-placeholder-val="{{ true }}">
+                        <div style="background:#FBFBFD;border-left:3px solid #D5D7F8;padding:12px;display:flex;flex-direction:column;gap:12px">
+                          <div onClick="{{ visitClient.inv.toggleBody }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;min-height:36px">
+                            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                              <sc-if value="{{ visitClient.inv.hasTitle }}" hint-placeholder-val="{{ true }}">
+                                <div style="font-size:16px;font-weight:500;line-height:24px;color:#242629;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ visitClient.inv.title }}</div>
+                              </sc-if>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;flex:none">
+                              <div role="button" onClick="{{ visitClient.inv.remove }}" style="position:relative;width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer" data-tt="Usuń dane firmowe" aria-label="Usuń dane firmowe" data-tt-pos="left">
+                                <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
+                              </div>
+                              <div role="button" style="width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer">
+                                <span style="width:20px;height:20px;display:block;background-color:#242629;transition:transform 0.2s ease-in-out;transform:{{ visitClient.inv.arrow }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                              </div>
+                            </div>
+                          </div>
+                          <sc-if value="{{ visitClient.inv.expanded }}" hint-placeholder-val="{{ true }}">
+                            <div style="display:flex;flex-direction:column;gap:12px">
+                              <label class="z-field" style="width:100%;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid {{ visitClient.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">{{ visitClient.inv.nipLabel }}</span>
+                                  <span style="position:relative;display:block;width:100%">
+                                    <span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ visitClient.inv.nipTyped }}</span><span style="color:#979DB0">{{ visitClient.inv.nipRest }}</span></span>
+                                    <input value="{{ visitClient.inv.nip }}" data-inv-field="nip" onInput="{{ visitClient.inv.onField }}" onBlur="{{ visitClient.inv.onNipBlur }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                  </span>
+                                </span>
+                              </label>
+                              <sc-if value="{{ visitClient.inv.hasError }}" hint-placeholder-val="{{ false }}">
+                                <span style="font-size:14px;line-height:20px;color:#D93025">{{ visitClient.inv.error }}</span>
+                              </sc-if>
+                              <sc-if value="{{ visitClient.inv.showCompany }}" hint-placeholder-val="{{ true }}">
+                                <div style="display:flex;gap:12px;align-items:flex-start">
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Nazwa firmy</span>
+                                  <input value="{{ visitClient.inv.company }}" data-inv-field="company" onInput="{{ visitClient.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Ulica i numer</span>
+                                  <input value="{{ visitClient.inv.street }}" data-inv-field="street" onInput="{{ visitClient.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Kod pocztowy</span>
+                                  <input value="{{ visitClient.inv.zip }}" data-inv-field="zip" onInput="{{ visitClient.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Miejscowość</span>
+                                  <input value="{{ visitClient.inv.city }}" data-inv-field="city" onInput="{{ visitClient.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                                </div>
+                              </sc-if>
+                            </div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
                 </div>
               </div>
+
+              <div style="height:1px;background:#DCE0E6;margin:0 28px"></div>
+
 
               <div style="padding:0 28px;display:flex;flex-direction:column;gap:14px">
                 <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:28px;font-weight:500">
@@ -1866,7 +1973,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           </div>
                           <div style="display:flex;align-items:center;gap:4px">
                             <sc-if value="{{ car.removable }}" hint-placeholder-val="{{ false }}">
-                              <div role="button" data-car-id="{{ car.id }}" onClick="{{ removeVisitCar }}" title="Usuń pojazd" style="width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer">
+                              <div role="button" data-car-id="{{ car.id }}" onClick="{{ removeVisitCar }}" style="position:relative;width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer" data-tt="Usuń pojazd" aria-label="Usuń pojazd" data-tt-pos="left">
                                 <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                               </div>
                             </sc-if>
@@ -1973,7 +2080,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                                         </sc-if>
                                                       </span>
                                                       <span style="display:flex;align-items:center;gap:4px;flex:none">
-                                                        <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" title="Usuń komplet" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#FCE3DF">
+                                                        <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#FCE3DF">
                                                           <span style="width:20px;height:20px;display:block;background-color:#6B707D;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                                                         </span>
                                                         <span style="width:36px;height:36px;display:flex;justify-content:center;align-items:center;flex:none">
@@ -2086,7 +2193,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                                                 <input value="{{ w.qty }}" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" data-field="qty" onInput="{{ onVisitSetWheelField }}" placeholder="{{ w.qtyPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
                                                               </span>
                                                             </label>
-                                                            <button type="button" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" onClick="{{ removeVisitSetWheel }}" title="Usuń oponę" style="width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF">
+                                                            <button type="button" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" onClick="{{ removeVisitSetWheel }}" style="position:relative;width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF" data-tt="Usuń oponę" aria-label="Usuń oponę">
                                                               <span style="width:20px;height:20px;display:block;background-color:#6B707D;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                                                             </button>
                                                           </div>
@@ -2118,7 +2225,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                                         <span title="Lista" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                                                         <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat"></span>
                                                         </span>
-                                                        <span onClick="{{ addVisitSetFile }}" title="Dodaj załącznik (zdjęcie lub PDF)" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                                                        <span onClick="{{ addVisitSetFile }}" data-tt="Dodaj załącznik" aria-label="Dodaj załącznik" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                                                         <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
                                                         </span>
                                                         </div>
@@ -2128,7 +2235,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                                         <sc-for list="{{ t.files }}" as="f" hint-placeholder-count="2">
                                                         <span style="position:relative;width:56px;height:56px;border-radius:8px;border:1px solid #E9ECF1;background:#F6F6FC;display:grid;place-items:center">
                                                         <span style="width:20px;height:20px;display:block;background-color:#979DB0;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
-                                                        <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeVisitSetFile }}" title="Usuń" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693">
+                                                        <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeVisitSetFile }}" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693" data-tt="Usuń plik" aria-label="Usuń plik">
                                                         <span style="width:12px;height:12px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat;mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat"></span>
                                                         </button>
                                                         </span>
@@ -2176,7 +2283,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:8;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="background:#FFFFFF;border-radius:8px;width:calc(100vw - 80px);height:calc(100vh - 80px);max-width:1840px;max-height:1120px;display:flex;flex-direction:column;overflow:hidden">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;gap:14px;padding:0 24px">
-            <button type="button" onClick="{{ closeTireSection }}" title="Wróć" style="min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeTireSection }}" style="position:relative;min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
             </button>
           </div>
@@ -2202,7 +2309,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           </sc-if>
                         </span>
                         <span style="display:flex;align-items:center;gap:4px;flex:none">
-                          <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" title="Usuń komplet" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#FCE3DF">
+                          <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#FCE3DF">
                             <span style="width: 20px; height: 20px; display: none; background-color: #6B707D; -webkit-mask: url(assets/icons/i-trash.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                           </span>
                           <span style="width:36px;height:36px;display:flex;justify-content:center;align-items:center;flex:none">
@@ -2315,7 +2422,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                                   <input value="{{ w.qty }}" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" data-field="qty" onInput="{{ onVisitSetWheelField }}" placeholder="{{ w.qtyPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
                                 </span>
                               </label>
-                              <button type="button" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" onClick="{{ removeVisitSetWheel }}" title="Usuń oponę" style="width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF">
+                              <button type="button" data-set-key="{{ w.setKey }}" data-wheel-id="{{ w.id }}" onClick="{{ removeVisitSetWheel }}" style="position:relative;width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF" data-tt="Usuń oponę" aria-label="Usuń oponę">
                                 <span style="width:20px;height:20px;display:block;background-color:#6B707D;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                               </button>
                             </div>
@@ -2347,7 +2454,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <span title="Lista" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                           <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat"></span>
                           </span>
-                          <span onClick="{{ addVisitSetFile }}" title="Dodaj załącznik (zdjęcie lub PDF)" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                          <span onClick="{{ addVisitSetFile }}" data-tt="Dodaj załącznik" aria-label="Dodaj załącznik" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                           <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
                           </span>
                           </div>
@@ -2357,7 +2464,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <sc-for list="{{ t.files }}" as="f" hint-placeholder-count="2">
                           <span style="position:relative;width:56px;height:56px;border-radius:8px;border:1px solid #E9ECF1;background:#F6F6FC;display:grid;place-items:center">
                           <span style="width:20px;height:20px;display:block;background-color:#979DB0;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
-                          <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeVisitSetFile }}" title="Usuń" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693">
+                          <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeVisitSetFile }}" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693" data-tt="Usuń plik" aria-label="Usuń plik">
                           <span style="width:12px;height:12px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat;mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat"></span>
                           </button>
                           </span>
@@ -2397,7 +2504,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
         <div style="background:#FFFFFF;border-radius:8px;width:calc(100vw - 80px);height:calc(100vh - 80px);max-width:1840px;max-height:1120px;display:flex;flex-direction:column;overflow:hidden">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 24px">
             <div style="font-size:22px;line-height:28px;font-weight:600;color:#242629">Termin i stanowisko</div>
-            <button type="button" onClick="{{ closeTimeEdit }}" title="Zamknij" style="min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+            <button type="button" onClick="{{ closeTimeEdit }}" style="position:relative;min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
           </div>
@@ -2417,11 +2524,11 @@ a:hover { color:#1D207C; text-decoration:underline; }
                 <sc-if value="{{ timeEdit.dateOpen }}" hint-placeholder-val="{{ false }}">
                   <div style="position:absolute;top:calc(100% + 8px);left:0;z-index:30;background:#fff;border:1px solid #DCE0E6;border-radius:10px;padding:10px 12px 12px;box-sizing:border-box;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05)">
                     <div style="display:grid;grid-template-columns:24px 1fr 24px;align-items:center;margin-bottom:6px">
-                      <button type="button" data-step="-1" onClick="{{ stepTimeMonth }}" title="Poprzedni miesiąc" style="width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                      <button type="button" data-step="-1" onClick="{{ stepTimeMonth }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5" data-tt="Poprzedni miesiąc" aria-label="Poprzedni miesiąc">
                         <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
                       </button>
                       <span style="font-size:14px;font-weight:600;color:#242629;text-align:center;letter-spacing:-0.01em">{{ timeEdit.calTitle }}</span>
-                      <button type="button" data-step="1" onClick="{{ stepTimeMonth }}" title="Następny miesiąc" style="width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                      <button type="button" data-step="1" onClick="{{ stepTimeMonth }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5" data-tt="Następny miesiąc" aria-label="Następny miesiąc">
                         <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                       </button>
                     </div>
@@ -2515,7 +2622,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
     <sc-if value="{{ clash.open }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="position: relative; background: #FFFFFF; border-radius: 16px; max-width: 480px; padding: 24px; display: flex; flex-direction: column; align-items: center; width: 480px">
-          <button type="button" onClick="{{ cancelSeasonClash }}" title="Zamknij" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:50%;background:#F6F6FC;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+          <button type="button" onClick="{{ cancelSeasonClash }}" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:50%;background:#F6F6FC;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
             <span style="width:16px;height:16px;display:block;background-color:#0A0B29;-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
           </button>
           <div style="margin-top: 32px; font-size: 20px; line-height: 28px; font-weight: 600; color: #0A0B29; text-align: center; letter-spacing: -0.01em; white-space: nowrap">Ten pojazd ma już komplet {{ clash.seasonGen }} opon</div>
@@ -2533,7 +2640,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
         <div style="background:#FFFFFF;height:100%;width:100%;max-width:1440px;border-radius:8px;display:flex;flex-direction:column;overflow:hidden">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #E9ECF1;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 28px">
             <div style="font-size:22px;line-height:28px;font-weight:600;color:#242629">{{ tire.title }}</div>
-            <button type="button" onClick="{{ closeTireModal }}" title="Zamknij" style="width:32px;height:32px;flex:none;border:0;border-radius:50%;background:#F0F1F5;cursor:pointer;display:grid;place-items:center" style-hover="background:#E3E5EC">
+            <button type="button" onClick="{{ closeTireModal }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:#F0F1F5;cursor:pointer;display:grid;place-items:center" style-hover="background:#E3E5EC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
               <span style="width:16px;height:16px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
             </button>
           </div>
@@ -2553,11 +2660,11 @@ a:hover { color:#1D207C; text-decoration:underline; }
               <sc-if value="{{ tire.dateOpen }}" hint-placeholder-val="{{ false }}">
                 <div style="position:absolute;top:calc(100% + 8px);right:0;z-index:30;background:#fff;border:1px solid #DCE0E6;border-radius:10px;padding:10px 12px 12px;box-sizing:border-box;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05)">
                   <div style="display:grid;grid-template-columns:24px 1fr 24px;align-items:center;margin-bottom:6px">
-                    <button type="button" data-step="-1" onClick="{{ stepMonth }}" title="Poprzedni miesiąc" style="width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                    <button type="button" data-step="-1" onClick="{{ stepMonth }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5" data-tt="Poprzedni miesiąc" aria-label="Poprzedni miesiąc">
                       <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
                     </button>
                     <span style="font-size:14px;font-weight:600;color:#242629;text-align:center;letter-spacing:-0.01em">{{ tire.calTitle }}</span>
-                    <button type="button" data-step="1" onClick="{{ stepMonth }}" title="Następny miesiąc" style="width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                    <button type="button" data-step="1" onClick="{{ stepMonth }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5" data-tt="Następny miesiąc" aria-label="Następny miesiąc">
                       <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
@@ -2689,7 +2796,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                             <input value="{{ w.qty }}" data-wheel-id="{{ w.id }}" data-field="qty" onInput="{{ onTireWheelField }}" placeholder="{{ w.qtyPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
                           </span>
                         </label>
-                        <button type="button" data-wheel-id="{{ w.id }}" onClick="{{ removeTireWheel }}" title="Usuń oponę" style="width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF">
+                        <button type="button" data-wheel-id="{{ w.id }}" onClick="{{ removeTireWheel }}" style="position:relative;width:30px;height:30px;margin-top:13px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;opacity:{{ w.removeOpacity }};pointer-events:{{ w.removeEvents }}" style-hover="background:#E9E9FF" data-tt="Usuń oponę" aria-label="Usuń oponę">
                           <span style="width:20px;height:20px;display:block;background-color:#6B707D;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                         </button>
                       </div>
@@ -2724,7 +2831,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     <span title="Lista" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                       <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat"></span>
                     </span>
-                    <span onClick="{{ addTireFile }}" title="Dodaj załącznik (zdjęcie lub PDF)" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
+                    <span onClick="{{ addTireFile }}" data-tt="Dodaj załącznik" aria-label="Dodaj załącznik" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:#F0F1F5">
                       <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
                     </span>
                   </div>
@@ -2734,7 +2841,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                       <sc-for list="{{ tire.files }}" as="f" hint-placeholder-count="2">
                         <span style="position:relative;width:56px;height:56px;border-radius:8px;border:1px solid #E9ECF1;background:#F6F6FC;display:grid;place-items:center">
                           <span style="width:20px;height:20px;display:block;background-color:#979DB0;-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
-                          <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeTireFile }}" title="Usuń" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693">
+                          <button type="button" data-file-key="{{ f.key }}" onClick="{{ removeTireFile }}" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border:1px solid #E9ECF1;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:#222693" data-tt="Usuń plik" aria-label="Usuń plik">
                             <span style="width:12px;height:12px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat;mask:url(assets/icons/i-close.svg) center / 12px 12px no-repeat"></span>
                           </button>
                         </span>
@@ -2770,7 +2877,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 24px">
             <div style="font-size:22px;line-height:28px;font-weight:600;color:#242629">{{ edit.title }}</div>
             <div style="display:flex;align-items:center;gap:8px">
-              <button type="button" onClick="{{ closeEdit }}" title="Zamknij" style="min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC">
+              <button type="button" onClick="{{ closeEdit }}" style="position:relative;min-width:46px;height:46px;border:1px solid #DCE0E6;border-radius:10px;background:#fff;cursor:pointer;display:grid;place-items:center" style-hover="background:#F6F6FC" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
                 <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
               </button>
             </div>
@@ -2781,6 +2888,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
 
               <sc-if value="{{ edit.showClient }}" hint-placeholder-val="{{ false }}">
                 <div style="display:flex;flex-direction:column;gap:14px;padding:24px 0;border-bottom:1px solid {{ edit.clientBorder }}">
+                  <div style="font-size:18px;line-height:28px;font-weight:500;color:#242629">Podstawowe dane</div>
                   <div style="display: flex; flex-direction: column; gap: 24px">
                     <div style="display: flex; gap: 12px; align-items: flex-start">
                       <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:#242629">
@@ -2836,6 +2944,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         </sc-if>
                       </div>
                     </div>
+
                     <div style="display: flex; gap: 12px; align-items: flex-start">
                       <sc-for list="{{ edit.consents }}" as="c" hint-placeholder-count="3">
                         <div data-field="{{ c.key }}" onClick="{{ onEditToggle }}" style="flex:1;min-width:0;display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none;font-size:14px;line-height:20px;color:#242629">
@@ -2845,6 +2954,83 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <span style="text-wrap: pretty">{{ c.label }}</span>
                         </div>
                       </sc-for>
+                    </div>
+
+                    <!-- Dane do faktury — karta jak karta pojazdu -->
+                    <div style="height:1px;background:#DCE0E6"></div>
+                    <div style="display:flex;flex-direction:column;gap:14px">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:30px">
+                        <div style="font-size:18px;line-height:28px;font-weight:500;color:#242629">Dane do faktury</div>
+                        <sc-if value="{{ edit.inv.showAdd }}" hint-placeholder-val="{{ true }}">
+                          <button type="button" onClick="{{ edit.inv.add }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:#F3F3FF;color:#222693;font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:#E9E9FF">
+                            <span style="width:20px;height:20px;flex:none;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                            Dane firmowe
+                          </button>
+                        </sc-if>
+                      </div>
+                      <sc-if value="{{ edit.inv.on }}" hint-placeholder-val="{{ true }}">
+                        <div style="background:#FBFBFD;border-left:3px solid #D5D7F8;padding:12px;display:flex;flex-direction:column;gap:12px">
+                          <div onClick="{{ edit.inv.toggleBody }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;min-height:36px">
+                            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                              <sc-if value="{{ edit.inv.hasTitle }}" hint-placeholder-val="{{ true }}">
+                                <div style="font-size:16px;font-weight:500;line-height:24px;color:#242629;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ edit.inv.title }}</div>
+                              </sc-if>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:4px;flex:none">
+                              <div role="button" onClick="{{ edit.inv.remove }}" style="position:relative;width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer" data-tt="Usuń dane firmowe" aria-label="Usuń dane firmowe" data-tt-pos="left">
+                                <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
+                              </div>
+                              <div role="button" style="width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer">
+                                <span style="width:20px;height:20px;display:block;background-color:#242629;transition:transform 0.2s ease-in-out;transform:{{ edit.inv.arrow }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                              </div>
+                            </div>
+                          </div>
+                          <sc-if value="{{ edit.inv.expanded }}" hint-placeholder-val="{{ true }}">
+                            <div style="display:flex;flex-direction:column;gap:12px">
+                              <label class="z-field" style="width:100%;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid {{ edit.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">{{ edit.inv.nipLabel }}</span>
+                                  <span style="position:relative;display:block;width:100%">
+                                    <span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ edit.inv.nipTyped }}</span><span style="color:#979DB0">{{ edit.inv.nipRest }}</span></span>
+                                    <input value="{{ edit.inv.nip }}" data-inv-field="nip" onInput="{{ edit.inv.onField }}" onBlur="{{ edit.inv.onNipBlur }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                  </span>
+                                </span>
+                              </label>
+                              <sc-if value="{{ edit.inv.hasError }}" hint-placeholder-val="{{ false }}">
+                                <span style="font-size:14px;line-height:20px;color:#D93025">{{ edit.inv.error }}</span>
+                              </sc-if>
+                              <sc-if value="{{ edit.inv.showCompany }}" hint-placeholder-val="{{ true }}">
+                                <div style="display:flex;gap:12px;align-items:flex-start">
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Nazwa firmy</span>
+                                  <input value="{{ edit.inv.company }}" data-inv-field="company" onInput="{{ edit.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Ulica i numer</span>
+                                  <input value="{{ edit.inv.street }}" data-inv-field="street" onInput="{{ edit.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Kod pocztowy</span>
+                                  <input value="{{ edit.inv.zip }}" data-inv-field="zip" onInput="{{ edit.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                              <label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid #979DB0;border-radius:10px;overflow:hidden;cursor:text">
+                                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                                  <span style="font-size:12px;line-height:16px;color:#979DB0">Miejscowość</span>
+                                  <input value="{{ edit.inv.city }}" data-inv-field="city" onInput="{{ edit.inv.onField }}" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
+                                </span>
+                              </label>
+                                </div>
+                              </sc-if>
+                            </div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
                     </div>
                   </div>
                 </div>
@@ -2876,7 +3062,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           </div>
                           <div style="display:flex;align-items:center;gap:4px">
                             <sc-if value="{{ car.removable }}" hint-placeholder-val="{{ false }}">
-                              <div role="button" data-car-id="{{ car.id }}" onClick="{{ removeEditCar }}" title="Usuń pojazd" style="width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer">
+                              <div role="button" data-car-id="{{ car.id }}" onClick="{{ removeEditCar }}" style="position:relative;width:36px;height:36px;min-width:36px;display:flex;justify-content:center;align-items:center;cursor:pointer" data-tt="Usuń pojazd" aria-label="Usuń pojazd" data-tt-pos="left">
                                 <span style="width:20px;height:20px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                               </div>
                             </sc-if>
@@ -2976,7 +3162,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
           <div style="display:flex;justify-content:center;align-items:center;border-top:1px solid #E9ECF1;padding:14px">
             <div style="max-width:544px;width:100%;display:flex;gap:8px">
               <button type="button" onClick="{{ closeEdit }}" style="flex:1;height:48px;border:0;border-radius:10px;background:#F3F3FF;color:#222693;font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:#E9E9FF">Anuluj</button>
-              <button type="button" onClick="{{ submitEdit }}" style="flex:1;height:48px;border:0;border-radius:10px;background:#222693;color:#fff;font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:#1D207C">Potwierdź</button>
+              <button type="button" onClick="{{ submitEdit }}" style="flex:1;height:48px;border:0;border-radius:10px;background:#222693;opacity:{{ submitOpacity }};cursor:{{ submitCursor }};pointer-events:{{ submitEvents }};color:#fff;font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:#1D207C">Potwierdź</button>
             </div>
           </div>
         </div>
@@ -2988,10 +3174,10 @@ a:hover { color:#1D207C; text-decoration:underline; }
         <div style="background:#fff;border-radius:8px;width:calc(100vw - 80px);height:calc(100vh - 80px);max-width:1840px;max-height:1120px;overflow:hidden;display:flex;flex-direction:column">
           <div style="min-height:70px;max-height:70px;border-bottom:1px solid #DCE0E6;display:flex;align-items:center;justify-content:flex-end">
             <div style="display:flex;align-items:center;justify-content:flex-end">
-              <button type="button" title="Pobierz kartę zlecenia" aria-label="Pobierz kartę zlecenia" style="position:relative;width:70px;height:70px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 200ms" style-hover="background:#F3F3FF" style-before="content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:#F3F3FF">
+              <button type="button" style="position:relative;width:70px;height:70px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 200ms" style-hover="background:#F3F3FF" style-before="content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:#F3F3FF" data-tt="Pobierz kartę zlecenia" aria-label="Pobierz kartę zlecenia" data-tt-pos="bottom">
                 <span style="width:24px;height:24px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/header-download.svg) center / 24px 24px no-repeat;mask:url(assets/icons/header-download.svg) center / 24px 24px no-repeat"></span>
               </button>
-              <button type="button" onClick="{{ closeEvent }}" title="Zamknij" aria-label="Zamknij" style="position:relative;width:70px;height:70px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 200ms" style-hover="background:#F8F9FF" style-before="content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:#F3F3FF">
+              <button type="button" onClick="{{ closeEvent }}" style="position:relative;width:70px;height:70px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 200ms" style-hover="background:#F8F9FF" style-before="content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:#F3F3FF" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
                 <span style="width:24px;height:24px;display:block;background-color:#242629;-webkit-mask:url(assets/icons/header-close.svg) center / 24px 24px no-repeat;mask:url(assets/icons/header-close.svg) center / 24px 24px no-repeat"></span>
               </button>
             </div>
@@ -3027,7 +3213,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                       <div style="font-size:14px;line-height:22px;color:#6B707D">Nazwa usługi:</div>
                       <div style="font-size:16px">{{ evd.reason }}</div>
                     </div>
-                    <button type="button" title="Edytuj" style="margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+                    <button type="button" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt-off="Edytuj" aria-label="Edytuj">
                       <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
@@ -3048,7 +3234,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         </div>
                       </div>
                     </div>
-                    <button type="button" onClick="{{ openTimeEdit }}" title="Edytuj termin i stanowisko" style="margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+                    <button type="button" onClick="{{ openTimeEdit }}" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt-off="Edytuj termin i stanowisko" aria-label="Edytuj termin i stanowisko">
                       <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
@@ -3101,7 +3287,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         </sc-if>
                       </div>
                     </div>
-                    <button type="button" onClick="{{ toggleAssignMenu }}" title="Zarządzaj przypisanymi osobami" style="margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+                    <button type="button" onClick="{{ toggleAssignMenu }}" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt-off="Zarządzaj przypisanymi osobami" aria-label="Zarządzaj przypisanymi osobami">
                       <span style="width:20px;height:20px;display:block;background-color:#222693;transition:transform 200ms;transform:{{ assignChevronRotate }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
@@ -3123,7 +3309,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <span style="color:#222693;text-decoration:underline;cursor:pointer;white-space:nowrap">{{ evd.phone }}</span>
                         <span style="white-space:nowrap">{{ evd.clientName }}</span>
                       </div>
-                      <div onClick="{{ openVisitClientEdit }}" title="Edytuj dane klienta" style="width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer">
+                      <div onClick="{{ openVisitClientEdit }}" style="position:relative;width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer" data-tt-off="Edytuj dane klienta" aria-label="Edytuj dane klienta">
                         <span style="width: 20px; height: 20px; display: block; background-color: var(--zilo-blue-1); -webkit-mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat; color: var(--zilo-blue-1)"></span>
                       </div>
                     </div>
@@ -3149,7 +3335,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <div style="color:#979DB0;font-size:13px;line-height:16px">VIN</div>
                           <div style="color:#000;font-size:15px;line-height:32px;display:flex;align-items:center;gap:6px">
                             <span>{{ evd.vin }}</span>
-                            <button type="button" title="Kopiuj VIN" style="width:20px;height:20px;padding:0;background:transparent;border:0;cursor:pointer;display:grid;place-items:center">
+                            <button type="button" style="position:relative;width:20px;height:20px;padding:0;background:transparent;border:0;cursor:pointer;display:grid;place-items:center" data-tt="Kopiuj VIN" aria-label="Kopiuj VIN">
                               <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </div>
@@ -3163,7 +3349,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
               <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
                 <div style="padding: 14px 16px; margin: 0 12px; display: flex; flex-direction: column; gap: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px; margin-left: 0px; margin-right: 0px">
                   
-                  <div onClick="{{ openTireSection }}" style="background: #FBFBFB; border-left: 3px solid #D5D7F8; border-bottom: 1px solid #E9ECF1; padding: 12px 10px 10px 8px; display: flex; flex-direction: column; gap: 0px; cursor: pointer; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; padding-left: 12px; justify-content: flex-start; align-items: stretch" style-hover="background:#F6F6FC">
+                  <div onClick="{{ openTireSection }}" style="background: #FBFBFB; border-left: 3px solid #D5D7F8; border-bottom: 1px solid #E9ECF1; padding: 6px 10px 6px 8px; display: flex; flex-direction: column; gap: 0px; cursor: pointer; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; padding-left: 12px; justify-content: flex-start; align-items: stretch" style-hover="background:#F6F6FC">
     
                     <sc-if value="{{ visitTire.hasOn }}" hint-placeholder-val="{{ true }}">
                       <div style="padding: 0px; border-radius: 0px; display: flex; flex-direction: column; gap: 4px">
@@ -3209,7 +3395,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                               Wydaj opony
                               <span style="width: 20px; height: 20px; flex: none; display: none; background-color: #222693; -webkit-mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                             </button>
-                          <div onClick="{{ openTireSection }}" title="Edytuj opony" style="width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer;flex:none">
+                          <div onClick="{{ openTireSection }}" style="position:relative;width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer;flex:none" data-tt="Edytuj opony" aria-label="Edytuj opony">
                             <span style="width: 20px; height: 20px; display: block; background-color: var(--zilo-blue-1); -webkit-mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                           </div>
                           </span>
@@ -3218,11 +3404,11 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </sc-if>
     
                     <sc-if value="{{ visitTire.emptyOn }}" hint-placeholder-val="{{ false }}">
-                      <div onClick="{{ openClientEditorWithDraft }}" style="margin-top:8px;padding:8px;border-radius:8px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="background:#F6F6FC">
+                      <div onClick="{{ openClientEditorWithDraft }}" style="margin-top:0;padding:2px 8px;border-radius:8px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="background:#F6F6FC">
                         <div style="display:flex;align-items:center;gap:12px">
                           <span style="font-size:14px;line-height:20px;color:#6B707D">Dodaj komplet do przechowalni</span>
                           <span style="display:flex;align-items:center;gap:4px;margin-left:auto;flex:none">
-                            <button type="button" onClick="{{ openClientEditorWithDraft }}" title="Nowy komplet" style="width:30px;height:30px;border:0;border-radius:4px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF">
+                            <button type="button" onClick="{{ openClientEditorWithDraft }}" style="position:relative;width:30px;height:30px;border:0;border-radius:4px;background:#F3F3FF;cursor:pointer;display:grid;place-items:center" style-hover="background:#E9E9FF" data-tt="Nowy komplet" aria-label="Nowy komplet">
                               <span style="width:20px;height:20px;display:block;background-color:#222693;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </span>
@@ -3297,7 +3483,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                 </sc-if>
 
                 <sc-if value="{{ evd.tabWycena }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;flex-direction:column;gap:16px">
 
                   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 16px;padding:0 4px 4px">
                     <div style="display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:max-content">
@@ -3305,6 +3491,13 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </div>
                     <sc-if value="{{ evd.wyc.hasQuote }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto;margin-left:auto">
+                        <button type="button" onClick="{{ evd.wyc.downloadPdf }}" style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:#F3F3FF;color:#222693;cursor:pointer;padding:0;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF" data-tt="Pobierz PDF" aria-label="Pobierz PDF">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="width:20px;height:20px" aria-hidden="true"><path d="M10.4613 13.7551C10.3429 13.8846 10.1755 13.9583 10 13.9583C9.82453 13.9583 9.65714 13.8846 9.53873 13.7551L6.2054 10.1092C5.97248 9.85448 5.99019 9.45915 6.24494 9.22623C6.49969 8.99332 6.89502 9.01102 7.12794 9.26577L9.375 11.7235V2.5C9.375 2.15482 9.65482 1.875 10 1.875C10.3452 1.875 10.625 2.15482 10.625 2.5V11.7235L12.8721 9.26577C13.105 9.01102 13.5003 8.99332 13.7551 9.22623C14.0098 9.45915 14.0275 9.85448 13.7946 10.1092L10.4613 13.7551Z" fill="currentColor"></path><path d="M3.125 12.5C3.125 12.1548 2.84518 11.875 2.5 11.875C2.15482 11.875 1.875 12.1548 1.875 12.5V12.5457C1.87498 13.6854 1.87497 14.604 1.9721 15.3265C2.07295 16.0765 2.2887 16.7081 2.79029 17.2097C3.29189 17.7113 3.92345 17.9271 4.67354 18.0279C5.39602 18.125 6.31462 18.125 7.45428 18.125H12.5457C13.6854 18.125 14.604 18.125 15.3265 18.0279C16.0766 17.9271 16.7081 17.7113 17.2097 17.2097C17.7113 16.7081 17.9271 16.0765 18.0279 15.3265C18.125 14.604 18.125 13.6854 18.125 12.5457V12.5C18.125 12.1548 17.8452 11.875 17.5 11.875C17.1548 11.875 16.875 12.1548 16.875 12.5C16.875 13.6962 16.8737 14.5304 16.789 15.1599C16.7068 15.7714 16.5565 16.0952 16.3258 16.3258C16.0952 16.5565 15.7714 16.7068 15.1599 16.789C14.5304 16.8737 13.6962 16.875 12.5 16.875H7.5C6.30382 16.875 5.46956 16.8737 4.8401 16.789C4.22862 16.7068 3.90481 16.5565 3.67418 16.3258C3.44354 16.0952 3.29317 15.7714 3.21096 15.1599C3.12633 14.5304 3.125 13.6962 3.125 12.5Z" fill="currentColor"></path></svg>
+                        </button>
+                        <button type="button" onClick="{{ evd.wyc.issueFv }}" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:#F3F3FF;color:#222693;font-family:inherit;font-weight:400;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF">
+                          <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat"></span>
+                          Wystaw FV
+                        </button>
                         <button type="button" onClick="{{ evd.wyc.sendOffer }}" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:#F3F3FF;color:#222693;font-family:inherit;font-weight:400;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF" style-active="background:#DCDCFA">
                           <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px" aria-hidden="true"><path d="M8.92612 11.0744L2.5 7.6725C7.16919 5.10733 12.2421 3.3582 17.5 2.50049C16.6424 7.75819 14.8935 12.8309 12.3285 17.4999L8.92612 11.0744ZM8.92612 11.0744L13.0788 6.9217" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                           Wyślij ofertę do klienta
@@ -3351,7 +3544,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           
                           <span onClick="{{ r.openNet }}" style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:#F0F1F5">{{ r.net }}</span>
                           <span onClick="{{ r.openGross }}" style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:#F0F1F5">{{ r.gross }}</span>
-                          <span style="display:flex;justify-content:flex-end"><button type="button" onClick="{{ r.remove }}" title="Usuń pozycję" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9ECF1;color:#E0483D">
+                          <span style="display:flex;justify-content:flex-end"><button type="button" onClick="{{ r.remove }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9ECF1;color:#E0483D" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
                             <span style="width:18px;height:18px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat;mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat"></span>
                           </button></span>
                         </div>
@@ -3383,7 +3576,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <span onClick="{{ g.openNet }}" style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:#F0F1F5">{{ g.net }}</span>
                           <span onClick="{{ g.openGross }}" style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:#F0F1F5">{{ g.gross }}</span>
                           <span style="display:flex;justify-content:flex-end">
-                            <button type="button" onClick="{{ g.remove }}" title="Usuń pozycję" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693">
+                            <button type="button" onClick="{{ g.remove }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
                               <span style="width:18px;height:18px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat;mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat"></span>
                             </button>
                           </span>
@@ -3402,10 +3595,6 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </div>
 
                     <div style="display:flex;align-items:center;gap:16px;padding:0 4px">
-                      <button type="button" onClick="{{ evd.wyc.downloadPdf }}" style="display:inline-flex;align-items:center;justify-content:center;gap:4px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:#F3F3FF;color:#222693;font-family:inherit;font-weight:400;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#E9E9FF">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="width:20px;height:20px" aria-hidden="true"><path d="M10.4613 13.7551C10.3429 13.8846 10.1755 13.9583 10 13.9583C9.82453 13.9583 9.65714 13.8846 9.53873 13.7551L6.2054 10.1092C5.97248 9.85448 5.99019 9.45915 6.24494 9.22623C6.49969 8.99332 6.89502 9.01102 7.12794 9.26577L9.375 11.7235V2.5C9.375 2.15482 9.65482 1.875 10 1.875C10.3452 1.875 10.625 2.15482 10.625 2.5V11.7235L12.8721 9.26577C13.105 9.01102 13.5003 8.99332 13.7551 9.22623C14.0098 9.45915 14.0275 9.85448 13.7946 10.1092L10.4613 13.7551Z" fill="currentColor"></path><path d="M3.125 12.5C3.125 12.1548 2.84518 11.875 2.5 11.875C2.15482 11.875 1.875 12.1548 1.875 12.5V12.5457C1.87498 13.6854 1.87497 14.604 1.9721 15.3265C2.07295 16.0765 2.2887 16.7081 2.79029 17.2097C3.29189 17.7113 3.92345 17.9271 4.67354 18.0279C5.39602 18.125 6.31462 18.125 7.45428 18.125H12.5457C13.6854 18.125 14.604 18.125 15.3265 18.0279C16.0766 17.9271 16.7081 17.7113 17.2097 17.2097C17.7113 16.7081 17.9271 16.0765 18.0279 15.3265C18.125 14.604 18.125 13.6854 18.125 12.5457V12.5C18.125 12.1548 17.8452 11.875 17.5 11.875C17.1548 11.875 16.875 12.1548 16.875 12.5C16.875 13.6962 16.8737 14.5304 16.789 15.1599C16.7068 15.7714 16.5565 16.0952 16.3258 16.3258C16.0952 16.5565 15.7714 16.7068 15.1599 16.789C14.5304 16.8737 13.6962 16.875 12.5 16.875H7.5C6.30382 16.875 5.46956 16.8737 4.8401 16.789C4.22862 16.7068 3.90481 16.5565 3.67418 16.3258C3.44354 16.0952 3.29317 15.7714 3.21096 15.1599C3.12633 14.5304 3.125 13.6962 3.125 12.5Z" fill="currentColor"></path></svg>
-                        Pobierz PDF
-                      </button>
                       <span style="margin-left:auto;display:flex;gap:24px;font-size:15px;line-height:22px;color:#6B707D;font-variant-numeric:tabular-nums">
                         <span style="color: var(--black)">Suma netto: <b style="font-weight:500;color:#242629">{{ evd.wyc.sumNet }}</b></span>
                         <span style="color: var(--black)">Suma brutto: <b style="font-weight:500;color:#242629">{{ evd.wyc.sumGross }}</b></span>
@@ -3415,7 +3604,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                   </sc-if>
 
                   <sc-if value="{{ evd.wyc.hasHistory }}" hint-placeholder-val="{{ false }}">
-                  <section style="margin-top:24px;margin-bottom:48px;border-top:1px solid #E9ECF1;padding-top:20px">
+                  <section style="border-top:1px solid #E9ECF1;padding-top:16px">
                     <button type="button" onClick="{{ evd.wyc.toggleHistory }}" style="display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0 4px 12px;width:100%;cursor:pointer;font-family:inherit;color:#242629">
                       <span style="display:inline-flex;color:#000">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.99805 1.40039C10.0921 1.40039 10.1859 1.40129 10.2793 1.4043C11.6526 1.4547 12.9194 1.81103 14.0391 2.4082C15.661 3.40089 16.596 4.3362 17.2881 5.44043C18.1863 7.07763 18.5422 8.34433 18.5898 9.69043C18.5968 9.81215 18.5977 9.90591 18.5977 10C18.5977 10.0941 18.5968 10.1878 18.5938 10.2812C18.5424 11.6548 18.1862 12.9213 17.5889 14.041C16.5961 15.663 15.661 16.598 14.5566 17.29C12.9194 18.1881 11.6528 18.5443 10.3066 18.5918C10.1859 18.5987 10.0921 18.5996 9.99805 18.5996C9.90396 18.5996 9.8102 18.5987 9.7168 18.5957C8.34238 18.5442 7.07568 18.1882 5.95605 17.5908C4.33425 16.598 3.39893 15.6629 2.70703 14.5586C1.80908 12.9214 1.45275 11.6546 1.40527 10.3086C1.39934 10.1878 1.39844 10.0941 1.39844 10C1.39844 9.90591 1.39934 9.81215 1.40234 9.71875C1.41301 9.38759 1.69033 9.12709 2.02148 9.1377C2.35263 9.14836 2.61215 9.4257 2.60156 9.75684C2.59896 9.8375 2.59766 9.91866 2.59766 10C2.59766 14.0869 5.91114 17.4004 9.99805 17.4004C14.085 17.4004 17.3984 14.0869 17.3984 10C17.3984 5.91309 14.085 2.59961 9.99805 2.59961C9.91671 2.59961 9.83554 2.60092 9.75488 2.60352C9.42375 2.6141 9.14641 2.35459 9.13574 2.02344C9.12513 1.69229 9.38564 1.41497 9.7168 1.4043C9.8102 1.40129 9.90396 1.40039 9.99805 1.40039ZM9.99805 7C10.3293 7.00001 10.5974 7.26842 10.5977 7.59961V10.2002H13.1982C13.5295 10.2003 13.7977 10.4686 13.7979 10.7998C13.7979 11.1311 13.5295 11.4003 13.1982 11.4004H9.99805C9.66668 11.4004 9.39844 11.1312 9.39844 10.7998V7.59961C9.39865 7.26842 9.66681 7 9.99805 7Z" fill="currentColor"></path></svg>
@@ -3428,11 +3617,11 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </button>
                     <sc-if value="{{ evd.wyc.historyOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid #E9ECF1;border-radius:10px;background:#fff;display:flex;flex-direction:column;overflow-x:auto">
-                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 100px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:#6B707D;border-bottom:1px solid #E9ECF1">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:#6B707D;border-bottom:1px solid #E9ECF1">
                         <div>Wysłano</div><div>Status</div><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><div style="text-align:right">Razem</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.history }}" as="h" hint-placeholder-count="1">
-                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 100px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }}">
+                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }}">
                           <span style="font-size:15px;line-height:22px;color:#242629">{{ h.date }}</span>
                           <span style="position:relative">
                             <button type="button" onClick="{{ h.toggleMenu }}" style="display:inline-flex;align-items:center;gap:8px;padding:4px 8px 4px 12px;border:0;border-radius:4px;cursor:pointer;font-family:inherit;font-size:14px;line-height:22px;background:{{ h.statusBg }};color:{{ h.statusColor }};transition:background 150ms">
@@ -3453,11 +3642,48 @@ a:hover { color:#1D207C; text-decoration:underline; }
                           <span style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.t }}</span>
                           <span style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.amt }}</span>
                           <span style="display:flex;justify-content:flex-end;gap:4px">
-                            <button type="button" onClick="{{ evd.wyc.downloadPdf }}" title="Pobierz PDF" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693">
+                            <button type="button" onClick="{{ evd.wyc.downloadPdf }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693" data-tt="Pobierz PDF" aria-label="Pobierz PDF">
                               <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10.4613 13.7551C10.3429 13.8846 10.1755 13.9583 10 13.9583C9.82453 13.9583 9.65714 13.8846 9.53873 13.7551L6.2054 10.1092C5.97248 9.85448 5.99019 9.45915 6.24494 9.22623C6.49969 8.99332 6.89502 9.01102 7.12794 9.26577L9.375 11.7235V2.5C9.375 2.15482 9.65482 1.875 10 1.875C10.3452 1.875 10.625 2.15482 10.625 2.5V11.7235L12.8721 9.26577C13.105 9.01102 13.5003 8.99332 13.7551 9.22623C14.0098 9.45915 14.0275 9.85448 13.7946 10.1092L10.4613 13.7551Z" fill="currentColor"></path><path d="M3.125 12.5C3.125 12.1548 2.84518 11.875 2.5 11.875C2.15482 11.875 1.875 12.1548 1.875 12.5V12.5457C1.87498 13.6854 1.87497 14.604 1.9721 15.3265C2.07295 16.0765 2.2887 16.7081 2.79029 17.2097C3.29189 17.7113 3.92345 17.9271 4.67354 18.0279C5.39602 18.125 6.31462 18.125 7.45428 18.125H12.5457C13.6854 18.125 14.604 18.125 15.3265 18.0279C16.0766 17.9271 16.7081 17.7113 17.2097 17.2097C17.7113 16.7081 17.9271 16.0765 18.0279 15.3265C18.125 14.604 18.125 13.6854 18.125 12.5457V12.5C18.125 12.1548 17.8452 11.875 17.5 11.875C17.1548 11.875 16.875 12.1548 16.875 12.5C16.875 13.6962 16.8737 14.5304 16.789 15.1599C16.7068 15.7714 16.5565 16.0952 16.3258 16.3258C16.0952 16.5565 15.7714 16.7068 15.1599 16.789C14.5304 16.8737 13.6962 16.875 12.5 16.875H7.5C6.30382 16.875 5.46956 16.8737 4.8401 16.789C4.22862 16.7068 3.90481 16.5565 3.67418 16.3258C3.44354 16.0952 3.29317 15.7714 3.21096 15.1599C3.12633 14.5304 3.125 13.6962 3.125 12.5Z" fill="currentColor"></path></svg>
                             </button>
-                            <button type="button" onClick="{{ evd.wyc.previewOffer }}" title="Podgląd" style="width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693">
+                            <button type="button" onClick="{{ h.issueFv }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693" data-tt="Wystaw fakturę" aria-label="Wystaw fakturę">
+                              <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat"></span>
+                            </button>
+                            <button type="button" onClick="{{ evd.wyc.previewOffer }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693" data-tt="Podgląd" aria-label="Podgląd">
                               <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 7.03503C8.36241 7.03503 7.03488 8.36256 7.03488 10.0001C7.03488 11.6377 8.36241 12.9653 10 12.9653C11.6376 12.9653 12.9651 11.6377 12.9651 10.0001C12.9651 8.36256 11.6376 7.03503 10 7.03503ZM8.22093 10.0001C8.22093 9.01759 9.01745 8.22108 10 8.22108C10.9826 8.22108 11.7791 9.01759 11.7791 10.0001C11.7791 10.9827 10.9826 11.7792 10 11.7792C9.01745 11.7792 8.22093 10.9827 8.22093 10.0001Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M10 3.08154C6.43069 3.08154 4.02651 5.21975 2.63115 7.03255L2.60598 7.06524C2.29041 7.47508 1.99977 7.85255 1.80259 8.29888C1.59144 8.77684 1.5 9.29776 1.5 10.0001C1.5 10.7025 1.59144 11.2235 1.80259 11.7014C1.99977 12.1477 2.29041 12.5252 2.60599 12.9351L2.63115 12.9677C4.02651 14.7806 6.43069 16.9188 10 16.9188C13.5693 16.9188 15.9735 14.7806 17.3689 12.9677L17.394 12.9351C17.7096 12.5252 18.0002 12.1478 18.1974 11.7014C18.4086 11.2235 18.5 10.7025 18.5 10.0001C18.5 9.29776 18.4086 8.77684 18.1974 8.29888C18.0002 7.85254 17.7096 7.47507 17.394 7.06522L17.3689 7.03255C15.9735 5.21975 13.5693 3.08154 10 3.08154ZM3.57101 7.75599C4.85939 6.08218 6.9561 4.26759 10 4.26759C13.0439 4.26759 15.1406 6.08218 16.429 7.75599C16.7758 8.20652 16.9789 8.47573 17.1125 8.77816C17.2374 9.06081 17.314 9.40628 17.314 10.0001C17.314 10.594 17.2374 10.9395 17.1125 11.2221C16.9789 11.5246 16.7758 11.7938 16.429 12.2443C15.1406 13.9181 13.0439 15.7327 10 15.7327C6.9561 15.7327 4.85939 13.9181 3.57101 12.2443C3.22422 11.7938 3.02109 11.5246 2.88748 11.2221C2.76262 10.9395 2.68605 10.594 2.68605 10.0001C2.68605 9.40628 2.76262 9.06081 2.88748 8.77816C3.02109 8.47573 3.22422 8.20652 3.57101 7.75599Z" fill="currentColor"></path></svg>
+                            </button>
+                          </span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    </sc-if>
+                  </section>
+                  </sc-if>
+
+                  <sc-if value="{{ evd.wyc.hasFvHistory }}" hint-placeholder-val="{{ false }}">
+                  <section style="border-top:1px solid #E9ECF1;padding-top:16px">
+                    <button type="button" onClick="{{ evd.wyc.toggleFvHistory }}" style="display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0 4px 12px;width:100%;cursor:pointer;font-family:inherit;color:#242629">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:#000;-webkit-mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat"></span>
+                      <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Wystawione faktury</span>
+                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#ECEDF8;color:#222693;font-size:12px;font-weight:600;margin-right:6px">{{ evd.wyc.fvHistoryCount }}</span>
+                      <span style="margin-left:auto;color:#6B707D;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;transition:background 140ms" style-hover="background:#EEF0F5">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="transform:{{ evd.wyc.fvHistoryChevron }};transition:transform 200ms"><path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </span>
+                    </button>
+                    <sc-if value="{{ evd.wyc.fvHistoryOpen }}" hint-placeholder-val="{{ true }}">
+                    <div style="border:1px solid #E9ECF1;border-radius:10px;background:#fff;display:flex;flex-direction:column;overflow-x:auto">
+                      <div style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:#6B707D;border-bottom:1px solid #E9ECF1">
+                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div style="text-align:right">Kwota</div><div></div>
+                      </div>
+                      <sc-for list="{{ evd.wyc.fvHistory }}" as="f" hint-placeholder-count="1">
+                        <div style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }}">
+                          <span style="font-size:15px;line-height:22px;color:#242629;font-variant-numeric:tabular-nums">{{ f.numer }}</span>
+                          <span style="font-size:15px;line-height:22px;color:#242629;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.buyer }}</span>
+                          <span style="font-size:15px;line-height:22px;color:#242629">{{ f.date }}</span>
+                          <span><span style="display:inline-flex;align-items:center;padding:4px 12px;border-radius:4px;font-size:14px;line-height:22px;background:{{ f.statusBg }};color:{{ f.statusColor }}">{{ f.status }}</span></span>
+                          <span style="font-size:15px;line-height:22px;color:#242629;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ f.amt }}</span>
+                          <span style="display:flex;justify-content:flex-end">
+                            <button type="button" onClick="{{ evd.wyc.downloadPdf }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:#6B707D;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#F3F3FF;color:#222693" data-tt="Pobierz fakturę PDF" aria-label="Pobierz fakturę PDF" data-tt-pos="left">
+                              <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </span>
                         </div>
@@ -3510,8 +3736,8 @@ const EVENTS = [
   { id: 'r7', ws: 'w1', d: 1, t: '08:30', dur: 150, brand: 'Audi', model: 'A4 B8', plate: 'WB 8123R', reason: 'Wymiana rozrządu', st: 'wydane', client: 'Robert Lis', phone: '660 442 019' },
   { id: 'r11', ws: 'w1', d: 2, t: '08:00', dur: 120, brand: 'Volvo', model: 'V40', plate: 'WE 1204X', reason: 'Wymiana amortyzatorów', st: 'wydane', client: 'Karol Mróz', phone: '601 449 202' },
   { id: 'r13', ws: 'w3', d: 2, t: '10:30', dur: 45, brand: 'Fiat', model: 'Tipo', plate: 'WA 5510J', reason: 'Wymiana opon', st: 'wydane', client: 'Sebastian Rak', phone: '507 116 449', ext: true },
-  { id: 'r30', ws: 'w1', d: 3, t: '07:30', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'trakcie', client: 'Marek Kowalski', phone: '500 200 300', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
-  { id: 'r16', ws: 'w1', d: 3, t: '10:00', dur: 60, brand: 'Skoda', model: 'Superb', plate: 'WE 2288V', reason: 'Wymiana sprzęgła', st: 'trakcie', client: 'Grzegorz Pawlak', phone: '602 118 774' },
+  { id: 'r30', ws: 'w1', d: 3, t: '07:30', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'trakcie', client: 'Marek Zieliński', phone: '601 233 981', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
+  { id: 'r31', ws: 'w1', d: 4, t: '08:00', dur: 60, brand: 'Skoda', model: 'Superb', plate: 'PO 4471K', reason: 'Wymiana oleju z filtrem', st: 'nowa', client: 'Tomasz Nowak', phone: '604 771 118', veh: { year: '2019', engine: '2.0 TDI 190 KM', vin: 'TMBAG9NP4K7042118' } },
   { id: 'r27', ws: 'w3', d: 5, t: '09:00', dur: 60, brand: 'Volkswagen', model: 'Polo', plate: 'WE 5540N', reason: 'Wymiana opon', st: 'nowa', client: 'Dorota Krupa', phone: '660 118 004' },
 ];
 
@@ -3592,6 +3818,8 @@ const CLIENTS = [
       { id: 'r1', date: '10.08.2026', service: 'Wymiana opon + wyważanie', st: 'wydane', price: '320' },
       { id: 'v2', date: '14.03.2026', service: 'Przegląd okresowy', st: 'wydane', price: '480' },
       { id: 'v3', date: '02.11.2025', service: 'Wymiana klocków przód', st: 'wydane', price: '640' } ] },
+    { id: 'c1c', brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', vin: 'WVWZZZ3CZLE045128', year: '2020', engine: '2.0 TDI', last: '13.08.2026', visits: [
+      { id: 'r30', date: '13.08.2026', service: 'Wymiana oleju z filtrem', st: 'trakcie', price: '480' } ] },
     { id: 'c1b', brand: 'Toyota', model: 'Avensis', plate: 'WE 1180T', vin: '', year: '2011', engine: '2.0 D-4D', last: '18.05.2026', visits: [
       { id: 'v4', date: '18.05.2026', service: 'Wymiana oleju', st: 'wydane', price: '260' } ] } ] },
   { id: 'c2', name: 'Anna Krupa', phone: '512 887 220', email: 'anna.krupa@wp.pl', sms: true, mail: false, opinion: true, cars: [
@@ -3606,7 +3834,9 @@ const CLIENTS = [
     { id: 'c4a', brand: 'BMW', model: '320d E90', plate: 'KR 5588T', vin: 'WBAVC91050K118330', year: '2010', engine: '2.0 d 177 KM', last: '10.08.2026', visits: [
       { id: 'r4', date: '10.08.2026', service: 'Diagnostyka komputerowa', st: 'naprawione', price: '180' },
       { id: 'v10', date: '11.06.2026', service: 'Wymiana rozrządu', st: 'wydane', price: '2450' },
-      { id: 'v11', date: '03.04.2026', service: 'Wymiana opon', st: 'anulowane', price: '' } ] } ] },
+      { id: 'v11', date: '03.04.2026', service: 'Wymiana opon', st: 'anulowane', price: '' } ] },
+    { id: 'c4b', brand: 'Skoda', model: 'Superb', plate: 'PO 4471K', vin: 'TMBAG9NP4K7042118', year: '2019', engine: '2.0 TDI 190 KM', last: '14.08.2026', visits: [
+      { id: 'r31', date: '14.08.2026', service: 'Wymiana oleju z filtrem', st: 'nowa', price: '999' } ] } ] },
   { id: 'c5', name: 'Ewa Malinowska', phone: '607 003 442', email: 'ewa.mal@gmail.com', sms: true, mail: false, opinion: false, cars: [
     { id: 'c5a', brand: 'Ford', model: 'Focus MK3', plate: 'GD 3391M', vin: 'WF05XXGCC5EU11822', year: '2014', engine: '1.6 TDCi', last: '10.08.2026', visits: [
       { id: 'r5', date: '10.08.2026', service: 'Wymiana klocków i tarcz', st: 'wydane', price: '890' } ] } ] },
@@ -3630,21 +3860,33 @@ const CLIENTS = [
     { id: 'c11a', brand: 'Fiat', model: 'Tipo', plate: 'WA 5510J', vin: 'ZFA35600006118440', year: '2019', engine: '1.4 T-Jet', last: '12.08.2026', visits: [
       { id: 'r13', date: '12.08.2026', service: 'Wymiana opon', st: 'trakcie', price: '260' } ] } ] },
   { id: 'c12', name: 'Grzegorz Pawlak', phone: '602 118 774', email: 'g.pawlak@gmail.com', sms: true, mail: true, opinion: true, cars: [
-    { id: 'c12a', brand: 'Skoda', model: 'Superb III', plate: 'WE 2288V', vin: 'TMBJG9NP7H7118221', year: '2017', engine: '2.0 TDI 150 KM', last: '13.08.2026', visits: [
-      { id: 'r16', date: '13.08.2026', service: 'Wymiana sprzęgła', st: 'trakcie', price: '3200' },
+    { id: 'c12a', brand: 'Skoda', model: 'Superb III', plate: 'WE 2288V', vin: 'TMBJG9NP7H7118221', year: '2017', engine: '2.0 TDI 150 KM', last: '05.05.2026', visits: [
       { id: 'v22', date: '05.05.2026', service: 'Wymiana opon', st: 'wydane', price: '300' } ] } ] },
-  { id: 'c14', name: 'Marek Kowalski', phone: '500 200 300', email: 'm.kowalski@gmail.com', sms: true, mail: true, opinion: false, cars: [
-    { id: 'c14a', brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', vin: 'WVWZZZ3CZLE045128', year: '2020', engine: '2.0 TDI', last: '13.08.2026', visits: [
-      { id: 'r30', date: '13.08.2026', service: 'Wymiana oleju z filtrem', st: 'trakcie', price: '480' } ] } ] },
   { id: 'c13', name: 'Halina Adamczyk', phone: '605 447 210', email: 'h.adamczyk@gmail.com', sms: true, mail: false, opinion: true, cars: [
     { id: 'c13a', brand: 'Skoda', model: 'Fabia III', plate: 'WE 6104P', vin: 'TMBEH6NJ0HZ118004', year: '2017', engine: '1.0 TSI 95 KM', last: '13.08.2026', visits: [
       { id: 'r29', date: '13.08.2026', service: 'Wymiana opon', st: 'nowa', price: '280' },
       { id: 'v30', date: '21.03.2026', service: 'Wymiana opon + przechowanie', st: 'wydane', price: '340' } ] } ] },
 ];
 
+// Klienci firmowi — dane na fakturę podstawione domyślnie.
+const inv = (nip, company, street, zip, city) => ({
+  on: true, expanded: false,
+  nip: nip, nipBlurred: false, fetched: true,
+  company: company, street: street, zip: zip, city: city,
+});
+
+const DEFAULT_INVOICES = {
+  c1:  inv('552 325 05 93', 'Zieliński Transport Sp. z o.o.', 'ul. Ignacego Dobrogojskiego 30A', '61-692', 'Poznań'),
+  c3:  inv('779 148 22 61', 'Wysocki Bud Sp. j.', 'ul. Bukowska 112', '60-397', 'Poznań'),
+  c4:  inv('781 204 66 18', 'Nowak Logistyka Sp. z o.o.', 'ul. Szwajcarska 14', '61-285', 'Poznań'),
+  c6:  inv('972 116 40 75', 'Lis Serwis Sp. z o.o.', 'ul. Głogowska 218', '60-104', 'Poznań'),
+  c9:  inv('783 170 92 34', 'Mróz Fleet Sp. z o.o.', 'ul. Obornicka 235', '60-650', 'Poznań'),
+  c12: inv('778 142 55 09', 'Pawlak Instalacje Sp. z o.o.', 'ul. Warszawska 143', '61-047', 'Poznań'),
+};
+
 const NOTES = {
+  r31: 'Wymiana oleju i filtra przy przebiegu 142 000 km. Klient prosi o olej Castrol — ten sam co przy poprzedniej wymianie.',
   r29: 'Wymiana opon z felgami — komplet zimowy klienta przechowywany w warsztacie. Do sprawdzenia stan bieżnika przy oddaniu.',
-  r16: 'Klient zgłasza ślizganie się sprzęgła przy wyższych obrotach. Zgoda na wymianę kompletu wraz z łożyskiem oporowym.',
   r7: 'Wymiana rozrządu wraz z pompą wody. Klient prosi o kontakt telefoniczny przed dokupieniem części.',
 };
 
@@ -3761,20 +4003,19 @@ const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0214', ext: 'FV 88213/08/2026', date: '12.08.2026' };
 
-const SEED_QUOTE_STATE = {
+const OIL_QUOTE_STATE = {
   robociznas: [
-    { name: 'Wymiana paska rozrządu', person: 'Paweł Nowak', qty: '1', cena: '700,00', rabat: '0', vat: '23', unit: 'Godzina' },
-    { name: 'Wymiana pompy wody', person: 'Paweł Nowak', qty: '1', cena: '220,00', rabat: '0', vat: '23', unit: 'Godzina' },
-    { name: 'Uzupełnienie i odpowietrzenie układu chłodniczego', person: 'Paweł Nowak', qty: '1', cena: '220,00', rabat: '0', vat: '23', unit: 'Godzina' },
+    { name: 'Wymiana oleju', person: 'Paweł Nowak', qty: '1', cena: '300,00', rabat: '', vat: '23', unit: 'Godzina' },
+    { name: 'Wymiana filtra oleju', person: 'Paweł Nowak', qty: '1', cena: '80,00', rabat: '', vat: '23', unit: 'Godzina' },
   ],
   towars: [
-    { name: 'Pasek rozrządu', indeks: 'KP15607XS', producent: 'Gates', doc: 'ZM/2026/0211', qty: '1', cena: '700,00', koszt: '482,76', rabat: '0', vat: '23', unit: 'Zestaw', grupa: 'Klient detaliczny' },
-    { name: 'Pompa wody', indeks: 'VKPC 81416', producent: 'SKF', qty: '1', cena: '369,67', koszt: '254,95', rabat: '0', vat: '23', unit: 'Sztuka', grupa: 'Klient detaliczny' },
-    { name: 'Płyn chłodniczy', indeks: 'G12++', producent: 'Castrol', qty: '1', cena: '99,96', koszt: '68,94', rabat: '0', vat: '23', unit: 'Opakowanie', grupa: 'Klient detaliczny' },
+    { name: 'Olej silnikowy 5W30 5L', indeks: 'EDGE 5W30 LL', producent: 'Castrol', qty: '1', cena: '359,60', koszt: '248,00', rabat: '', vat: '23', unit: 'Opakowanie', grupa: 'Klient detaliczny' },
+    { name: 'Filtr oleju', indeks: 'HU 719/7 x', producent: 'MANN', qty: '1', cena: '55,10', koszt: '38,00', rabat: '', vat: '23', unit: 'Sztuka', grupa: 'Klient detaliczny' },
+    { name: 'Korek spustowy miski olejowej', indeks: 'N 908 132 02', producent: 'Febi', qty: '1', cena: '17,40', koszt: '12,00', rabat: '', vat: '23', unit: 'Sztuka', grupa: 'Klient detaliczny' },
   ],
 };
 
-const SEED_QUOTE_VISIT = 'r16';
+const OIL_QUOTE_VISIT = 'r31';
 
 const DOC_POSITIONS = [
   { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
@@ -3783,15 +4024,13 @@ const DOC_POSITIONS = [
   { name: 'Olej silnikowy 5W30 5L', code: 'EDGE 5W30 LL', producer: 'Castrol', unit: 'Opakowanie', qty: '1', price: '248,00', vat: '23', msrp: '379,00' },
   { name: 'Amortyzator tylny', code: '314 875', producer: 'SACHS', unit: 'Sztuka', qty: '2', price: '219,00', vat: '23', msrp: '' },
   { name: 'Świece zapłonowe (zestaw 4)', code: 'ZKR7A-10', producer: 'NGK', unit: 'Zestaw', qty: '1', price: '84,00', vat: '23', msrp: '' },
+  { name: 'Korek spustowy miski olejowej', code: 'N 908 132 02', producer: 'Febi', unit: 'Sztuka', qty: '1', price: '12,00', vat: '23', msrp: '' },
 ];
 
 const DOC_DRAFT_ROWS = [
-  { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
-  { name: 'Tarcze hamulcowe przód', code: '24.0122-0187.1', producer: 'ATE', unit: 'Sztuka', qty: '1', price: '146,00', vat: '23', msrp: '219,00' },
-  { name: 'Tarcze hamulcowe przód', code: '24.0122-0187.1', producer: 'ATE', unit: 'Sztuka', qty: '1', price: '146,00', vat: '23', msrp: '219,00' },
-  { name: 'Filtr oleju', code: 'HU 719/7 x', producer: 'MANN', unit: 'Sztuka', qty: '1', price: '38,00', vat: '23', msrp: '' },
   { name: 'Olej silnikowy 5W30 5L', code: 'EDGE 5W30 LL', producer: 'Castrol', unit: 'Opakowanie', qty: '1', price: '248,00', vat: '23', msrp: '379,00' },
-  { name: 'Świece zapłonowe (zestaw 4)', code: 'ZKR7A-10', producer: 'NGK', unit: 'Zestaw', qty: '1', price: '84,00', vat: '23', msrp: '' },
+  { name: 'Filtr oleju', code: 'HU 719/7 x', producer: 'MANN', unit: 'Sztuka', qty: '1', price: '38,00', vat: '23', msrp: '' },
+  { name: 'Korek spustowy miski olejowej', code: 'N 908 132 02', producer: 'Febi', unit: 'Sztuka', qty: '1', price: '12,00', vat: '23', msrp: '' },
 ];
 
 const DEFAULT_SUPPLIERS = [
@@ -3854,11 +4093,16 @@ class Component extends DCLogic {
     page: 1,
     eventId: null,
     evTab: 'details',
-    quotes: { [SEED_QUOTE_VISIT]: { state: SEED_QUOTE_STATE, items: [] } },
-    offerHistory: { [SEED_QUOTE_VISIT]: [{ date: '23 sie, 10:54', status: 'Zaakceptowana', u: '1402,20 zł', t: '1438,64 zł', amt: '2840,84 zł' }] },
+    quotes: {
+      [OIL_QUOTE_VISIT]: { state: OIL_QUOTE_STATE, items: [] },
+    },
+    offerHistory: { [OIL_QUOTE_VISIT]: [{ date: '13 sie, 10:54', status: 'Zaakceptowana', u: '467,40 zł', t: '531,48 zł', amt: '998,88 zł' }] },
     wycConfigSrc: null,
     offerConfigSrc: null,
     offerConfigVisit: null,
+    fvConfigSrc: null,
+    fvConfigVisit: null,
+    fvHistory: {},
     wycConfigVisit: null,
     historyOpen: true,
     historyMenu: null,
@@ -3870,6 +4114,7 @@ class Component extends DCLogic {
     editForm: null,
     openSelect: null,
     clientGroups: {},
+    clientInvoice: Object.assign({}, DEFAULT_INVOICES),
     docUploadPct: 0,
     docSnack: false,
     docStatuses: {},
@@ -3897,7 +4142,6 @@ class Component extends DCLogic {
     tireTip: null,
     openTireSet: null,
     openTireMenu: null,
-    tireBtnTip: null,
     statusMenu: null,
     setStatus: {},
     tireForm: null,
@@ -3919,7 +4163,7 @@ class Component extends DCLogic {
     timeSelect: null,
     timeDateOpen: false,
     wsDropdownOpen: false,
-    assignedByVisit: { r16: ['e3'] },
+    assignedByVisit: {},
     assignedIds: [],
     assignMenuOpen: false,
   };
@@ -4068,6 +4312,7 @@ class Component extends DCLogic {
   onWycMessage(e) {
     const d = e && e.data;
     if (d && d.__ofr != null) { this.onOfferMessage(d); return; }
+    if (d && d.__fv != null) { this.onFvMessage(d); return; }
     if (!d || d.__wyc == null) return;
     if (!this.state.wycConfigSrc) return;
     if (d.__wyc === 'preview') return;
@@ -4093,7 +4338,14 @@ class Component extends DCLogic {
           };
           history = Object.assign({}, prev.offerHistory, { [id]: (prev.offerHistory[id] || []).concat([entry]) });
         }
-        return { quotes: quotes, offerHistory: history, wycConfigSrc: null, wycConfigVisit: null };
+        return {
+          quotes: quotes,
+          offerHistory: history,
+          // przypisane towary weszły do wyceny — trzymanie ich dalej osobno dublowałoby wiersze
+          visitParts: Object.assign({}, prev.visitParts, { [id]: [] }),
+          wycConfigSrc: null,
+          wycConfigVisit: null,
+        };
       });
       this.__wycSend = false;
       this.ziloToast(send ? 'Oferta wysłana do klienta' : 'Wycena zapisana');
@@ -4723,6 +4975,7 @@ class Component extends DCLogic {
     const inlineTires = this.state.eventId === 'r31';
     return {
       open: !this.state.tireSectionOpen,
+      inv: this.invVals('visitClientForm', 'visit-inv-country'),
       tiresSeparate: !inlineTires,
       phone: f.phone,
       name: f.name,
@@ -5188,6 +5441,7 @@ class Component extends DCLogic {
     const uN = sum(rows.uslugi, 'net'), uB = sum(rows.uslugi, 'gross');
     const tN = sum(goods, 'net'), tB = sum(goods, 'gross');
     const hist = (s.offerHistory || {})[id] || [];
+    const fvHist = (s.fvHistory || {})[id] || [];
     return {
       title: 'Usługi i towary',
       hasQuote: true,
@@ -5262,7 +5516,29 @@ class Component extends DCLogic {
       addTowar: () => this.openWycConfig(id, { field: 'towar' }),
       sendOffer: () => this.openOfferConfig(id),
       downloadPdf: () => this.ziloToast('Kosztorys pobrany jako PDF'),
+      issueFv: () => this.openInvoiceConfig(id),
       previewOffer: () => this.openWycConfig(id, null, { preview: true }),
+      hasFvHistory: fvHist.length > 0,
+      fvHistoryCount: String(fvHist.length),
+      fvHistoryOpen: s.fvHistoryOpen !== false,
+      fvHistoryChevron: s.fvHistoryOpen === false ? 'rotate(-90deg)' : 'rotate(0deg)',
+      toggleFvHistory: () => this.setState((st) => ({ fvHistoryOpen: st.fvHistoryOpen === false })),
+      fvHistory: fvHist.map((h, i) => {
+        const tone = (label) => (label === 'Opłacona'
+          ? { bg: '#DEF3E7', color: '#0E5B3A' }
+          : (label === 'Częściowo opłacona' ? { bg: '#FEF3DC', color: '#7A4A00' } : { bg: '#ECEDF8', color: '#222693' }));
+        const cur = tone(h.status);
+        return {
+          numer: h.numer,
+          buyer: h.buyer,
+          date: h.date,
+          status: h.status,
+          statusBg: cur.bg,
+          statusColor: cur.color,
+          amt: h.amt,
+          border: i === fvHist.length - 1 ? 'transparent' : '#E9ECF1',
+        };
+      }),
       hasHistory: hist.length > 0,
       historyCount: String(hist.length),
       historyOpen: s.historyOpen !== false,
@@ -5278,6 +5554,7 @@ class Component extends DCLogic {
           status: h.status,
           statusColor: cur.color,
           statusBg: cur.bg,
+          issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary }),
           menuOpen: s.historyMenu === id + ':' + i,
           toggleMenu: (e) => {
             e.stopPropagation();
@@ -5302,6 +5579,95 @@ class Component extends DCLogic {
         };
       }),
     };
+  }
+
+  openInvoiceConfig(visitId, opts) {
+    // ten sam wzorzec co oferta: znacznik czasu lamie cache iframe'a
+    const seq = Date.now() + '-' + (this.__fvSeq = (this.__fvSeq || 0) + 1);
+    let src = 'konfigurator-faktur/v1.html?n=' + seq;
+    try {
+      const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
+      const client = CLIENTS.filter((c) => c.cars.some((car) => car.plate === ev.plate))[0] || null;
+      const invoices = this.state.clientInvoice || {};
+      const st = ((this.state.quotes || {})[visitId] || {}).state || {};
+      const trim = (list, withProducent) => (list || []).map((r) => {
+        const row = { name: r.name || '', unit: r.unit || 'Sztuka', qty: r.qty || '1', cena: r.cena || '0,00', vat: r.vat || '23' };
+        if (withProducent) row.producent = r.producent || '';
+        return row;
+      });
+      let uslugi = [], towary = [];
+      // faktura z konkretnej wysłanej oferty bierze jej pozycje, nie bieżącą wycenę
+      const fromOffer = opts && (opts.uslugi || opts.towary);
+      if (fromOffer) {
+        uslugi = trim(opts.uslugi, false);
+        towary = trim(opts.towary, true);
+      } else if (Array.isArray(st.groups)) {
+        st.groups.forEach((g) => {
+          if (g.robocizna) uslugi = uslugi.concat(trim([g.robocizna], false));
+          towary = towary.concat(trim(g.towars, true));
+        });
+      } else {
+        uslugi = trim(st.robociznas, false);
+        towary = trim(st.towars, true);
+      }
+      // nabywcą jest firma przypisana do TEGO klienta, nie dowolny wpis z bazy
+      const mine = client ? (invoices[client.id] || null) : null;
+      const hasInv = !!(mine && mine.on && String(mine.company || '').trim());
+      const companies = hasInv
+        ? [{ key: client.id, label: mine.company, invoice: { nip: mine.nip || '', company: mine.company || '', street: mine.street || '', zip: mine.zip || '', city: mine.city || '' } }]
+        : [];
+      // stub GUS — w prototypie każdy poprawny NIP zwraca te same dane, tak jak w edytorze klienta
+      const gus = hasInv
+        ? { company: mine.company, street: mine.street, zip: mine.zip, city: mine.city }
+        : {
+            company: (String((client && client.name) || 'Auto').split(' ').pop() || 'Auto') + ' Sp. z o.o.',
+            street: 'ul. Ignacego Dobrogojskiego 30A', zip: '61-692', city: 'Poznań',
+          };
+      const nextNo = ((this.state.fvHistory || {})[visitId] || []).length + 1;
+      const now = new Date();
+      const payload = {
+        today: now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'),
+        numer: nextNo + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear(),
+        client: { name: (client && client.name) || ev.client || '', phone: (client && client.phone) || ev.phone || '', email: (client && client.email) || '' },
+        invoice: hasInv ? { nip: mine.nip, company: mine.company, street: mine.street, zip: mine.zip, city: mine.city } : {},
+        buyerKey: hasInv ? client.id : '__nowy',
+        companies: companies,
+        gus: gus,
+        uslugi: uslugi,
+        towary: towary,
+        uwagi: '',
+      };
+      src += '#fv=' + encodeURIComponent(JSON.stringify(payload));
+    } catch (e) {}
+    this.setState({ fvConfigSrc: src, fvConfigVisit: visitId });
+  }
+
+  onFvMessage(d) {
+    if (!this.state.fvConfigSrc) return;
+    if (d.__fv === 'close') { this.setState({ fvConfigSrc: null, fvConfigVisit: null }); return; }
+    if (d.__fv === 'editSeller') { this.ziloToast('Dane sprzedawcy edytujesz w ustawieniach warsztatu'); return; }
+    if (d.__fv === 'toast') { this.ziloToast(String(d.text || '')); return; }
+    if (d.__fv !== 'issue') return;
+    const id = this.state.fvConfigVisit;
+    const st = d.state || {};
+    const t = d.totals || {};
+    this.setState((prev) => {
+      const now = new Date();
+      const M = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
+      const entry = {
+        numer: st.numer || '',
+        buyer: (st.buyer && st.buyer.company) || '',
+        date: now.getDate() + ' ' + M[now.getMonth()] + ', ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
+        status: st.status || 'Wystawiona',
+        amt: t.gross || '0,00 zł',
+      };
+      return {
+        fvHistory: Object.assign({}, prev.fvHistory, { [id]: (prev.fvHistory[id] || []).concat([entry]) }),
+        fvConfigSrc: null,
+        fvConfigVisit: null,
+      };
+    });
+    this.ziloToast('Faktura ' + (st.numer || '') + ' wystawiona');
   }
 
   openOfferConfig(visitId) {
@@ -5349,12 +5715,20 @@ class Component extends DCLogic {
     this.setState((prev) => {
       const now = new Date();
       const M = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
+      const st = d.state || {};
+      const keep = (list, withProducent) => (list || []).map((r) => {
+        const row = { name: r.name || '', unit: r.unit || 'Sztuka', qty: r.qty || '1', cena: r.cena || '0,00', vat: r.vat || '23' };
+        if (withProducent) row.producent = r.producent || '';
+        return row;
+      });
       const entry = {
         date: now.getDate() + ' ' + M[now.getMonth()] + ', ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
         status: 'Wysłana',
         u: t.uslugi || '0,00 zł',
         t: t.towary || '0,00 zł',
         amt: t.gross || '0,00 zł',
+        uslugi: keep(st.uslugi, false),
+        towary: keep(st.towary, true),
       };
       return {
         offerHistory: Object.assign({}, prev.offerHistory, { [id]: (prev.offerHistory[id] || []).concat([entry]) }),
@@ -5372,7 +5746,38 @@ class Component extends DCLogic {
     let src = 'konfigurator-wycen-2/v2.html?n=' + seq;
     const saved = (this.state.quotes || {})[visitId];
     try {
-      if (saved && saved.state) src += '#state=' + encodeURIComponent(JSON.stringify(saved.state));
+      // Towary przypisane z zakładki „Towary" żyją poza stanem wyceny — bez tego
+      // konfigurator otwierał się pusty, mimo że w szczegółach wizyty były widoczne.
+      const parts = (this.state.visitParts || {})[visitId] || [];
+      let st = saved && saved.state ? JSON.parse(JSON.stringify(saved.state)) : null;
+      if (parts.length) {
+        if (!st) {
+          st = {
+            robociznas: [{ id: 1, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', rabat: '', unit: 'Sztuka', vat: '23', bruttoEditing: null, openField: null }],
+            towars: [],
+          };
+        }
+        if (!Array.isArray(st.towars)) st.towars = [];
+        if (!Array.isArray(st.robociznas)) st.robociznas = [];
+        parts.forEach((p, i) => st.towars.push({
+          id: 900 + i,
+          name: p.name || '',
+          indeks: p.indeks || '',
+          producent: p.producent || '',
+          qty: p.qty || '1',
+          cena: p.cena || '0,00',
+          koszt: p.koszt || '0,00',
+          kosztBrutto: p.kosztBrutto || '0,00',
+          rabat: '',
+          unit: p.unit || 'Sztuka',
+          vat: p.vat || '23',
+          grupa: p.grupa || '',
+          doc: p.doc || '',
+          bruttoEditing: null,
+          openField: null,
+        }));
+      }
+      if (st) src += '#state=' + encodeURIComponent(JSON.stringify(st));
       if (opts && opts.preview) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'preview=1';
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '' };
@@ -5554,6 +5959,117 @@ class Component extends DCLogic {
     return base.map((t, i) => ({ ...t, __idx: i })).filter((t) => removed.indexOf(t.__idx) === -1);
   }
 
+  // Maska NIP: 3-3-2-2. Wpisana cyfra „zjada" jedną kreskę, reszta zostaje widoczna.
+  static NIP_MASK = '___ ___ __ __';
+  static NIP_POS = [0, 1, 2, 4, 5, 6, 8, 9, 11, 12];
+
+  nipDigits(v) {
+    return String(v == null ? '' : v).replace(/[^0-9]/g, '').slice(0, 10);
+  }
+
+  nipFormat(v) {
+    const d = this.nipDigits(v);
+    let out = '';
+    for (let i = 0; i < d.length; i += 1) {
+      if (i === 3 || i === 6 || i === 8) out += ' ';
+      out += d[i];
+    }
+    return out;
+  }
+
+  nipRest(v) {
+    const d = this.nipDigits(v);
+    if (!d.length) return Component.NIP_MASK;
+    return Component.NIP_MASK.slice(Component.NIP_POS[d.length - 1] + 1);
+  }
+
+  // Jedna definicja sekcji „Dane do faktury" — używana i w modalu klienta,
+  // i w edytorze klienta przy wizycie. formKey wskazuje, który formularz obsługujemy.
+  invVals(formKey, selKey) {
+    const f = (this.state[formKey] && this.state[formKey].invoice) || {};
+    const pl = (f.country || 'Polska') === 'Polska';
+    const nipOk = this.nipComplete(f.nip);
+    // czerwony stan dopiero po wyjściu z pola — w trakcie wpisywania NIP z definicji jest niepełny
+    const nipTouched = !!f.nipBlurred;
+    // poza Polską GUS nie odpowiada — pola firmowe wpisuje się ręcznie
+    const showCompany = !!f.fetched || !pl;
+    const patch = (p) => this.setState((st) => ({
+      [formKey]: Object.assign({}, st[formKey], {
+        invoice: Object.assign({}, (st[formKey] || {}).invoice, p),
+      }),
+    }));
+    return {
+      on: !!f.on,
+      showAdd: !f.on,
+      // tytuł karty pojawia się dopiero, gdy jest co pokazać
+      title: f.company ? (f.company + '  ·  NIP: ' + this.nipFormat(f.nip)) : '',
+      hasTitle: !!f.company,
+      expanded: !!f.on && !!f.expanded,
+      arrow: (f.on && f.expanded) ? 'rotate(180deg)' : 'rotate(0deg)',
+      nip: this.nipFormat(f.nip),
+      nipTyped: this.nipFormat(f.nip),
+      nipRest: this.nipRest(f.nip),
+      nipLabel: this.nipDigits(f.nip).length ? 'NIP' : 'NIP*',
+      nipBorder: nipTouched && !nipOk ? '#D93025' : '#979DB0',
+      hasError: nipTouched && !nipOk,
+      error: 'NIP musi mieć 10 cyfr.',
+      showCompany: !!f.fetched,
+      company: f.company || '',
+      street: f.street || '',
+      zip: f.zip || '',
+      city: f.city || '',
+
+      add: (e) => { if (e && e.stopPropagation) e.stopPropagation(); patch({ on: true, expanded: true }); },
+      remove: (e) => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        patch({ on: false, expanded: false, nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' });
+      },
+      toggleBody: () => { if (f.on) patch({ expanded: !f.expanded }); },
+      onField: (e) => {
+        const key = e.currentTarget.dataset.invField;
+        const val = e.target.value;
+        const p = { [key]: val };
+        if (key === 'nip') {
+          p.nip = this.nipFormat(val);
+          p.nipBlurred = false;
+          // potwierdzenie tylko przy przejściu z „brak danych" na „pobrane",
+          // żeby nie wyskakiwało przy każdej korekcie już uzupełnionego numeru
+          if (!f.fetched && this.nipComplete(val)) this.ziloToast('Dane firmy pobrane z GUS');
+          // poprawny numer od razu zaciąga dane — bez osobnego przycisku
+          if (this.nipComplete(val)) {
+            const c = CLIENTS.find((x) => x.id === this.state.clientId) || CLIENTS[0];
+            p.fetched = true;
+            p.company = (c.name.split(' ').pop() || 'Auto') + ' Sp. z o.o.';
+            p.zip = '61-692';
+            p.street = 'ul. Ignacego Dobrogojskiego 30A';
+            p.city = 'Poznań';
+          } else {
+            p.fetched = false;
+            p.company = ''; p.zip = ''; p.street = ''; p.city = '';
+          }
+        }
+        patch(p);
+      },
+      onNipBlur: () => patch({ nipBlurred: true }),
+    };
+  }
+
+  // Kompletny numer = 10 cyfr. W prototypie to wystarcza, żeby zaciągnąć dane.
+  nipComplete(nip) {
+    return this.nipDigits(nip).length === 10;
+  }
+
+  // Suma kontrolna wg wzoru KSeF — zostaje w kodzie, ale nie blokuje prototypu.
+  nipValid(nip) {
+    const d = String(nip || '').replace(/[^0-9]/g, '');
+    if (d.length !== 10) return false;
+    const w = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+    let sum = 0;
+    for (let i = 0; i < 9; i += 1) sum += w[i] * Number(d[i]);
+    const c = sum % 11;
+    return c !== 10 && c === Number(d[9]);
+  }
+
   storageVals(carId) {
     const sets = this.tireSetsFor(carId);
     const open = this.state.openTireSet;
@@ -5564,7 +6080,8 @@ class Component extends DCLogic {
       sets: sets.map((t, i) => {
         const key = carId + '::' + t.__idx;
         const cardBorder = i === sets.length - 1 ? 'transparent' : '#E9ECF1';
-        const isOpen = open === key || (open === null && i === 0 && t.status === 'in');
+        // domyślnie wszystkie komplety zwinięte — rozwija dopiero kliknięcie
+        const isOpen = open === key;
         const status = this.state.setStatus[key] || t.status;
         const isIn = status === 'in';
         const stMeta = { in: { label: 'W przechowalni', dot: '#22A06B', bg: '#DCEFE3', color: '#0E5B3A' }, out: { label: 'Wydane', dot: '#979DB0', bg: '#F0F1F5', color: '#6B707D' } };
@@ -5597,9 +6114,6 @@ class Component extends DCLogic {
           expanded: isOpen,
           arrowRotate: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
           menuOpen: menu === key,
-          tipMenu: this.state.tireBtnTip === key + ':menu',
-          tipDownload: this.state.tireBtnTip === key + ':download',
-          tipEdit: this.state.tireBtnTip === key + ':edit',
           location: t.location || '',
           hasLocation: !!t.location,
           note: t.note || '',
@@ -5643,6 +6157,13 @@ class Component extends DCLogic {
       name: c.name,
       phone: c.phone,
       email: c.email || '-',
+      priceGroup: (this.state.clientGroups || {})[c.id] || '—',
+      hasInvoice: !!((this.state.clientInvoice || {})[c.id] || {}).on,
+      invNip: this.nipFormat((((this.state.clientInvoice || {})[c.id]) || {}).nip) || '—',
+      invCompany: (((this.state.clientInvoice || {})[c.id]) || {}).company || '—',
+      invStreet: (((this.state.clientInvoice || {})[c.id]) || {}).street || '—',
+      invZip: (((this.state.clientInvoice || {})[c.id]) || {}).zip || '—',
+      invCity: (((this.state.clientInvoice || {})[c.id]) || {}).city || '—',
       carCount: c.cars.length,
       consents: [chip(c.sms, 'Zgoda na SMS'), chip(c.mail, 'Zgoda na e-mail'), chip(c.opinion, 'Zgoda na opinię')],
       storage: this.storageVals(car.id),
@@ -5705,6 +6226,10 @@ class Component extends DCLogic {
       editForm: {
         phone: c.phone, name: c.name, email: c.email || '',
         priceGroup: (this.state.clientGroups || {})[c.id] || '',
+        invoice: Object.assign(
+          { on: false, expanded: false, country: 'Polska', nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' },
+          (this.state.clientInvoice || {})[c.id] || {}
+        ),
         sms: !!c.sms, mail: !!c.mail, opinion: !!c.opinion, cars, selectedCarId,
       },
     });
@@ -5732,6 +6257,7 @@ class Component extends DCLogic {
       phone: f.phone,
       name: f.name,
       email: f.email,
+      inv: this.invVals('editForm', 'inv-country'),
       groupSel: (() => {
         const open = this.state.openSelect === 'client-group';
         const has = !!f.priceGroup;
@@ -5961,6 +6487,8 @@ class Component extends DCLogic {
           const msrp = this.docNum(r.msrp);
           const useMsrp = group && group.mode === 'msrp' && msrp > 0;
           const net = useMsrp ? msrp * (1 + (group.pct || 0) / 100) : buy * (1 + ((group && group.pct) || 0) / 100);
+          const plain = (x) => (Math.round(x * 100) / 100).toFixed(2).replace('.', ',');
+          const vat = String(parseFloat(r.vat) || 23);
           return {
             name: r.name,
             doc: this.state.docId || '',
@@ -5968,6 +6496,16 @@ class Component extends DCLogic {
             net: this.moneyPl(net),
             gross: this.moneyPl(net * (1 + (parseFloat(r.vat) || 23) / 100)),
             border: i === arr.length - 1 ? 'transparent' : '#E9ECF1',
+            // pola potrzebne, gdy pozycja trafi do konfiguratora wyceny
+            indeks: r.code || '',
+            producent: r.producer || '',
+            unit: r.unit || 'Sztuka',
+            vat: vat,
+            qty: '1',
+            cena: plain(net),
+            koszt: plain(buy),
+            kosztBrutto: plain(buy * (1 + parseFloat(vat) / 100)),
+            grupa: group ? group.name : '',
           };
         });
         const n = (s.docSel || []).length;
@@ -5994,6 +6532,8 @@ class Component extends DCLogic {
       wycConfigOpen: !!s.wycConfigSrc,
       offerConfigOpen: !!s.offerConfigSrc,
       offerConfigSrc: s.offerConfigSrc || '',
+      fvConfigOpen: !!s.fvConfigSrc,
+      fvConfigSrc: s.fvConfigSrc || '',
       closeWycConfig: () => this.closeWycConfig(),
       wycConfigSrc: s.wycConfigSrc || '',
       wycConfigRef: (el) => {
@@ -6008,6 +6548,7 @@ class Component extends DCLogic {
       assignToast: s.assignToast || '',
       assignToastRing: s.assignToastRun ? '87.96' : '0',
       closeAssignToast: () => this.setState({ assignToast: '', assignToastRun: false }),
+      hasToastAction: !!s.assignedVisitId,
       openAssignedVisit: () => {
         const vid = s.assignedVisitId;
         if (!vid) return;
@@ -6207,10 +6748,13 @@ class Component extends DCLogic {
         }
         const nr = d.nr || 'ZM/2026/0214';
         this.setState({
-          screen: 'docs',
+          // po zapisie wchodzimy w zapisany dokument, nie wracamy na listę
+          screen: 'docDetail',
+          docId: nr,
           docUploadPct: 0,
           docDraft: null,
           docRows: null,
+          docSel: [],
           docsList: [{
             nr: nr, ext: d.ext, supplier: d.supplier, date: d.date,
             status: 'Dostarczony', rows: rows,
@@ -6925,6 +7469,10 @@ class Component extends DCLogic {
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
+            invoice: Object.assign(
+              { on: false, expanded: false, country: 'Polska', nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' },
+              (this.state.clientInvoice || {})[client.id] || {}
+            ),
           },
           visitCarOpen: client.cars.reduce((acc, c) => { acc[c.id] = false; return acc; }, {}),
           visitTireDrafts: [],
@@ -6949,6 +7497,10 @@ class Component extends DCLogic {
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
+            invoice: Object.assign(
+              { on: false, expanded: false, country: 'Polska', nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' },
+              (this.state.clientInvoice || {})[client.id] || {}
+            ),
           },
           visitCarOpen: client.cars.reduce((acc, c) => { acc[c.id] = false; return acc; }, {}),
           visitTireDrafts: [key],
@@ -6970,6 +7522,10 @@ class Component extends DCLogic {
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
+            invoice: Object.assign(
+              { on: false, expanded: false, country: 'Polska', nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' },
+              (this.state.clientInvoice || {})[client.id] || {}
+            ),
           },
           visitCarOpen: client.cars.length > 1 ? {} : { [car.id]: true },
           visitTireOpenMap: this.tireSetsFor(car.id).length ? {} : { draft0: true },
@@ -7010,10 +7566,21 @@ class Component extends DCLogic {
           const f = forms[k];
           edits[k] = { season: f.season, note: f.note || '', location: f.location || '', wheels: toWheels(f.wheels) };
         });
+        const ev = this.state.events.find((x) => x.id === this.state.eventId);
+        const cli = ev ? CLIENTS.find((c) => c.cars.some((car) => car.plate === ev.plate)) : null;
         this.setState((st) => ({
           visitClientForm: null,
           visitTireForms: {},
           visitTireDrafts: [],
+          // dane firmowe zapisują się przy kliencie, tak samo jak z modalu „Dane klienta"
+          clientInvoice: (() => {
+            if (!cli) return st.clientInvoice;
+            const f = (st.visitClientForm || {}).invoice || {};
+            const next = Object.assign({}, st.clientInvoice);
+            if (f.on && this.nipComplete(f.nip)) next[cli.id] = Object.assign({}, f, { expanded: false });
+            else delete next[cli.id];
+            return next;
+          })(),
           editedSets: { ...st.editedSets, ...edits },
           addedSets: added.length
             ? { ...st.addedSets, [carId]: (st.addedSets[carId] || []).concat(added) }
@@ -7337,11 +7904,6 @@ class Component extends DCLogic {
         const d = e.currentTarget.dataset;
         this.setState((st) => ({ statusMenu: null, setStatus: { ...st.setStatus, [d.setKey]: d.status } }));
       },
-      showBtnTip: (e) => {
-        const d = e.currentTarget.dataset;
-        this.setState({ tireBtnTip: d.setKey + ':' + d.tip });
-      },
-      hideBtnTip: () => this.setState({ tireBtnTip: null }),
       toggleTireMenu: (e) => {
         e.stopPropagation();
         const key = e.currentTarget.dataset.setKey;
@@ -7366,6 +7928,22 @@ class Component extends DCLogic {
       detail,
       edit: this.editVals() || {},
       isEditOpen: !!s.editMode,
+      canSubmit: (() => {
+        const f = (s.editForm && s.editForm.invoice) || {};
+        return !f.on || this.nipComplete(f.nip);
+      })(),
+      submitOpacity: (() => {
+        const f = (s.editForm && s.editForm.invoice) || {};
+        return (!f.on || this.nipComplete(f.nip)) ? '1' : '0.5';
+      })(),
+      submitCursor: (() => {
+        const f = (s.editForm && s.editForm.invoice) || {};
+        return (!f.on || this.nipComplete(f.nip)) ? 'pointer' : 'not-allowed';
+      })(),
+      submitEvents: (() => {
+        const f = (s.editForm && s.editForm.invoice) || {};
+        return (!f.on || this.nipComplete(f.nip)) ? 'auto' : 'none';
+      })(),
       openEditClient: () => this.openEdit('edit-client'),
       openAddVehicle: () => this.openEdit('add-vehicle'),
       openEditVehicle: () => this.openEdit('edit-vehicle'),
@@ -7373,11 +7951,15 @@ class Component extends DCLogic {
       submitEdit: () => this.setState((st) => {
         const c = CLIENTS.find((x) => x.id === st.clientId) || CLIENTS[0];
         const next = Object.assign({}, st.clientGroups);
+        const inv = Object.assign({}, st.clientInvoice);
         if (st.editForm && st.editMode === 'edit-client') {
           if (st.editForm.priceGroup) next[c.id] = st.editForm.priceGroup;
           else delete next[c.id];
+          const f = st.editForm.invoice || {};
+          if (f.on && this.nipComplete(f.nip)) inv[c.id] = Object.assign({}, f, { expanded: false });
+          else delete inv[c.id];
         }
-        return { editMode: null, editForm: null, clientGroups: next, openSelect: null };
+        return { editMode: null, editForm: null, clientGroups: next, clientInvoice: inv, openSelect: null };
       }),
       onEditField: (e) => {
         const key = e.currentTarget.dataset.field;
@@ -7397,6 +7979,10 @@ class Component extends DCLogic {
           groupReturn: { clientId: s.clientId, editMode: s.editMode, editForm: s.editForm },
         });
       },
+      onNipBlur: () => this.setState((st) => {
+        const inv = (st.editForm || {}).invoice || {};
+        return { editForm: Object.assign({}, st.editForm, { invoice: Object.assign({}, inv, { nipBlurred: true }) }) };
+      }),
       toggleGroupSelect: (e) => {
         e.stopPropagation();
         this.setState((st) => ({ openSelect: st.openSelect === 'client-group' ? null : 'client-group' }));
@@ -7491,6 +8077,128 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+/* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
+   position:fixed omija overflow rodziców, a pozycja przeskakuje na stronę,
+   po której jest miejsce, i tak czy siak jest docinana do viewportu.
+   Myszka czeka DELAY ms, klawiatura pokazuje od razu. */
+(function () {
+  var GAP = 10, EDGE = 8, DELAY = 500;
+  var bubble = null, host = null, pending = null, timer = 0, watch = 0;
+
+  function box() {
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'zilo-tt';
+      bubble.setAttribute('role', 'tooltip');
+    }
+    if (!bubble.isConnected) document.body.appendChild(bubble);
+    return bubble;
+  }
+
+  function fits(p, r, w, h) {
+    if (p === 'top') return r.top - h - GAP >= EDGE;
+    if (p === 'bottom') return r.bottom + h + GAP <= innerHeight - EDGE;
+    if (p === 'left') return r.left - w - GAP >= EDGE;
+    return r.right + w + GAP <= innerWidth - EDGE;
+  }
+
+  function show(el) {
+    var text = el.getAttribute('data-tt');
+    if (!text) return;
+    var b = box();
+    b.textContent = text;
+    b.classList.toggle('is-multiline', text.length > 40);
+    b.classList.remove('is-on');
+    b.style.transform = 'none';
+    b.style.left = '0px';
+    b.style.top = '0px';
+
+    var r = el.getBoundingClientRect();
+    var w = b.offsetWidth, h = b.offsetHeight;
+    var want = el.getAttribute('data-tt-pos') || 'top';
+    var order = [want, 'top', 'bottom', 'right', 'left'];
+    var pos = want, i;
+    for (i = 0; i < order.length; i++) {
+      if (fits(order[i], r, w, h)) { pos = order[i]; break; }
+    }
+
+    var x, y, from;
+    if (pos === 'top') { x = r.left + r.width / 2 - w / 2; y = r.top - h - GAP; from = 'translateY(4px)'; }
+    else if (pos === 'bottom') { x = r.left + r.width / 2 - w / 2; y = r.bottom + GAP; from = 'translateY(-4px)'; }
+    else if (pos === 'left') { x = r.left - w - GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(4px)'; }
+    else { x = r.right + GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(-4px)'; }
+
+    x = Math.max(EDGE, Math.min(x, innerWidth - w - EDGE));
+    y = Math.max(EDGE, Math.min(y, innerHeight - h - EDGE));
+
+    b.style.left = Math.round(x) + 'px';
+    b.style.top = Math.round(y) + 'px';
+    b.style.transform = from;
+    host = el;
+    requestAnimationFrame(function () {
+      if (host === el) b.classList.add('is-on');
+    });
+
+    clearInterval(watch);
+    watch = setInterval(function () {
+      if (!host || !host.isConnected) hide();
+    }, 200);
+  }
+
+  function cancel() {
+    clearTimeout(timer);
+    timer = 0;
+    pending = null;
+  }
+
+  function hide() {
+    cancel();
+    clearInterval(watch);
+    watch = 0;
+    host = null;
+    if (bubble) { bubble.classList.remove('is-on'); bubble.style.transform = 'none'; }
+  }
+
+  function queue(el) {
+    cancel();
+    if (host && host !== el) hide();
+    pending = el;
+    timer = setTimeout(function () {
+      timer = 0;
+      pending = null;
+      show(el);
+    }, DELAY);
+  }
+
+  function trigger(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) { hide(); return; }
+    if (el === host || el === pending) return;
+    queue(el);
+  }
+
+  document.addEventListener('mouseover', trigger, true);
+  document.addEventListener('mouseout', function (e) {
+    var cur = host || pending;
+    if (cur && !cur.contains(e.relatedTarget)) hide();
+  }, true);
+  document.addEventListener('focusin', function (e) {
+    /* tylko fokus z klawiatury — inaczej dymek wraca zaraz po kliknieciu przycisku */
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) return;
+    try { if (!el.matches(':focus-visible')) return; } catch (err) { return; }
+    if (el === host) return;
+    cancel();
+    show(el);
+  }, true);
+  document.addEventListener('focusout', hide, true);
+  document.addEventListener('mousedown', hide, true);
+  document.addEventListener('scroll', hide, true);
+  addEventListener('resize', hide);
+  addEventListener('blur', hide);
+})();
 </script>
 </body>
 </html>

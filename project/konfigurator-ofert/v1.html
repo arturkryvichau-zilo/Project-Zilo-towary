@@ -21,7 +21,7 @@
     .o-input:disabled { color: var(--grey-3, #979DB0); -webkit-text-fill-color: var(--grey-3, #979DB0); }
     select.o-input { appearance:none; -webkit-appearance:none; cursor:pointer; }
     .o-chev { position:absolute; right:11px; bottom:15px; width:20px; height:20px; display:block; pointer-events:none; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; }
-    .o-trash { width:36px; height:36px; flex:none; border:0; border-radius:8px; background:transparent; cursor:pointer; display:grid; place-items:center; }
+    .o-trash { position:relative; width:36px; height:36px; flex:none; border:0; border-radius:8px; background:transparent; cursor:pointer; display:grid; place-items:center; }
     .o-trash:hover { background:#E9E9FF; }
     .o-trash span { width:20px; height:20px; display:block; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; }
     .o-add { display:inline-flex; align-items:center; gap:6px; height:32px; padding:4px 8px; border:0; border-radius:4px; background:transparent; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:16px; line-height:22px; cursor:pointer; }
@@ -29,16 +29,41 @@
     .o-add i { width:20px; height:20px; display:block; background-color:var(--zilo-blue-1, #222693); -webkit-mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; }
     .o-sum { font-size:15px; line-height:22px; color:var(--grey-2, #6B707D); white-space:nowrap; }
     .o-sum b { font-weight:500; color:var(--grey-1, #242629); }
-    .o-tool { width:30px; height:30px; border-radius:4px; display:grid; place-items:center; font-size:15px; color:var(--grey-1, #242629); cursor:pointer; }
-    .o-tool:hover { background:#F0F1F5; }
-  </style>
+    /* ─── Segmented Control (design system) ─── */
+    .ds-seg {
+      --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
+      --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
+      --seg-pill-bg: #ffffff;
+      --seg-shadow: 0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.08);
+      display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
+      border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
+      font-family:var(--font-sans); user-select:none; position:relative;
+    }
+    .ds-seg[data-size="mobile"] { --seg-radius:12px; --seg-gap:3px; }
+    .ds-seg__item {
+      flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:0 24px; border:0; background:transparent; border-radius:8px;
+      color:var(--seg-fg-off); font-family:inherit; font-size:14px; font-weight:400; line-height:1;
+      cursor:pointer; white-space:nowrap;
+      transition: background 160ms var(--ease-standard), color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
+    }
+    .ds-seg .ds-seg__item:not([aria-checked="true"]):hover { color:var(--black); }
+    .ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
+    .ds-seg__item:focus { outline:none; }
+  
+/* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
+   więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
+.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:#fff; font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
+.zilo-tt.is-multiline { white-space:normal; width:260px; }
+.zilo-tt.is-on { opacity:1; transform:translate(0,0); }
+</style>
 </helmet>
 
 <div style="min-height:100vh;display:flex;flex-direction:column;background:#fff;font-family:var(--font-sans)">
 
   <header style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5, #E9ECF1);background:#fff;min-height:70px;box-sizing:border-box;flex:none">
     <div style="display:flex;align-items:center;gap:18px">
-      <button type="button" onClick="{{ close }}" title="Zamknij" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:#F0F1F5">
+      <button type="button" onClick="{{ close }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:#F0F1F5" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
         <span style="width:20px;height:20px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
       </button>
     </div>
@@ -55,17 +80,15 @@
       <section>
         <div style="font-size:18px;line-height:26px;font-weight:600;color:var(--grey-1, #242629);margin-bottom:14px">Dane klienta</div>
         <div style="display:flex;gap:12px;margin-bottom:12px">
-          <label class="o-cell" style="width:74px;flex:none;position:relative;cursor:pointer">
-            <select class="o-input" value="{{ cc }}" onChange="{{ setCc }}" style="font-size:16px;line-height:20px">
-              <sc-for list="{{ ccOptions }}" as="c" hint-placeholder-count="2">
-                <option value="{{ c }}">{{ c }}</option>
-              </sc-for>
-            </select>
-            <span class="o-chev" style="bottom:17px;right:8px"></span>
-          </label>
-          <label class="o-cell" style="flex:1;min-width:0;cursor:text">
-            <span class="o-label">Numer telefonu*</span>
-            <input class="o-input" type="text" value="{{ phone }}" onInput="{{ setPhone }}" placeholder="000 000 000">
+          <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--grey-1, #242629)">
+            <span style="display:flex;align-items:center;gap:4px;padding:0 14px;border-right:1px solid var(--grey-3, #979DB0);color:var(--grey-1, #242629);font-size:16px;user-select:none;flex:none">
+              {{ cc }}
+              <span style="width:16px;height:16px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat;mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat"></span>
+            </span>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+              <span class="o-label">Numer telefonu</span>
+              <input class="o-input" type="text" value="{{ phone }}" onInput="{{ setPhone }}" placeholder="000 000 000">
+            </span>
           </label>
         </div>
         <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px">
@@ -99,102 +122,118 @@
 
     </div>
 
-    <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
-      <div style="min-width:1180px">
-
-        <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-          <span style="display:inline-flex;align-items:center;gap:6px;font-size:15px;line-height:22px;color:var(--zilo-blue-1, #222693);cursor:pointer">
-            Dodatkowe pola
-            <span style="width:20px;height:20px;display:block;background-color:var(--zilo-blue-1, #222693);-webkit-mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
-          </span>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px">
+        <button type="button" class="o-add" onClick="{{ toggleRabat }}" style="background:{{ rabatBg }}"><i style="{{ rabatIcon }}"></i>Rabat</button>
+        <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
         </div>
+      </div>
+    <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
+      <div style="min-width:{{ posMinWidth }}">
 
         <sc-for list="{{ uslugi }}" as="r" hint-placeholder-count="1">
-          <div style="display:grid;grid-template-columns:minmax(220px,1fr) 110px 90px 150px 130px 150px 150px 36px;gap:10px;align-items:center;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:{{ uslugiGrid }};gap:10px;align-items:center;margin-bottom:10px">
             <label class="o-cell" style="cursor:text"><span class="o-label">Usługa</span><input class="o-input" type="text" value="{{ r.name }}" onInput="{{ r.setName }}" placeholder=""></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ uslugaUnits }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" value="{{ r.qty }}" onInput="{{ r.setQty }}"></label>
-            <label class="o-cell" style="cursor:text"><span class="o-label">Cena netto</span><input class="o-input" type="text" value="{{ r.cena }}" onInput="{{ r.setCena }}"></label>
+            <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
-            <span class="o-cell is-locked"><span class="o-label">Wartość netto</span><span class="o-input" style="color:var(--grey-3, #979DB0)">{{ r.netto }}</span></span>
-            <label class="o-cell" style="cursor:text"><span class="o-label">Wartość brutto</span><input class="o-input" type="text" value="{{ r.brutto }}" onInput="{{ r.setBrutto }}"></label>
-            <button type="button" class="o-trash" onClick="{{ r.remove }}" title="Usuń pozycję"><span></span></button>
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+            </sc-if>
+            <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
+            <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
           </div>
         </sc-for>
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
           <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Dodaj usługę</button>
           <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">Suma netto: <b>{{ sumU.net }}</b></span>
-            <span class="o-sum">Suma VAT: <b>{{ sumU.vat }}</b></span>
-            <span class="o-sum">Suma brutto: <b>{{ sumU.gross }}</b></span>
+            <span class="o-sum">{{ sumU.label }}: <b>{{ sumU.value }}</b></span>
           </span>
         </div>
 
         <sc-for list="{{ towary }}" as="r" hint-placeholder-count="1">
-          <div style="display:grid;grid-template-columns:minmax(180px,1fr) minmax(160px,0.85fr) 110px 90px 150px 130px 150px 150px 36px;gap:10px;align-items:center;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:{{ towaryGrid }};gap:10px;align-items:center;margin-bottom:10px">
             <label class="o-cell" style="cursor:text"><span class="o-label">Towar</span><input class="o-input" type="text" value="{{ r.name }}" onInput="{{ r.setName }}" placeholder=""></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Producent</span><input class="o-input" type="text" value="{{ r.producent }}" onInput="{{ r.setProducent }}" placeholder=""></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ towarUnits }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" value="{{ r.qty }}" onInput="{{ r.setQty }}"></label>
-            <label class="o-cell" style="cursor:text"><span class="o-label">Cena netto</span><input class="o-input" type="text" value="{{ r.cena }}" onInput="{{ r.setCena }}"></label>
+            <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
-            <span class="o-cell is-locked"><span class="o-label">Wartość netto</span><span class="o-input" style="color:var(--grey-3, #979DB0)">{{ r.netto }}</span></span>
-            <label class="o-cell" style="cursor:text"><span class="o-label">Wartość brutto</span><input class="o-input" type="text" value="{{ r.brutto }}" onInput="{{ r.setBrutto }}"></label>
-            <button type="button" class="o-trash" onClick="{{ r.remove }}" title="Usuń pozycję"><span></span></button>
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+            </sc-if>
+            <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
+            <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
           </div>
         </sc-for>
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
           <button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Dodaj towar</button>
           <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">Suma netto: <b>{{ sumT.net }}</b></span>
-            <span class="o-sum">Suma VAT: <b>{{ sumT.vat }}</b></span>
-            <span class="o-sum">Suma brutto: <b>{{ sumT.gross }}</b></span>
+            <span class="o-sum">{{ sumT.label }}: <b>{{ sumT.value }}</b></span>
           </span>
         </div>
 
       </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(280px,0.62fr);gap:22px;align-items:start;margin-top:24px">
-
-      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden">
-        <div style="display:flex;align-items:center;gap:2px;padding:8px 12px;border-bottom:1px solid var(--grey-5, #E9ECF1)">
-          <span class="o-tool" style="font-weight:600">B</span>
-          <span class="o-tool" style="font-style:italic">I</span>
-          <span class="o-tool" style="text-decoration:underline">U</span>
-          <span class="o-tool"><span style="width:20px;height:20px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat"></span></span>
-        </div>
-        <textarea class="o-input" value="{{ notatka }}" onInput="{{ setNotatka }}" rows="4" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" style="min-height:110px;padding:12px 16px;line-height:22px;resize:none;box-sizing:border-box"></textarea>
-      </div>
-
-      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden">
-        <div style="display:flex;align-items:center;gap:2px;padding:8px 12px;border-bottom:1px solid var(--grey-5, #E9ECF1)">
-          <span class="o-tool" style="font-weight:600">B</span>
-          <span class="o-tool" style="font-style:italic">I</span>
-          <span class="o-tool" style="text-decoration:underline">U</span>
-          <span class="o-tool"><span style="width:20px;height:20px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-clipboard-list.svg) center / 20px 20px no-repeat"></span></span>
-        </div>
-        <textarea class="o-input" value="{{ komentarz }}" onInput="{{ setKomentarz }}" rows="4" placeholder="Komentarz dla klienta" style="min-height:110px;padding:12px 16px;line-height:22px;resize:none;box-sizing:border-box"></textarea>
-      </div>
-
-      <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-          <span style="font-size:16px;line-height:24px;color:var(--grey-1, #242629)">Suma netto:</span>
-          <span style="font-size:16px;line-height:24px;color:var(--grey-1, #242629);white-space:nowrap">{{ total.net }}</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-          <span style="font-size:16px;line-height:24px;color:var(--grey-1, #242629)">Suma VAT:</span>
-          <span style="font-size:16px;line-height:24px;color:var(--grey-1, #242629);white-space:nowrap">{{ total.vat }}</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-          <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--zilo-blue-1, #222693)">Suma brutto:</span>
-          <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--zilo-blue-1, #222693);white-space:nowrap">{{ total.gross }}</span>
-        </div>
-      </div>
-
     </div>
+
+    <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,0.85fr);gap:12px;align-items:stretch;margin-top:10px">
+
+      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;text-decoration:underline;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <textarea class="o-input" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" value="{{ notatka }}" onInput="{{ setNotatka }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
+      </div>
+
+      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;text-decoration:underline;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <textarea class="o-input" placeholder="Komentarz dla klienta" value="{{ komentarz }}" onInput="{{ setKomentarz }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
+      </div>
+
+      <div style="background:var(--grey-6, #F0F1F5);border:1px solid var(--grey-4, #DCE0E6);border-radius:10px;padding:22px 28px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+          <span style="color:var(--grey-1, #242629)">Suma netto:</span>
+          <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.net }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+          <span style="color:var(--grey-1, #242629)">Suma VAT:</span>
+          <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.vat }}</span>
+        </div>
+        <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+            <span style="color:var(--grey-1, #242629)">Rabat ({{ total.rabatPct }}%):</span>
+            <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.rabat }}</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:26px;padding-top:4px">
+          <span style="color:var(--zilo-blue-1, #222693);font-weight:500">Suma brutto:</span>
+          <span style="color:var(--zilo-blue-1, #222693);font-weight:500">{{ total.gross }}</span>
+        </div>
+      </div>
+
+    </section>
 
   </div>
 </div>
@@ -224,6 +263,11 @@ class Component extends DCLogic {
     return (Math.round(n * 100) / 100).toFixed(2).replace('.', ',');
   }
 
+  // procent bez zbędnych zer: 10 zamiast 10,00; przy mieszanych stawkach wychodzi średnia ważona
+  static pct(n) {
+    return String(Math.round(n * 100) / 100).replace('.', ',');
+  }
+
   static money(n) {
     return Component.fmt(n).replace(/\B(?=(\d{3})+(?!\d)(?=,))/g, ' ') + ' zł';
   }
@@ -237,7 +281,9 @@ class Component extends DCLogic {
       qty: r.qty || '1',
       cena: r.cena || '0,00',
       vat: r.vat || '23',
+      rabat: r.rabat || '',
       bruttoEdit: null,
+      nettoEdit: null,
     };
     if (withProducent) row.producent = r.producent || '';
     return row;
@@ -255,6 +301,8 @@ class Component extends DCLogic {
     const towary = Component.seedRows(p.towary, true, 1);
     return {
       cc: 'PL',
+      valueMode: 'netto',
+      showRabat: false,
       phone: c.phone || '',
       cname: c.name || '',
       cmail: c.email || '',
@@ -270,11 +318,19 @@ class Component extends DCLogic {
   })();
 
   calc(r) {
-    const net = Component.num(r.qty) * Component.num(r.cena);
+    const base = Component.num(r.qty) * Component.num(r.cena);
+    // rabat obniża wartość pozycji, VAT liczy się dopiero po nim — tak samo jak w wycenach
+    const rb = this.state.showRabat ? Component.num(r.rabat) : 0;
+    const rabatAmt = base * (rb / 100);
+    const afterRabat = base - rabatAmt;
+    // do procentu w podsumowaniu liczą się tylko pozycje, na których rabat faktycznie jest —
+    // inaczej pozycje bez rabatu rozwadniają stawkę (10% pokazywało się jako 1,92%)
+    const rabatBase = rb > 0 ? base : 0;
+    const net = r.nettoEdit !== null && r.nettoEdit !== undefined ? Component.num(r.nettoEdit) : afterRabat;
     const gross = r.bruttoEdit !== null && r.bruttoEdit !== undefined
       ? Component.num(r.bruttoEdit)
       : net * (1 + Component.num(r.vat) / 100);
-    return { net: net, gross: gross, vat: gross - net };
+    return { net: net, gross: gross, vat: gross - net, base: rabatBase, rabat: rabatAmt };
   }
 
   patch(coll, id, p) {
@@ -284,16 +340,31 @@ class Component extends DCLogic {
   buildRows(coll, withProducent) {
     return this.state[coll].map((r) => {
       const c = this.calc(r);
-      const set = (field) => (e) => this.patch(coll, r.id, { [field]: e.target.value, bruttoEdit: null });
+      const set = (field) => (e) => this.patch(coll, r.id, { [field]: e.target.value, bruttoEdit: null, nettoEdit: null });
+      const isBrutto = this.state.valueMode === 'brutto';
+      const vRate = 1 + Component.num(r.vat) / 100;
       const row = {
-        name: r.name, unit: r.unit, qty: r.qty, cena: r.cena, vat: r.vat,
+        name: r.name, unit: r.unit, qty: r.qty, cena: r.cena, vat: r.vat, rabat: r.rabat,
         netto: Component.fmt(c.net),
         brutto: r.bruttoEdit !== null && r.bruttoEdit !== undefined ? r.bruttoEdit : Component.fmt(c.gross),
+        cenaLabel: isBrutto ? 'Cena brutto' : 'Cena netto',
+        cenaValue: isBrutto ? Component.fmt(Component.num(r.cena) * vRate) : r.cena,
+        setCenaValue: isBrutto
+          ? (e) => this.patch(coll, r.id, { cena: Component.fmt(Component.num(e.target.value) / vRate), bruttoEdit: null, nettoEdit: null })
+          : set('cena'),
+        sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
+        sumaValue: isBrutto
+          ? (r.bruttoEdit !== null && r.bruttoEdit !== undefined ? r.bruttoEdit : Component.fmt(c.gross))
+          : (r.nettoEdit !== null && r.nettoEdit !== undefined ? r.nettoEdit : Component.fmt(c.net)),
+        setSumaValue: isBrutto
+          ? (e) => this.patch(coll, r.id, { bruttoEdit: e.target.value })
+          : (e) => this.patch(coll, r.id, { nettoEdit: e.target.value, bruttoEdit: null }),
         setName: (e) => this.patch(coll, r.id, { name: e.target.value }),
         setUnit: set('unit'),
         setQty: set('qty'),
         setCena: set('cena'),
         setVat: set('vat'),
+        setRabat: set('rabat'),
         setBrutto: (e) => this.patch(coll, r.id, { bruttoEdit: e.target.value }),
         remove: () => this.setState((s) => {
           const next = s[coll].filter((x) => x.id !== r.id);
@@ -311,9 +382,15 @@ class Component extends DCLogic {
   sumOf(coll) {
     const t = this.state[coll].reduce((a, r) => {
       const c = this.calc(r);
-      return { net: a.net + c.net, gross: a.gross + c.gross };
-    }, { net: 0, gross: 0 });
-    return { net: Component.money(t.net), vat: Component.money(t.gross - t.net), gross: Component.money(t.gross), _n: t.net, _g: t.gross };
+      return { net: a.net + c.net, gross: a.gross + c.gross, base: a.base + c.base, rabat: a.rabat + c.rabat };
+    }, { net: 0, gross: 0, base: 0, rabat: 0 });
+    const brutto = this.state.valueMode === 'brutto';
+    return {
+      net: Component.money(t.net), vat: Component.money(t.gross - t.net), gross: Component.money(t.gross),
+      label: brutto ? 'Suma brutto' : 'Suma netto',
+      value: brutto ? Component.money(t.gross) : Component.money(t.net),
+      _n: t.net, _g: t.gross, _b: t.base, _r: t.rabat,
+    };
   }
 
   renderVals() {
@@ -322,6 +399,8 @@ class Component extends DCLogic {
     const sumT = this.sumOf('towary');
     const net = sumU._n + sumT._n;
     const gross = sumU._g + sumT._g;
+    const rabatAmt = sumU._r + sumT._r;
+    const rabatBase = sumU._b + sumT._b;
     const chan = (key, name, desc, last) => ({
       name: name,
       desc: desc,
@@ -341,12 +420,21 @@ class Component extends DCLogic {
       };
     } catch (e) {}
     return {
+      showRabat: s.showRabat,
+      rabatBg: s.showRabat ? '#E9E9FF' : 'transparent',
+      rabatIcon: s.showRabat ? '-webkit-mask-image:url(../assets/icons/i-close.svg);mask-image:url(../assets/icons/i-close.svg)' : '',
+      toggleRabat: () => this.setState((st) => ({ showRabat: !st.showRabat })),
+      posMinWidth: s.showRabat ? '1520px' : '1350px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.showRabat ? ' 154px' : '') + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + (s.showRabat ? ' 154px' : '') + ' 154px 36px',
+      segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
+      segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
+      pickNetto: () => this.setState({ valueMode: 'netto' }),
+      pickBrutto: () => this.setState({ valueMode: 'brutto' }),
       uslugaUnits: Component.USLUGA_UNITS,
       towarUnits: Component.TOWAR_UNITS,
       vats: Component.VATS,
-      ccOptions: Component.CC,
       cc: s.cc, phone: s.phone, cname: s.cname, cmail: s.cmail,
-      setCc: (e) => this.setState({ cc: e.target.value }),
       setPhone: (e) => this.setState({ phone: e.target.value }),
       setCname: (e) => this.setState({ cname: e.target.value }),
       setCmail: (e) => this.setState({ cmail: e.target.value }),
@@ -360,7 +448,8 @@ class Component extends DCLogic {
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       sumU: sumU,
       sumT: sumT,
-      total: { net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross) },
+      total: { net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross),
+               rabat: Component.money(rabatAmt), rabatPct: Component.pct(rabatBase ? (rabatAmt / rabatBase) * 100 : 0) },
       notatka: s.notatka,
       komentarz: s.komentarz,
       setNotatka: (e) => this.setState({ notatka: e.target.value }),
@@ -379,5 +468,127 @@ document.addEventListener('keydown', function (e) {
 });
 </script>
 
+<script>
+/* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
+   position:fixed omija overflow rodziców, a pozycja przeskakuje na stronę,
+   po której jest miejsce, i tak czy siak jest docinana do viewportu.
+   Myszka czeka DELAY ms, klawiatura pokazuje od razu. */
+(function () {
+  var GAP = 10, EDGE = 8, DELAY = 500;
+  var bubble = null, host = null, pending = null, timer = 0, watch = 0;
+
+  function box() {
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'zilo-tt';
+      bubble.setAttribute('role', 'tooltip');
+    }
+    if (!bubble.isConnected) document.body.appendChild(bubble);
+    return bubble;
+  }
+
+  function fits(p, r, w, h) {
+    if (p === 'top') return r.top - h - GAP >= EDGE;
+    if (p === 'bottom') return r.bottom + h + GAP <= innerHeight - EDGE;
+    if (p === 'left') return r.left - w - GAP >= EDGE;
+    return r.right + w + GAP <= innerWidth - EDGE;
+  }
+
+  function show(el) {
+    var text = el.getAttribute('data-tt');
+    if (!text) return;
+    var b = box();
+    b.textContent = text;
+    b.classList.toggle('is-multiline', text.length > 40);
+    b.classList.remove('is-on');
+    b.style.transform = 'none';
+    b.style.left = '0px';
+    b.style.top = '0px';
+
+    var r = el.getBoundingClientRect();
+    var w = b.offsetWidth, h = b.offsetHeight;
+    var want = el.getAttribute('data-tt-pos') || 'top';
+    var order = [want, 'top', 'bottom', 'right', 'left'];
+    var pos = want, i;
+    for (i = 0; i < order.length; i++) {
+      if (fits(order[i], r, w, h)) { pos = order[i]; break; }
+    }
+
+    var x, y, from;
+    if (pos === 'top') { x = r.left + r.width / 2 - w / 2; y = r.top - h - GAP; from = 'translateY(4px)'; }
+    else if (pos === 'bottom') { x = r.left + r.width / 2 - w / 2; y = r.bottom + GAP; from = 'translateY(-4px)'; }
+    else if (pos === 'left') { x = r.left - w - GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(4px)'; }
+    else { x = r.right + GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(-4px)'; }
+
+    x = Math.max(EDGE, Math.min(x, innerWidth - w - EDGE));
+    y = Math.max(EDGE, Math.min(y, innerHeight - h - EDGE));
+
+    b.style.left = Math.round(x) + 'px';
+    b.style.top = Math.round(y) + 'px';
+    b.style.transform = from;
+    host = el;
+    requestAnimationFrame(function () {
+      if (host === el) b.classList.add('is-on');
+    });
+
+    clearInterval(watch);
+    watch = setInterval(function () {
+      if (!host || !host.isConnected) hide();
+    }, 200);
+  }
+
+  function cancel() {
+    clearTimeout(timer);
+    timer = 0;
+    pending = null;
+  }
+
+  function hide() {
+    cancel();
+    clearInterval(watch);
+    watch = 0;
+    host = null;
+    if (bubble) { bubble.classList.remove('is-on'); bubble.style.transform = 'none'; }
+  }
+
+  function queue(el) {
+    cancel();
+    if (host && host !== el) hide();
+    pending = el;
+    timer = setTimeout(function () {
+      timer = 0;
+      pending = null;
+      show(el);
+    }, DELAY);
+  }
+
+  function trigger(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) { hide(); return; }
+    if (el === host || el === pending) return;
+    queue(el);
+  }
+
+  document.addEventListener('mouseover', trigger, true);
+  document.addEventListener('mouseout', function (e) {
+    var cur = host || pending;
+    if (cur && !cur.contains(e.relatedTarget)) hide();
+  }, true);
+  document.addEventListener('focusin', function (e) {
+    /* tylko fokus z klawiatury — inaczej dymek wraca zaraz po kliknieciu przycisku */
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) return;
+    try { if (!el.matches(':focus-visible')) return; } catch (err) { return; }
+    if (el === host) return;
+    cancel();
+    show(el);
+  }, true);
+  document.addEventListener('focusout', hide, true);
+  document.addEventListener('mousedown', hide, true);
+  document.addEventListener('scroll', hide, true);
+  addEventListener('resize', hide);
+  addEventListener('blur', hide);
+})();
+</script>
 </body>
 </html>

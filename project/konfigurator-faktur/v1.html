@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="../_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/colors_and_type.css">
+  <script src="../_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; background: #fff; }
+    .o-cell { display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:56px; padding:9px 13px; background:#fff; border:1px solid var(--grey-3, #979DB0); border-radius:10px; min-width:0; transition: box-shadow 200ms var(--ease-standard); }
+    .o-cell:focus-within { box-shadow: inset 0 0 0 1px var(--zilo-blue-1, #222693); border-color: var(--zilo-blue-1, #222693); }
+    .o-cell.is-locked { background:#F6F6FC; border-color:#E9ECF1; }
+    .o-label { font-family:var(--font-sans); font-size:12px; line-height:16px; color:var(--grey-3, #979DB0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .o-input { font-family:var(--font-sans); font-weight:400; font-size:16px; line-height:20px; color:var(--grey-1, #242629); background:transparent; border:0; outline:0; padding:0; width:100%; }
+    .o-input::placeholder { color: var(--grey-3, #979DB0); opacity:1; }
+    .o-input:disabled { color: var(--grey-3, #979DB0); -webkit-text-fill-color: var(--grey-3, #979DB0); }
+    select.o-input { appearance:none; -webkit-appearance:none; cursor:pointer; }
+    .o-chev { position:absolute; right:11px; bottom:15px; width:20px; height:20px; display:block; pointer-events:none; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; }
+    .o-trash { position:relative; width:36px; height:36px; flex:none; border:0; border-radius:8px; background:transparent; cursor:pointer; display:grid; place-items:center; }
+    .o-trash:hover { background:#E9E9FF; }
+    .o-trash span { width:20px; height:20px; display:block; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; }
+    .o-add { display:inline-flex; align-items:center; gap:6px; height:32px; padding:4px 8px; border:0; border-radius:4px; background:transparent; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:16px; line-height:22px; cursor:pointer; }
+    .o-add:hover { background:#E9E9FF; }
+    .o-add i { width:20px; height:20px; display:block; background-color:var(--zilo-blue-1, #222693); -webkit-mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; }
+    .o-sum { font-size:15px; line-height:22px; color:var(--grey-2, #6B707D); white-space:nowrap; }
+    .o-sum b { font-weight:500; color:var(--grey-1, #242629); }
+    /* secondary pill — ten sam co "+ Nowy pojazd" / "Edytuj klienta" w aplikacji */
+    .o-2nd { display:inline-flex; align-items:center; gap:6px; height:30px; flex:none; padding:4px 10px; border:0; border-radius:4px; background:#F3F3FF; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:14px; line-height:22px; cursor:pointer; transition: background-color 200ms var(--ease-standard); }
+    .o-2nd:hover { background:#E9E9FF; }
+    .o-title { font-size:18px; line-height:26px; font-weight:600; color:var(--grey-1, #242629); }
+    .o-party { font-size:15px; line-height:22px; color:var(--grey-2, #6B707D); }
+    .o-party.nm { font-size:16px; line-height:24px; font-weight:500; color:var(--grey-1, #242629); margin-bottom:4px; }
+    .o-more { display:inline-flex; align-items:center; gap:4px; border:0; background:transparent; padding:0; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:14px; line-height:22px; cursor:pointer; }
+    .o-more i { width:16px; height:16px; display:block; background-color:currentColor; transition: transform 200ms var(--ease-standard); -webkit-mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat; mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat; }
+    .o-divh { height:1px; background:var(--grey-5, #E9ECF1); }
+    /* ─── Segmented Control (design system) ─── */
+    .ds-seg {
+      --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
+      --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
+      --seg-pill-bg: #ffffff;
+      --seg-shadow: 0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.08);
+      display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
+      border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
+      font-family:var(--font-sans); user-select:none; position:relative;
+    }
+    .ds-seg[data-size="mobile"] { --seg-radius:12px; --seg-gap:3px; }
+    .ds-seg__item {
+      flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:0 24px; border:0; background:transparent; border-radius:8px;
+      color:var(--seg-fg-off); font-family:inherit; font-size:14px; font-weight:400; line-height:1;
+      cursor:pointer; white-space:nowrap;
+      transition: background 160ms var(--ease-standard), color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
+    }
+    .ds-seg .ds-seg__item:not([aria-checked="true"]):hover { color:var(--black); }
+    .ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
+    .ds-seg__item:focus { outline:none; }
+
+/* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
+   więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
+.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:#fff; font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
+.zilo-tt.is-multiline { white-space:normal; width:260px; }
+.zilo-tt.is-on { opacity:1; transform:translate(0,0); }
+</style>
+</helmet>
+
+<div style="height:100vh;display:flex;flex-direction:column;background:#fff;font-family:var(--font-sans);overflow:hidden">
+
+  <header style="position:sticky;top:0;z-index:10;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5, #E9ECF1);background:#fff;min-height:70px;box-sizing:border-box;flex:none">
+    <div style="display:flex;align-items:center;gap:18px">
+      <button type="button" onClick="{{ close }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:#F0F1F5" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
+        <span style="width:20px;height:20px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
+      </button>
+    </div>
+    <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #0A0B29);white-space:nowrap">Wystaw fakturę</span>
+    <div style="display:flex;justify-content:flex-end">
+      <button type="button" onClick="{{ issue }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:#fff;font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:#1C2082" style-active="background:#161A6E">Wystaw fakturę</button>
+    </div>
+  </header>
+
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 64px">
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+      <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Typ</span><select class="o-input" value="{{ typ }}" onChange="{{ setTyp }}"><sc-for list="{{ typy }}" as="t" hint-placeholder-count="3"><option value="{{ t }}">{{ t }}</option></sc-for></select><span class="o-chev"></span></label>
+      <label class="o-cell" style="cursor:text"><span class="o-label">Numer</span><input class="o-input" type="text" value="{{ numer }}" onInput="{{ setNumer }}"></label>
+      <label class="o-cell" style="cursor:text"><span class="o-label">Data wystawienia</span><input class="o-input" type="text" value="{{ dataWyst }}" onInput="{{ setDataWyst }}"></label>
+      <label class="o-cell" style="cursor:text"><span class="o-label">Miejsce wystawienia</span><input class="o-input" type="text" value="{{ miejsce }}" onInput="{{ setMiejsce }}"></label>
+      <label class="o-cell" style="cursor:text"><span class="o-label">Data sprzedaży</span><input class="o-input" type="text" value="{{ dataSprz }}" onInput="{{ setDataSprz }}"></label>
+    </div>
+
+    <div class="o-divh" style="margin:22px 0"></div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr);gap:36px;align-items:start;margin-bottom:26px">
+
+      <section>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <span class="o-title">Sprzedawca</span>
+          <button type="button" class="o-2nd" onClick="{{ editSeller }}">
+            <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+            Edytuj
+          </button>
+        </div>
+        <div class="o-party nm">{{ seller.company }}</div>
+        <div class="o-party">NIP {{ seller.nip }}</div>
+        <div class="o-party">{{ seller.address }}</div>
+      </section>
+
+      <div style="align-self:stretch;background:var(--grey-5, #E9ECF1)"></div>
+
+      <section>
+        <div class="o-title" style="margin-bottom:14px">Nabywca</div>
+        <label class="o-cell" style="cursor:text;margin-bottom:12px;border-color:{{ nipBorder }}">
+          <span class="o-label">{{ nipLabel }}</span>
+          <span style="position:relative;display:block;width:100%">
+            <span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ nipTyped }}</span><span style="color:var(--grey-3, #979DB0)">{{ nipRest }}</span></span>
+            <input class="o-input" type="text" value="{{ nip }}" onInput="{{ setNip }}" onBlur="{{ onNipBlur }}" style="position:relative">
+          </span>
+        </label>
+        <sc-if value="{{ nipError }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:-6px 0 12px;font-size:14px;line-height:20px;color:#D93025">NIP musi mieć 10 cyfr.</div>
+        </sc-if>
+        <label class="o-cell" style="position:relative;cursor:pointer;margin-bottom:12px"><span class="o-label">Nabywca</span><select class="o-input" value="{{ buyerKey }}" onChange="{{ setBuyer }}"><sc-for list="{{ buyers }}" as="b" hint-placeholder-count="2"><option value="{{ b.key }}">{{ b.label }}</option></sc-for></select><span class="o-chev"></span></label>
+        <label class="o-cell" style="cursor:text;margin-bottom:12px"><span class="o-label">Ulica i nr</span><input class="o-input" type="text" value="{{ street }}" onInput="{{ setStreet }}" placeholder="np. ul. Bukowska 112"></label>
+        <div style="display:grid;grid-template-columns:minmax(0,0.5fr) minmax(0,1fr);gap:12px">
+          <label class="o-cell" style="cursor:text"><span class="o-label">Kod pocztowy</span><input class="o-input" type="text" value="{{ zip }}" onInput="{{ setZip }}" placeholder="00-000"></label>
+          <label class="o-cell" style="cursor:text"><span class="o-label">Miejscowość</span><input class="o-input" type="text" value="{{ city }}" onInput="{{ setCity }}" placeholder="np. Poznań"></label>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px">
+          <label style="display:inline-flex;align-items:center;gap:11px;cursor:pointer">
+            <span onClick="{{ toggleLink }}" role="switch" aria-checked="{{ linkChecked }}" style="width:44px;height:24px;flex:none;border-radius:999px;background:{{ linkTrack }};cursor:pointer;position:relative;transition:background-color 200ms var(--ease-standard)">
+              <span style="position:absolute;top:2px;left:{{ linkKnob }};width:20px;height:20px;border-radius:50%;background:#fff;transition:left 200ms var(--ease-standard)"></span>
+            </span>
+            <span style="font-size:15px;line-height:22px;color:var(--grey-1, #242629)">Wyślij link do faktury SMS-em / e-mailem</span>
+          </label>
+          <button type="button" class="o-more" onClick="{{ toggleMore }}">więcej<i style="transform:{{ moreArrow }}"></i></button>
+        </div>
+
+        <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+            <label class="o-cell" style="cursor:text"><span class="o-label">Numer telefonu</span><input class="o-input" type="text" value="{{ phone }}" onInput="{{ setPhone }}" placeholder="000 000 000"></label>
+            <label class="o-cell" style="cursor:text"><span class="o-label">Imię i nazwisko</span><input class="o-input" type="text" value="{{ cname }}" onInput="{{ setCname }}" placeholder="np. Jan Kowalski"></label>
+            <label class="o-cell" style="cursor:text"><span class="o-label">Adres e-mail</span><input class="o-input" type="text" value="{{ cmail }}" onInput="{{ setCmail }}" placeholder="np. jan@example.pl"></label>
+          </div>
+        </sc-if>
+      </section>
+
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px">
+        <button type="button" class="o-add" onClick="{{ toggleRabat }}" style="background:{{ rabatBg }}"><i style="{{ rabatIcon }}"></i>Rabat</button>
+        <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
+        </div>
+      </div>
+
+      <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
+        <div style="min-width:{{ posMinWidth }}">
+
+          <sc-for list="{{ uslugi }}" as="r" hint-placeholder-count="1">
+            <div style="display:grid;grid-template-columns:{{ uslugiGrid }};gap:10px;align-items:center;margin-bottom:10px">
+              <label class="o-cell" style="cursor:text"><span class="o-label">Nazwa</span><input class="o-input" type="text" value="{{ r.name }}" onInput="{{ r.setName }}" placeholder=""></label>
+              <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ uslugaUnits }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" value="{{ r.qty }}" onInput="{{ r.setQty }}"></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
+              <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
+              <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+                <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+              </sc-if>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
+              <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
+            </div>
+          </sc-for>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
+            <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Dodaj usługę</button>
+            <span style="display:flex;gap:24px;padding-right:46px">
+              <span class="o-sum">{{ sumU.label }}: <b>{{ sumU.value }}</b></span>
+            </span>
+          </div>
+
+          <sc-for list="{{ towary }}" as="r" hint-placeholder-count="1">
+            <div style="display:grid;grid-template-columns:{{ towaryGrid }};gap:10px;align-items:center;margin-bottom:10px">
+              <label class="o-cell" style="cursor:text"><span class="o-label">Towar</span><input class="o-input" type="text" value="{{ r.name }}" onInput="{{ r.setName }}" placeholder=""></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">Producent</span><input class="o-input" type="text" value="{{ r.producent }}" onInput="{{ r.setProducent }}" placeholder=""></label>
+              <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ towarUnits }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" value="{{ r.qty }}" onInput="{{ r.setQty }}"></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
+              <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
+              <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+                <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+              </sc-if>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
+              <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
+            </div>
+          </sc-for>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
+            <button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Dodaj towar</button>
+            <span style="display:flex;gap:24px;padding-right:46px">
+              <span class="o-sum">{{ sumT.label }}: <b>{{ sumT.value }}</b></span>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.85fr);gap:22px;align-items:stretch;margin-top:18px">
+
+      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:150px">
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;text-decoration:underline;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
+          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <textarea class="o-input" placeholder="Uwagi drukowane na fakturze (widoczne dla klienta)" value="{{ uwagi }}" onInput="{{ setUwagi }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
+      </div>
+
+      <div style="background:var(--grey-6, #F0F1F5);border:1px solid var(--grey-4, #DCE0E6);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+          <span style="color:var(--grey-1, #242629)">Suma netto</span>
+          <span style="color:var(--grey-1, #242629)">{{ total.net }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+          <span style="color:var(--grey-1, #242629)">Suma VAT</span>
+          <span style="color:var(--grey-1, #242629)">{{ total.vat }}</span>
+        </div>
+        <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
+            <span style="color:var(--grey-1, #242629)">Rabat ({{ total.rabatPct }}%)</span>
+            <span style="color:var(--grey-1, #242629)">{{ total.rabat }}</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:26px;padding-top:4px">
+          <span style="color:var(--zilo-blue-1, #222693);font-weight:500">Suma brutto</span>
+          <span style="color:var(--zilo-blue-1, #222693);font-weight:500">{{ total.gross }}</span>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="o-divh" style="margin:28px 0"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+      <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Płatność</span><select class="o-input" value="{{ platnosc }}" onChange="{{ setPlatnosc }}"><sc-for list="{{ platnosci }}" as="p" hint-placeholder-count="3"><option value="{{ p }}">{{ p }}</option></sc-for></select><span class="o-chev"></span></label>
+      <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Termin płatności</span><select class="o-input" value="{{ termin }}" onChange="{{ setTermin }}"><sc-for list="{{ terminy }}" as="t" hint-placeholder-count="3"><option value="{{ t }}">{{ t }}</option></sc-for></select><span class="o-chev"></span></label>
+      <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Status</span><select class="o-input" value="{{ status }}" onChange="{{ setStatus }}"><sc-for list="{{ statusy }}" as="s" hint-placeholder-count="3"><option value="{{ s }}">{{ s }}</option></sc-for></select><span class="o-chev"></span></label>
+      <label class="o-cell" style="cursor:text"><span class="o-label">Kwota opłacona</span><input class="o-input" type="text" value="{{ oplacona }}" onInput="{{ setOplacona }}"></label>
+      <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Waluta</span><select class="o-input" value="{{ waluta }}" onChange="{{ setWaluta }}"><sc-for list="{{ waluty }}" as="w" hint-placeholder-count="3"><option value="{{ w }}">{{ w }}</option></sc-for></select><span class="o-chev"></span></label>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+  static USLUGA_UNITS = ['Sztuka', 'Godzina'];
+  static TOWAR_UNITS = ['Sztuka', 'Gramy', 'Litry'];
+  static VATS = ['23', '8', '5', '0'];
+  static TYPY = ['Faktura', 'Faktura zaliczkowa', 'Faktura pro forma'];
+  static PLATNOSCI = ['Przelew', 'Gotówka', 'Karta'];
+  static STATUSY = ['Wystawiona', 'Opłacona', 'Częściowo opłacona'];
+  static WALUTY = ['PLN', 'EUR', 'USD'];
+  static NOWY = '__nowy';
+  static NOWA = '__nowa';
+
+  static payload() {
+    try {
+      const m = (location.hash || '').match(/[#&]fv=([^&]*)/);
+      if (m) return JSON.parse(decodeURIComponent(m[1]));
+    } catch (e) {}
+    return {};
+  }
+
+  static num(t) {
+    const n = parseFloat(String(t == null ? '' : t).replace(/\s/g, '').replace(/[^0-9,.-]/g, '').replace(',', '.'));
+    return isNaN(n) ? 0 : n;
+  }
+
+  static fmt(n) {
+    return (Math.round(n * 100) / 100).toFixed(2).replace('.', ',');
+  }
+
+  static money(n) {
+    return Component.fmt(n).replace(/\B(?=(\d{3})+(?!\d)(?=,))/g, ' ') + ' zł';
+  }
+
+  // procent bez zbędnych zer: 10 zamiast 10,00; przy mieszanych stawkach wychodzi średnia ważona
+  static pct(n) {
+    return String(Math.round(n * 100) / 100).replace('.', ',');
+  }
+
+  static pad(n) { return String(n).padStart(2, '0'); }
+
+  static NIP_MASK = '___ ___ __ __';
+  static NIP_POS = [0, 1, 2, 4, 5, 6, 8, 9, 11, 12];
+
+  static nipDigits(v) {
+    return String(v == null ? '' : v).replace(/[^0-9]/g, '').slice(0, 10);
+  }
+
+  static nipFormat(v) {
+    const d = Component.nipDigits(v);
+    let out = '';
+    for (let i = 0; i < d.length; i += 1) {
+      if (i === 3 || i === 6 || i === 8) out += ' ';
+      out += d[i];
+    }
+    return out;
+  }
+
+  static nipRest(v) {
+    const d = Component.nipDigits(v);
+    if (!d.length) return Component.NIP_MASK;
+    return Component.NIP_MASK.slice(Component.NIP_POS[d.length - 1] + 1);
+  }
+
+  static nipComplete(v) { return Component.nipDigits(v).length === 10; }
+
+  static safeDate(t) {
+    const d = new Date(t);
+    return isNaN(d.getTime()) ? new Date() : d;
+  }
+
+  static isoDay(d) {
+    return d.getFullYear() + '-' + Component.pad(d.getMonth() + 1) + '-' + Component.pad(d.getDate());
+  }
+
+  static mkRow(id, seed, withProducent) {
+    const r = seed || {};
+    const row = {
+      id: id,
+      name: r.name || '',
+      unit: r.unit || 'Sztuka',
+      qty: r.qty || '1',
+      cena: r.cena || '0,00',
+      vat: r.vat || '23',
+      rabat: r.rabat || '',
+      bruttoEdit: null,
+      nettoEdit: null,
+    };
+    if (withProducent) row.producent = r.producent || '';
+    return row;
+  }
+
+  static seedRows(list, withProducent, startId) {
+    const src = Array.isArray(list) && list.length ? list : [null];
+    return src.map((r, i) => Component.mkRow(startId + i, r, withProducent));
+  }
+
+  // Terminy liczone od daty wystawienia — 14 dni to domyslna wartosc na fakturze.
+  static terminy(issued) {
+    const plus = (days) => {
+      const d = new Date(issued.getTime());
+      d.setDate(d.getDate() + days);
+      return Component.isoDay(d);
+    };
+    return ['14 dni (' + plus(14) + ')', '7 dni (' + plus(7) + ')', '30 dni (' + plus(30) + ')', 'Gotówka'];
+  }
+
+  state = (() => {
+    const p = Component.payload();
+    const c = p.client || {};
+    const inv = p.invoice || {};
+    const today = Component.safeDate(p.today);
+    const uslugi = Component.seedRows(p.uslugi, false, 1);
+    const towary = Component.seedRows(p.towary, true, 1);
+    return {
+      valueMode: 'netto',
+      showRabat: false,
+      moreOpen: false,
+      sendLink: true,
+      typ: Component.TYPY[0],
+      numer: p.numer || (1 + '/' + Component.pad(today.getMonth() + 1) + '/' + today.getFullYear()),
+      dataWyst: Component.isoDay(today),
+      dataSprz: Component.isoDay(today),
+      miejsce: (p.seller && p.seller.city) || 'Poznań',
+      buyerKey: p.buyerKey || Component.NOWY,
+      nip: Component.nipFormat(inv.nip || ''),
+      nipBlurred: false,
+      fetched: !!(inv.company),
+      street: inv.street || '',
+      zip: inv.zip || '',
+      city: inv.city || '',
+      company: inv.company || '',
+      phone: c.phone || '',
+      cname: c.name || '',
+      cmail: c.email || '',
+      uslugi: uslugi,
+      towary: towary,
+      nextU: uslugi.length + 1,
+      nextT: towary.length + 1,
+      uwagi: p.uwagi || '',
+      platnosc: Component.PLATNOSCI[0],
+      termin: Component.terminy(today)[0],
+      status: Component.STATUSY[0],
+      oplacona: '0',
+      waluta: Component.WALUTY[0],
+    };
+  })();
+
+  calc(r) {
+    const base = Component.num(r.qty) * Component.num(r.cena);
+    const rb = this.state.showRabat ? Component.num(r.rabat) : 0;
+    const rabatAmt = base * (rb / 100);
+    const afterRabat = base - rabatAmt;
+    // do procentu w podsumowaniu liczą się tylko pozycje, na których rabat faktycznie jest —
+    // inaczej pozycje bez rabatu rozwadniają stawkę (10% pokazywało się jako 1,92%)
+    const rabatBase = rb > 0 ? base : 0;
+    const net = r.nettoEdit !== null && r.nettoEdit !== undefined ? Component.num(r.nettoEdit) : afterRabat;
+    const gross = r.bruttoEdit !== null && r.bruttoEdit !== undefined
+      ? Component.num(r.bruttoEdit)
+      : net * (1 + Component.num(r.vat) / 100);
+    return { net: net, gross: gross, vat: gross - net, base: rabatBase, rabat: rabatAmt };
+  }
+
+  patch(coll, id, p) {
+    this.setState((s) => ({ [coll]: s[coll].map((r) => (r.id === id ? Object.assign({}, r, p) : r)) }));
+  }
+
+  buildRows(coll, withProducent) {
+    return this.state[coll].map((r) => {
+      const c = this.calc(r);
+      const set = (field) => (e) => this.patch(coll, r.id, { [field]: e.target.value, bruttoEdit: null, nettoEdit: null });
+      const isBrutto = this.state.valueMode === 'brutto';
+      const vRate = 1 + Component.num(r.vat) / 100;
+      const row = {
+        name: r.name, unit: r.unit, qty: r.qty, cena: r.cena, vat: r.vat, rabat: r.rabat,
+        cenaLabel: isBrutto ? 'Cena brutto' : 'Cena netto',
+        cenaValue: isBrutto ? Component.fmt(Component.num(r.cena) * vRate) : r.cena,
+        setCenaValue: isBrutto
+          ? (e) => this.patch(coll, r.id, { cena: Component.fmt(Component.num(e.target.value) / vRate), bruttoEdit: null, nettoEdit: null })
+          : set('cena'),
+        sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
+        sumaValue: isBrutto
+          ? (r.bruttoEdit !== null && r.bruttoEdit !== undefined ? r.bruttoEdit : Component.fmt(c.gross))
+          : (r.nettoEdit !== null && r.nettoEdit !== undefined ? r.nettoEdit : Component.fmt(c.net)),
+        setSumaValue: isBrutto
+          ? (e) => this.patch(coll, r.id, { bruttoEdit: e.target.value })
+          : (e) => this.patch(coll, r.id, { nettoEdit: e.target.value, bruttoEdit: null }),
+        setName: (e) => this.patch(coll, r.id, { name: e.target.value }),
+        setUnit: set('unit'),
+        setQty: set('qty'),
+        setVat: set('vat'),
+        setRabat: set('rabat'),
+        remove: () => this.setState((s) => {
+          const next = s[coll].filter((x) => x.id !== r.id);
+          return { [coll]: next.length ? next : [Component.mkRow(1, null, withProducent)] };
+        }),
+      };
+      if (withProducent) {
+        row.producent = r.producent || '';
+        row.setProducent = (e) => this.patch(coll, r.id, { producent: e.target.value });
+      }
+      return row;
+    });
+  }
+
+  sumOf(coll) {
+    const t = this.state[coll].reduce((a, r) => {
+      const c = this.calc(r);
+      return { net: a.net + c.net, gross: a.gross + c.gross, base: a.base + c.base, rabat: a.rabat + c.rabat };
+    }, { net: 0, gross: 0, base: 0, rabat: 0 });
+    const brutto = this.state.valueMode === 'brutto';
+    return {
+      label: brutto ? 'Suma brutto' : 'Suma netto',
+      value: brutto ? Component.money(t.gross) : Component.money(t.net),
+      gross: Component.money(t.gross),
+      _n: t.net, _g: t.gross, _b: t.base, _r: t.rabat,
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const p = Component.payload();
+    const seller = Object.assign(
+      { company: 'DM Motors Sp. z o.o.', nip: '118-14-52-946', street: 'ul. Serwisowa 12', zip: '01-424', city: 'Warszawa' },
+      p.seller || {}
+    );
+    const sumU = this.sumOf('uslugi');
+    const sumT = this.sumOf('towary');
+    const net = sumU._n + sumT._n;
+    const gross = sumU._g + sumT._g;
+    const rabatAmt = sumU._r + sumT._r;
+    const rabatBase = sumU._b + sumT._b;
+
+    // lista ogranicza się do firm przypisanych do tego klienta; firma zaciągnięta
+    // z GUS dochodzi jako bieżący wybór, żeby jej nazwa miała gdzie się pokazać
+    const companies = Array.isArray(p.companies) ? p.companies : [];
+    const known = companies.map((c) => ({ key: c.key, label: c.label }));
+    const fetchedNew = s.fetched && s.company && !companies.some((c) => c.label === s.company);
+    const buyers = known
+      .concat(fetchedNew ? [{ key: Component.NOWY, label: s.company }] : [])
+      .concat([{ key: Component.NOWA, label: '+ Nowa firma' }]);
+
+    const pickBuyer = (e) => {
+      const key = e.target.value;
+      if (key === Component.NOWA) {
+        this.setState({ buyerKey: Component.NOWY, nip: '', nipBlurred: false, fetched: false, street: '', zip: '', city: '', company: '' });
+        return;
+      }
+      const c = companies.filter((x) => x.key === key)[0];
+      if (!c) { this.setState({ buyerKey: key }); return; }
+      const inv = c.invoice || {};
+      this.setState({
+        buyerKey: key, fetched: true, nipBlurred: false,
+        nip: Component.nipFormat(inv.nip || ''), street: inv.street || '', zip: inv.zip || '',
+        city: inv.city || '', company: inv.company || '',
+      });
+    };
+
+    // każdy poprawny NIP zwraca w prototypie te same dane — jak w edytorze klienta
+    const gus = p.gus || {};
+    const setNip = (e) => {
+      const val = e.target.value;
+      const done = Component.nipComplete(val);
+      if (done && !s.fetched) {
+        try { parent.postMessage({ __fv: 'toast', text: 'Dane firmy pobrane z GUS' }, '*'); } catch (err) {}
+      }
+      this.setState(done
+        ? { nip: Component.nipFormat(val), nipBlurred: false, fetched: true, buyerKey: Component.NOWY,
+            company: gus.company || '', street: gus.street || '', zip: gus.zip || '', city: gus.city || '' }
+        : { nip: Component.nipFormat(val), nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' });
+    };
+    const nipOk = Component.nipComplete(s.nip);
+
+    const rabatCol = s.showRabat ? ' 154px' : '';
+    const bind = (key) => (e) => this.setState({ [key]: e.target.value });
+
+    try {
+      window.__fvState = {
+        typ: s.typ, numer: s.numer, dataWyst: s.dataWyst, dataSprz: s.dataSprz, miejsce: s.miejsce,
+        seller: seller,
+        buyer: { key: s.buyerKey, company: s.company, nip: s.nip, street: s.street, zip: s.zip, city: s.city, name: s.cname, phone: s.phone, email: s.cmail },
+        sendLink: s.sendLink,
+        uslugi: s.uslugi, towary: s.towary, rabat: s.showRabat,
+        uwagi: s.uwagi,
+        platnosc: s.platnosc, termin: s.termin, status: s.status, oplacona: s.oplacona, waluta: s.waluta,
+        totals: { net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross) },
+      };
+    } catch (e) {}
+
+    return {
+      typy: Component.TYPY, typ: s.typ, setTyp: bind('typ'),
+      numer: s.numer, setNumer: bind('numer'),
+      dataWyst: s.dataWyst, setDataWyst: bind('dataWyst'),
+      dataSprz: s.dataSprz, setDataSprz: bind('dataSprz'),
+      miejsce: s.miejsce, setMiejsce: bind('miejsce'),
+
+      seller: { company: seller.company, nip: seller.nip, address: seller.street + ', ' + seller.zip + ' ' + seller.city },
+      editSeller: () => { try { parent.postMessage({ __fv: 'editSeller' }, '*'); } catch (e) {} },
+
+      buyers: buyers, buyerKey: s.buyerKey, setBuyer: pickBuyer,
+      nip: s.nip, setNip: setNip,
+      nipTyped: s.nip,
+      nipRest: Component.nipRest(s.nip),
+      nipLabel: Component.nipDigits(s.nip).length ? 'NIP' : 'NIP*',
+      nipBorder: s.nipBlurred && !nipOk ? '#D93025' : 'var(--grey-3, #979DB0)',
+      nipError: s.nipBlurred && !nipOk,
+      onNipBlur: () => this.setState({ nipBlurred: true }),
+      street: s.street, setStreet: bind('street'),
+      zip: s.zip, setZip: bind('zip'),
+      city: s.city, setCity: bind('city'),
+
+      linkChecked: s.sendLink ? 'true' : 'false',
+      linkTrack: s.sendLink ? 'var(--zilo-blue-1, #222693)' : 'var(--grey-3, #979DB0)',
+      linkKnob: s.sendLink ? '22px' : '2px',
+      toggleLink: () => this.setState((st) => ({ sendLink: !st.sendLink })),
+
+      moreOpen: s.moreOpen,
+      moreArrow: s.moreOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleMore: () => this.setState((st) => ({ moreOpen: !st.moreOpen })),
+      phone: s.phone, setPhone: bind('phone'),
+      cname: s.cname, setCname: bind('cname'),
+      cmail: s.cmail, setCmail: bind('cmail'),
+
+      showRabat: s.showRabat,
+      rabatBg: s.showRabat ? '#E9E9FF' : 'transparent',
+      rabatIcon: s.showRabat ? '-webkit-mask-image:url(../assets/icons/i-close.svg);mask-image:url(../assets/icons/i-close.svg)' : '',
+      toggleRabat: () => this.setState((st) => ({ showRabat: !st.showRabat })),
+
+      segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
+      segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
+      pickNetto: () => this.setState({ valueMode: 'netto' }),
+      pickBrutto: () => this.setState({ valueMode: 'brutto' }),
+
+      posMinWidth: s.showRabat ? '1520px' : '1350px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + rabatCol + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + rabatCol + ' 154px 36px',
+      uslugaUnits: Component.USLUGA_UNITS,
+      towarUnits: Component.TOWAR_UNITS,
+      vats: Component.VATS,
+      uslugi: this.buildRows('uslugi', false),
+      towary: this.buildRows('towary', true),
+      addUsluga: () => this.setState((st) => ({ uslugi: st.uslugi.concat([Component.mkRow(st.nextU, null, false)]), nextU: st.nextU + 1 })),
+      addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
+      sumU: sumU, sumT: sumT,
+      total: { net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross),
+               rabat: Component.money(rabatAmt), rabatPct: Component.pct(rabatBase ? (rabatAmt / rabatBase) * 100 : 0) },
+
+      uwagi: s.uwagi, setUwagi: bind('uwagi'),
+
+      platnosci: Component.PLATNOSCI, platnosc: s.platnosc, setPlatnosc: bind('platnosc'),
+      terminy: Component.terminy(Component.safeDate(s.dataWyst)), termin: s.termin, setTermin: bind('termin'),
+      statusy: Component.STATUSY, status: s.status, setStatus: bind('status'),
+      oplacona: s.oplacona, setOplacona: bind('oplacona'),
+      waluty: Component.WALUTY, waluta: s.waluta, setWaluta: bind('waluta'),
+
+      close: () => { try { parent.postMessage({ __fv: 'close' }, '*'); } catch (e) {} },
+      issue: () => { try { parent.postMessage({ __fv: 'issue', state: window.__fvState || null, totals: (window.__fvState || {}).totals || null }, '*'); } catch (e) {} },
+    };
+  }
+}
+</script>
+
+<script>
+/* Zilo bridge — Esc zamyka konfigurator faktury po stronie aplikacji. */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') { try { parent.postMessage({ __fv: 'close' }, '*'); } catch (_) {} }
+});
+</script>
+
+<script>
+/* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
+   position:fixed omija overflow rodziców, a pozycja przeskakuje na stronę,
+   po której jest miejsce, i tak czy siak jest docinana do viewportu.
+   Myszka czeka DELAY ms, klawiatura pokazuje od razu. */
+(function () {
+  var GAP = 10, EDGE = 8, DELAY = 500;
+  var bubble = null, host = null, pending = null, timer = 0, watch = 0;
+
+  function box() {
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'zilo-tt';
+      bubble.setAttribute('role', 'tooltip');
+    }
+    if (!bubble.isConnected) document.body.appendChild(bubble);
+    return bubble;
+  }
+
+  function fits(p, r, w, h) {
+    if (p === 'top') return r.top - h - GAP >= EDGE;
+    if (p === 'bottom') return r.bottom + h + GAP <= innerHeight - EDGE;
+    if (p === 'left') return r.left - w - GAP >= EDGE;
+    return r.right + w + GAP <= innerWidth - EDGE;
+  }
+
+  function show(el) {
+    var text = el.getAttribute('data-tt');
+    if (!text) return;
+    var b = box();
+    b.textContent = text;
+    b.classList.toggle('is-multiline', text.length > 40);
+    b.classList.remove('is-on');
+    b.style.transform = 'none';
+    b.style.left = '0px';
+    b.style.top = '0px';
+
+    var r = el.getBoundingClientRect();
+    var w = b.offsetWidth, h = b.offsetHeight;
+    var want = el.getAttribute('data-tt-pos') || 'top';
+    var order = [want, 'top', 'bottom', 'right', 'left'];
+    var pos = want, i;
+    for (i = 0; i < order.length; i++) {
+      if (fits(order[i], r, w, h)) { pos = order[i]; break; }
+    }
+
+    var x, y, from;
+    if (pos === 'top') { x = r.left + r.width / 2 - w / 2; y = r.top - h - GAP; from = 'translateY(4px)'; }
+    else if (pos === 'bottom') { x = r.left + r.width / 2 - w / 2; y = r.bottom + GAP; from = 'translateY(-4px)'; }
+    else if (pos === 'left') { x = r.left - w - GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(4px)'; }
+    else { x = r.right + GAP; y = r.top + r.height / 2 - h / 2; from = 'translateX(-4px)'; }
+
+    x = Math.max(EDGE, Math.min(x, innerWidth - w - EDGE));
+    y = Math.max(EDGE, Math.min(y, innerHeight - h - EDGE));
+
+    b.style.left = Math.round(x) + 'px';
+    b.style.top = Math.round(y) + 'px';
+    b.style.transform = from;
+    host = el;
+    requestAnimationFrame(function () {
+      if (host === el) b.classList.add('is-on');
+    });
+
+    clearInterval(watch);
+    watch = setInterval(function () {
+      if (!host || !host.isConnected) hide();
+    }, 200);
+  }
+
+  function cancel() {
+    clearTimeout(timer);
+    timer = 0;
+    pending = null;
+  }
+
+  function hide() {
+    cancel();
+    clearInterval(watch);
+    watch = 0;
+    host = null;
+    if (bubble) { bubble.classList.remove('is-on'); bubble.style.transform = 'none'; }
+  }
+
+  function queue(el) {
+    cancel();
+    if (host && host !== el) hide();
+    pending = el;
+    timer = setTimeout(function () {
+      timer = 0;
+      pending = null;
+      show(el);
+    }, DELAY);
+  }
+
+  function trigger(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) { hide(); return; }
+    if (el === host || el === pending) return;
+    queue(el);
+  }
+
+  document.addEventListener('mouseover', trigger, true);
+  document.addEventListener('mouseout', function (e) {
+    var cur = host || pending;
+    if (cur && !cur.contains(e.relatedTarget)) hide();
+  }, true);
+  document.addEventListener('focusin', function (e) {
+    /* tylko fokus z klawiatury — inaczej dymek wraca zaraz po kliknieciu przycisku */
+    var el = e.target && e.target.closest ? e.target.closest('[data-tt]') : null;
+    if (!el) return;
+    try { if (!el.matches(':focus-visible')) return; } catch (err) { return; }
+    if (el === host) return;
+    cancel();
+    show(el);
+  }, true);
+  document.addEventListener('focusout', hide, true);
+  document.addEventListener('mousedown', hide, true);
+  document.addEventListener('scroll', hide, true);
+  addEventListener('resize', hide);
+  addEventListener('blur', hide);
+})();
+</script>
+</body>
+</html>

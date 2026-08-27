@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konfigurator faktury — układ Fakturowni na komponentach Zilo</title>
+<style>
+  :root{
+    --grey-1:#242629; --grey-2:#6B707D; --grey-3:#979DB0; --grey-4:#DCE0E6; --grey-5:#E9ECF1; --grey-6:#F0F1F5;
+    --black:#0A0B29; --zilo-blue-1:#222693; --zilo-primary:#222693; --blue-5:#F3F3FF;
+    --font-sans:'Rubik',-apple-system,'Segoe UI',Roboto,sans-serif;
+    --ease-standard:cubic-bezier(.2,0,0,1);
+  }
+  html,body{margin:0;background:#fff;font-family:var(--font-sans);}
+
+  /* komponenty z konfigurator-ofert/v1.html */
+  .o-cell{display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;height:56px;padding:9px 13px;background:#fff;border:1px solid var(--grey-3);border-radius:10px;min-width:0;transition:box-shadow 200ms var(--ease-standard);position:relative;}
+  .o-cell:focus-within{box-shadow:inset 0 0 0 1px var(--zilo-blue-1);border-color:var(--zilo-blue-1);}
+  .o-cell.is-locked{background:#F6F6FC;border-color:#E9ECF1;}
+  .o-label{font-family:var(--font-sans);font-size:12px;line-height:16px;color:var(--grey-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .o-input{font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:20px;color:var(--grey-1);background:transparent;border:0;outline:0;padding:0;width:100%;}
+  .o-input::placeholder{color:var(--grey-3);opacity:1;}
+  select.o-input{appearance:none;-webkit-appearance:none;cursor:pointer;}
+  .o-chev{position:absolute;right:11px;bottom:17px;color:var(--grey-2);font-size:12px;pointer-events:none;}
+  .o-trash{position:relative;width:36px;height:36px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center;}
+  .o-trash:hover{background:#E9E9FF;}
+  .o-trash span{width:20px;height:20px;display:block;background-color:var(--grey-2);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9 3l-1 1H4v2h16V4h-4l-1-1H9zm-3 5v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8H6zm3 2h2v9H9v-9zm4 0h2v9h-2v-9z'/%3E%3C/svg%3E") center / 20px 20px no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9 3l-1 1H4v2h16V4h-4l-1-1H9zm-3 5v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8H6zm3 2h2v9H9v-9zm4 0h2v9h-2v-9z'/%3E%3C/svg%3E") center / 20px 20px no-repeat;}
+  .o-add{display:inline-flex;align-items:center;gap:6px;height:32px;padding:4px 8px;border:0;border-radius:4px;background:transparent;color:var(--zilo-blue-1);font-family:var(--font-sans);font-size:16px;line-height:22px;cursor:pointer;font-weight:600;}
+  .o-add:hover{background:#E9E9FF;}
+  .o-add i{width:20px;height:20px;display:block;background-color:var(--zilo-blue-1);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z'/%3E%3C/svg%3E") center / 20px 20px no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z'/%3E%3C/svg%3E") center / 20px 20px no-repeat;}
+  .o-sum{font-size:15px;line-height:22px;color:var(--grey-2);white-space:nowrap;}
+  .o-sum b{font-weight:500;color:var(--grey-1);}
+  .ds-seg{--seg-h:46px;--seg-radius:10px;--seg-gap:4px;--seg-bg:var(--grey-6);--seg-fg-off:var(--grey-2);--seg-fg-on:var(--black);--seg-pill-bg:#fff;--seg-shadow:0 1px 2px rgba(20,24,35,.06),0 2px 8px rgba(20,24,35,.08);display:inline-flex;padding:var(--seg-gap);background:var(--seg-bg);border-radius:var(--seg-radius);height:var(--seg-h);box-sizing:border-box;font-family:var(--font-sans);user-select:none;}
+  .ds-seg[data-size="mobile"]{--seg-radius:12px;--seg-gap:3px;}
+  .ds-seg__item{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;padding:0 24px;border:0;background:transparent;border-radius:8px;color:var(--seg-fg-off);font-family:inherit;font-size:14px;font-weight:400;line-height:1;cursor:pointer;white-space:nowrap;transition:background 160ms var(--ease-standard),color 160ms var(--ease-standard),box-shadow 160ms var(--ease-standard);}
+  .ds-seg__item[aria-checked="true"]{background:var(--seg-pill-bg);color:var(--seg-fg-on);box-shadow:var(--seg-shadow);}
+
+  .sec-title{font-size:18px;line-height:26px;font-weight:600;color:var(--grey-1);}
+  .btn-2nd{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 15px;border:0;border-radius:8px;background:var(--blue-5);color:var(--zilo-blue-1);font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;}
+  .party-line{font-size:15px;line-height:22px;color:var(--grey-2);}
+  .party-line.nm{font-size:16px;font-weight:600;color:var(--grey-1);margin-bottom:4px;}
+  .radio{display:inline-flex;align-items:center;gap:9px;font-size:15px;color:var(--grey-1);cursor:pointer;}
+  .radio .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-3);flex:none;}
+  .radio.on .dot{border-color:var(--zilo-blue-1);background:radial-gradient(var(--zilo-blue-1) 42%,#fff 46%);}
+  .more{color:var(--zilo-blue-1);font-size:14px;font-weight:600;cursor:pointer;}
+  .switch{width:44px;height:24px;border-radius:999px;background:var(--grey-3);position:relative;flex:none;}
+  .switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left 200ms var(--ease-standard);}
+  .switch.on{background:var(--zilo-blue-1);}
+  .switch.on .knob{left:22px;}
+  .divh{height:1px;background:var(--grey-5);margin:22px 0;}
+</style>
+</head>
+<body>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;background:#fff;font-family:var(--font-sans)">
+
+  <!-- HEADER -->
+  <header style="position:sticky;top:0;z-index:10;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5);background:#fff;min-height:70px;box-sizing:border-box;flex:none">
+    <div><button type="button" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;color:var(--grey-1);font-size:18px">✕</button></div>
+    <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black)">Wystaw fakturę</span>
+    <div style="display:flex;justify-content:flex-end"><button type="button" style="height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary);color:#fff;font-family:inherit;font-size:16px;cursor:pointer">Wystaw fakturę</button></div>
+  </header>
+
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 64px">
+
+    <!-- 1 · DANE FAKTURY (górny rząd) -->
+    <div style="display:grid;grid-template-columns:180px 1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px">
+      <label class="o-cell" style="cursor:pointer"><span class="o-label">Typ</span><select class="o-input"><option>Faktura</option><option>Faktura zaliczkowa</option><option>Faktura pro forma</option></select><span class="o-chev">⌄</span></label>
+      <label class="o-cell"><span class="o-label">Numer</span><input class="o-input" type="text" value="1/08/2026"></label>
+      <label class="o-cell"><span class="o-label">Data wystawienia</span><input class="o-input" type="text" value="2026-08-27"></label>
+      <label class="o-cell"><span class="o-label">Miejsce wystawienia</span><input class="o-input" type="text" value="Warszawa"></label>
+      <label class="o-cell"><span class="o-label">Data sprzedaży</span><input class="o-input" type="text" value="2026-08-27"></label>
+    </div>
+
+    <div class="divh"></div>
+
+    <!-- 2 · SPRZEDAWCA | NABYWCA -->
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr);gap:36px;align-items:start;margin-bottom:26px">
+
+      <section>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <span class="sec-title">Sprzedawca</span>
+          <button class="btn-2nd">Edytuj</button>
+        </div>
+        <div class="party-line nm">DM Motors Sp. z o.o.</div>
+        <div class="party-line">NIP 118-14-52-946</div>
+        <div class="party-line">ul. Serwisowa 12, 01-424 Warszawa</div>
+      </section>
+
+      <div style="align-self:stretch;background:var(--grey-5)"></div>
+
+      <section>
+        <div class="sec-title" style="margin-bottom:14px">Nabywca</div>
+        <label class="o-cell" style="cursor:pointer;margin-bottom:12px"><span class="o-label">Nabywca</span><select class="o-input"><option>Serwis AutoMax Sp. z o.o.</option><option>+ Nowy nabywca</option></select><span class="o-chev">⌄</span></label>
+        <label class="o-cell" style="margin-bottom:12px"><span class="o-label">NIP</span><input class="o-input" type="text" value="521-38-74-123"></label>
+        <label class="o-cell" style="margin-bottom:12px"><span class="o-label">Ulica i nr</span><input class="o-input" type="text" value="Al. Prymasa Tysiąclecia 81A/6"></label>
+        <div style="display:grid;grid-template-columns:minmax(0,0.5fr) minmax(0,1fr);gap:12px">
+          <label class="o-cell"><span class="o-label">Kod pocztowy</span><input class="o-input" type="text" value="01-424"></label>
+          <label class="o-cell"><span class="o-label">Miejscowość</span><input class="o-input" type="text" value="Warszawa"></label>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px">
+          <label style="display:inline-flex;align-items:center;gap:11px;cursor:pointer">
+            <span class="switch on"><span class="knob"></span></span>
+            <span style="font-size:15px;color:var(--grey-1)">Wyślij link do faktury SMS-em / e-mailem</span>
+          </label>
+          <span class="more">więcej ⌄</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3 · NETTO/BRUTTO + POZYCJE -->
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px">
+        <button type="button" class="o-add" style="background:#E9E9FF"><i></i>Rabat</button>
+        <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="true">Netto</button>
+          <button type="button" class="ds-seg__item" role="radio" aria-checked="false">Brutto</button>
+        </div>
+      </div>
+
+      <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
+        <div style="min-width:1600px">
+
+          <div style="display:grid;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 130px 154px 36px;gap:10px;align-items:center;margin-bottom:10px">
+            <label class="o-cell"><span class="o-label">Nazwa</span><input class="o-input" type="text" value="Wymiana oleju z filtrem"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input"><option>Sztuka</option><option>Godzina</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Ilość</span><input class="o-input" type="text" value="1"></label>
+            <label class="o-cell"><span class="o-label">Cena netto</span><input class="o-input" type="text" value="300,00"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input"><option>23</option><option>8</option><option>5</option><option>0</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" placeholder="—"></label>
+            <label class="o-cell is-locked"><span class="o-label">Wartość netto</span><input class="o-input" type="text" value="300,00" disabled></label>
+            <button type="button" class="o-trash"><span></span></button>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
+            <button type="button" class="o-add"><i></i>Dodaj usługę</button>
+            <span style="padding-right:46px"><span class="o-sum">Suma netto: <b>300,00 zł</b></span></span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 130px 154px 36px;gap:10px;align-items:center;margin-bottom:10px">
+            <label class="o-cell"><span class="o-label">Towar</span><input class="o-input" type="text" value="Filtr oleju"></label>
+            <label class="o-cell"><span class="o-label">Producent</span><input class="o-input" type="text" value="MANN"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input"><option>Sztuka</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Ilość</span><input class="o-input" type="text" value="1"></label>
+            <label class="o-cell"><span class="o-label">Cena netto</span><input class="o-input" type="text" value="55,10"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input"><option>23</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" placeholder="—"></label>
+            <label class="o-cell is-locked"><span class="o-label">Wartość netto</span><input class="o-input" type="text" value="55,10" disabled></label>
+            <button type="button" class="o-trash"><span></span></button>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 130px 154px 36px;gap:10px;align-items:center;margin-bottom:10px">
+            <label class="o-cell"><span class="o-label">Towar</span><input class="o-input" type="text" value="Olej silnikowy 5W30 5L"></label>
+            <label class="o-cell"><span class="o-label">Producent</span><input class="o-input" type="text" value="Castrol"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input"><option>Litry</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Ilość</span><input class="o-input" type="text" value="1"></label>
+            <label class="o-cell"><span class="o-label">Cena netto</span><input class="o-input" type="text" value="359,60"></label>
+            <label class="o-cell" style="cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input"><option>23</option></select><span class="o-chev">⌄</span></label>
+            <label class="o-cell"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" placeholder="—"></label>
+            <label class="o-cell is-locked"><span class="o-label">Wartość netto</span><input class="o-input" type="text" value="359,60" disabled></label>
+            <button type="button" class="o-trash"><span></span></button>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
+            <button type="button" class="o-add"><i></i>Dodaj towar</button>
+            <span style="padding-right:46px"><span class="o-sum">Suma netto: <b>414,70 zł</b></span></span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 · UWAGI (lewo) | PODSUMOWANIE z rabatem globalnym (prawo) -->
+    <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.85fr);gap:22px;align-items:stretch;margin-top:18px">
+
+      <div style="display:flex;flex-direction:column">
+        <div style="flex:1;display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3);border-radius:10px;overflow:hidden;min-height:150px">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5);color:var(--grey-1)">
+            <button style="width:28px;height:28px;border:0;background:transparent;cursor:pointer;font-weight:700;font-size:15px;border-radius:4px">B</button>
+            <button style="width:28px;height:28px;border:0;background:transparent;cursor:pointer;font-style:italic;font-size:15px;border-radius:4px">I</button>
+            <button style="width:28px;height:28px;border:0;background:transparent;cursor:pointer;text-decoration:underline;font-size:15px;border-radius:4px">U</button>
+          </div>
+          <textarea class="o-input" placeholder="Uwagi drukowane na fakturze (widoczne dla klienta)" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
+        </div>
+      </div>
+
+      <div style="background:var(--grey-6);border:1px solid var(--grey-4);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+        <div style="display:flex;justify-content:space-between;font-size:16px"><span style="color:var(--grey-1)">Suma netto</span><span style="color:var(--grey-1)">714,70 zł</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:16px"><span style="color:var(--grey-1)">Suma VAT</span><span style="color:var(--grey-1)">164,38 zł</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:18px;padding-top:4px"><span style="color:var(--zilo-blue-1);font-weight:500">Suma brutto</span><span style="color:var(--zilo-blue-1);font-weight:500">879,08 zł</span></div>
+      </div>
+
+    </section>
+
+    <div class="divh" style="margin:28px 0"></div>
+
+    <!-- 6 · PŁATNOŚĆ / TERMIN / STATUS / KWOTA / WALUTA -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+      <label class="o-cell" style="cursor:pointer"><span class="o-label">Płatność</span><select class="o-input"><option>Przelew</option><option>Gotówka</option><option>Karta</option></select><span class="o-chev">⌄</span></label>
+      <label class="o-cell" style="cursor:pointer"><span class="o-label">Termin płatności</span><select class="o-input"><option>14 dni (2026-09-10)</option><option>7 dni</option><option>Gotówka</option></select><span class="o-chev">⌄</span></label>
+      <label class="o-cell" style="cursor:pointer"><span class="o-label">Status</span><select class="o-input"><option>Wystawiona</option><option>Opłacona</option><option>Częściowo opłacona</option></select><span class="o-chev">⌄</span></label>
+      <label class="o-cell"><span class="o-label">Kwota opłacona</span><input class="o-input" type="text" value="0"></label>
+      <label class="o-cell" style="cursor:pointer"><span class="o-label">Waluta</span><select class="o-input"><option>PLN</option><option>EUR</option><option>USD</option></select><span class="o-chev">⌄</span></label>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
