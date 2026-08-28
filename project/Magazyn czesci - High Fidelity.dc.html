@@ -3807,12 +3807,6 @@ const TIRE_SETS = {
         { pos: 'Wszystkie 4', maker: 'Michelin', size: '225/45 R18', rim: 'Tak', tread: '7,0 mm' },
       ] },
   ],
-  c3a: [
-    { season: 'Zima', code: 'Z0002', /* Piotr Wysocki — tylko zimowe */ location: '', received: '02.04.2026', status: 'in',
-      note: '118 DÓŁ, regał 2', files: [], wheels: [
-        { pos: '', maker: 'Goodyear', size: '205/55 R16', rim: 'Nie', tread: '7,5 mm', qty: '4' },
-      ] },
-  ],
   c4a: [
     { season: 'Zima', code: 'Z0004', location: '117 DÓŁ, regał 3', received: '18.03.2026', status: 'in',
       note: '', files: [], wheels: [
@@ -3858,14 +3852,6 @@ const CLIENTS = [
       { id: 'r30', date: '13.08.2026', service: 'Wymiana oleju z filtrem', st: 'nowa', price: '999' } ] },
     { id: 'c1b', brand: 'Toyota', model: 'Avensis', plate: 'WE 1180T', vin: '', year: '2011', engine: '2.0 D-4D', last: '18.05.2026', visits: [
       { id: 'v4', date: '18.05.2026', service: 'Wymiana oleju', st: 'wydane', price: '260' } ] } ] },
-  { id: 'c2', name: 'Anna Krupa', phone: '512 887 220', email: 'anna.krupa@wp.pl', sms: true, mail: false, opinion: true, cars: [
-    { id: 'c2a', brand: 'Toyota', model: 'Yaris', plate: 'PO 7712A', vin: 'VNKKD3D330A118220', year: '2018', engine: '1.5 Hybrid', last: '10.08.2026', visits: [
-      { id: 'r2', date: '10.08.2026', service: 'Sezonowa wymiana opon', st: 'wydane', price: '280' },
-      { id: 'v6', date: '20.02.2026', service: 'Wymiana filtra kabinowego', st: 'wydane', price: '120' } ] } ] },
-  { id: 'c3', name: 'Piotr Wysocki', phone: '698 110 402', email: '', sms: false, mail: false, opinion: false, cars: [
-    { id: 'c3a', brand: 'Volkswagen', model: 'Golf VII', plate: 'WA 9021L', vin: 'WVWZZZAUZFW118440', year: '2016', engine: '1.4 TSI 125 KM', last: '10.08.2026', visits: [
-      { id: 'r3', date: '10.08.2026', service: 'Przegląd okresowy', st: 'naprawione', price: '540' },
-      { id: 'v8', date: '08.01.2026', service: 'Wymiana świec', st: 'wydane', price: '210' } ] } ] },
   { id: 'c4', name: 'Tomasz Nowak', phone: '604 771 118', email: 't.nowak@onet.pl', sms: true, mail: true, opinion: true, cars: [
     { id: 'c4a', brand: 'BMW', model: '320d E90', plate: 'KR 5588T', vin: 'WBAVC91050K118330', year: '2010', engine: '2.0 d 177 KM', last: '10.08.2026', visits: [
       { id: 'r4', date: '10.08.2026', service: 'Diagnostyka komputerowa', st: 'naprawione', price: '180' },
@@ -3912,7 +3898,6 @@ const inv = (nip, company, street, zip, city) => ({
 
 const DEFAULT_INVOICES = {
   c1:  inv('552 325 05 93', 'Zieliński Transport Sp. z o.o.', 'ul. Ignacego Dobrogojskiego 30A', '61-692', 'Poznań'),
-  c3:  inv('779 148 22 61', 'Wysocki Bud Sp. j.', 'ul. Bukowska 112', '60-397', 'Poznań'),
   c4:  inv('781 204 66 18', 'Nowak Logistyka Sp. z o.o.', 'ul. Szwajcarska 14', '61-285', 'Poznań'),
   c6:  inv('972 116 40 75', 'Lis Serwis Sp. z o.o.', 'ul. Głogowska 218', '60-104', 'Poznań'),
   c9:  inv('783 170 92 34', 'Mróz Fleet Sp. z o.o.', 'ul. Obornicka 235', '60-650', 'Poznań'),
