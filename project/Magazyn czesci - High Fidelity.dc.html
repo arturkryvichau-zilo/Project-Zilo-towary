@@ -3275,7 +3275,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                       <div style="font-size:14px;line-height:22px;color:#6B707D">Osoby przypisane:</div>
                       <div style="position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%">
                         <div style="flex:none;height:min(340px, 55%)"></div>
-            <sc-if value="{{ assignEmpty }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ peopleEmpty }}" hint-placeholder-val="{{ false }}">
                           <button type="button" onClick="{{ toggleAssignMenu }}" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px dashed #DCE0E6;border-radius:999px;background:transparent;color:#6B707D;font-family:inherit;font-size:14px;line-height:1.2;cursor:pointer;transition:all 150ms" style-hover="border-color:#222693;color:#222693;background:#F6F6FC">
                             <span style="display:inline-flex;align-items:center;justify-content:center">
                               <svg width="14" height="14" viewBox="0 0 14 14"><line x1="7" y1="2" x2="7" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="2" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line></svg>
@@ -5466,7 +5466,7 @@ class Component extends DCLogic {
     const towaryCount = rows.towary.length;
     // Konfigurator zawsze trzyma jeden pusty wiersz zalążkowy. To nie jest pozycja
     // wyceny — nie ma nazwy, kwoty ani czasu — więc nie pokazujemy go w szczegółach.
-    const pustaUsluga = (r) => !String(r.name || '').trim() && !r.c.net && !r.c.gross && !this.qnum(r.czas);
+    const pustaUsluga = (r) => !String(r.name || '').trim() && !String(r.person || '').trim() && !r.c.net && !r.c.gross && !this.qnum(r.czas);
     const pustyTowar = (g) => !String(g.name || '').trim() && !g.c.net && !g.c.gross;
     // indeks źródłowy trzeba zachować — służy do usuwania właściwego wiersza
     const uslugiList = rows.uslugi.map((r, i) => ({ r, i })).filter((x) => !pustaUsluga(x.r));
@@ -8155,7 +8155,7 @@ class Component extends DCLogic {
       evd: evd || {},
       closeEvent: () => this.setState({ eventId: null }),
       assignedPeople: this.visitPeopleIds().map((id) => PEOPLE.find((p) => p.id === id)).filter(Boolean),
-      assignEmpty: this.visitPeopleIds().length === 0,
+      peopleEmpty: this.visitPeopleIds().length === 0,
       assignFilled: this.visitPeopleIds().length > 0,
       assignMenuOpen: s.assignMenuOpen,
       assignChevronRotate: s.assignMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -8170,10 +8170,37 @@ class Component extends DCLogic {
       togglePerson: (e) => {
         const id = e.currentTarget.dataset.personId;
         const vid = this.state.eventId;
+        const person = (PEOPLE.filter((p) => p.id === id)[0] || {}).name || '';
+        const ev = EVENTS.filter((x) => x.id === vid)[0] || {};
         this.setState((st) => {
           const cur = (st.assignedByVisit || {})[vid] || [];
-          const next = cur.includes(id) ? cur.filter((x) => x !== id) : cur.concat([id]);
-          return { assignedByVisit: Object.assign({}, st.assignedByVisit, { [vid]: next }) };
+          const adding = !cur.includes(id);
+          const next = adding ? cur.concat([id]) : cur.filter((x) => x !== id);
+          const q = (st.quotes || {})[vid] || null;
+          const base = (q && q.state) || {};
+          const rows = Array.isArray(base.robociznas) ? base.robociznas.slice() : [];
+          let out;
+          if (adding) {
+            // pierwsza osoba przejmuje nazwę usługi z wizyty, kolejne dostają sam wiersz
+            out = rows.concat([{
+              name: rows.length === 0 ? (ev.reason || '') : '',
+              person: person, qty: '1', czas: '0', cena: '0,00', rabat: '', vat: '23', unit: 'Godzina',
+            }]);
+          } else {
+            // zdejmujemy tylko wiersz, którego nikt nie wypełnił — z kwotą zostaje
+            let dropped = false;
+            out = rows.filter((r) => {
+              if (dropped || (r.person || r.osoba) !== person || this.qnum(r.cena) > 0) return true;
+              dropped = true;
+              return false;
+            });
+          }
+          return {
+            assignedByVisit: Object.assign({}, st.assignedByVisit, { [vid]: next }),
+            quotes: Object.assign({}, st.quotes, {
+              [vid]: { state: Object.assign({ towars: [] }, base, { robociznas: out }), items: (q && q.items) || [] },
+            }),
+          };
         });
       },
       clientCardOpen: s.clientCardOpen,
