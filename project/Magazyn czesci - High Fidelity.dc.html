@@ -5877,7 +5877,7 @@ class Component extends DCLogic {
       }
       if (st) src += '#state=' + encodeURIComponent(JSON.stringify(st));
       if (opts && opts.preview) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'preview=1';
-      if (opts && opts.pick) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'pick=1';
+      if (opts && opts.pick) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'pick=' + encodeURIComponent(opts.pick === true ? '1' : opts.pick);
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const cliRec = CLIENTS.filter((c) => c.cars.some((x) => x.plate === ev.plate))[0] || null;
       const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '', grupa: cliRec ? this.clientGroupLabel(cliRec.id) : this.clientGroupLabel(null) };
@@ -6862,7 +6862,7 @@ class Component extends DCLogic {
             screen: back.screen,
             eventId: back.eventId,
             docsList: [{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList()),
-          }, () => this.openWycConfig(back.visit, null, { pick: true }));
+          }, () => this.openWycConfig(back.visit, null, { pick: nr }));
           return;
         }
         this.setState({
