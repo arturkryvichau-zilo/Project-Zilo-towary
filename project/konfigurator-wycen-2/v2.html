@@ -744,7 +744,10 @@ class Component extends DCLogic {
     try {
       var h = location.hash || '';
       var m = h.match(/state=([^&]+)/);
-      if (m) { var s = JSON.parse(decodeURIComponent(m[1])); if (s && typeof s === 'object') base = s; }
+      // Stan z hasha niesie tylko pozycje wyceny. Podmiana całego obiektu gubiła
+      // resztę domyślnych pól (extraFields, valueMode, docPicked…) i pierwszy klik
+      // w cokolwiek, co ich dotyka, wywalał się na undefined — stąd scalanie.
+      if (m) { var s = JSON.parse(decodeURIComponent(m[1])); if (s && typeof s === 'object') base = Object.assign({}, def, s); }
       base.mode = /(?:^|[#&])preview=1(?:&|$)/.test(h) ? 'preview' : 'normal';
     } catch (e) {}
     try {
