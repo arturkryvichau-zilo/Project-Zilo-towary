@@ -2,3 +2,7 @@
 .vercel/
 node_modules/
 .claude/settings.local.json
+# pliki robocze testów — nie należą do wdrożenia
+project/*-test.js
+project/wyc-logic.js
+project/main-dc.js
