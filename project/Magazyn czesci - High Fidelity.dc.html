@@ -4166,7 +4166,6 @@ class Component extends DCLogic {
     visitTireOpen: false,
     releaseForm: null,
     releaseSelect: null,
-    releaseResult: null,
     visitClientForm: null,
     timeForm: null,
     timeSelect: null,
@@ -7747,14 +7746,6 @@ class Component extends DCLogic {
         if (v.setKey) this.openEditFromKey(v.setKey);
       },
       release: this.releaseVals(),
-      releaseDone: !!s.releaseResult,
-      releaseMessage: s.releaseResult
-        ? (s.releaseResult.choice === 'existing'
-          ? 'Komplet został wydany klientowi, a drugi komplet przyjęty do przechowania.'
-          : (s.releaseResult.choice === 'new'
-            ? 'Komplet został wydany klientowi. Uzupełnij dane nowego kompletu przyjętego na przechowanie.'
-            : 'Komplet został wydany klientowi. Nie przyjęto kompletu w zamian.'))
-        : '',
       openRelease: (e) => {
         e.stopPropagation();
         const v = this.visitTireVals();
@@ -7811,7 +7802,9 @@ class Component extends DCLogic {
       },
       confirmRelease: () => {
         const f = this.state.releaseForm;
-        const outSeason = this.releaseVals().outSeason || '';
+        const rv = this.releaseVals();
+        const outSeason = rv.outSeason || '';
+        const outCode = rv.outCode || '';
         const carId = this.visitCarId();
         let added = null;
         if (f.choice === 'new' && carId) {
@@ -7828,10 +7821,14 @@ class Component extends DCLogic {
           releaseSelect: null,
           setStatus: { ...st.setStatus, [f.setKey]: 'out' },
           addedSets: added ? { ...st.addedSets, [carId]: (st.addedSets[carId] || []).concat([added]) } : st.addedSets,
-          releaseResult: { season: outSeason, choice: f.choice },
         }));
+        const komplet = ['Komplet', outSeason, outCode && ('nr ' + outCode)].filter(Boolean).join(' ');
+        this.ziloToast(
+          f.choice === 'existing' ? komplet + ' wydany, drugi przyjęty do przechowalni'
+            : f.choice === 'new' ? komplet + ' wydany, nowy przyjęty do przechowalni'
+              : komplet + ' wydany klientowi'
+        );
       },
-      dismissReleaseResult: () => this.setState({ releaseResult: null }),
       openTireModal: () => this.setState({
         tireSelect: null,
         tireDateOpen: false,
