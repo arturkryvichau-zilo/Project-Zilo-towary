@@ -4116,6 +4116,7 @@ class Component extends DCLogic {
     fvConfigVisit: null,
     fvHistory: {},
     fvFlash: null,
+    docReturn: null,
     offerFlash: null,
     wycConfigVisit: null,
     historyOpen: true,
@@ -4322,6 +4323,25 @@ class Component extends DCLogic {
     if (!d || d.__wyc == null) return;
     if (!this.state.wycConfigSrc) return;
     if (d.__wyc === 'preview') return;
+    if (d.__wyc === 'addDoc') {
+      const back = this.state.wycConfigVisit;
+      const st = d.state || null;
+      this.setState((prev) => ({
+        // niezapisane pozycje wracają razem z nami — wgrywanie nie może ich zjeść
+        quotes: st
+          ? Object.assign({}, prev.quotes, { [back]: { state: st, items: ((prev.quotes || {})[back] || {}).items || [] } })
+          : prev.quotes,
+        docReturn: { visit: back, screen: prev.screen, eventId: prev.eventId, navKey: prev.navKey },
+        wycConfigSrc: null,
+        wycConfigVisit: null,
+        navKey: 'goods',
+        screen: 'docUpload',
+        docUploadPct: 0,
+        docRows: null,
+        docDraft: null,
+      }));
+      return;
+    }
     if (d.__wyc === 'save') {
       const id = this.state.wycConfigVisit;
       const send = !!d.send || !!this.__wycSend;
@@ -5863,6 +5883,7 @@ class Component extends DCLogic {
       }
       if (st) src += '#state=' + encodeURIComponent(JSON.stringify(st));
       if (opts && opts.preview) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'preview=1';
+      if (opts && opts.pick) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'pick=1';
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const cliRec = CLIENTS.filter((c) => c.cars.some((x) => x.plate === ev.plate))[0] || null;
       const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '', grupa: cliRec ? this.clientGroupLabel(cliRec.id) : this.clientGroupLabel(null) };
@@ -5873,7 +5894,9 @@ class Component extends DCLogic {
         nr: d.nr,
         supplier: d.supplier,
         date: d.date,
-        items: (((this.state.docRowsById || {})[d.nr]) || DOC_POSITIONS).map((r) => ({
+        // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
+        // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
+        items: (d.rows || []).map((r) => ({
           name: r.name, indeks: r.code, producent: r.producer || '', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
         })),
       }));
@@ -6833,6 +6856,21 @@ class Component extends DCLogic {
           return;
         }
         const nr = d.nr || 'ZM/2026/0214';
+        const back = this.state.docReturn;
+        if (back) {
+          this.setState({
+            docReturn: null,
+            docUploadPct: 0,
+            docDraft: null,
+            docRows: null,
+            docSel: [],
+            navKey: back.navKey,
+            screen: back.screen,
+            eventId: back.eventId,
+            docsList: [{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList()),
+          }, () => this.openWycConfig(back.visit, null, { pick: true }));
+          return;
+        }
         this.setState({
           // po zapisie wchodzimy w zapisany dokument, nie wracamy na listę
           screen: 'docDetail',

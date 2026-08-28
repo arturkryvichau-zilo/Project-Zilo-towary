@@ -594,7 +594,8 @@
         </div>
 
         <div style="flex:none;display:flex;align-items:center;gap:8px;padding:16px 30px;border-top:1px solid var(--grey-5);">
-          <span style="flex:1;min-width:0;display:inline-flex;align-items:center;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
+          <button type="button" class="o-add" onClick="{{ addDocument }}" style="flex:none;"><i></i>Dodaj dokument</button>
+          <span style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:flex-end;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
             {{ docPicker.countLabel }}
             <sc-if value="{{ docPicker.hasPicked }}" hint-placeholder-val="{{ false }}">
               <button type="button" onClick="{{ clearDocPicked }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:var(--zilo-primary-5);color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);" data-tt="Odznacz wszystkie" aria-label="Odznacz wszystkie">
@@ -749,6 +750,7 @@ class Component extends DCLogic {
       // w cokolwiek, co ich dotyka, wywalał się na undefined — stąd scalanie.
       if (m) { var s = JSON.parse(decodeURIComponent(m[1])); if (s && typeof s === 'object') base = Object.assign({}, def, s); }
       base.mode = /(?:^|[#&])preview=1(?:&|$)/.test(h) ? 'preview' : 'normal';
+      if (/(?:^|[#&])pick=1(?:&|$)/.test(h)) base.docPickerOpen = true;
     } catch (e) {}
     try {
       // Stan z #state= (i z zapisu konfiguratora) może nie mieć id wierszy — bez nich
@@ -1226,6 +1228,9 @@ class Component extends DCLogic {
       })),
 
       openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null }),
+      addDocument: () => {
+        try { parent.postMessage({ __wyc: 'addDoc', state: window.__wycState || null }, '*'); } catch (e) {}
+      },
       closeDocPicker: () => this.setState({ docPickerOpen: false, docPicked: [] }),
       clearDocPicked: () => this.setState({ docPicked: [] }),
       setDocQuery: (e) => this.setState({ docQuery: e.target.value }),
