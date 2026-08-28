@@ -603,7 +603,10 @@ window.__resources = {
         </div>
 
         <div style="flex:none;display:flex;align-items:center;gap:8px;padding:16px 30px;border-top:1px solid var(--grey-5);">
-          <button type="button" class="o-add" onClick="{{ addDocument }}" style="flex:none;"><i></i>Dodaj dokument</button>
+          <button type="button" onClick="{{ addDocument }}" style="flex:none; font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            Dodaj dokument
+          </button>
           <span style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:flex-end;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
             {{ docPicker.countLabel }}
             <sc-if value="{{ docPicker.hasPicked }}" hint-placeholder-val="{{ false }}">
