@@ -4203,59 +4203,50 @@ class Component extends DCLogic {
   assignRef = React.createRef();
   evScrollRef = React.createRef();
 
-  visitSpanRows() {
-    let first = Infinity, last = -Infinity;
-    (this.state.events || []).forEach((e) => {
-      const start = toMin(e.t) / SLOT_MIN;
-      const end = start + Math.max(1, Math.ceil(e.dur / SLOT_MIN));
-      if (start < first) first = start;
-      if (end > last) last = end;
-    });
-    return last > first ? { first, last } : null;
-  }
+  // Kalendarz otwiera się zawsze na tej samej godzinie u góry widoku.
+  static DAY_START_H = 7;
 
-  centerTarget(el) {
-    const span = this.visitSpanRows();
-    const midRow = span ? (span.first + span.last) / 2 : (9 * 60) / SLOT_MIN;
+  dayStartTop(el) {
+    const row = (Component.DAY_START_H * 60) / SLOT_MIN;
     const max = Math.max(0, el.scrollHeight - el.clientHeight);
-    return Math.min(max, Math.max(0, midRow * this.slotH() - el.clientHeight / 2));
+    return Math.min(max, Math.max(0, row * this.slotH()));
   }
 
-  stopCentering() {
-    if (this.centerTimer) { clearInterval(this.centerTimer); this.centerTimer = null; }
-    if (this.__centerStop) { clearTimeout(this.__centerStop); this.__centerStop = null; }
+  stopAutoScroll() {
+    if (this.autoScrollTimer) { clearInterval(this.autoScrollTimer); this.autoScrollTimer = null; }
+    if (this.__autoScrollStop) { clearTimeout(this.__autoScrollStop); this.__autoScrollStop = null; }
     const el = this.weekRef.current;
-    if (el && this.__centerCancel) {
-      el.removeEventListener('wheel', this.__centerCancel);
-      el.removeEventListener('touchstart', this.__centerCancel);
-      el.removeEventListener('mousedown', this.__centerCancel);
-      el.removeEventListener('keydown', this.__centerCancel);
+    if (el && this.__autoScrollCancel) {
+      el.removeEventListener('wheel', this.__autoScrollCancel);
+      el.removeEventListener('touchstart', this.__autoScrollCancel);
+      el.removeEventListener('mousedown', this.__autoScrollCancel);
+      el.removeEventListener('keydown', this.__autoScrollCancel);
     }
-    this.__centerCancel = null;
+    this.__autoScrollCancel = null;
   }
 
-  centerOnVisit() {
-    this.stopCentering();
+  scrollToDayStart() {
+    this.stopAutoScroll();
     let settled = 0;
     const apply = () => {
       const el = this.weekRef.current;
       if (!el || el.clientHeight <= 0 || el.scrollHeight <= el.clientHeight) return;
-      const target = this.centerTarget(el);
+      const target = this.dayStartTop(el);
       if (Math.abs(el.scrollTop - target) > 2) { el.scrollTop = target; settled = 0; }
-      else if (++settled >= 6) this.stopCentering();
+      else if (++settled >= 6) this.stopAutoScroll();
     };
-    // the moment the user takes over, centering must never touch scrollTop again
-    this.__centerCancel = () => this.stopCentering();
+    // od pierwszego ruchu użytkownika automat nie dotyka już scrollTop
+    this.__autoScrollCancel = () => this.stopAutoScroll();
     const el = this.weekRef.current;
     if (el) {
-      el.addEventListener('wheel', this.__centerCancel, { passive: true });
-      el.addEventListener('touchstart', this.__centerCancel, { passive: true });
-      el.addEventListener('mousedown', this.__centerCancel);
-      el.addEventListener('keydown', this.__centerCancel);
+      el.addEventListener('wheel', this.__autoScrollCancel, { passive: true });
+      el.addEventListener('touchstart', this.__autoScrollCancel, { passive: true });
+      el.addEventListener('mousedown', this.__autoScrollCancel);
+      el.addEventListener('keydown', this.__autoScrollCancel);
     }
     apply();
-    this.centerTimer = setInterval(apply, 50);
-    this.__centerStop = setTimeout(() => this.stopCentering(), 1200);
+    this.autoScrollTimer = setInterval(apply, 50);
+    this.__autoScrollStop = setTimeout(() => this.stopAutoScroll(), 1200);
   }
 
   pollRefFrame() {
@@ -4407,7 +4398,7 @@ class Component extends DCLogic {
     window.addEventListener('message', this.__onWycMessage);
     this.__onWycKey = (e) => { if (e.key === 'Escape') this.closeWycConfig(); };
     window.addEventListener('keydown', this.__onWycKey);
-    this.centerOnVisit();
+    this.scrollToDayStart();
     this.onMouseMove = (e) => {
       const r = this.state.resize;
       if (!r) return;
@@ -4434,7 +4425,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     if (this.__onWycMessage) window.removeEventListener('message', this.__onWycMessage);
     if (this.__onWycKey) window.removeEventListener('keydown', this.__onWycKey);
-    this.stopCentering();
+    this.stopAutoScroll();
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('mouseup', this.onMouseUp);
     if (this.__onWycMessage) window.removeEventListener('message', this.__onWycMessage);
@@ -7089,7 +7080,7 @@ class Component extends DCLogic {
       isClients: s.screen === 'clients',
       isClientDetail: s.screen === 'client',
       isEventOpen: !!evd,
-      goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.centerOnVisit()),
+      goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.scrollToDayStart()),
       goClients: () => this.setState({ screen: 'clients', eventId: null }),
       navItems: NAV.map((n) => {
         const active = n.key === s.navKey;
@@ -7104,7 +7095,7 @@ class Component extends DCLogic {
       }),
       onNavClick: (e) => {
         const key = e.currentTarget.dataset.navKey;
-        if (key === 'calendar') this.setState({ navKey: key, screen: 'calendar', eventId: null }, () => this.centerOnVisit());
+        if (key === 'calendar') this.setState({ navKey: key, screen: 'calendar', eventId: null }, () => this.scrollToDayStart());
         else if (key === 'clients') this.setState({ navKey: key, screen: 'clients', eventId: null });
         else if (key === 'settings') this.setState({ navKey: key, screen: 'settings', eventId: null, moreOpen: false });
         else if (key === 'goods') this.setState({ navKey: key, screen: 'docs', eventId: null, moreOpen: false });
