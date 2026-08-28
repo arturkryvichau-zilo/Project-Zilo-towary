@@ -26,6 +26,7 @@ input::placeholder, textarea::placeholder { color:#979DB0; opacity:1; }
 a { color:#222693; text-decoration:none; }
 a:hover { color:#1D207C; text-decoration:underline; }
 @keyframes docBulkIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes zFlash { 0%, 65% { background-color:#E9E9FF; } 100% { background-color:transparent; } }
 
 /* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
    więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
@@ -294,7 +295,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
             <div style="display:flex;flex-direction:column;gap:12px">
 
               <div style="background: #fff; border: 1px solid #DCE0E6; border-radius: 10px; overflow-x: auto; margin-top: 20px">
-                <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 120px 130px 90px 130px 130px; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #E9ECF1; font-size: 16px; line-height: 20px; color: var(--grey-2); align-items: center; background-color: #FBFBFB; padding-top: 16px; padding-bottom: 16px; padding-right: 24px; padding-left: 24px">
+                <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #E9ECF1; font-size: 16px; line-height: 20px; color: var(--grey-2); align-items: center; background-color: #FBFBFB; padding-top: 16px; padding-bottom: 16px; padding-right: 24px; padding-left: 24px">
                   <span onClick="{{ docDetail.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ docDetail.allBorder }};border-radius:4px;background:{{ docDetail.allBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
                     <span style="width:14px;height:14px;display:block;background-color:#fff;-webkit-mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;opacity:{{ docDetail.allOpacity }}"></span>
                   </span>
@@ -302,14 +303,14 @@ a:hover { color:#1D207C; text-decoration:underline; }
                   <span style="font-size: 14px">Indeks</span>
                   <span style="font-size: 14px">Producent</span>
                   <span style="font-size: 14px">Jednostka</span>
-                  <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Sug. cena prod.</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Cena netto</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">VAT</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Wartość netto</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Wartość brutto</span>
+                  <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Sug. cena prod.</span>
                 </div>
                 <sc-for list="{{ docDetail.rows }}" as="p" hint-placeholder-count="5">
-                  <div onClick="{{ p.toggle }}" style="cursor:pointer;min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 120px 130px 90px 130px 130px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: #242629; background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px" style-hover="background:#FBFBFB">
+                  <div onClick="{{ p.toggle }}" style="cursor:pointer;min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: #242629; background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px" style-hover="background:#FBFBFB">
                     <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ p.boxBorder }};border-radius:4px;background:{{ p.boxBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
                     <span style="width:14px;height:14px;display:block;background-color:#fff;-webkit-mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;opacity:{{ p.boxOpacity }}"></span>
                   </span>
@@ -317,17 +318,18 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     <span style="color: var(--black); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px">{{ p.code }}</span>
                     <span style="color: var(--black); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px">{{ p.producer }}</span>
                     <span style="color: var(--black); font-size: 16px">{{ p.unit }}</span>
-                    <span style="text-align: right; white-space: nowrap; font-size: 16px; color: var(--grey-2)">{{ p.msrpLabel }}</span>
                     <span style="text-align: right; white-space: nowrap; font-size: 16px">{{ p.priceLabel }}</span>
                     <span style="text-align: right; color: var(--black); font-size: 16px">{{ p.vatLabel }}</span>
                     <span style="text-align: right; white-space: nowrap; font-size: 16px">{{ p.net }}</span>
                     <span style="text-align: right; font-weight: 400; white-space: nowrap; font-size: 16px; color: var(--black)">{{ p.gross }}</span>
+                    <span style="text-align: right; white-space: nowrap; font-size: 16px; color: var(--grey-2)">{{ p.msrpLabel }}</span>
                   </div>
                 </sc-for>
-                <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 120px 130px 90px 130px 130px; gap: 16px; padding: 14px 20px; font-size: 15px; line-height: 22px; font-weight: 500; color: #242629; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; background-color: #FBFBFB">
-                  <span></span><span style="font-size: 14px; color: var(--black); display: inline"></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 14px 20px; font-size: 15px; line-height: 22px; font-weight: 500; color: #242629; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px; background-color: #FBFBFB">
+                  <span></span><span style="font-size: 14px; color: var(--black); display: inline"></span><span></span><span></span><span></span><span></span><span></span>
                   <span style="text-align: right; white-space: nowrap; font-size: 16px; color: var(--black)">{{ docDetail.totalNet }}</span>
                   <span style="text-align: right; white-space: nowrap; font-size: 16px; color: var(--black)">{{ docDetail.totalGross }}</span>
+                  <span></span>
                 </div>
               </div>
             </div>
@@ -1859,6 +1861,31 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <input value="{{ visitClient.email }}" data-field="email" onInput="{{ onVisitClientField }}" placeholder="np. mechanik@zilo.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:#242629;background:transparent;border:0;outline:0;padding:0;width:100%">
                       </span>
                     </label>
+                      <div style="flex:1;min-width:0;position:relative">
+                        <div data-select-id="{{ visitClient.groupSel.key }}" onClick="{{ toggleVisitGroupSelect }}" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:{{ visitClient.groupSel.border }};border-radius:10px;cursor:pointer">
+                          <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ visitClient.groupSel.bodyPad }};box-sizing:border-box">
+                            <span style="font-size:{{ visitClient.groupSel.labelSize }};line-height:{{ visitClient.groupSel.labelLine }};color:#979DB0">Grupa cenowa</span>
+                            <sc-if value="{{ visitClient.groupSel.hasValue }}" hint-placeholder-val="{{ true }}">
+                              <span style="font-size:16px;line-height:20px;color:#242629;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ visitClient.groupSel.value }}</span>
+                            </sc-if>
+                          </span>
+                          <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ visitClient.groupSel.chevronRotate }}">
+                            <span style="width:20px;height:20px;display:block;background-color:{{ visitClient.groupSel.chevronColor }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                          </span>
+                        </div>
+                        <sc-if value="{{ visitClient.groupSel.open }}" hint-placeholder-val="{{ false }}">
+                          <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid #DCE0E6;border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:6px 0;z-index:30">
+                            <sc-for list="{{ visitClient.groupSel.options }}" as="opt" hint-placeholder-count="3">
+                              <div data-value="{{ opt.value }}" onClick="{{ pickVisitClientGroup }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;font-size:16px;line-height:22px;color:#242629;cursor:pointer;background:{{ opt.bg }}" style-hover="background:#F6F6FC">
+                                <span>{{ opt.label }}</span>
+                                <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:#222693;-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                </sc-if>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
                   </div>
                   <div style="display:flex;gap:16px;align-items:flex-start">
                     <sc-for list="{{ visitClient.consents }}" as="c" hint-placeholder-count="3">
@@ -3421,7 +3448,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
             </div>
             </div>
 
-            <div style="flex:1 1 auto;min-width:324px;overflow-y:auto;background:#FBFBFB">
+            <div ref="{{ evScrollRef }}" style="flex:1 1 auto;min-width:324px;overflow-y:auto;background:#FBFBFB">
               <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px">
                 <div style="position:sticky;top:-24px;z-index:5;display:flex;gap:32px;margin:-24px 4px 0;padding-top:24px;background:#FBFBFB;border-bottom:1px solid #DCE0E6">
                   <sc-for list="{{ evd.tabs }}" as="t" hint-placeholder-count="3">
@@ -3621,7 +3648,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <div>Wysłano</div><div>Status</div><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><div style="text-align:right">Razem</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.history }}" as="h" hint-placeholder-count="1">
-                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }}">
+                        <div data-flash="{{ h.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }};animation:{{ h.flashAnim }}">
                           <span style="font-size:15px;line-height:22px;color:#242629">{{ h.date }}</span>
                           <span style="position:relative">
                             <button type="button" onClick="{{ h.toggleMenu }}" style="display:inline-flex;align-items:center;gap:8px;padding:4px 8px 4px 12px;border:0;border-radius:4px;cursor:pointer;font-family:inherit;font-size:14px;line-height:22px;background:{{ h.statusBg }};color:{{ h.statusColor }};transition:background 150ms">
@@ -3675,7 +3702,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
                         <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div style="text-align:right">Kwota</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.fvHistory }}" as="f" hint-placeholder-count="1">
-                        <div style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }}">
+                        <div data-flash="{{ f.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }};animation:{{ f.flashAnim }}">
                           <span style="font-size:15px;line-height:22px;color:#242629;font-variant-numeric:tabular-nums">{{ f.numer }}</span>
                           <span style="font-size:15px;line-height:22px;color:#242629;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.buyer }}</span>
                           <span style="font-size:15px;line-height:22px;color:#242629">{{ f.date }}</span>
@@ -4103,6 +4130,8 @@ class Component extends DCLogic {
     fvConfigSrc: null,
     fvConfigVisit: null,
     fvHistory: {},
+    fvFlash: null,
+    offerFlash: null,
     wycConfigVisit: null,
     historyOpen: true,
     historyMenu: null,
@@ -4171,6 +4200,7 @@ class Component extends DCLogic {
   weekRef = React.createRef();
 
   assignRef = React.createRef();
+  evScrollRef = React.createRef();
 
   visitSpanRows() {
     let first = Infinity, last = -Infinity;
@@ -4341,6 +4371,9 @@ class Component extends DCLogic {
         return {
           quotes: quotes,
           offerHistory: history,
+          evTab: send ? 'wycena' : prev.evTab,
+          historyOpen: send ? true : prev.historyOpen,
+          offerFlash: send ? id + ':' + (prev.offerHistory[id] || []).length : prev.offerFlash,
           // przypisane towary weszły do wyceny — trzymanie ich dalej osobno dublowałoby wiersze
           visitParts: Object.assign({}, prev.visitParts, { [id]: [] }),
           wycConfigSrc: null,
@@ -4349,6 +4382,7 @@ class Component extends DCLogic {
       });
       this.__wycSend = false;
       this.ziloToast(send ? 'Oferta wysłana do klienta' : 'Wycena zapisana');
+      if (send) this.flashScroll('offerFlash');
       return;
     }
     this.closeWycConfig();
@@ -4980,6 +5014,32 @@ class Component extends DCLogic {
       phone: f.phone,
       name: f.name,
       email: f.email,
+      groupSel: (() => {
+        const open = this.state.openSelect === 'visit-client-group';
+        const cur = f.priceGroup || '';
+        const has = !!cur;
+        const list = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).map((g) => ({
+          value: g.name,
+          label: g.pct ? g.name + ' · ' + g.pct + '%' : g.name,
+        }));
+        return {
+          key: 'visit-client-group',
+          value: cur,
+          hasValue: has,
+          open: open,
+          border: open ? '2px solid #222693' : '1px solid #979DB0',
+          bodyPad: open ? (has ? '8px 12px' : '19px 12px') : (has ? '9px 13px 13px 13px' : '20px 13px'),
+          labelSize: has ? '12px' : '16px',
+          labelLine: has ? '16px' : '20px',
+          chevronRotate: open ? 'rotate(180deg)' : 'rotate(0deg)',
+          chevronColor: open ? '#222693' : '#6B707D',
+          options: list.map((o) => ({
+            value: o.value, label: o.label,
+            selected: o.value === cur,
+            bg: o.value === cur ? '#F6F6FC' : 'transparent',
+          })),
+        };
+      })(),
       consents: [
         consent('sms', f.sms, 'Czy klient wyraził zgodę na otrzymywanie SMS-ów/telefonów z ofertami i treściami marketingowymi?'),
         consent('mail', f.mail, 'Czy klient wyraził zgodę na otrzymywanie E-maili z ofertami i treściami marketingowymi?'),
@@ -5537,6 +5597,8 @@ class Component extends DCLogic {
           statusColor: cur.color,
           amt: h.amt,
           border: i === fvHist.length - 1 ? 'transparent' : '#E9ECF1',
+          flashAnim: s.fvFlash === id + ':' + i ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
+          flashMark: s.fvFlash === id + ':' + i ? '1' : '0',
         };
       }),
       hasHistory: hist.length > 0,
@@ -5549,11 +5611,14 @@ class Component extends DCLogic {
           ? { bg: '#DEF3E7', color: '#0E5B3A' }
           : (label === 'Odrzucona' ? { bg: '#FEE9E5', color: '#6E1A14' } : { bg: '#FEF3DC', color: '#7A4A00' }));
         const cur = tone(h.status);
+        const isFlash = s.offerFlash === id + ':' + i;
         return {
           date: h.date,
           status: h.status,
           statusColor: cur.color,
           statusBg: cur.bg,
+          flashAnim: isFlash ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
+          flashMark: isFlash ? '1' : '0',
           issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary }),
           menuOpen: s.historyMenu === id + ':' + i,
           toggleMenu: (e) => {
@@ -5579,6 +5644,42 @@ class Component extends DCLogic {
         };
       }),
     };
+  }
+
+  // Grupa oznaczona w ustawieniach jako domyślna obowiązuje każdego klienta,
+  // dopóki ktoś nie wybierze mu innej w edytorze.
+  defaultGroupName() {
+    const list = this.state.priceGroups || DEFAULT_PRICE_GROUPS;
+    const def = list.filter((g) => g.isDefault)[0] || list[0];
+    return def ? def.name : '';
+  }
+
+  clientGroup(clientId) {
+    return ((this.state.clientGroups || {})[clientId]) || this.defaultGroupName();
+  }
+
+  // Nazwa z narzutem — „Cennik producenta" liczy od sugerowanej ceny, więc nie ma procentu.
+  clientGroupLabel(clientId) {
+    const name = this.clientGroup(clientId);
+    const g = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).filter((x) => x.name === name)[0];
+    if (!g || (g.mode === 'msrp' && !g.pct)) return name;
+    return name + ' +' + (g.pct || 0) + '%';
+  }
+
+  // Po dopisaniu wiersza do historii przewija szczegóły wizyty tak, żeby było go widać,
+  // i po chwili gasi podświetlenie. Druga próba ratuje przypadek, gdy przy pierwszej
+  // wiersz nie zdążył się wyrenderować.
+  flashScroll(key) {
+    const go = () => {
+      const el = this.evScrollRef.current;
+      if (!el) return;
+      const row = el.querySelector('[data-flash="1"]');
+      if (row && row.scrollIntoView) row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      else el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    };
+    setTimeout(go, 60);
+    setTimeout(go, 320);
+    setTimeout(() => this.setState({ [key]: null }), 2600);
   }
 
   openInvoiceConfig(visitId, opts) {
@@ -5665,9 +5766,13 @@ class Component extends DCLogic {
         fvHistory: Object.assign({}, prev.fvHistory, { [id]: (prev.fvHistory[id] || []).concat([entry]) }),
         fvConfigSrc: null,
         fvConfigVisit: null,
+        evTab: 'wycena',
+        fvHistoryOpen: true,
+        fvFlash: id + ':' + (prev.fvHistory[id] || []).length,
       };
     });
     this.ziloToast('Faktura ' + (st.numer || '') + ' wystawiona');
+    this.flashScroll('fvFlash');
   }
 
   openOfferConfig(visitId) {
@@ -5734,9 +5839,13 @@ class Component extends DCLogic {
         offerHistory: Object.assign({}, prev.offerHistory, { [id]: (prev.offerHistory[id] || []).concat([entry]) }),
         offerConfigSrc: null,
         offerConfigVisit: null,
+        evTab: 'wycena',
+        historyOpen: true,
+        offerFlash: id + ':' + (prev.offerHistory[id] || []).length,
       };
     });
     this.ziloToast('Oferta wysłana do klienta');
+    this.flashScroll('offerFlash');
   }
 
   openWycConfig(visitId, focus, opts) {
@@ -5780,7 +5889,8 @@ class Component extends DCLogic {
       if (st) src += '#state=' + encodeURIComponent(JSON.stringify(st));
       if (opts && opts.preview) src += (src.indexOf('#') >= 0 ? '&' : '#') + 'preview=1';
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
-      const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '' };
+      const cliRec = CLIENTS.filter((c) => c.cars.some((x) => x.plate === ev.plate))[0] || null;
+      const car = { name: ev.client || '', phone: ev.phone || '', service: ev.reason || '', opis: (NOTES || {})[visitId] || '', grupa: cliRec ? this.clientGroupLabel(cliRec.id) : this.clientGroupLabel(null) };
       src += (src.indexOf('#') >= 0 ? '&' : '#') + 'car=' + encodeURIComponent(JSON.stringify(car));
       const groups = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).map((g) => ({ name: g.name, pct: g.pct, mode: g.mode }));
       src += '&groups=' + encodeURIComponent(JSON.stringify(groups));
@@ -6157,7 +6267,7 @@ class Component extends DCLogic {
       name: c.name,
       phone: c.phone,
       email: c.email || '-',
-      priceGroup: (this.state.clientGroups || {})[c.id] || '—',
+      priceGroup: this.clientGroup(c.id),
       hasInvoice: !!((this.state.clientInvoice || {})[c.id] || {}).on,
       invNip: this.nipFormat((((this.state.clientInvoice || {})[c.id]) || {}).nip) || '—',
       invCompany: (((this.state.clientInvoice || {})[c.id]) || {}).company || '—',
@@ -6225,7 +6335,7 @@ class Component extends DCLogic {
       editMode: mode,
       editForm: {
         phone: c.phone, name: c.name, email: c.email || '',
-        priceGroup: (this.state.clientGroups || {})[c.id] || '',
+        priceGroup: this.clientGroup(c.id),
         invoice: Object.assign(
           { on: false, expanded: false, country: 'Polska', nip: '', nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' },
           (this.state.clientInvoice || {})[c.id] || {}
@@ -6437,6 +6547,7 @@ class Component extends DCLogic {
         };
       })(),
       assignRef: this.assignRef,
+      evScrollRef: this.evScrollRef,
       assignChips: [
         { id: 'all', title: 'Wszystkie stanowiska' },
         { id: 'w3', title: 'Opony i wulkanizacja', border: '#2563EB' },
@@ -6478,7 +6589,7 @@ class Component extends DCLogic {
         const groups = s.priceGroups || DEFAULT_PRICE_GROUPS;
         const clientName = ev.client;
         const clientRec = CLIENTS.filter((c) => c.name === clientName)[0];
-        const groupName = clientRec ? (s.clientGroups || {})[clientRec.id] : null;
+        const groupName = clientRec ? this.clientGroup(clientRec.id) : null;
         const group = groups.filter((g) => g.name === groupName)[0]
           || groups.filter((g) => g.isDefault)[0]
           || groups[0];
@@ -7466,6 +7577,7 @@ class Component extends DCLogic {
           tireSectionOpen: true,
           visitClientForm: {
             phone: client.phone, name: client.name, email: client.email || '',
+            priceGroup: this.clientGroup(client.id),
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
@@ -7494,6 +7606,7 @@ class Component extends DCLogic {
           tireSectionOpen: true,
           visitClientForm: {
             phone: client.phone, name: client.name, email: client.email || '',
+            priceGroup: this.clientGroup(client.id),
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
@@ -7519,6 +7632,7 @@ class Component extends DCLogic {
         this.setState({
           visitClientForm: {
             phone: client.phone, name: client.name, email: client.email || '',
+            priceGroup: this.clientGroup(client.id),
             sms: !!client.sms, mail: !!client.mail, opinion: !!client.opinion,
             cars: client.cars.map((c) => ({ ...c })),
             selectedCarId: car.id,
@@ -7572,6 +7686,12 @@ class Component extends DCLogic {
           visitClientForm: null,
           visitTireForms: {},
           visitTireDrafts: [],
+          // grupa cenowa zapisuje się w kartotece klienta i obowiązuje kolejne zlecenia
+          clientGroups: (() => {
+            const g = (st.visitClientForm || {}).priceGroup;
+            if (!cli || !g) return st.clientGroups;
+            return Object.assign({}, st.clientGroups, { [cli.id]: g });
+          })(),
           // dane firmowe zapisują się przy kliencie, tak samo jak z modalu „Dane klienta"
           clientInvoice: (() => {
             if (!cli) return st.clientInvoice;
@@ -7986,6 +8106,15 @@ class Component extends DCLogic {
       toggleGroupSelect: (e) => {
         e.stopPropagation();
         this.setState((st) => ({ openSelect: st.openSelect === 'client-group' ? null : 'client-group' }));
+      },
+      toggleVisitGroupSelect: (e) => {
+        e.stopPropagation();
+        this.setState((st) => ({ openSelect: st.openSelect === 'visit-client-group' ? null : 'visit-client-group' }));
+      },
+      pickVisitClientGroup: (e) => {
+        e.stopPropagation();
+        const val = e.currentTarget.dataset.value;
+        this.setState((st) => ({ openSelect: null, visitClientForm: { ...st.visitClientForm, priceGroup: val } }));
       },
       pickClientGroup: (e) => {
         e.stopPropagation();

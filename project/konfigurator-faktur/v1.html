@@ -239,7 +239,7 @@
         </div>
         <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
-            <span style="color:var(--grey-1, #242629)">Rabat ({{ total.rabatPct }}%)</span>
+            <span style="color:var(--grey-1, #242629)">Rabat</span>
             <span style="color:var(--grey-1, #242629)">{{ total.rabat }}</span>
           </div>
         </sc-if>
@@ -296,11 +296,6 @@ class Component extends DCLogic {
 
   static money(n) {
     return Component.fmt(n).replace(/\B(?=(\d{3})+(?!\d)(?=,))/g, ' ') + ' zł';
-  }
-
-  // procent bez zbędnych zer: 10 zamiast 10,00; przy mieszanych stawkach wychodzi średnia ważona
-  static pct(n) {
-    return String(Math.round(n * 100) / 100).replace('.', ',');
   }
 
   static pad(n) { return String(n).padStart(2, '0'); }
@@ -417,14 +412,11 @@ class Component extends DCLogic {
     const rb = this.state.showRabat ? Component.num(r.rabat) : 0;
     const rabatAmt = base * (rb / 100);
     const afterRabat = base - rabatAmt;
-    // do procentu w podsumowaniu liczą się tylko pozycje, na których rabat faktycznie jest —
-    // inaczej pozycje bez rabatu rozwadniają stawkę (10% pokazywało się jako 1,92%)
-    const rabatBase = rb > 0 ? base : 0;
     const net = r.nettoEdit !== null && r.nettoEdit !== undefined ? Component.num(r.nettoEdit) : afterRabat;
     const gross = r.bruttoEdit !== null && r.bruttoEdit !== undefined
       ? Component.num(r.bruttoEdit)
       : net * (1 + Component.num(r.vat) / 100);
-    return { net: net, gross: gross, vat: gross - net, base: rabatBase, rabat: rabatAmt };
+    return { net: net, gross: gross, vat: gross - net, rabat: rabatAmt };
   }
 
   patch(coll, id, p) {
@@ -472,14 +464,14 @@ class Component extends DCLogic {
   sumOf(coll) {
     const t = this.state[coll].reduce((a, r) => {
       const c = this.calc(r);
-      return { net: a.net + c.net, gross: a.gross + c.gross, base: a.base + c.base, rabat: a.rabat + c.rabat };
-    }, { net: 0, gross: 0, base: 0, rabat: 0 });
+      return { net: a.net + c.net, gross: a.gross + c.gross, rabat: a.rabat + c.rabat };
+    }, { net: 0, gross: 0, rabat: 0 });
     const brutto = this.state.valueMode === 'brutto';
     return {
       label: brutto ? 'Suma brutto' : 'Suma netto',
       value: brutto ? Component.money(t.gross) : Component.money(t.net),
       gross: Component.money(t.gross),
-      _n: t.net, _g: t.gross, _b: t.base, _r: t.rabat,
+      _n: t.net, _g: t.gross, _r: t.rabat,
     };
   }
 
@@ -495,7 +487,6 @@ class Component extends DCLogic {
     const net = sumU._n + sumT._n;
     const gross = sumU._g + sumT._g;
     const rabatAmt = sumU._r + sumT._r;
-    const rabatBase = sumU._b + sumT._b;
 
     // lista ogranicza się do firm przypisanych do tego klienta; firma zaciągnięta
     // z GUS dochodzi jako bieżący wybór, żeby jej nazwa miała gdzie się pokazać
@@ -609,7 +600,7 @@ class Component extends DCLogic {
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       sumU: sumU, sumT: sumT,
       total: { net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross),
-               rabat: Component.money(rabatAmt), rabatPct: Component.pct(rabatBase ? (rabatAmt / rabatBase) * 100 : 0) },
+               rabat: Component.money(rabatAmt) },
 
       uwagi: s.uwagi, setUwagi: bind('uwagi'),
 

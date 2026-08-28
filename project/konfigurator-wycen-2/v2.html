@@ -143,6 +143,7 @@
             <div style="font-size:16px;line-height:24px;color:var(--grey-1);">Marek Kowalski</div>
             <a data-car="phone" href="tel:+48516375467" style="font-size:16px;line-height:24px;color:var(--zilo-blue-1);text-decoration:underline;text-underline-offset:3px;font-weight:400;">+48 516 375 467</a>
             <div style="font-size:16px;line-height:24px;color:var(--grey-1);">marek.kowalski@gmail.com</div>
+            <div data-car="grupa" style="font-size:16px;line-height:24px;color:var(--grey-1);">Klient detaliczny +45%</div>
           </div>
         </div>
       </div>
@@ -179,6 +180,7 @@
           </div>
         </div>
       </div>
+
     </section>
 
     <!-- Przełącznik wartości stoi nad kartą, 8 px od niej -->
@@ -323,7 +325,7 @@
           </button>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat ({{ robRabatPct }}%): <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
+              <span>Rabat: <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
             </sc-if>
             <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
               <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
@@ -361,6 +363,13 @@
               <div class="z-tri-body">
                 <div class="z-tri-label">Producent</div>
                 <input class="z-input z-tri-value" type="text" value="{{ row.producent }}" onChange="{{ row.setProducent }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
+            <!-- Cena zakupu — edytowalna -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.kosztLabel }}</div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Jednostka select -->
@@ -401,37 +410,6 @@
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
-            <!-- Cena zakupu — edytowalna -->
-            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
-              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
-                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.kosztLabel }}</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
-              </div>
-            </label>
-            <!-- Grupa cenowa -->
-            <div style="position:relative;">
-              <div onClick="{{ row.toggleGrupa }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.grupaOpenStyle }}">
-                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
-                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Grupa cenowa</div>
-                  <div style="font-size:16px;font-weight:400;line-height:20px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ row.grupa }}</div>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:center;width:36px;color:var(--grey-2);flex-shrink:0;transform: {{ row.grupaChevronRotation }} ;transition:transform 160ms var(--ease-standard);">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                </div>
-              </div>
-              <sc-if value="{{ row.grupaOpen }}" hint-placeholder-val="{{ false }}">
-                <div style="position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:320px;background:#fff;border:1px solid var(--grey-4);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:26;">
-                  <sc-for list="{{ row.grupaOptions }}" as="opt" hint-placeholder-count="4">
-                    <div onClick="{{ opt.select }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:15px;line-height:22px;color:var(--grey-1);cursor:pointer;background: {{ opt.selectedBg }} ;" style-hover="background:var(--grey-6);">
-                      {{ opt.label }}
-                      <sc-if value="{{ opt.isSelected }}" hint-placeholder-val="{{ false }}">
-                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--zilo-blue-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                      </sc-if>
-                    </div>
-                  </sc-for>
-                </div>
-              </sc-if>
-            </div>
             <!-- Rabat (%) — edytowalne, widoczne gdy pole aktywne -->
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
@@ -474,7 +452,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat ({{ towRabatPct }}%): <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
+              <span>Rabat: <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
             </sc-if>
             <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
               <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
@@ -535,7 +513,7 @@
         <!-- Rabat globalny (suma rabatów z wszystkich grup) -->
         <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
-            <span style="color:var(--grey-1);">Rabat ({{ totalRabatPct }}%):</span>
+            <span style="color:var(--grey-1);">Rabat:</span>
             <span style="color:var(--grey-1);font-weight:400;">{{ totalRabatDisplay }} zł</span>
           </div>
         </sc-if>
@@ -742,8 +720,6 @@ class Component extends DCLogic {
     return isNaN(n) ? 0 : n;
   }
   static fmt(n) { return (Math.round(n * 100) / 100).toFixed(2).replace('.', ','); }
-  // procent bez zbędnych zer: 10 zamiast 10,00; przy mieszanych stawkach wychodzi średnia ważona
-  static pct(n) { return String(Math.round(n * 100) / 100).replace('.', ','); }
   // Cena jednostkowa wyliczana wstecz z wartości pozycji: dwa miejsca nie wystarczają
   // (1000 / 7 = 142,86 -> 7 × 142,86 = 1000,02). Trzymamy cztery, gdy to konieczne.
   static fmtPrice(n) {
@@ -967,7 +943,6 @@ class Component extends DCLogic {
       brutto: cmp.brutto,
       vatAmt: cmp.vatAmt,
       rabatAmt: cmp.rabatAmt,
-      bazaAmt: cmp.rabatAmt > 0 ? cmp.netto + cmp.rabatAmt : 0,
 
       // Klasy dla tri-state (default / filled)
       nameCellClass:   r.name   ? 'is-filled' : '',
@@ -985,18 +960,6 @@ class Component extends DCLogic {
         isSelected: r.unit === u,
         selectedBg: bg(r.unit === u),
         select: () => this._patchRow(collection, r.id, { unit: u, openField: null, unitManual: true }),
-      })),
-
-      grupa: r.grupa || '— brak —',
-      grupaOpen: openField === 'grupa',
-      grupaChevronRotation: chev(openField === 'grupa'),
-      grupaOpenStyle: obord(openField === 'grupa'),
-      toggleGrupa: () => setField('grupa'),
-      grupaOptions: Component.priceGroups().map((g) => ({
-        label: g.label,
-        isSelected: (r.grupa || '') === g.value,
-        selectedBg: bg((r.grupa || '') === g.value),
-        select: () => this._patchRow(collection, r.id, { grupa: g.value, openField: null, cena: g.value ? Component.priceFromCost(r.koszt, g.value) : r.cena }),
       })),
 
       vat: r.vat,
@@ -1147,15 +1110,16 @@ class Component extends DCLogic {
     // Grid template dla wierszy — z / bez kolumny Rabat (%)
     // [drag 16 | label 2fr | osoba/indeks 1.3fr | jednostka 1.15fr | ilość 92 | cena 1fr | vat 1fr | (rabat 92)? | suma/wartość netto 1fr | suma/wartość brutto 1fr | trash 30]
     // Robocizna: name | osoba | jednostka | ilość | przeprac.czas | cena | vat | (rabat)? | wNetto | wBrutto | trash
-    // Obie siatki mają tę samą min-width i elastyczny spacer przed wartością,
-    // dzięki czemu kolumny usług i towarów stoją w jednej linii przy każdej szerokości.
+    // Usługa ma dwa pola mniej niż towar (cena zakupu, grupa cenowa), więc jej wiersz
+    // kończy się wcześniej — kolumny obu list nie stoją w jednej linii i tak ma zostać.
     const robGridStyle =
       'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px' +
       (showRabat ? ' 154px' : '') +
       ' 154px 30px;gap:8px;align-items:center;';
-    // Towar: name | indeks | producent | jednostka | ilość | cena | koszt | vat | (rabat)? | wNetto | wBrutto | trash
+    // Towar: name | indeks | producent | koszt | jednostka | ilość | cena | (rabat)? | wNetto | trash
+    // Grupa cenowa jest jedna na całą wycenę i stoi w sekcji klienta, nie w wierszu.
     const towGridStyle =
-      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 154px 154px' +
+      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 154px' +
       (showRabat ? ' 154px' : '') +
       ' 154px 30px;gap:8px;align-items:center;';
 
@@ -1171,12 +1135,10 @@ class Component extends DCLogic {
     const robBrutto = sumBy(robociznas, 'brutto');
     const robVat    = sumBy(robociznas, 'vatAmt');
     const robRabat  = sumBy(robociznas, 'rabatAmt');
-    const robBaza   = sumBy(robociznas, 'bazaAmt');
     const towNetto  = sumBy(towars, 'netto');
     const towBrutto = sumBy(towars, 'brutto');
     const towVat    = sumBy(towars, 'vatAmt');
     const towRabat  = sumBy(towars, 'rabatAmt');
-    const towBaza   = sumBy(towars, 'bazaAmt');
 
     // Dodatkowe pola menu
     const catalog = Component.FIELD_CATALOG;
@@ -1241,17 +1203,14 @@ class Component extends DCLogic {
       robBruttoDisplay:  Component.fmt(robBrutto),
       robVatDisplay:     Component.fmt(robVat),
       robRabatDisplay:   Component.fmt(robRabat),
-      robRabatPct:       Component.pct(robBaza ? (robRabat / robBaza) * 100 : 0),
       towNettoDisplay:   Component.fmt(towNetto),
       towBruttoDisplay:  Component.fmt(towBrutto),
       towVatDisplay:     Component.fmt(towVat),
       towRabatDisplay:   Component.fmt(towRabat),
-      towRabatPct:       Component.pct(towBaza ? (towRabat / towBaza) * 100 : 0),
       totalNettoDisplay:  Component.fmt(robNetto  + towNetto),
       totalBruttoDisplay: Component.fmt(robBrutto + towBrutto),
       totalVatDisplay:    Component.fmt(robVat    + towVat),
       totalRabatDisplay:  Component.fmt(robRabat  + towRabat),
-      totalRabatPct:      Component.pct((robBaza + towBaza) ? ((robRabat + towRabat) / (robBaza + towBaza)) * 100 : 0),
 
       addRobocizna: () => this.setState((s) => ({
         robociznas: [...s.robociznas, Component.mkRobocizna(s.nextRobociznaId)],
@@ -1327,6 +1286,7 @@ class Component extends DCLogic {
       if (k === 'year') return car.year || null;
       if (k === 'markaYear') return car.name ? (car.name + (car.year ? ', ' + car.year : '')) : null;
       if (k === 'service') return car.service || null;
+      if (k === 'grupa') return car.grupa || null;
       if (k === 'opis') return car.opis || '---';
       return null;
     }
