@@ -8369,5 +8369,105 @@ class Component extends DCLogic {
   addEventListener('blur', hide);
 })();
 </script>
+
+<!-- ════════════════════════════════════════════════════════════════
+     Useberry test layer — completion trigger (self-reported).
+     NIE jest to funkcja produktu Zilo — element warstwy testowej.
+     Przeniesione 1:1 z Project-Zilo-calendar-wersja-2.0/calendar.html.
+════════════════════════════════════════════════════════════════ -->
+<style>
+  #zz-finish-wrap {
+    position: fixed; right: 24px; bottom: 24px; z-index: 12100;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+    pointer-events: none;
+  }
+  #zz-finish-wrap > * { pointer-events: auto; }
+  #btn-zakoncz-zadanie {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 46px; padding: 12px 18px;
+    border-radius: 8px; border: 1.5px solid #222693; outline: none;
+    font-family: 'Rubik', sans-serif; font-size: 16px; font-weight: 400; line-height: 22px;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: background 140ms, color 140ms, border-color 140ms, opacity 140ms;
+    background: #fff; color: #222693; box-shadow: 0 8px 22px rgba(10, 11, 41, 0.18);
+  }
+  #btn-zakoncz-zadanie:hover  { color: #1D207C; border-color: #1D207C; }
+  #btn-zakoncz-zadanie:active { color: #1D207C; border-color: #1D207C; }
+  #btn-zakoncz-zadanie svg { width: 20px; height: 20px; flex-shrink: 0; }
+  #btn-zakoncz-zadanie.zz-pressed { transform: translateY(1px) scale(0.985); }
+  /* Dymek (tooltip) — styl jak tooltipy Zilo: ciemne tło, biały tekst, zaokrąglone rogi, strzałka w dół */
+  #zz-tooltip {
+    max-width: 250px; background: #242629; color: #fff;
+    font-family: 'Rubik', sans-serif; font-size: 14px; line-height: 20px;
+    padding: 10px 14px; border-radius: 8px; position: relative;
+    box-shadow: 0 8px 22px rgba(10, 11, 41, 0.24);
+    opacity: 0; transform: translateY(6px); pointer-events: none;
+    transition: opacity 220ms cubic-bezier(.2, 0, 0, 1), transform 220ms cubic-bezier(.2, 0, 0, 1);
+  }
+  #zz-tooltip.zz-visible { opacity: 1; transform: translateY(0); }
+  #zz-tooltip::after {
+    content: ''; position: absolute; right: 26px; bottom: -5px;
+    width: 11px; height: 11px; background: #242629; transform: rotate(45deg); border-radius: 2px;
+  }
+</style>
+<div id="zz-finish-wrap">
+  <div id="zz-tooltip" role="status">Jeśli uważasz, że wszystko skończyłeś, naciśnij ten przycisk.</div>
+  <button id="btn-zakoncz-zadanie" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12 10 17 19 7"/></svg>
+    Zakończ zadanie
+  </button>
+</div>
+<script>
+(function () {
+  var btn = document.getElementById('btn-zakoncz-zadanie');
+  var tip = document.getElementById('zz-tooltip');
+  if (!btn || !tip) return;
+  var shown = false, idleTimer = null;
+  var IDLE_MS = 12000; // ~12 s bezczynności (brak kliknięć / inputu)
+
+  function showTip() {
+    if (shown) return;
+    shown = true;
+    tip.classList.add('zz-visible');           // po pokazaniu zostaje (nie miga)
+    if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+  }
+  function resetIdle() {
+    if (shown) return;
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(showTip, IDLE_MS);
+  }
+
+  // Aktywność = kliknięcia / pisanie. Brak aktywności przez IDLE_MS → dymek.
+  ['click', 'keydown', 'input', 'pointerdown', 'touchstart'].forEach(function (ev) {
+    document.addEventListener(ev, resetIdle, true);
+  });
+  resetIdle();
+
+  // Konfiguratory żyją w iframe'ach — bez tego bezczynność w nich liczyłaby się
+  // jako bezczynność w całym prototypie i dymek wyskakiwałby w trakcie pracy.
+  window.addEventListener('message', function (e) {
+    var d = e && e.data;
+    if (d && (d.__wyc != null || d.__ofr != null || d.__fv != null)) resetIdle();
+  });
+
+  // LUB: pierwsze wypełnienie pola kwoty → dymek od razu (co nastąpi pierwsze).
+  document.addEventListener('input', function (e) {
+    if (shown) return;
+    var t = e.target; if (!t) return;
+    var key = ((t.id || '') + ' ' + (t.name || '') + ' ' + (t.className || '')).toLowerCase();
+    if (/price|cena|kwota|netto|brutto|amount|estimated|unit-?net|top-net|top-brutto/.test(key)
+        && String(t.value || '').trim() !== '') {
+      showTip();
+    }
+  }, true);
+
+  // Klik nie zmienia nic w prototypie (Useberry łapie klik jako zakończenie).
+  // Tylko lekka informacja zwrotna „wciśnięcia", bez nawigacji.
+  btn.addEventListener('click', function () {
+    btn.classList.add('zz-pressed');
+    setTimeout(function () { btn.classList.remove('zz-pressed'); }, 180);
+  });
+})();
+</script>
 </body>
 </html>
