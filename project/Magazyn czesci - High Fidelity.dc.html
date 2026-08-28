@@ -3759,13 +3759,8 @@ const ST = {
 };
 
 const EVENTS = [
-  { id: 'r2', ws: 'w3', d: 0, t: '08:00', dur: 60, brand: 'Toyota', model: 'Yaris', plate: 'PO 7712A', reason: 'Sezonowa wymiana opon', st: 'wydane', client: 'Anna Krupa', phone: '512 887 220' },
-  { id: 'r7', ws: 'w1', d: 1, t: '08:30', dur: 150, brand: 'Audi', model: 'A4 B8', plate: 'WB 8123R', reason: 'Wymiana rozrządu', st: 'wydane', client: 'Robert Lis', phone: '660 442 019' },
-  { id: 'r11', ws: 'w1', d: 2, t: '08:00', dur: 120, brand: 'Volvo', model: 'V40', plate: 'WE 1204X', reason: 'Wymiana amortyzatorów', st: 'wydane', client: 'Karol Mróz', phone: '601 449 202' },
-  { id: 'r13', ws: 'w3', d: 2, t: '10:30', dur: 45, brand: 'Fiat', model: 'Tipo', plate: 'WA 5510J', reason: 'Wymiana opon', st: 'wydane', client: 'Sebastian Rak', phone: '507 116 449', ext: true },
-  { id: 'r30', ws: 'w1', d: 3, t: '07:30', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'trakcie', client: 'Marek Zieliński', phone: '601 233 981', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
-  { id: 'r31', ws: 'w1', d: 4, t: '08:00', dur: 60, brand: 'Skoda', model: 'Superb', plate: 'PO 4471K', reason: 'Wymiana oleju z filtrem', st: 'nowa', client: 'Tomasz Nowak', phone: '604 771 118', veh: { year: '2019', engine: '2.0 TDI 190 KM', vin: 'TMBAG9NP4K7042118' } },
-  { id: 'r27', ws: 'w3', d: 5, t: '09:00', dur: 60, brand: 'Volkswagen', model: 'Polo', plate: 'WE 5540N', reason: 'Wymiana opon', st: 'nowa', client: 'Dorota Krupa', phone: '660 118 004' },
+  { id: 'r32', ws: 'w3', d: 3, t: '08:00', dur: 60, brand: 'BMW', model: '320d E90', plate: 'KR 5588T', reason: 'Wymiana opon', st: 'trakcie', client: 'Tomasz Nowak', phone: '604 771 118', veh: { year: '2010', engine: '2.0 d 177 KM', vin: 'WBAVC91050K118330' } },
+  { id: 'r30', ws: 'w1', d: 3, t: '10:00', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'nowa', client: 'Marek Zieliński', phone: '601 233 981', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
 ];
 
 
@@ -3810,6 +3805,12 @@ const TIRE_SETS = {
         { pos: '', maker: 'Goodyear', size: '205/55 R16', rim: 'Nie', tread: '7,5 mm', qty: '4' },
       ] },
   ],
+  c4a: [
+    { season: 'Zima', code: 'Z0004', location: '117 DÓŁ, regał 3', received: '18.03.2026', status: 'in',
+      note: '', files: [], wheels: [
+        { pos: '', maker: 'Continental', size: '225/50 R17', rim: 'Nie', tread: '7,0 mm', qty: '4' },
+      ] },
+  ],
   c7a: [
     { season: 'Zima', code: 'Z0003', location: '', received: '18.03.2026', status: 'in',
       note: '204 GÓRA', files: [], wheels: [
@@ -3846,7 +3847,7 @@ const CLIENTS = [
       { id: 'v2', date: '14.03.2026', service: 'Przegląd okresowy', st: 'wydane', price: '480' },
       { id: 'v3', date: '02.11.2025', service: 'Wymiana klocków przód', st: 'wydane', price: '640' } ] },
     { id: 'c1c', brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', vin: 'WVWZZZ3CZLE045128', year: '2020', engine: '2.0 TDI', last: '13.08.2026', visits: [
-      { id: 'r30', date: '13.08.2026', service: 'Wymiana oleju z filtrem', st: 'trakcie', price: '480' } ] },
+      { id: 'r30', date: '13.08.2026', service: 'Wymiana oleju z filtrem', st: 'nowa', price: '999' } ] },
     { id: 'c1b', brand: 'Toyota', model: 'Avensis', plate: 'WE 1180T', vin: '', year: '2011', engine: '2.0 D-4D', last: '18.05.2026', visits: [
       { id: 'v4', date: '18.05.2026', service: 'Wymiana oleju', st: 'wydane', price: '260' } ] } ] },
   { id: 'c2', name: 'Anna Krupa', phone: '512 887 220', email: 'anna.krupa@wp.pl', sms: true, mail: false, opinion: true, cars: [
@@ -3861,9 +3862,8 @@ const CLIENTS = [
     { id: 'c4a', brand: 'BMW', model: '320d E90', plate: 'KR 5588T', vin: 'WBAVC91050K118330', year: '2010', engine: '2.0 d 177 KM', last: '10.08.2026', visits: [
       { id: 'r4', date: '10.08.2026', service: 'Diagnostyka komputerowa', st: 'naprawione', price: '180' },
       { id: 'v10', date: '11.06.2026', service: 'Wymiana rozrządu', st: 'wydane', price: '2450' },
-      { id: 'v11', date: '03.04.2026', service: 'Wymiana opon', st: 'anulowane', price: '' } ] },
-    { id: 'c4b', brand: 'Skoda', model: 'Superb', plate: 'PO 4471K', vin: 'TMBAG9NP4K7042118', year: '2019', engine: '2.0 TDI 190 KM', last: '14.08.2026', visits: [
-      { id: 'r31', date: '14.08.2026', service: 'Wymiana oleju z filtrem', st: 'nowa', price: '999' } ] } ] },
+      { id: 'v11', date: '03.04.2026', service: 'Wymiana opon', st: 'anulowane', price: '' },
+      { id: 'r32', date: '13.08.2026', service: 'Wymiana opon', st: 'trakcie', price: '320' } ] } ] },
   { id: 'c5', name: 'Ewa Malinowska', phone: '607 003 442', email: 'ewa.mal@gmail.com', sms: true, mail: false, opinion: false, cars: [
     { id: 'c5a', brand: 'Ford', model: 'Focus MK3', plate: 'GD 3391M', vin: 'WF05XXGCC5EU11822', year: '2014', engine: '1.6 TDCi', last: '10.08.2026', visits: [
       { id: 'r5', date: '10.08.2026', service: 'Wymiana klocków i tarcz', st: 'wydane', price: '890' } ] } ] },
@@ -3912,7 +3912,8 @@ const DEFAULT_INVOICES = {
 };
 
 const NOTES = {
-  r31: 'Wymiana oleju i filtra przy przebiegu 142 000 km. Klient prosi o olej Castrol — ten sam co przy poprzedniej wymianie.',
+  r30: 'Wymiana oleju i filtra przy przebiegu 142 000 km. Klient prosi o olej Castrol — ten sam co przy poprzedniej wymianie.',
+  r32: 'Komplet zimowy klienta z przechowalni — do sprawdzenia stan bieżnika przy zakładaniu.',
   r29: 'Wymiana opon z felgami — komplet zimowy klienta przechowywany w warsztacie. Do sprawdzenia stan bieżnika przy oddaniu.',
   r7: 'Wymiana rozrządu wraz z pompą wody. Klient prosi o kontakt telefoniczny przed dokupieniem części.',
 };
@@ -4042,7 +4043,7 @@ const OIL_QUOTE_STATE = {
   ],
 };
 
-const OIL_QUOTE_VISIT = 'r31';
+const OIL_QUOTE_VISIT = 'r30';
 
 const DOC_POSITIONS = [
   { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
@@ -5006,7 +5007,7 @@ class Component extends DCLogic {
       trackBg: on ? '#222693' : '#979DB0',
       knobLeft: on ? '25.625px' : '1.625px',
     });
-    const inlineTires = this.state.eventId === 'r31';
+    const inlineTires = this.state.eventId === 'r32';
     return {
       open: !this.state.tireSectionOpen,
       inv: this.invVals('visitClientForm', 'visit-inv-country'),
