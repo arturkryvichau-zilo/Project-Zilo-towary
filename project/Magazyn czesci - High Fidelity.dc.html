@@ -1023,7 +1023,6 @@ a:hover { color:#1D207C; text-decoration:underline; }
             <button type="button" style="position:relative;height:46px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px;padding:0 18px;border:1px solid #8386E2;border-radius:8px;background:#FFFFFF;color:#222693;font-family:inherit;font-size:16px;font-weight:400;cursor:pointer;transition:background 150ms;white-space:nowrap" style-hover="background:#F3F3FF">
               <img src="assets/icons/ai-assistant.svg" alt="" style="width:20px;height:20px;display:block">
               Asystent AI
-              <span aria-label="4 powiadomienia" style="position:absolute;top:-8px;right:-8px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#EA4335;color:#FFFFFF;font-size:12px;font-weight:500;line-height:22px;text-align:center;box-sizing:border-box;pointer-events:none;box-shadow:0 0 0 2px #FFFFFF">4</span>
             </button>
             <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 20px;border:0;border-radius:10px;background:#222693;color:#fff;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:#1D207C">
               <span style="width:20px;height:20px;display:block;background-color:#fff;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
@@ -3537,22 +3536,6 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </sc-if>
                   </div>
 
-                  <sc-if value="{{ evd.wyc.empty }}" hint-placeholder-val="{{ true }}">
-                  <div style="background:#fff;border:1px dashed #DCE0E6;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px">
-                    <div style="width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
-                      <span style="width:28px;height:28px;display:block;background-color:#979DB0;-webkit-mask:url(assets/icons/tab-price.svg) center / 28px 28px no-repeat;mask:url(assets/icons/tab-price.svg) center / 28px 28px no-repeat"></span>
-                    </div>
-                    <div style="flex:1;min-width:0">
-                      <div style="font-size:16px;line-height:22px;color:#242629">Brak wyceny dla tego zlecenia</div>
-                      <div style="font-size:13px;line-height:18px;color:#6B707D;margin-top:2px">Dodaj usługi i towary, żeby wysłać ofertę klientowi albo wystawić fakturę.</div>
-                    </div>
-                    <button type="button" onClick="{{ evd.wyc.openConfig }}" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;flex:none;padding:0 14px;border:0;border-radius:8px;background:#222693;color:#fff;font-family:inherit;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#1C2082" style-active="background:#161A6E">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                      Dodaj wycenę
-                    </button>
-                  </div>
-                  </sc-if>
-
                   <sc-if value="{{ evd.wyc.hasQuote }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:14px">
                     <div style="border:1px solid #E9ECF1;border-radius:10px;background:#fff;overflow-x:{{ evd.wyc.servicesOverflow }}">
@@ -3935,7 +3918,7 @@ const NOTES = {
 };
 
 const DOC_SEED = [
-  { nr: 'ZM/2026/0213', ext: 'FV 74221/08/2026', supplier: 'Inter Cars', date: '12.08.2026', status: 'W trakcie', rows: [
+  { nr: 'ZM/2026/0213', ext: 'FV 74221/08/2026', supplier: 'Auto Partner', date: '12.08.2026', status: 'W trakcie', rows: [
     { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
     { name: 'Tarcze hamulcowe przód', code: '24.0122-0187.1', producer: 'ATE', unit: 'Sztuka', qty: '2', price: '146,00', vat: '23', msrp: '219,00' },
     { name: 'Filtr oleju', code: 'HU 7020 z', producer: 'MANN', unit: 'Sztuka', qty: '1', price: '38,00', vat: '23', msrp: '' },
@@ -5497,8 +5480,8 @@ class Component extends DCLogic {
     const fvHist = (s.fvHistory || {})[id] || [];
     return {
       title: 'Usługi i towary',
-      hasQuote: hasQuote,
-      empty: !hasQuote,
+      hasQuote: true,
+      empty: false,
       servicesOverflow: s.rowPeopleMenu ? 'visible' : 'auto',
       services: uslugiList.map(({ r, i: ri }) => {
         const picked = (s.rowPeople || {})[id + ':' + ri];
@@ -7650,7 +7633,7 @@ class Component extends DCLogic {
         const drafts = this.state.visitTireDrafts || [];
         if (!carId) { this.setState({ visitClientForm: null }); return; }
         const pad = (n) => String(n).padStart(2, '0');
-        const today = '15.08.2026';
+        const today = '13.08.2026';
         const toWheels = (ws) => ws.map((w) => ({
           pos: '', maker: w.maker || '', size: w.size || '',
           rim: w.rim || '', tread: w.tread || '', qty: w.qty || '1',
