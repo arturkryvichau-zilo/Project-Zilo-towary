@@ -3537,6 +3537,22 @@ a:hover { color:#1D207C; text-decoration:underline; }
                     </sc-if>
                   </div>
 
+                  <sc-if value="{{ evd.wyc.empty }}" hint-placeholder-val="{{ true }}">
+                  <div style="background:#fff;border:1px dashed #DCE0E6;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px">
+                    <div style="width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                      <span style="width:28px;height:28px;display:block;background-color:#979DB0;-webkit-mask:url(assets/icons/tab-price.svg) center / 28px 28px no-repeat;mask:url(assets/icons/tab-price.svg) center / 28px 28px no-repeat"></span>
+                    </div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:16px;line-height:22px;color:#242629">Brak wyceny dla tego zlecenia</div>
+                      <div style="font-size:13px;line-height:18px;color:#6B707D;margin-top:2px">Dodaj usługi i towary, żeby wysłać ofertę klientowi albo wystawić fakturę.</div>
+                    </div>
+                    <button type="button" onClick="{{ evd.wyc.openConfig }}" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;flex:none;padding:0 14px;border:0;border-radius:8px;background:#222693;color:#fff;font-family:inherit;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:#1C2082" style-active="background:#161A6E">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                      Dodaj wycenę
+                    </button>
+                  </div>
+                  </sc-if>
+
                   <sc-if value="{{ evd.wyc.hasQuote }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:14px">
                     <div style="border:1px solid #E9ECF1;border-radius:10px;background:#fff;overflow-x:{{ evd.wyc.servicesOverflow }}">
@@ -4031,19 +4047,6 @@ const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0214', ext: 'FV 88213/08/2026', date: '12.08.2026' };
 
-const OIL_QUOTE_STATE = {
-  robociznas: [
-    { name: 'Wymiana oleju', person: 'Paweł Nowak', qty: '1', cena: '300,00', rabat: '', vat: '23', unit: 'Godzina' },
-    { name: 'Wymiana filtra oleju', person: 'Paweł Nowak', qty: '1', cena: '80,00', rabat: '', vat: '23', unit: 'Godzina' },
-  ],
-  towars: [
-    { name: 'Olej silnikowy 5W30 5L', indeks: 'EDGE 5W30 LL', producent: 'Castrol', qty: '1', cena: '359,60', koszt: '248,00', rabat: '', vat: '23', unit: 'Opakowanie', grupa: 'Klient detaliczny' },
-    { name: 'Filtr oleju', indeks: 'HU 7020 z', producent: 'MANN', qty: '1', cena: '55,10', koszt: '38,00', rabat: '', vat: '23', unit: 'Sztuka', grupa: 'Klient detaliczny' },
-    { name: 'Korek spustowy miski olejowej', indeks: 'N 908 132 02', producent: 'Febi', qty: '1', cena: '17,40', koszt: '12,00', rabat: '', vat: '23', unit: 'Sztuka', grupa: 'Klient detaliczny' },
-  ],
-};
-
-const OIL_QUOTE_VISIT = 'r30';
 
 const DOC_POSITIONS = [
   { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
@@ -4121,10 +4124,8 @@ class Component extends DCLogic {
     page: 1,
     eventId: null,
     evTab: 'details',
-    quotes: {
-      [OIL_QUOTE_VISIT]: { state: OIL_QUOTE_STATE, items: [] },
-    },
-    offerHistory: { [OIL_QUOTE_VISIT]: [{ date: '13 sie, 10:54', status: 'Zaakceptowana', u: '467,40 zł', t: '531,48 zł', amt: '998,88 zł' }] },
+    quotes: {},
+    offerHistory: {},
     wycConfigSrc: null,
     offerConfigSrc: null,
     offerConfigVisit: null,
@@ -5496,8 +5497,8 @@ class Component extends DCLogic {
     const fvHist = (s.fvHistory || {})[id] || [];
     return {
       title: 'Usługi i towary',
-      hasQuote: true,
-      empty: false,
+      hasQuote: hasQuote,
+      empty: !hasQuote,
       servicesOverflow: s.rowPeopleMenu ? 'visible' : 'auto',
       services: uslugiList.map(({ r, i: ri }) => {
         const picked = (s.rowPeople || {})[id + ':' + ri];
