@@ -63,7 +63,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <img src="assets/logos/zilo-white.svg" alt="Zilo" style="display:block;width:60px;height:26px">
     </div>
     <nav style="display:flex;flex-direction:column;gap:2px;padding:2px 0;width:100%;align-items:center">
-      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="9">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
         <div data-nav-key="{{ item.key }}" onClick="{{ onNavClick }}" style="position:relative;width:84px;height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ item.bg }};transition:background-color 200ms cubic-bezier(0.2,0,0,1)" style-hover="background:#272843">
           <span style="position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 2px 2px 0;background:#fff;opacity:{{ item.railOpacity }}"></span>
           <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:{{ item.color }}">
@@ -4063,9 +4063,9 @@ const NAV = [
   { key: 'phone', label: 'Połączenia', icon: 'assets/nav/phone.svg' },
   { key: 'goods', label: 'Towary', icon: 'assets/nav/parts.svg', fill: 'assets/nav/parts-fill.svg' },
   { key: 'clients', label: 'Klienci', icon: 'assets/nav/clients.svg', fill: 'assets/nav/clients-fill.svg' },
-  { key: 'to-issue', label: 'Do wydania', icon: 'assets/nav/to-issue.svg' },
-  { key: 'services', label: 'Usługi', icon: 'assets/nav/services.svg' },
-  { key: 'online', label: 'Profile Online', icon: 'assets/nav/online.svg' },
+  { key: 'to-issue', label: 'Do wydania', icon: 'assets/nav/to-issue.svg' , hidden: true },
+  { key: 'services', label: 'Usługi', icon: 'assets/nav/services.svg' , hidden: true },
+  { key: 'online', label: 'Profile Online', icon: 'assets/nav/online.svg' , hidden: true },
   { key: 'marketing', label: 'Marketing', icon: 'assets/nav/marketing.svg' },
   { key: 'settings', label: 'Ustawienia', icon: 'assets/nav/settings.svg' },
 ];
@@ -7107,7 +7107,7 @@ class Component extends DCLogic {
       isEventOpen: !!evd,
       goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.scrollToDayStart()),
       goClients: () => this.setState({ screen: 'clients', eventId: null }),
-      navItems: NAV.map((n) => {
+      navItems: NAV.filter((n) => !n.hidden).map((n) => {
         const active = n.key === s.navKey;
         return {
           key: n.key,
