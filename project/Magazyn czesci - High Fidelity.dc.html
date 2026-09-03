@@ -63,7 +63,7 @@ a:hover { color:#1D207C; text-decoration:underline; }
       <img src="assets/logos/zilo-white.svg" alt="Zilo" style="display:block;width:60px;height:26px">
     </div>
     <nav style="display:flex;flex-direction:column;gap:2px;padding:2px 0;width:100%;align-items:center">
-      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="7">
         <div data-nav-key="{{ item.key }}" onClick="{{ onNavClick }}" style="position:relative;width:84px;height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ item.bg }};transition:background-color 200ms cubic-bezier(0.2,0,0,1)" style-hover="background:#272843">
           <span style="position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 2px 2px 0;background:#fff;opacity:{{ item.railOpacity }}"></span>
           <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:{{ item.color }}">
@@ -4060,6 +4060,7 @@ const DEFAULT_SUPPLIERS = [
 const NAV = [
   { key: 'stats', label: 'Statystyki', icon: 'assets/nav/stats.svg' },
   { key: 'calendar', label: 'Kalendarz', icon: 'assets/nav/calendar.svg', fill: 'assets/nav/calendar-fill.svg' },
+  { key: 'reports', label: 'Raporty', icon: 'assets/nav/reports.svg', fill: 'assets/nav/reports-fill.svg' },
   { key: 'phone', label: 'Połączenia', icon: 'assets/nav/phone.svg' },
   { key: 'goods', label: 'Towary', icon: 'assets/nav/parts.svg', fill: 'assets/nav/parts-fill.svg' },
   { key: 'clients', label: 'Klienci', icon: 'assets/nav/clients.svg', fill: 'assets/nav/clients-fill.svg' },
