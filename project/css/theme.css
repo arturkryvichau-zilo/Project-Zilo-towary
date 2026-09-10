@@ -1,0 +1,150 @@
+/* Motyw jasny i ciemny — jedno źródło kolorów dla artboardu i konfiguratorów.
+   Wartości jasne odpowiadają dotychczasowemu wyglądowi, ciemne dobrane tak, by
+   trzymać kontrast tekstu ≥ 4.5:1, a elementów aktywnych ≥ 3:1.
+   W ciemnym motywie wyżej położona powierzchnia jest jaśniejsza, nie cieniowana. */
+:root {
+  --tk-border: #DCE0E6;
+  --tk-border-2: #E9ECF1;
+  --tk-border-focus: #242629;
+  --tk-border-strong: #979DB0;
+  --tk-brand: #222693;
+  --tk-brand-bd: #222693;
+  --tk-brand-bd-soft: #D5D7F8;
+  --tk-brand-fg: #222693;
+  --tk-brand-fg-strong: #1D207C;
+  --tk-brand-hover: #1C2082;
+  --tk-brand-press: #161A6E;
+  --tk-brand-soft: #F3F3FF;
+  --tk-brand-soft-2: #E9E9FF;
+  --tk-brand-soft-3: #DCDCFA;
+  --tk-canvas: #FBFBFB;
+  --tk-cyan: #0891B2;
+  --tk-cyan-fg: #06414F;
+  --tk-cyan-soft: #ECFEFF;
+  --tk-danger: #EA4335;
+  --tk-danger-fg: #6E1A14;
+  --tk-danger-soft: #FCE3DF;
+  --tk-info: #2563EB;
+  --tk-info-fg: #112B63;
+  --tk-info-soft: #EFF4FE;
+  --tk-inverse: #242629;
+  --tk-nav: #0A0B29;
+  --tk-nav-fg: #EBEBEE;
+  --tk-nav-hover: #272843;
+  --tk-ok: #22A06B;
+  --tk-ok-fg: #0E5B3A;
+  --tk-ok-soft: #DCEFE3;
+  --tk-on-fill: #FFFFFF;
+  --tk-surface: #FFFFFF;
+  --tk-surface-2: #F6F6FC;
+  --tk-surface-3: #F0F1F5;
+  --tk-surface-4: #E4E6EC;
+  --tk-text: #242629;
+  --tk-text-2: #6B707D;
+  --tk-text-3: #979DB0;
+  --tk-text-strong: #0D1619;
+  --tk-violet: #7C3AED;
+  --tk-violet-fg: #2E0650;
+  --tk-violet-soft: #F5F3FF;
+  --tk-warn: #D97706;
+  --tk-warn-fg: #7A4A00;
+  --tk-warn-soft: #FDF4E2;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --tk-border: #2F3350;
+  --tk-border-2: #272B43;
+  --tk-border-focus: #C9CDE0;
+  --tk-border-strong: #454B6D;
+  --tk-brand: #4F53C4;
+  --tk-brand-bd: #6C71DC;
+  --tk-brand-bd-soft: #3A3F82;
+  --tk-brand-fg: #A9ADFF;
+  --tk-brand-fg-strong: #C2C5FF;
+  --tk-brand-hover: #5B60D6;
+  --tk-brand-press: #4348B0;
+  --tk-brand-soft: #23264D;
+  --tk-brand-soft-2: #2C3068;
+  --tk-brand-soft-3: #353A7E;
+  --tk-canvas: #0F1020;
+  --tk-cyan: #35B4D1;
+  --tk-cyan-fg: #93DDEC;
+  --tk-cyan-soft: #0D2A32;
+  --tk-danger: #F26A5E;
+  --tk-danger-fg: #FFB4AA;
+  --tk-danger-soft: #3A1C19;
+  --tk-info: #5B8DEF;
+  --tk-info-fg: #A8C4F7;
+  --tk-info-soft: #15203A;
+  --tk-inverse: #E9EAF2;
+  --tk-nav: #0A0B1E;
+  --tk-nav-fg: #E4E5EE;
+  --tk-nav-hover: #2A2C4E;
+  --tk-ok: #3FBF89;
+  --tk-ok-fg: #8FE3B8;
+  --tk-ok-soft: #16321F;
+  --tk-on-fill: #FFFFFF;
+  --tk-surface: #171A2E;
+  --tk-surface-2: #1E2138;
+  --tk-surface-3: #242840;
+  --tk-surface-4: #2B2F4C;
+  --tk-text: #E9EAF2;
+  --tk-text-2: #A7ADBF;
+  --tk-text-3: #7E8498;
+  --tk-text-strong: #F5F6FA;
+  --tk-violet: #9C6BF2;
+  --tk-violet-fg: #C9AFF9;
+  --tk-violet-soft: #221838;
+  --tk-warn: #E0982F;
+  --tk-warn-fg: #F3CE8A;
+  --tk-warn-soft: #33260F;
+  color-scheme: dark;
+}
+
+/* Tokeny Design Systemu — pliki sięgają po nie bezpośrednio przez var(--grey-1)
+   itd., więc w ciemnym motywie muszą wskazywać na tę samą paletę. */
+:root[data-theme="dark"] {
+  --grey-1: var(--tk-text);
+  --grey-2: var(--tk-text-2);
+  --grey-3: var(--tk-text-3);
+  --grey-4: var(--tk-border);
+  --grey-5: var(--tk-border-2);
+  --grey-6: var(--tk-surface-3);
+  --grey-7: var(--tk-canvas);
+  --white:  var(--tk-surface);
+  --black:  var(--tk-text-strong);
+  --red:    var(--tk-danger);
+  --zilo-blue-1: var(--tk-brand-fg);
+  --zilo-blue-2: var(--tk-brand-fg-strong);
+  --zilo-blue-3: var(--tk-brand-bd);
+  --zilo-blue-4: var(--tk-brand-bd-soft);
+  --zilo-blue-5: var(--tk-brand-soft);
+  --zilo-blue-6: var(--tk-surface-2);
+  --zilo-primary:       var(--tk-brand);
+  --zilo-primary-hover: var(--tk-brand-hover);
+  --zilo-primary-press: var(--tk-brand-press);
+  --zilo-primary-5: var(--tk-brand-soft);
+  --zilo-primary-4: var(--tk-brand-soft-2);
+  --zilo-primary-3: var(--tk-brand-soft-3);
+  --fg-1: var(--tk-text); --fg-2: var(--tk-text-2); --fg-3: var(--tk-text-3);
+  --fg-brand: var(--tk-brand-fg);
+  --bg-page: var(--tk-canvas); --bg-surface: var(--tk-surface); --bg-subtle: var(--tk-surface-2);
+}
+
+/* Segmented Control z DS ma własne zmienne lokalne. */
+:root[data-theme="dark"] .ds-seg {
+  --seg-bg: var(--tk-surface-3);
+  --seg-pill-bg: var(--tk-surface);
+  --seg-fg-off: var(--tk-text-2);
+  --seg-fg-on: var(--tk-text);
+  --seg-shadow: 0 1px 2px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.30);
+}
+
+/* Cienie na ciemnym tle gubią się — zastępujemy je delikatną obwódką. */
+:root[data-theme="dark"] [style*="box-shadow"] { box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+
+/* Obrazy rastrowe i logo zostają bez zmian; wygaszamy tylko ich jaskrawość. */
+:root[data-theme="dark"] img:not([src$=".svg"]) { filter: brightness(.92); }
+
+html, body { background: var(--tk-canvas); }

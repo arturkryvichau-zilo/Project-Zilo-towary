@@ -3,6 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/theme.css">
+<script>
+/* Motyw ustawiamy przed pierwszym malowaniem, żeby nie mignęło jasnym tłem.
+   Kolejność: motyw narzucony przez rodzica (iframe) → wybór użytkownika → jasny. */
+(function () {
+  var el = document.documentElement;
+  function set(t) { el.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); }
+  try {
+    var m = (location.hash || '').match(/[#&]theme=(dark|light)/);
+    set(m ? m[1] : (localStorage.getItem('zilo-theme') || 'light'));
+  } catch (e) { set('light'); }
+  // konfiguratory żyją w iframe'ach — rodzic przełącza je razem ze sobą
+  addEventListener('message', function (e) {
+    var d = e && e.data;
+    if (d && typeof d.__theme === 'string') set(d.__theme);
+  });
+  window.__ziloSetTheme = function (t) {
+    set(t);
+    try { localStorage.setItem('zilo-theme', t); } catch (e) {}
+    var f = document.querySelectorAll('iframe');
+    for (var i = 0; i < f.length; i++) {
+      try { f[i].contentWindow.postMessage({ __theme: t }, '*'); } catch (e) {}
+    }
+  };
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('#zilo-theme-toggle');
+    if (!b) return;
+    window.__ziloSetTheme(el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }, true);
+})();
+</script>
 <script>
 /* React, ReactDOM i Babel z własnego serwera zamiast z unpkg — prototyp musi
    działać w osadzeniu (Useberry), gdzie żądania do CDN-ów bywają blokowane. */
@@ -20,10 +51,10 @@ window.__resources = {
   <link rel="stylesheet" href="../_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/colors_and_type.css">
   <script src="../_ds/design-system-zilo-8fde3836-8610-49c3-b8ea-f933dbfc0097/_ds_bundle.js"></script>
   <style>
-    html, body { margin: 0; background: #fff; }
-    .o-cell { display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:56px; padding:9px 13px; background:#fff; border:1px solid var(--grey-3, #979DB0); border-radius:10px; min-width:0; transition: box-shadow 200ms var(--ease-standard); }
+    html, body { margin: 0; background: var(--tk-surface); }
+    .o-cell { display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:56px; padding:9px 13px; background:var(--tk-surface); border:1px solid var(--grey-3, #979DB0); border-radius:10px; min-width:0; transition: box-shadow 200ms var(--ease-standard); }
     .o-cell:focus-within { box-shadow: inset 0 0 0 1px var(--zilo-blue-1, #222693); border-color: var(--zilo-blue-1, #222693); }
-    .o-cell.is-locked { background:#F6F6FC; border-color:#E9ECF1; }
+    .o-cell.is-locked { background:var(--tk-surface-2); border-color:var(--tk-border-2); }
     .o-label { font-family:var(--font-sans); font-size:12px; line-height:16px; color:var(--grey-3, #979DB0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .o-input { font-family:var(--font-sans); font-weight:400; font-size:16px; line-height:20px; color:var(--grey-1, #242629); background:transparent; border:0; outline:0; padding:0; width:100%; }
     .o-input::placeholder { color: var(--grey-3, #979DB0); opacity:1; }
@@ -31,10 +62,10 @@ window.__resources = {
     select.o-input { appearance:none; -webkit-appearance:none; cursor:pointer; }
     .o-chev { position:absolute; right:11px; bottom:15px; width:20px; height:20px; display:block; pointer-events:none; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/chevron-down.svg) center / 20px 20px no-repeat; }
     .o-trash { position:relative; width:36px; height:36px; flex:none; border:0; border-radius:8px; background:transparent; cursor:pointer; display:grid; place-items:center; }
-    .o-trash:hover { background:#E9E9FF; }
+    .o-trash:hover { background:var(--tk-brand-soft-2); }
     .o-trash span { width:20px; height:20px; display:block; background-color:var(--grey-2, #6B707D); -webkit-mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat; }
     .o-add { display:inline-flex; align-items:center; gap:6px; height:32px; padding:4px 8px; border:0; border-radius:4px; background:transparent; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:16px; line-height:22px; cursor:pointer; }
-    .o-add:hover { background:#E9E9FF; }
+    .o-add:hover { background:var(--tk-brand-soft-2); }
     .o-add i { width:20px; height:20px; display:block; background-color:var(--zilo-blue-1, #222693); -webkit-mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; mask:url(../assets/icons/i-add.svg) center / 20px 20px no-repeat; }
     .o-sum { font-size:15px; line-height:22px; color:var(--grey-2, #6B707D); white-space:nowrap; }
     .o-sum b { font-weight:500; color:var(--grey-1, #242629); }
@@ -42,7 +73,7 @@ window.__resources = {
     .ds-seg {
       --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
       --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
-      --seg-pill-bg: #ffffff;
+      --seg-pill-bg: var(--tk-surface);
       --seg-shadow: 0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.08);
       display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
       border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
@@ -62,23 +93,23 @@ window.__resources = {
   
 /* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
    więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
-.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:#fff; font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
+.zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:var(--tk-on-fill); font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
 .zilo-tt.is-multiline { white-space:normal; width:260px; }
 .zilo-tt.is-on { opacity:1; transform:translate(0,0); }
 </style>
 </helmet>
 
-<div style="min-height:100vh;display:flex;flex-direction:column;background:#fff;font-family:var(--font-sans)">
+<div style="min-height:100vh;display:flex;flex-direction:column;background:var(--tk-surface);font-family:var(--font-sans)">
 
-  <header style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5, #E9ECF1);background:#fff;min-height:70px;box-sizing:border-box;flex:none">
+  <header style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--grey-5, #E9ECF1);background:var(--tk-surface);min-height:70px;box-sizing:border-box;flex:none">
     <div style="display:flex;align-items:center;gap:18px">
-      <button type="button" onClick="{{ close }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:#F0F1F5" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
+      <button type="button" onClick="{{ close }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-3)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
         <span style="width:20px;height:20px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
       </button>
     </div>
     <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #0A0B29);white-space:nowrap">Wysyłka oferty</span>
     <div style="display:flex;justify-content:flex-end">
-      <button type="button" onClick="{{ send }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:#fff;font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:#1C2082" style-active="background:#161A6E">Wyślij ofertę</button>
+      <button type="button" onClick="{{ send }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Wyślij ofertę</button>
     </div>
   </header>
 
@@ -89,7 +120,7 @@ window.__resources = {
       <section>
         <div style="font-size:18px;line-height:26px;font-weight:600;color:var(--grey-1, #242629);margin-bottom:14px">Dane klienta</div>
         <div style="display:flex;gap:12px;margin-bottom:12px">
-          <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--grey-1, #242629)">
+          <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--grey-1, #242629)">
             <span style="display:flex;align-items:center;gap:4px;padding:0 14px;border-right:1px solid var(--grey-3, #979DB0);color:var(--grey-1, #242629);font-size:16px;user-select:none;flex:none">
               {{ cc }}
               <span style="width:16px;height:16px;display:block;background-color:var(--grey-1, #242629);-webkit-mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat;mask:url(../assets/icons/chevron-down.svg) center / 16px 16px no-repeat"></span>
@@ -119,7 +150,7 @@ window.__resources = {
         <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="2">
           <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid {{ ch.line }}">
             <span onClick="{{ ch.toggle }}" role="switch" aria-checked="{{ ch.checked }}" style="width:44px;height:24px;flex:none;margin-top:2px;border-radius:999px;background:{{ ch.track }};cursor:pointer;position:relative;transition:background-color 200ms var(--ease-standard)">
-              <span style="position:absolute;top:2px;left:{{ ch.knob }};width:20px;height:20px;border-radius:50%;background:#fff;transition:left 200ms var(--ease-standard)"></span>
+              <span style="position:absolute;top:2px;left:{{ ch.knob }};width:20px;height:20px;border-radius:50%;background:var(--tk-surface);transition:left 200ms var(--ease-standard)"></span>
             </span>
             <span style="min-width:0">
               <span style="display:block;font-size:16px;line-height:24px;color:var(--grey-1, #242629)">{{ ch.name }}</span>
@@ -139,7 +170,7 @@ window.__resources = {
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
         </div>
       </div>
-    <div style="background:#F0F1F5;border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
+    <div style="background:var(--tk-surface-3);border-radius:12px;padding:20px 24px 24px;overflow-x:auto">
       <div style="min-width:{{ posMinWidth }}">
 
         <sc-for list="{{ uslugi }}" as="r" hint-placeholder-count="1">
@@ -193,7 +224,7 @@ window.__resources = {
 
     <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,0.85fr);gap:12px;align-items:stretch;margin-top:10px">
 
-      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
+      <div style="display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
         <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
           <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
           <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
@@ -207,7 +238,7 @@ window.__resources = {
         <textarea class="o-input" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" value="{{ notatka }}" onInput="{{ setNotatka }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
       </div>
 
-      <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
+      <div style="display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
         <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
           <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
           <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
@@ -421,7 +452,7 @@ class Component extends DCLogic {
     } catch (e) {}
     return {
       showRabat: s.showRabat,
-      rabatBg: s.showRabat ? '#E9E9FF' : 'transparent',
+      rabatBg: s.showRabat ? 'var(--tk-brand-soft-2)' : 'transparent',
       rabatIcon: s.showRabat ? '-webkit-mask-image:url(../assets/icons/i-close.svg);mask-image:url(../assets/icons/i-close.svg)' : '',
       toggleRabat: () => this.setState((st) => ({ showRabat: !st.showRabat })),
       posMinWidth: s.showRabat ? '1520px' : '1350px',
