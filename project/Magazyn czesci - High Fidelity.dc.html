@@ -145,7 +145,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
           <button type="button" onClick="{{ closeFeatureSettings }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
-            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="font-weight: 500; font-size: 26px; line-height: 36px; color: var(--tk-text-strong)">Interface</div>
         </div>
@@ -155,7 +155,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <div style="height:62px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--tk-border)">
               <span style="font-weight:500;font-size:18px;line-height:26px;color:var(--tk-text-strong)">Widoczność funkcji</span>
               <button type="button" onClick="{{ openFeatureDialog }}" style="display:inline-flex;align-items:center;gap:4px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;font-weight:400;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                 Edytuj
               </button>
             </div>
@@ -179,7 +179,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
               <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Przechowalnia opon</span>
               <button type="button" onClick="{{ cancelFeatureDialog }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:var(--tk-surface-2);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
-                <span style="width:16px;height:16px;display:block;background-color:var(--tk-nav);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+                <span style="width:16px;height:16px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
               </button>
             </div>
             <div style="margin-top:22px;display:flex;align-items:flex-start;gap:16px">
@@ -207,7 +207,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px">
             <h1 style="font-size: 26px; line-height: 40px; font-weight: 600; color: var(--tk-text); margin: 0; letter-spacing: -0.4px">Towary</h1>
             <button type="button" onClick="{{ addDoc }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
-              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
               Dodaj dokument
             </button>
           </div>
@@ -259,7 +259,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                             {{ opt.value }}
                           </span>
                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                            <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                            <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                           </sc-if>
                         </span>
                       </sc-for>
@@ -290,7 +290,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
           <button type="button" onClick="{{ backToDocs }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
-            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="display:flex;align-items:center;gap:12px;min-width:0">
             <div style="font-weight: 500; font-size: 26px; line-height: 36px; color: var(--tk-text-strong); white-space: nowrap">Dokument {{ docDetail.nr }}</div>
@@ -298,7 +298,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           </div>
           <div style="flex:1"></div>
           <button type="button" onClick="{{ editDoc }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
-            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
             Edytuj
           </button>
         </div>
@@ -355,7 +355,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div style="background: var(--tk-surface); border: 1px solid var(--tk-border); border-radius: 10px; overflow-x: auto; margin-top: 20px">
                 <div style="min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--tk-border-2); font-size: 16px; line-height: 20px; color: var(--grey-2); align-items: center; background-color: var(--tk-canvas); padding-top: 16px; padding-bottom: 16px; padding-right: 24px; padding-left: 24px">
                   <span onClick="{{ docDetail.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ docDetail.allBorder }};border-radius:4px;background:{{ docDetail.allBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
-                    <span style="width:14px;height:14px;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;opacity:{{ docDetail.allOpacity }}"></span>
+                    <span style="width:14px;height:14px;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;mask:url(assets/icons/{{ docDetail.allIcon }}) center / 14px 14px no-repeat;opacity:{{ docDetail.allOpacity }}"></span>
                   </span>
                   <span style="font-size: 14px">Nazwa</span>
                   <span style="font-size: 14px">Indeks</span>
@@ -370,7 +370,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-for list="{{ docDetail.rows }}" as="p" hint-placeholder-count="5">
                   <div onClick="{{ p.toggle }}" style="cursor:pointer;min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: var(--tk-text); background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px" style-hover="background:var(--tk-canvas)">
                     <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ p.boxBorder }};border-radius:4px;background:{{ p.boxBg }};cursor:pointer;display:grid;place-items:center;transition:background 200ms cubic-bezier(.2,0,0,1),border-color 200ms cubic-bezier(.2,0,0,1)">
-                    <span style="width:14px;height:14px;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;opacity:{{ p.boxOpacity }}"></span>
+                    <span style="width:14px;height:14px;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 14px 14px no-repeat;opacity:{{ p.boxOpacity }}"></span>
                   </span>
                     <span style="font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px">{{ p.name }}</span>
                     <span style="color: var(--black); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px">{{ p.code }}</span>
@@ -709,7 +709,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </sc-for>
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:4px">
                   <button type="button" onClick="{{ addDocRow }}" style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 4px 8px; border: 0; border-radius: 4px; background: transparent; color: var(--tk-brand-fg); font-family: inherit; font-size: 14px; line-height: 22px; cursor: pointer" style-hover="background:var(--tk-surface-4)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                     Dodaj pozycję
                   </button>
                   <div style="display:flex;gap:24px;font-size:15px;line-height:22px;color:var(--tk-text-2);white-space:nowrap;padding-right:50px">
@@ -746,7 +746,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
           <button type="button" onClick="{{ goSettings }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
-            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
           </button>
           <div style="font-weight: 500; font-size: 26px; line-height: 36px; color: var(--tk-text-strong)">Ustawienia towarów</div>
         </div>
@@ -758,7 +758,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Grupy cenowe</span>
                 <button type="button" onClick="{{ newPriceGroup }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                   Grupa cenowa
                 </button>
               </div>
@@ -795,7 +795,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracje z hurtowniami</span>
                 <button type="button" onClick="{{ newSupplier }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                   Połącz hurtownię
                 </button>
               </div>
@@ -1083,7 +1083,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               Asystent AI
             </button>
             <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 20px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">
-              <span style="width:20px;height:20px;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
               Nowe zlecenie
             </button>
           </div>
@@ -1117,7 +1117,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <span style="font-size:11px;color:var(--tk-brand-fg);width:22px;height:22px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:var(--tk-brand-soft)">{{ day.count }}</span>
                 </div>
                 <button type="button" style="position:relative;width:28px;height:28px;flex:none;border:0;border-radius:6px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt-off="Nowe zlecenie" aria-label="Nowe zlecenie" data-tt-pos="bottom">
-                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                 </button>
               </div>
 
@@ -1178,7 +1178,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           </div>
           <div style="display:flex;align-items:center;gap:10px">
             <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 20px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">
-              <span style="width:20px;height:20px;display:block;background-color:var(--tk-surface);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
               Nowy klient
             </button>
           </div>
@@ -1206,7 +1206,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <div data-key="{{ opt.key }}" onClick="{{ pickClientsFilter }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                         <span>{{ opt.label }}</span>
                         <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                         </sc-if>
                       </div>
                     </sc-for>
@@ -1222,7 +1222,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div data-client-id="{{ client.id }}" onClick="{{ openClient }}" style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:16px;cursor:pointer;display:flex;flex-direction:column" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-canvas);box-shadow:0 4px 14px rgba(34,38,147,0.08)">
                 <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
                   <span style="display:inline-flex;align-items:center;gap:10px;font-size:16px;color:var(--tk-brand-fg)">
-                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-phone.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-phone.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-phone.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-phone.svg) center / 20px 20px no-repeat"></span>
                     <span style="text-decoration:underline">{{ client.phone }}</span>
                   </span>
                   <span style="display:inline-flex;align-items:center;gap:10px;font-size:16px;color:var(--tk-text)">{{ client.name }}</span>
@@ -1244,7 +1244,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           {{ car.vinLabel }}
                           <sc-if value="{{ car.hasVin }}" hint-placeholder-val="{{ true }}">
                             <button type="button" style="position:relative;border:0;background:transparent;padding:4px;cursor:pointer;display:inline-grid;place-items:center;border-radius:4px" style-hover="background:var(--tk-brand-soft)" data-tt="Kopiuj VIN" aria-label="Kopiuj VIN">
-                              <span style="width:16px;height:16px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat"></span>
+                              <span style="width:16px;height:16px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-copy.svg) center / 16px 16px no-repeat"></span>
                             </button>
                           </sc-if>
                         </span>
@@ -1382,7 +1382,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </div>
               </div>
               <button type="button" onClick="{{ openEditClient }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                 Edytuj
               </button>
             </div>
@@ -1396,7 +1396,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <span style="display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:999px;background:var(--tk-surface-2);color:var(--tk-brand-fg);font-size:13px;font-weight:500">{{ detail.carCount }}</span>
                 </div>
                 <button type="button" onClick="{{ openAddVehicle }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                   Nowy pojazd
                 </button>
               </div>
@@ -1424,7 +1424,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                   <span style="font-size:18px;font-weight:600;color:var(--tk-text)">{{ detail.car.name }}</span>
                   <button type="button" onClick="{{ openEditVehicle }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                     Edytuj
                   </button>
                 </div>
@@ -1455,7 +1455,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                     <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Opony w przechowalni</span>
                     <button type="button" onClick="{{ openTireModal }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                       Nowy komplet
                     </button>
                   </div>
@@ -1496,7 +1496,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                           {{ opt.label }}
                                         </span>
                                         <sc-if value="{{ opt.current }}" hint-placeholder-val="{{ false }}">
-                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                         </sc-if>
                                       </span>
                                     </sc-for>
@@ -1509,7 +1509,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                             <span style="display:flex;align-items:center;gap:8px;margin-left:auto;flex:none">
                               <span style="position:relative;display:flex">
                                 <button type="button" data-set-key="{{ set.key }}" onClick="{{ toggleTireMenu }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:var(--tk-brand-soft)" data-tt="Więcej opcji" aria-label="Więcej opcji">
-                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-three-circle.svg) center / 20px 20px no-repeat"></span>
                                 </button>
                                 <sc-if value="{{ set.menuOpen }}" hint-placeholder-val="{{ false }}">
                                   <span style="position:absolute;top:calc(100% + 8px);right:0;min-width:260px;display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
@@ -1522,12 +1522,12 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               </span>
                               <span style="position:relative;display:flex">
                                 <button type="button" data-set-key="{{ set.key }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:var(--tk-brand-soft)" data-tt="Pobierz protokół przyjęcia" aria-label="Pobierz protokół przyjęcia">
-                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
                                 </button>
                               </span>
                               <span style="position:relative;display:flex">
                                 <button type="button" data-set-key="{{ set.key }}" onClick="{{ editTireSet }}" style="position:relative;width: 30px; height: 30px; border: 0; border-radius: 4px; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #FFFFFF00" style-hover="background:var(--tk-brand-soft)" data-tt="Edytuj komplet" aria-label="Edytuj komplet">
-                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                                 </button>
                               </span>
                             </span>
@@ -1599,7 +1599,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                   <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Historia zleceń</span>
                   <button type="button" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                     Nowe zlecenie
                   </button>
                 </div>
@@ -1767,7 +1767,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                   <div data-select-id="{{ release.newSeasonSel.key }}" data-value="{{ o.value }}" onClick="{{ pickReleaseSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
                                     <span>{{ o.value }}</span>
                                     <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
-                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                     </sc-if>
                                   </div>
                                 </sc-for>
@@ -1792,7 +1792,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                   <div data-select-id="{{ release.newMakerSel.key }}" data-value="{{ o.value }}" onClick="{{ pickReleaseSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
                                     <span>{{ o.value }}</span>
                                     <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
-                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                     </sc-if>
                                   </div>
                                 </sc-for>
@@ -1836,7 +1836,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                     <div data-select-id="{{ release.newRimSel.key }}" data-value="{{ o.value }}" onClick="{{ pickReleaseSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
                                       <span>{{ o.value }}</span>
                                       <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
-                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                       </sc-if>
                                     </div>
                                   </sc-for>
@@ -1861,7 +1861,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </div>
                         <button type="button" onClick="{{ toggleNewMore }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 8px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;width:fit-content" style-hover="background:var(--tk-brand-soft-2)">
                           {{ release.newMoreLabel }}
-                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);transition:transform 200ms cubic-bezier(.2,0,0,1);transform:{{ release.newMoreArrow }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);transition:transform 200ms cubic-bezier(.2,0,0,1);transform:{{ release.newMoreArrow }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
                         </button>
                       </div>
                     </sc-if>
@@ -1936,7 +1936,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               <div data-value="{{ opt.value }}" onClick="{{ pickVisitClientGroup }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;font-size:16px;line-height:22px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-2)">
                                 <span>{{ opt.label }}</span>
                                 <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                 </sc-if>
                               </div>
                             </sc-for>
@@ -1962,7 +1962,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="font-size:18px;line-height:28px;font-weight:500;color:var(--tk-text)">Dane do faktury</div>
                         <sc-if value="{{ visitClient.inv.showAdd }}" hint-placeholder-val="{{ true }}">
                           <button type="button" onClick="{{ visitClient.inv.add }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                             Dane firmowe
                           </button>
                         </sc-if>
@@ -2041,7 +2041,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:28px;font-weight:500">
                   Pojazdy
                   <button type="button" onClick="{{ addVisitCar }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                     Nowy pojazd
                   </button>
                 </div>
@@ -2088,7 +2088,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                         <div data-select-id="{{ sel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitCarSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                           <span>{{ opt.value }}</span>
                                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                           </sc-if>
                                         </div>
                                       </sc-for>
@@ -2123,7 +2123,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                         <div data-select-id="{{ sel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitCarSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                           <span>{{ opt.value }}</span>
                                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                           </sc-if>
                                         </div>
                                       </sc-for>
@@ -2149,7 +2149,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:24px;font-weight:500;color:var(--tk-text)">
                                 Przechowalnia opon
                                 <button type="button" data-car-id="{{ car.id }}" onClick="{{ addVisitSetDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                                   Nowy komplet
                                 </button>
                               </div>
@@ -2193,7 +2193,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                                   <div data-select-id="{{ t.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                                                     <span>{{ opt.value }}</span>
                                                                     <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                                                     </sc-if>
                                                                   </div>
                                                                 </sc-for>
@@ -2221,7 +2221,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                                     <div data-select-id="{{ w.makerSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                                                       <span>{{ opt.value }}</span>
                                                                       <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                                                       </sc-if>
                                                                     </div>
                                                                   </sc-for>
@@ -2254,7 +2254,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                                     <div data-select-id="{{ w.rimSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                                                       <span>{{ opt.value }}</span>
                                                                       <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                                                       </sc-if>
                                                                     </div>
                                                                   </sc-for>
@@ -2284,11 +2284,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                         </sc-for>
                                                         <div style="display:flex;gap:4px">
                                                           <button type="button" data-set-key="{{ t.key }}" onClick="{{ addVisitSetWheel }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                                                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                                                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                                                             Dodaj oponę
                                                           </button>
                                                           <button type="button" data-set-key="{{ t.key }}" onClick="{{ copyVisitSetWheel }}" title="Skopiuj ostatnią oponę" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                                                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
+                                                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
                                                             Kopiuj
                                                           </button>
                                                         </div>
@@ -2378,7 +2378,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:28px;font-weight:500">
                   Przechowalnia opon
                   <button type="button" onClick="{{ addVisitSetDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                     Nowy komplet
                   </button>
                 </div>
@@ -2422,7 +2422,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                     <div data-select-id="{{ t.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                       <span>{{ opt.value }}</span>
                                       <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                       </sc-if>
                                     </div>
                                   </sc-for>
@@ -2450,7 +2450,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                       <div data-select-id="{{ w.makerSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                         <span>{{ opt.value }}</span>
                                         <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                         </sc-if>
                                       </div>
                                     </sc-for>
@@ -2483,7 +2483,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                       <div data-select-id="{{ w.rimSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                         <span>{{ opt.value }}</span>
                                         <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                          <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                         </sc-if>
                                       </div>
                                     </sc-for>
@@ -2513,11 +2513,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </sc-for>
                           <div style="display:flex;gap:4px">
                             <button type="button" data-set-key="{{ t.key }}" onClick="{{ addVisitSetWheel }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                               Dodaj oponę
                             </button>
                             <button type="button" data-set-key="{{ t.key }}" onClick="{{ copyVisitSetWheel }}" title="Skopiuj ostatnią oponę" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
                               Kopiuj
                             </button>
                           </div>
@@ -2647,7 +2647,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div data-select-id="{{ h.key }}" data-value="{{ opt.value }}" onClick="{{ pickTimeSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                           <span>{{ opt.value }}</span>
                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                           </sc-if>
                         </div>
                       </sc-for>
@@ -2677,7 +2677,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <span style="width:4px;height:18px;border-radius:2px;flex:none;background:{{ w.border }}"></span>
                       <span style="flex:1">{{ w.title }}</span>
                       <sc-if value="{{ w.selected }}" hint-placeholder-val="{{ false }}">
-                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                       </sc-if>
                     </div>
                   </sc-for>
@@ -2707,7 +2707,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="position: relative; background: var(--tk-surface); border-radius: 16px; max-width: 480px; padding: 24px; display: flex; flex-direction: column; align-items: center; width: 480px">
           <button type="button" onClick="{{ cancelSeasonClash }}" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:50%;background:var(--tk-surface-2);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
-            <span style="width:16px;height:16px;display:block;background-color:var(--tk-nav);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+            <span style="width:16px;height:16px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
           </button>
           <div style="margin-top: 32px; font-size: 20px; line-height: 28px; font-weight: 600; color: var(--tk-text-strong); text-align: center; letter-spacing: -0.01em; white-space: nowrap">Ten pojazd ma już komplet {{ clash.seasonGen }} opon</div>
           <div style="margin-top: 8px; font-size: 16px; line-height: 22px; font-weight: 400; color: var(--tk-text-2); text-align: center; text-wrap: pretty">W przechowalni jest już komplet {{ clash.code }}. Dodaj nowy obok niego albo zastąp nim ten zapisany wcześniej.</div>
@@ -2796,7 +2796,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               <div data-select-id="{{ tire.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickTireSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                 <span>{{ opt.value }}</span>
                                 <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                 </sc-if>
                               </div>
                             </sc-for>
@@ -2824,7 +2824,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                 <div data-select-id="{{ w.makerKey }}" data-value="{{ opt.value }}" onClick="{{ pickTireSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                   <span>{{ opt.value }}</span>
                                   <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                    <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                    <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                   </sc-if>
                                 </div>
                               </sc-for>
@@ -2857,7 +2857,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                 <div data-select-id="{{ w.rimKey }}" data-value="{{ opt.value }}" onClick="{{ pickTireSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                   <span>{{ opt.value }}</span>
                                   <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                    <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                    <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                   </sc-if>
                                 </div>
                               </sc-for>
@@ -2887,11 +2887,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </sc-for>
                     <div style="display:flex;gap:8px">
                       <button type="button" onClick="{{ addTireWheel }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 8px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                         Dodaj oponę
                       </button>
                       <button type="button" onClick="{{ copyTireWheel }}" title="Skopiuj ostatnią oponę" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 8px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
                         Kopiuj
                       </button>
                     </div>
@@ -3015,13 +3015,13 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               <div data-value="{{ opt.value }}" onClick="{{ pickClientGroup }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                 <span>{{ opt.label }}</span>
                                 <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                  <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                 </sc-if>
                               </div>
                             </sc-for>
                             <div style="height:1px;background:var(--tk-border-2);margin:4px 0"></div>
                             <div onClick="{{ newGroupFromClient }}" style="display: flex; align-items: center; gap: 8px; padding: 16px 24px; font-size: 16px; line-height: 24px; font-weight: 400; color: var(--tk-brand-fg); cursor: pointer" style-hover="background:var(--tk-brand-soft)">
-                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                               Grupa cenowa
                             </div>
                           </div>
@@ -3047,7 +3047,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="font-size:18px;line-height:28px;font-weight:500;color:var(--tk-text)">Dane do faktury</div>
                         <sc-if value="{{ edit.inv.showAdd }}" hint-placeholder-val="{{ true }}">
                           <button type="button" onClick="{{ edit.inv.add }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                             Dane firmowe
                           </button>
                         </sc-if>
@@ -3127,7 +3127,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       Pojazdy
                       <sc-if value="{{ edit.canAddCar }}" hint-placeholder-val="{{ true }}">
                         <button type="button" onClick="{{ addEditCar }}" title="Dodaj nowy pojazd" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                           Dodaj nowy pojazd
                         </button>
                       </sc-if>
@@ -3177,7 +3177,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                         <div data-select-id="{{ sel.key }}" data-value="{{ opt.value }}" onClick="{{ pickSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                           <span>{{ opt.value }}</span>
                                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                           </sc-if>
                                         </div>
                                       </sc-for>
@@ -3212,7 +3212,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                         <div data-select-id="{{ sel.key }}" data-value="{{ opt.value }}" onClick="{{ pickSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
                                           <span>{{ opt.value }}</span>
                                           <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
-                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                            <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                           </sc-if>
                                         </div>
                                       </sc-for>
@@ -3298,7 +3298,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <div style="font-size:16px">{{ evd.reason }}</div>
                     </div>
                     <button type="button" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt-off="Edytuj" aria-label="Edytuj">
-                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
                 </div>
@@ -3319,7 +3319,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </div>
                     <button type="button" onClick="{{ openTimeEdit }}" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt-off="Edytuj termin i stanowisko" aria-label="Edytuj termin i stanowisko">
-                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
                 </div>
@@ -3372,7 +3372,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </div>
                     <button type="button" onClick="{{ toggleAssignMenu }}" style="position:relative;margin:0 4px;width:30px;height:30px;flex:none;border:0;border-radius:8px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt-off="Zarządzaj przypisanymi osobami" aria-label="Zarządzaj przypisanymi osobami">
-                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);transition:transform 200ms;transform:{{ assignChevronRotate }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);transition:transform 200ms;transform:{{ assignChevronRotate }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
                     </button>
                   </div>
                 </div>
@@ -3420,7 +3420,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <div style="color:var(--tk-text-strong);font-size:15px;line-height:32px;display:flex;align-items:center;gap:6px">
                             <span>{{ evd.vin }}</span>
                             <button type="button" style="position:relative;width:20px;height:20px;padding:0;background:transparent;border:0;cursor:pointer;display:grid;place-items:center" data-tt="Kopiuj VIN" aria-label="Kopiuj VIN">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-copy.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </div>
                         </div>
@@ -3477,7 +3477,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span style="display: flex; align-items: center; gap: 4px; margin-left: 8px; flex: none; justify-content: flex-end">
                             <button type="button" onClick="{{ openRelease }}" style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 4px 12px; border: 0; border-radius: 4px; background: var(--tk-brand-soft); color: var(--tk-brand-fg); font-family: inherit; font-size: 15px; line-height: 22px; cursor: pointer" style-hover="background:var(--tk-brand-soft-2)">
                               Wydaj opony
-                              <span style="width: 20px; height: 20px; flex: none; display: none; background-color: var(--tk-brand); -webkit-mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width: 20px; height: 20px; flex: none; display: none; background-color:var(--tk-brand-fg); -webkit-mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           <div onClick="{{ openTireSection }}" style="position:relative;width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer;flex:none" data-tt="Edytuj opony" aria-label="Edytuj opony">
                             <span style="width: 20px; height: 20px; display: block; background-color: var(--zilo-blue-1); -webkit-mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
@@ -3493,7 +3493,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
                           <span style="display:flex;align-items:center;gap:4px;margin-left:auto;flex:none">
                             <button type="button" onClick="{{ openClientEditorWithDraft }}" style="position:relative;width:30px;height:30px;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </span>
                         </div>
@@ -3525,7 +3525,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;font-weight:500;padding:0 4px">
                       Opis zlecenia
                       <button type="button" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:14px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                         Edytuj
                       </button>
                     </div>
@@ -3538,7 +3538,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;font-weight:500;padding:0 4px">
                       Cena
                       <button type="button" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:14px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
                         Edytuj
                       </button>
                     </div>
@@ -3549,7 +3549,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="display:flex;justify-content:space-between;align-items:center">
                       <div style="font-size:16px;line-height:22px;font-weight:500">Załączniki:</div>
                       <button type="button" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:14px;font-weight:400;cursor:pointer" style-hover="background:var(--tk-brand-soft)">
-                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                         Dodaj załącznik
                       </button>
                     </div>
@@ -8441,7 +8441,7 @@ class Component extends DCLogic {
   #btn-zakoncz-zadanie.zz-pressed { transform: translateY(1px) scale(0.985); }
   /* Dymek (tooltip) — styl jak tooltipy Zilo: ciemne tło, biały tekst, zaokrąglone rogi, strzałka w dół */
   #zz-tooltip {
-    max-width: 250px; background: var(--tk-inverse); color: var(--tk-on-fill);
+    max-width: 250px; background: var(--tk-inverse); color: var(--tk-on-inverse);
     font-family: 'Rubik', sans-serif; font-size: 14px; line-height: 20px;
     padding: 10px 14px; border-radius: 8px; position: relative;
     box-shadow: 0 8px 22px rgba(10, 11, 41, 0.24);

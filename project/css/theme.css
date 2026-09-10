@@ -35,6 +35,7 @@
   --tk-ok-fg: #0E5B3A;
   --tk-ok-soft: #DCEFE3;
   --tk-on-fill: #FFFFFF;
+  --tk-on-inverse: #FFFFFF;
   --tk-surface: #FFFFFF;
   --tk-surface-2: #F6F6FC;
   --tk-surface-3: #F0F1F5;
@@ -70,21 +71,22 @@
   --tk-canvas: #0F1020;
   --tk-cyan: #35B4D1;
   --tk-cyan-fg: #93DDEC;
-  --tk-cyan-soft: #0D2A32;
+  --tk-cyan-soft: #113440;
   --tk-danger: #F26A5E;
   --tk-danger-fg: #FFB4AA;
-  --tk-danger-soft: #3A1C19;
+  --tk-danger-soft: #45211D;
   --tk-info: #5B8DEF;
   --tk-info-fg: #A8C4F7;
-  --tk-info-soft: #15203A;
+  --tk-info-soft: #1A2748;
   --tk-inverse: #E9EAF2;
   --tk-nav: #0A0B1E;
   --tk-nav-fg: #E4E5EE;
   --tk-nav-hover: #2A2C4E;
   --tk-ok: #3FBF89;
   --tk-ok-fg: #8FE3B8;
-  --tk-ok-soft: #16321F;
+  --tk-ok-soft: #1B3D28;
   --tk-on-fill: #FFFFFF;
+  --tk-on-inverse: #171A2E;
   --tk-surface: #171A2E;
   --tk-surface-2: #1E2138;
   --tk-surface-3: #242840;
@@ -95,10 +97,10 @@
   --tk-text-strong: #F5F6FA;
   --tk-violet: #9C6BF2;
   --tk-violet-fg: #C9AFF9;
-  --tk-violet-soft: #221838;
+  --tk-violet-soft: #2A1E45;
   --tk-warn: #E0982F;
   --tk-warn-fg: #F3CE8A;
-  --tk-warn-soft: #33260F;
+  --tk-warn-soft: #3D2E12;
   color-scheme: dark;
 }
 
