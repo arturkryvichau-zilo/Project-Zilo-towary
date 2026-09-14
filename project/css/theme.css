@@ -55,6 +55,11 @@
   --tk-season-winter: #3E7CC9;
   --tk-season-summer: #BC7A10;
   --tk-season-all: #8A8A93;
+
+  /* info box — jasna lawenda, tekst czarny */
+  --tk-note-bg: #F6F6FC;
+  --tk-note-fg: #242629;
+  --tk-note-icon: #6E7180;
   color-scheme: light;
 }
 
@@ -111,6 +116,11 @@
   --tk-season-winter: #7FB2EE;
   --tk-season-summer: #EFBB63;
   --tk-season-all: #A2A2AA;
+
+  /* info box */
+  --tk-note-bg: #20202B;
+  --tk-note-fg: #ECECEC;
+  --tk-note-icon: #9B9DAA;
   color-scheme: dark;
 }
 
