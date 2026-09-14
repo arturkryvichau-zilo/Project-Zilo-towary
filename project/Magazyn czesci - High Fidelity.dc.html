@@ -3545,6 +3545,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="font-size:16px;line-height:22px;padding:6px 4px;color:{{ evd.priceColor }}" style-hover="background:var(--tk-surface-2)">{{ evd.price }}</div>
                   </div>
 
+                  <!-- Załączniki ukryte na czas testów: zdejmij sc-if i przestaw attachmentsOn, żeby wróciły. -->
+                  <sc-if value="{{ attachmentsOn }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:8px;padding:16px 4px;border-bottom:none">
                     <div style="display:flex;justify-content:space-between;align-items:center">
                       <div style="font-size:16px;line-height:22px;font-weight:500">Załączniki:</div>
@@ -3563,6 +3565,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </div>
                   </div>
+                  </sc-if>
                 </div>
                 </sc-if>
 
@@ -8233,6 +8236,7 @@ class Component extends DCLogic {
           return { editForm: { ...st.editForm, cars: [fresh].concat(collapsed), selectedCarId: fresh.id } };
         });
       },
+      attachmentsOn: false,   // załączniki wyłączone na czas testów
       evd: evd || {},
       closeEvent: () => this.setState({ eventId: null }, () => this.scrollToDayStart()),
       assignedPeople: this.visitPeopleIds().map((id) => PEOPLE.find((p) => p.id === id)).filter(Boolean),
