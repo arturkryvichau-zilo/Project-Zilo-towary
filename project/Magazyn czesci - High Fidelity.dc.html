@@ -3744,7 +3744,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <sc-if value="{{ evd.wyc.fvHistoryOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
                       <div style="min-width:1010px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 140px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
-                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div>Status KSeF</div><div style="text-align:right">Kwota</div><div></div>
+                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div>KSeF</div><div style="text-align:right">Kwota</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.fvHistory }}" as="f" hint-placeholder-count="1">
                         <div data-flash="{{ f.flashMark }}" style="min-width:1010px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 140px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }};animation:{{ f.flashAnim }}">
