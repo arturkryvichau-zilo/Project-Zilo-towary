@@ -3686,14 +3686,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <sc-if value="{{ evd.wyc.hasHistory }}" hint-placeholder-val="{{ false }}">
                   <section style="border-top:1px solid var(--tk-border-2);padding-top:16px">
                     <button type="button" onClick="{{ evd.wyc.toggleHistory }}" style="display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0 4px 12px;width:100%;cursor:pointer;font-family:inherit;color:var(--tk-text)">
-                      <span style="display:inline-flex;color:var(--tk-text-strong)">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.99805 1.40039C10.0921 1.40039 10.1859 1.40129 10.2793 1.4043C11.6526 1.4547 12.9194 1.81103 14.0391 2.4082C15.661 3.40089 16.596 4.3362 17.2881 5.44043C18.1863 7.07763 18.5422 8.34433 18.5898 9.69043C18.5968 9.81215 18.5977 9.90591 18.5977 10C18.5977 10.0941 18.5968 10.1878 18.5938 10.2812C18.5424 11.6548 18.1862 12.9213 17.5889 14.041C16.5961 15.663 15.661 16.598 14.5566 17.29C12.9194 18.1881 11.6528 18.5443 10.3066 18.5918C10.1859 18.5987 10.0921 18.5996 9.99805 18.5996C9.90396 18.5996 9.8102 18.5987 9.7168 18.5957C8.34238 18.5442 7.07568 18.1882 5.95605 17.5908C4.33425 16.598 3.39893 15.6629 2.70703 14.5586C1.80908 12.9214 1.45275 11.6546 1.40527 10.3086C1.39934 10.1878 1.39844 10.0941 1.39844 10C1.39844 9.90591 1.39934 9.81215 1.40234 9.71875C1.41301 9.38759 1.69033 9.12709 2.02148 9.1377C2.35263 9.14836 2.61215 9.4257 2.60156 9.75684C2.59896 9.8375 2.59766 9.91866 2.59766 10C2.59766 14.0869 5.91114 17.4004 9.99805 17.4004C14.085 17.4004 17.3984 14.0869 17.3984 10C17.3984 5.91309 14.085 2.59961 9.99805 2.59961C9.91671 2.59961 9.83554 2.60092 9.75488 2.60352C9.42375 2.6141 9.14641 2.35459 9.13574 2.02344C9.12513 1.69229 9.38564 1.41497 9.7168 1.4043C9.8102 1.40129 9.90396 1.40039 9.99805 1.40039ZM9.99805 7C10.3293 7.00001 10.5974 7.26842 10.5977 7.59961V10.2002H13.1982C13.5295 10.2003 13.7977 10.4686 13.7979 10.7998C13.7979 11.1311 13.5295 11.4003 13.1982 11.4004H9.99805C9.66668 11.4004 9.39844 11.1312 9.39844 10.7998V7.59961C9.39865 7.26842 9.66681 7 9.99805 7Z" fill="currentColor"></path></svg>
-                      </span>
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ evd.wyc.historyArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                       <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Historia wysłanych ofert</span>
-                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600;margin-right:6px">{{ evd.wyc.historyCount }}</span>
-                      <span style="margin-left:auto;color:var(--tk-text-2);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;transition:background 140ms" style-hover="background:var(--tk-surface-3)">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="transform:{{ evd.wyc.historyChevron }};transition:transform 200ms"><path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                      </span>
+                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ evd.wyc.historyCount }}</span>
                     </button>
                     <sc-if value="{{ evd.wyc.historyOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
@@ -5679,7 +5674,7 @@ class Component extends DCLogic {
       hasHistory: hist.length > 0,
       historyCount: String(hist.length),
       historyOpen: s.historyOpen !== false,
-      historyChevron: s.historyOpen === false ? 'rotate(-90deg)' : 'rotate(0deg)',
+      historyArrow: s.historyOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
       toggleHistory: () => this.setState((st) => ({ historyOpen: st.historyOpen === false })),
       history: hist.map((h, i) => {
         const tone = (label) => (label === 'Zaakceptowana'
