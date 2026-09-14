@@ -1055,7 +1055,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                 </sc-for>
                 <sc-if value="{{ billing.noTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:26px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Brak połączonego narzędzia. Połącz je, aby faktury trafiały tam automatycznie.</div>
+                  <div style="padding:26px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:center">Brak połączonego narzędzia. Połącz je, aby faktury trafiały tam automatycznie.</div>
                 </sc-if>
               </div>
             </div>
@@ -1456,9 +1456,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
                         Połączono
                       </span>
-                    </sc-if>
-                    <sc-if value="{{ opt.isFree }}" hint-placeholder-val="{{ true }}">
-                      <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">{{ opt.note }}</span>
                     </sc-if>
                     <sc-if value="{{ opt.isBlocked }}" hint-placeholder-val="{{ false }}">
                       <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">Najpierw rozłącz obecne narzędzie.</span>
