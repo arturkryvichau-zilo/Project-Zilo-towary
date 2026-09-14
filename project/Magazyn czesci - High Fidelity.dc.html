@@ -5764,6 +5764,8 @@ class Component extends DCLogic {
           screen: back ? back.screen : 'billing',
           fvAfterBilling: null,
         });
+        // „Połączono z…" zamiast odmiany przez rodzaj — nazwy bywają różne
+        this.ziloToast(bDraft.editing ? 'Zmiany zapisane pomyślnie' : 'Połączono z ' + bDraft.name);
         // przyszliśmy tu z „Wystaw FV" — wracamy prosto na fakturę
         if (back) this.openInvoiceConfig(back.visitId, Object.assign({}, back.opts || {}, { force: true }));
       },
