@@ -3742,12 +3742,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <sc-if value="{{ evd.wyc.hasFvHistory }}" hint-placeholder-val="{{ false }}">
                   <section style="border-top:1px solid var(--tk-border-2);padding-top:16px">
                     <button type="button" onClick="{{ evd.wyc.toggleFvHistory }}" style="display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0 4px 12px;width:100%;cursor:pointer;font-family:inherit;color:var(--tk-text)">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-cash.svg) center / 20px 20px no-repeat"></span>
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ evd.wyc.fvHistoryArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                       <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Wystawione faktury</span>
-                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600;margin-right:6px">{{ evd.wyc.fvHistoryCount }}</span>
-                      <span style="margin-left:auto;color:var(--tk-text-2);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;transition:background 140ms" style-hover="background:var(--tk-surface-3)">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="transform:{{ evd.wyc.fvHistoryChevron }};transition:transform 200ms"><path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                      </span>
+                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ evd.wyc.fvHistoryCount }}</span>
                     </button>
                     <sc-if value="{{ evd.wyc.fvHistoryOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
@@ -5655,7 +5652,7 @@ class Component extends DCLogic {
       hasFvHistory: fvHist.length > 0,
       fvHistoryCount: String(fvHist.length),
       fvHistoryOpen: s.fvHistoryOpen !== false,
-      fvHistoryChevron: s.fvHistoryOpen === false ? 'rotate(-90deg)' : 'rotate(0deg)',
+      fvHistoryArrow: s.fvHistoryOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
       toggleFvHistory: () => this.setState((st) => ({ fvHistoryOpen: st.fvHistoryOpen === false })),
       fvHistory: fvHist.map((h, i) => {
         const tone = (label) => (label === 'Opłacona'
