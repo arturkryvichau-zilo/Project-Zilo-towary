@@ -4799,6 +4799,7 @@ class Component extends DCLogic {
     billingDraft: null,
     connectedBilling: null,
     fvSellerEdit: false,
+    fvAfterBilling: null,
     fvFlash: null,
     docReturn: null,
     offerFlash: null,
@@ -5756,14 +5757,24 @@ class Component extends DCLogic {
         if (!bDraft.name) return;
         const cur = connected.filter((c) => c.name === bDraft.editing)[0];
         const row = { name: bDraft.name, date: cur ? cur.date : '21.08.2026', fields: Object.assign({}, bDraft.fields) };
+        const back = s.fvAfterBilling;
         // lista zawsze ma najwyżej jedną pozycję
-        this.setState({ connectedBilling: [row], screen: 'billing' });
+        this.setState({
+          connectedBilling: [row],
+          screen: back ? back.screen : 'billing',
+          fvAfterBilling: null,
+        });
+        // przyszliśmy tu z „Wystaw FV" — wracamy prosto na fakturę
+        if (back) this.openInvoiceConfig(back.visitId, Object.assign({}, back.opts || {}, { force: true }));
       },
       disconnectTool: () => this.setState({
         connectedBilling: connected.filter((c) => c.name !== bDraft.editing),
         screen: 'billing',
       }),
-      closeToolFlow: () => this.setState({ screen: 'billing' }),
+      closeToolFlow: () => {
+        const back = s.fvAfterBilling;
+        this.setState({ screen: back ? back.screen : 'billing', fvAfterBilling: null });
+      },
       backToSettings: () => this.setState({ screen: 'settings', billingEdit: null, garageDraft: null }),
     };
   }
@@ -6732,6 +6743,17 @@ class Component extends DCLogic {
   }
 
   openInvoiceConfig(visitId, opts) {
+    // faktura wychodzi przez narzędzie fakturowe — bez połączenia prowadzimy
+    // najpierw przez konfigurację, a potem wracamy tu, gdzie użytkownik był
+    const connected = this.state.connectedBilling || DEFAULT_BILLING;
+    if (!connected.length && !(opts && opts.force)) {
+      this.setState({
+        screen: 'billingPick',
+        billingDraft: { name: '', fields: {}, editing: null },
+        fvAfterBilling: { visitId: visitId, opts: opts || null, screen: this.state.screen },
+      });
+      return;
+    }
     // ten sam wzorzec co oferta: znacznik czasu lamie cache iframe'a
     const seq = Date.now() + '-' + (this.__fvSeq = (this.__fvSeq || 0) + 1);
     let src = 'konfigurator-faktur/v1.html?n=' + seq;
