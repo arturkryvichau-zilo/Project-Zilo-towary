@@ -517,31 +517,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
-    <sc-if value="{{ garage.detailsOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
-        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:560px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
-          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;border-bottom:1px solid var(--tk-border-2)">
-            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Dane warsztatu</span>
-            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-3)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
-              <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
-            </button>
-          </div>
-          <div style="flex:1;min-height:0;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px">
-            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa warsztatu</span><input value="{{ garage.dName }}" onInput="{{ garage.setName }}" placeholder="np. Serwis DobryMechanik.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Jeśli chcesz zmienić nazwę, skontaktuj się z obsługą klienta: <span style="font-weight:500">kontakt@dobrymechanik.pl</span></span></div>
-            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Numer telefonu</span><input value="{{ garage.dPhone }}" onInput="{{ garage.setPhone }}" placeholder="000 000 000" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
-            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">E-mail</span><input value="{{ garage.dEmail }}" onInput="{{ garage.setEmail }}" placeholder="np. mechanik@zilo.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
-            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">NIP</span><input value="{{ garage.dNip }}" onInput="{{ garage.setNip }}" placeholder="0123456789" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Na ten numer telefonu oraz adres e-mail będziesz otrzymywał powiadomienia.</span></div>
-          </div>
-          <div style="flex:none;display:flex;gap:12px;padding:20px 24px;border-top:1px solid var(--tk-border-2)">
-            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
-            <button type="button" onClick="{{ garage.saveDetails }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
-          </div>
-        </div>
-      </div>
-    </sc-if>
-
     <sc-if value="{{ garage.extraOpen }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
         <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:520px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
@@ -599,6 +574,44 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="flex:none;display:flex;gap:12px;padding:20px 24px;border-top:1px solid var(--tk-border-2)">
             <button type="button" onClick="{{ garage.closeGarageEditor }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
             <button type="button" onClick="{{ garage.saveLogo }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ garage.detailsOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:var(--tk-canvas);display:flex;flex-direction:column">
+        <div style="min-height:70px;flex:none;border-bottom:1px solid var(--tk-border);display:flex;align-items:center;gap:14px;padding:0 28px;background:var(--tk-surface)">
+          <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:46px;height:46px;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);cursor:pointer;display:grid;place-items:center;flex:none" style-hover="background:var(--tk-surface-2)" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+          </button>
+          <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Edycja danych warsztatu</span>
+          <button type="button" onClick="{{ garage.saveDetails }}" style="margin-left:auto;flex:none;height:46px;padding:0 24px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+        </div>
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:24px 28px 40px">
+          <div style="width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+            <div style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane podstawowe warsztatu</div>
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa warsztatu</span><input value="{{ garage.dName }}" onInput="{{ garage.setName }}" placeholder="np. Serwis DobryMechanik.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Jeśli chcesz zmienić nazwę, skontaktuj się z obsługą klienta: <span style="font-weight:500">kontakt@dobrymechanik.pl</span></span></div>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Numer telefonu</span><input value="{{ garage.dPhone }}" onInput="{{ garage.setPhone }}" placeholder="000 000 000" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Adres e-mail</span><input value="{{ garage.dEmail }}" onInput="{{ garage.setEmail }}" placeholder="np. mechanik@zilo.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Na ten numer telefonu oraz adres e-mail będziesz otrzymywał powiadomienia.</span></div>
+            </div>
+
+            <div style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane firmy</div>
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;align-items:stretch;gap:12px"><label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">NIP</span><span style="position:relative;display:block;width:100%"><span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ garage.dNip }}</span><span style="color:var(--tk-text-3)">{{ garage.dNipRest }}</span></span><input value="{{ garage.dNip }}" onInput="{{ garage.setNip }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></span></label><button type="button" onClick="{{ garage.fetchGus }}" disabled="{{ garage.gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;font-weight:500;white-space:nowrap;cursor:{{ garage.gusCursor }};opacity:{{ garage.gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Zaciągnij z GUS</button></div>
+              <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa firmy</span><input value="{{ garage.dCompany }}" onInput="{{ garage.setCompany }}" placeholder="np. Serwis DobryMechanik Sp. z o.o." style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Ulica i numer</span><input value="{{ garage.dCompanyStreet }}" onInput="{{ garage.setCompanyStreet }}" placeholder="ul. Kwiatowa 10d" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Kod pocztowy</span><input value="{{ garage.dCompanyZip }}" onInput="{{ garage.setCompanyZip }}" placeholder="00-000" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Miejscowość</span><input value="{{ garage.dCompanyCity }}" onInput="{{ garage.setCompanyCity }}" placeholder="np. Poznań" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Te dane trafiają na faktury wystawiane przez warsztat. Wpisz je ręcznie albo zaciągnij z GUS po numerze NIP.</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -987,6 +1000,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Adres e-mail</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.email }}</span></div>
                   <sc-if value="{{ garage.hasNip }}" hint-placeholder-val="{{ true }}">
                     <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.nip }}</span></div>
+                  </sc-if>
+                  <sc-if value="{{ garage.hasCompany }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.company }}</span></div>
+                    <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Adres firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.companyAddress }}</span></div>
                   </sc-if>
                 </div>
               </section>
@@ -4342,6 +4359,10 @@ const GARAGE_SEED = {
   phone: '601 234 567',
   email: 'kontakt@serwis-dm.pl',
   nip: '779 241 96 34',
+  company: 'Serwis DobryMechanik Sp. z o.o.',
+  companyStreet: 'ul. Ignacego Dobrogojskiego 30A',
+  companyZip: '61-692',
+  companyCity: 'Poznań',
   street: 'ul. Ignacego Dobrogojskiego 30A',
   city: 'Poznań',
   quarter: 'Nowe Miasto',
@@ -5439,7 +5460,11 @@ class Component extends DCLogic {
       // karta „Dane warsztatu"
       name: g.name, phone: g.phone, email: g.email, nip: g.nip,
       hasNip: !!g.nip,
-      editDetails: openDraft('details'),
+      company: g.company || '',
+      companyAddress: [g.companyStreet, [g.companyZip, g.companyCity].filter(Boolean).join(' ')]
+        .filter(Boolean).join(', '),
+      hasCompany: !!g.company,
+      editDetails: openEditor('details'),
       // karta „Adres warsztatu"
       street: g.street,
       cityLine: g.city + (g.quarter ? ', ' + g.quarter : ''),
@@ -5458,13 +5483,33 @@ class Component extends DCLogic {
       czesciKlienta: 'Warsztat ' + (g.useClientParts ? '' : 'nie ') + 'pracuje na częściach klienta',
       editExtra: openDraft('extra'),
 
-      // modal „Dane warsztatu"
-      detailsOpen: s.garageModal === 'details',
+      // pełny ekran „Dane warsztatu" — dane podstawowe + dane firmy
+      detailsOpen: s.garageEdit === 'details',
       dName: f.name || '', setName: field('name'),
       dPhone: f.phone || '', setPhone: field('phone'),
       dEmail: f.email || '', setEmail: field('email'),
-      dNip: f.nip || '', setNip: field('nip'),
-      saveDetails: save(['name', 'phone', 'email', 'nip']),
+      dNip: this.nipFormat(f.nip || ''),
+      dNipRest: this.nipRest(f.nip || ''),
+      setNip: (e) => this.garagePatch({ nip: this.nipFormat(e.target.value) }),
+      // dane firmowe zaciąga dopiero przycisk, tak samo jak przy kliencie i na fakturze
+      gusDisabled: !this.nipComplete(f.nip),
+      gusOpacity: this.nipComplete(f.nip) ? '1' : '0.45',
+      gusCursor: this.nipComplete(f.nip) ? 'pointer' : 'not-allowed',
+      fetchGus: () => {
+        if (!this.nipComplete(f.nip)) return;
+        this.garagePatch({
+          company: (String(f.name || 'Serwis').split(' ')[0] || 'Serwis') + ' Sp. z o.o.',
+          companyStreet: 'ul. Ignacego Dobrogojskiego 30A',
+          companyZip: '61-692',
+          companyCity: 'Poznań',
+        });
+        this.ziloToast('Dane firmy pobrane z GUS');
+      },
+      dCompany: f.company || '', setCompany: field('company'),
+      dCompanyStreet: f.companyStreet || '', setCompanyStreet: field('companyStreet'),
+      dCompanyZip: f.companyZip || '', setCompanyZip: field('companyZip'),
+      dCompanyCity: f.companyCity || '', setCompanyCity: field('companyCity'),
+      saveDetails: save(['name', 'phone', 'email', 'nip', 'company', 'companyStreet', 'companyZip', 'companyCity']),
 
       // modal „Szczegóły warsztatu"
       extraOpen: s.garageModal === 'extra',
