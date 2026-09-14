@@ -517,6 +517,230 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
+    <sc-if value="{{ garage.detailsOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:560px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;border-bottom:1px solid var(--tk-border-2)">
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Dane warsztatu</span>
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-3)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
+            </button>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px">
+            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa warsztatu</span><input value="{{ garage.dName }}" onInput="{{ garage.setName }}" placeholder="np. Serwis DobryMechanik.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Jeśli chcesz zmienić nazwę, skontaktuj się z obsługą klienta: <span style="font-weight:500">kontakt@dobrymechanik.pl</span></span></div>
+            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Numer telefonu</span><input value="{{ garage.dPhone }}" onInput="{{ garage.setPhone }}" placeholder="000 000 000" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">E-mail</span><input value="{{ garage.dEmail }}" onInput="{{ garage.setEmail }}" placeholder="np. mechanik@zilo.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+            <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">NIP</span><input value="{{ garage.dNip }}" onInput="{{ garage.setNip }}" placeholder="0123456789" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Na ten numer telefonu oraz adres e-mail będziesz otrzymywał powiadomienia.</span></div>
+          </div>
+          <div style="flex:none;display:flex;gap:12px;padding:20px 24px;border-top:1px solid var(--tk-border-2)">
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
+            <button type="button" onClick="{{ garage.saveDetails }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ garage.extraOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:520px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;border-bottom:1px solid var(--tk-border-2)">
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Szczegóły warsztatu</span>
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-3)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
+            </button>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px">
+            <div style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text-strong)">Sposoby płatności</div>
+            <label onClick="{{ garage.toggleCard }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer"><span role="checkbox" aria-checked="{{ garage.cardBox.checked }}" style="width:20px;height:20px;flex:none;border-radius:4px;display:grid;place-items:center;background:{{ garage.cardBox.bg }};border:{{ garage.cardBox.border }};transition:background-color 160ms var(--ease-standard)"><svg viewBox="0 0 12 10" aria-hidden="true" style="width:12px;height:10px;fill:none;stroke:var(--tk-on-fill);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:{{ garage.cardBox.tick }}"><path d="M1 5 L4.5 8.5 L11 1.5"></path></svg></span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">Karta</span></label>
+            <label onClick="{{ garage.toggleCash }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer"><span role="checkbox" aria-checked="{{ garage.cashBox.checked }}" style="width:20px;height:20px;flex:none;border-radius:4px;display:grid;place-items:center;background:{{ garage.cashBox.bg }};border:{{ garage.cashBox.border }};transition:background-color 160ms var(--ease-standard)"><svg viewBox="0 0 12 10" aria-hidden="true" style="width:12px;height:10px;fill:none;stroke:var(--tk-on-fill);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:{{ garage.cashBox.tick }}"><path d="M1 5 L4.5 8.5 L11 1.5"></path></svg></span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">Gotówka</span></label>
+            <div style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text-strong);margin-top:8px">Inne</div>
+            <label onClick="{{ garage.toggleParts }}" style="display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer"><span role="checkbox" aria-checked="{{ garage.partsBox.checked }}" style="width:20px;height:20px;flex:none;border-radius:4px;display:grid;place-items:center;background:{{ garage.partsBox.bg }};border:{{ garage.partsBox.border }};transition:background-color 160ms var(--ease-standard)"><svg viewBox="0 0 12 10" aria-hidden="true" style="width:12px;height:10px;fill:none;stroke:var(--tk-on-fill);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:{{ garage.partsBox.tick }}"><path d="M1 5 L4.5 8.5 L11 1.5"></path></svg></span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">Warsztat pracuje na częściach klienta</span></label>
+          </div>
+          <div style="flex:none;display:flex;gap:12px;padding:20px 24px;border-top:1px solid var(--tk-border-2)">
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
+            <button type="button" onClick="{{ garage.saveExtra }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ garage.logoOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:520px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;border-bottom:1px solid var(--tk-border-2)">
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Logo warsztatu</span>
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:36px;height:36px;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-3)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="left">
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
+            </button>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+              <div style="width:100%;aspect-ratio:1 / 1;max-width:260px;border-radius:12px;border:1px dashed var(--tk-border-strong);background:var(--tk-brand-soft);display:grid;place-items:center;padding:16px;box-sizing:border-box;text-align:center">
+                <sc-if value="{{ garage.draftHasLogo }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:96px;height:96px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/wrench.svg) center / 96px 96px no-repeat;mask:url(assets/icons/wrench.svg) center / 96px 96px no-repeat"></span>
+                </sc-if>
+                <sc-if value="{{ garage.draftNoLogo }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:14px;line-height:20px;color:var(--tk-brand-fg)">Przeciągnij plik albo wybierz go z dysku</span>
+                </sc-if>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ garage.pickLogo }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-upload-doc.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-upload-doc.svg) center / 20px 20px no-repeat"></span>Wgraj plik</button>
+                <sc-if value="{{ garage.draftHasLogo }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{ garage.dropLogo }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:0;border-radius:8px;background:transparent;color:var(--tk-text-2);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-danger-soft);color:var(--tk-danger-fg)">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>Usuń</button>
+                </sc-if>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Logo Twojego warsztatu, które będzie wyświetlane na fakturach i wiadomościach do kierowców.</span></div>
+          </div>
+          <div style="flex:none;display:flex;gap:12px;padding:20px 24px;border-top:1px solid var(--tk-border-2)">
+            <button type="button" onClick="{{ garage.closeGarageEditor }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
+            <button type="button" onClick="{{ garage.saveLogo }}" style="flex:1;height:48px;border:0;border-radius:10px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ garage.contactOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:var(--tk-canvas);display:flex;flex-direction:column">
+        <div style="min-height:70px;flex:none;border-bottom:1px solid var(--tk-border);display:flex;align-items:center;gap:14px;padding:0 28px;background:var(--tk-surface)">
+          <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:46px;height:46px;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);cursor:pointer;display:grid;place-items:center;flex:none" style-hover="background:var(--tk-surface-2)" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+          </button>
+          <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Edycja danych adresowych warsztatu</span>
+          <button type="button" onClick="{{ garage.saveContact }}" style="margin-left:auto;flex:none;height:46px;padding:0 24px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+        </div>
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:24px 28px 40px">
+          <div style="width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+            <div style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Adres warsztatu</div>
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Ulica i numer budynku</span><input value="{{ garage.cStreet }}" onInput="{{ garage.setStreet }}" placeholder="ul. Kwiatowa 10d" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Miejscowość i dzielnica</span><input value="{{ garage.cCity }}" onInput="{{ garage.setCity }}" placeholder="Warszawa, Wola" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+                <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Kod pocztowy</span><input value="{{ garage.cZip }}" onInput="{{ garage.setZip }}" placeholder="02-900" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Jeśli chcesz zmienić adres, skontaktuj się z obsługą klienta: <span style="font-weight:500">kontakt@dobrymechanik.pl</span></span></div>
+            </div>
+
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text-strong)">Gdzie dokładnie znajduje się Twój warsztat?</span>
+                <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Przesuwając mapę, ustaw pinezkę w miejscu, w którym znajduje się Twój warsztat.</span>
+              </div>
+              <div style="height:260px;border-radius:10px;border:1px solid var(--tk-border-2);background:var(--tk-surface-2);display:grid;place-items:center;position:relative;overflow:hidden">
+                <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Mapa — w prototypie podgląd statyczny</span>
+                <span style="position:absolute;top:calc(50% - 28px);left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50% 50% 50% 0;transform-origin:center;rotate:-45deg;background:var(--tk-brand);border:3px solid var(--tk-surface)"></span>
+              </div>
+            </div>
+
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text-strong)">Wskazówki dojazdu</span>
+                <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodatkowe informacje, które pomogą kierowcom znaleźć Twój warsztat.</span>
+              </div>
+              <label style="display:flex;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                <textarea value="{{ garage.cDirections }}" onInput="{{ garage.setDirections }}" placeholder="np. wjazd do warsztatu przez zieloną bramę" style="flex:1;min-height:110px;padding:14px;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text);background:transparent;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ garage.hoursOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:11;background:var(--tk-canvas);display:flex;flex-direction:column">
+        <div style="min-height:70px;flex:none;border-bottom:1px solid var(--tk-border);display:flex;align-items:center;gap:14px;padding:0 28px;background:var(--tk-surface)">
+          <button type="button" onClick="{{ garage.closeGarageEditor }}" style="position:relative;width:46px;height:46px;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);cursor:pointer;display:grid;place-items:center;flex:none" style-hover="background:var(--tk-surface-2)" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+          </button>
+          <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Edycja godzin otwarcia</span>
+          <button type="button" onClick="{{ garage.saveHours }}" style="margin-left:auto;flex:none;height:46px;padding:0 24px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz</button>
+        </div>
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:24px 28px 40px">
+          <div style="width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+            <div style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Godziny otwarcia warsztatu</div>
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Tutaj ustawisz domyślne godziny pracy Twojego warsztatu. Jeśli potrzebujesz oznaczyć warsztat jako tymczasowo zamknięty, przejdź do zakładki <span style="font-weight:500">Urlop</span> w ustawieniach.</span></div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ garage.draftWeek }}" as="d" hint-placeholder-count="7">
+                  <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--tk-border-2)">
+                    <div style="flex:1 1 220px;min-width:200px;display:flex;align-items:center;gap:12px;min-height:56px">
+                      <span data-day="{{ d.key }}" onClick="{{ garage.toggleDay }}" role="switch" aria-checked="{{ d.isOpen }}" style="width:44px;height:24px;flex:none;border-radius:999px;background:{{ d.trackBg }};cursor:pointer;position:relative;transition:background-color 200ms var(--ease-standard)">
+                        <span style="position:absolute;top:2px;left:{{ d.knobLeft }};width:20px;height:20px;border-radius:50%;background:var(--tk-surface);transition:left 200ms var(--ease-standard)"></span>
+                      </span>
+                      <span style="display:flex;flex-direction:column;min-width:0">
+                        <span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ d.label }}</span>
+                        <sc-if value="{{ d.hasDuration }}" hint-placeholder-val="{{ true }}">
+                          <span style="font-size:13px;line-height:18px;color:var(--tk-text-3)">{{ d.duration }}</span>
+                        </sc-if>
+                      </span>
+                    </div>
+                    <div style="flex:1 1 300px;min-width:260px;display:flex;align-items:center;gap:12px">
+                      <sc-if value="{{ d.isOpen }}" hint-placeholder-val="{{ true }}">
+                        <div style="flex:1 1 0;min-width:0;position:relative">
+                      <div data-select-id="{{ d.fromSel.key }}" onClick="{{ garage.toggleHourSel }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:{{ d.fromSel.border }};border-radius:10px;cursor:pointer" style-hover="border-color:var(--tk-border-focus)">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">{{ d.fromSel.label }}</span>
+                          <span style="font-size:16px;line-height:20px;color:var(--tk-text)">{{ d.fromSel.value }}</span>
+                        </span>
+                        <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transform:{{ d.fromSel.chevronRotate }}">
+                          <span style="width:20px;height:20px;display:block;background-color:{{ d.fromSel.chevronColor }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                        </span>
+                      </div>
+                      <sc-if value="{{ d.fromSel.open }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:260px;overflow-y:auto;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.12), 0 2px 6px rgba(10,11,41,0.06);z-index:30">
+                          <sc-for list="{{ d.fromSel.options }}" as="opt" hint-placeholder-count="4">
+                            <div data-day="{{ opt.dayKey }}" data-side="{{ opt.side }}" data-value="{{ opt.value }}" onClick="{{ garage.pickHour }}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
+                              <span>{{ opt.value }}</span>
+                              <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                                <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                              </sc-if>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                        <span style="flex:none;width:10px;height:1px;background:var(--tk-border-strong)"></span>
+                        <div style="flex:1 1 0;min-width:0;position:relative">
+                      <div data-select-id="{{ d.toSel.key }}" onClick="{{ garage.toggleHourSel }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:{{ d.toSel.border }};border-radius:10px;cursor:pointer" style-hover="border-color:var(--tk-border-focus)">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">{{ d.toSel.label }}</span>
+                          <span style="font-size:16px;line-height:20px;color:var(--tk-text)">{{ d.toSel.value }}</span>
+                        </span>
+                        <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transform:{{ d.toSel.chevronRotate }}">
+                          <span style="width:20px;height:20px;display:block;background-color:{{ d.toSel.chevronColor }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                        </span>
+                      </div>
+                      <sc-if value="{{ d.toSel.open }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:260px;overflow-y:auto;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.12), 0 2px 6px rgba(10,11,41,0.06);z-index:30">
+                          <sc-for list="{{ d.toSel.options }}" as="opt" hint-placeholder-count="4">
+                            <div data-day="{{ opt.dayKey }}" data-side="{{ opt.side }}" data-value="{{ opt.value }}" onClick="{{ garage.pickHour }}" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
+                              <span>{{ opt.value }}</span>
+                              <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                                <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                              </sc-if>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                      </sc-if>
+                      <sc-if value="{{ d.closed }}" hint-placeholder-val="{{ false }}">
+                        <span style="display:flex;align-items:center;height:56px;font-size:16px;line-height:22px;color:var(--tk-text-3)">Zamknięte</span>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ assignToast }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:12100;max-width:640px;width:max-content">
         <div role="status" style="display:flex;align-items:center;gap:14px;padding:14px 14px 14px 18px;border-radius:10px;background:var(--tk-ok);color:var(--tk-on-fill);font-size:14px;line-height:20px;box-shadow:0 1px 3px rgba(36,38,41,0.08), 0 4px 14px rgba(36,38,41,0.06)">
@@ -739,6 +963,91 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </div>
           </div>
         </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGarage }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-canvas)">
+        <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
+          <button type="button" onClick="{{ garage.backToSettings }}" style="position:relative;width:24px;height:24px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0" data-tt="Wróć" aria-label="Wróć" data-tt-pos="bottom">
+            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-left.svg) center / 20px 20px no-repeat"></span>
+          </button>
+          <div style="font-weight:500;font-size:26px;line-height:36px;color:var(--tk-text-strong)">Szczegóły dotyczące warsztatu</div>
+        </div>
+
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 28px 40px">
+          <div style="display:flex;flex-direction:column;gap:20px;width:100%;max-width:1400px">
+
+            <div style="display:flex;flex-wrap:wrap;gap:20px">
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column;flex:1 1 0;min-width:320px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane warsztatu</span><button type="button" onClick="{{ garage.editDetails }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+                <div style="padding:8px 20px 20px">
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa warsztatu</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.name }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Numer telefonu</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.phone }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Adres e-mail</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.email }}</span></div>
+                  <sc-if value="{{ garage.hasNip }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.nip }}</span></div>
+                  </sc-if>
+                </div>
+              </section>
+
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column;flex:1 1 0;min-width:320px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Adres warsztatu</span><button type="button" onClick="{{ garage.editContact }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+                <div style="padding:8px 20px 20px">
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Ulica i numer budynku</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.street }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Miejscowość</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.cityLine }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Kod pocztowy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.zip }}</span></div>
+                </div>
+              </section>
+            </div>
+
+            <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Godziny otwarcia</span><button type="button" onClick="{{ garage.editHours }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">To są domyślne godziny pracy Twojego warsztatu. Jeśli potrzebujesz oznaczyć warsztat jako tymczasowo zamknięty, przejdź do zakładki <span style="font-weight:500">Urlop</span> w ustawieniach.</span></div>
+                <div style="display:flex;flex-wrap:wrap;gap:12px">
+                  <sc-for list="{{ garage.week }}" as="d" hint-placeholder-count="7">
+                    <div style="flex:1 1 0;min-width:140px;display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-canvas)">
+                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ d.label }}</span>
+                      <span style="font-size:16px;line-height:22px;color:{{ d.hoursColor }};white-space:nowrap">{{ d.hours }}</span>
+                      <sc-if value="{{ d.hasDuration }}" hint-placeholder-val="{{ true }}">
+                        <span style="font-size:13px;line-height:18px;color:var(--tk-text-3)">{{ d.duration }}</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </section>
+
+            <div style="display:flex;flex-wrap:wrap;gap:20px">
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column;flex:1 1 0;min-width:320px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Logo</span><button type="button" onClick="{{ garage.editLogo }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+                <div style="padding:20px;display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+                  <div style="flex:none;width:140px;height:140px;border-radius:12px;background:var(--tk-brand-soft);display:grid;place-items:center;padding:12px;box-sizing:border-box;text-align:center">
+                    <sc-if value="{{ garage.hasLogo }}" hint-placeholder-val="{{ false }}">
+                      <span style="width:72px;height:72px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/wrench.svg) center / 72px 72px no-repeat;mask:url(assets/icons/wrench.svg) center / 72px 72px no-repeat"></span>
+                    </sc-if>
+                    <sc-if value="{{ garage.noLogo }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size:14px;line-height:20px;color:var(--tk-brand-fg)">Miejsce na logo Twojego warsztatu</span>
+                    </sc-if>
+                  </div>
+                  <div style="flex:1 1 0;min-width:220px;display:flex;align-items:flex-start">
+                    <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-info-soft);color:var(--tk-info-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-info);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">Logo Twojego warsztatu, które będzie wyświetlane na fakturach i wiadomościach do kierowców.</span></div>
+                  </div>
+                </div>
+              </section>
+
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column;flex:1 1 0;min-width:320px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dodatkowe informacje</span><button type="button" onClick="{{ garage.editExtra }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+                <div style="padding:8px 20px 20px">
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Sposób płatności</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.platnosc }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Inne</span><span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ garage.czesciKlienta }}</span></div>
+                </div>
+              </section>
+            </div>
+
+          </div>
+        </div>
       </div>
     </sc-if>
 
@@ -4012,6 +4321,47 @@ const MORE_NAV = [
   { key: 'help', label: 'Pomoc', icon: 'assets/nav/help.svg' },
 ];
 
+// ——— Szczegóły dotyczące warsztatu (port z zilo-front-v2) ———
+const DAYS_PL = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+const DAYS_KEY = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+// aplikacja daje wybór co 30 minut przez całą dobę
+const HOURS_30 = (() => {
+  const out = [];
+  for (let h = 0; h < 24; h += 1) {
+    out.push(String(h).padStart(2, '0') + ':00');
+    out.push(String(h).padStart(2, '0') + ':30');
+  }
+  return out;
+})();
+
+const godzinPL = (n) => (n === 1 ? 'godzina' : (n >= 2 && n <= 4 ? 'godziny' : 'godzin'));
+
+const GARAGE_SEED = {
+  name: 'Serwis DobryMechanik.pl',
+  phone: '601 234 567',
+  email: 'kontakt@serwis-dm.pl',
+  nip: '779 241 96 34',
+  street: 'ul. Ignacego Dobrogojskiego 30A',
+  city: 'Poznań',
+  quarter: 'Nowe Miasto',
+  zip: '61-692',
+  directions: 'Wjazd od podwórza, zieloną bramą obok myjni.',
+  card: true,
+  cash: true,
+  useClientParts: false,
+  logo: '',
+  hours: {
+    mon: { open: true, from: '08:00', to: '17:00' },
+    tue: { open: true, from: '08:00', to: '17:00' },
+    wed: { open: true, from: '08:00', to: '17:00' },
+    thu: { open: true, from: '08:00', to: '17:00' },
+    fri: { open: true, from: '08:00', to: '16:00' },
+    sat: { open: true, from: '09:00', to: '13:00' },
+    sun: { open: false, from: '09:00', to: '13:00' },
+  },
+};
+
 const SETTINGS_COLUMNS = [
   {
     cards: [
@@ -4183,6 +4533,11 @@ class Component extends DCLogic {
     fvConfigVisit: null,
     fvHistory: {},
     visitTireDraftOnly: false,
+    garage: JSON.parse(JSON.stringify(GARAGE_SEED)),
+    garageDraft: null,
+    garageModal: null,
+    garageEdit: null,
+    garageSelect: null,
     fvFlash: null,
     docReturn: null,
     offerFlash: null,
@@ -4986,6 +5341,181 @@ class Component extends DCLogic {
     const t = this.tireSetsFor(carId).find((x) => x.__idx === Number(idx));
     if (t) forms[setKey] = this.buildSetForm(carId, t);
     return forms;
+  }
+
+  // ——— Szczegóły dotyczące warsztatu ———
+  garagePatch(patch) {
+    this.setState((st) => ({ garageDraft: Object.assign({}, st.garageDraft, patch) }));
+  }
+
+  garageHoursPatch(dayKey, patch) {
+    this.setState((st) => {
+      const h = (st.garageDraft && st.garageDraft.hours) || {};
+      return {
+        garageDraft: Object.assign({}, st.garageDraft, {
+          hours: Object.assign({}, h, { [dayKey]: Object.assign({}, h[dayKey], patch) }),
+        }),
+      };
+    });
+  }
+
+  garageDuration(d) {
+    if (!d || !d.open || !d.from || !d.to) return '';
+    const m = (t) => Number(t.split(':')[0]) * 60 + Number(t.split(':')[1]);
+    const diff = Math.round((m(d.to) - m(d.from)) / 60);
+    return diff > 0 ? diff + ' ' + godzinPL(diff) : '';
+  }
+
+  garageVals() {
+    const s = this.state;
+    const g = s.garage || GARAGE_SEED;
+    const f = s.garageDraft || {};
+    const openDraft = (modal) => () => this.setState({
+      garageModal: modal,
+      garageDraft: JSON.parse(JSON.stringify(s.garage || GARAGE_SEED)),
+    });
+    const openEditor = (screen) => () => this.setState({
+      garageEdit: screen,
+      garageSelect: null,
+      garageDraft: JSON.parse(JSON.stringify(s.garage || GARAGE_SEED)),
+    });
+    const close = () => this.setState({ garageModal: null, garageEdit: null, garageDraft: null, garageSelect: null });
+    const save = (keys, msg) => () => {
+      this.setState((st) => {
+        const next = Object.assign({}, st.garage);
+        keys.forEach((k) => { next[k] = (st.garageDraft || {})[k]; });
+        return { garage: next, garageModal: null, garageEdit: null, garageDraft: null, garageSelect: null };
+      });
+      this.ziloToast(msg || 'Zmiany zapisane pomyślnie');
+    };
+    const field = (key) => (e) => this.garagePatch({ [key]: e.target.value });
+    const flip = (key) => () => this.garagePatch({ [key]: !f[key] });
+    const box = (on) => ({
+      checked: on ? 'true' : 'false',
+      bg: on ? 'var(--tk-brand)' : 'var(--tk-surface)',
+      border: on ? '1.5px solid var(--tk-brand-bd)' : '1.5px solid var(--tk-border-strong)',
+      tick: on ? 1 : 0,
+    });
+
+    // godziny: jeden wpis na dzień, „Od" i „Do" jako listy co 30 minut
+    const hourSel = (dayKey, side, value) => {
+      const key = dayKey + '|' + side;
+      const open = s.garageSelect === key;
+      return {
+        key, value: value || '', open,
+        label: side === 'from' ? 'Od' : 'Do',
+        border: open ? '2px solid var(--tk-brand-bd)' : '1px solid var(--tk-border-strong)',
+        chevronRotate: open ? 'rotate(180deg)' : 'rotate(0deg)',
+        chevronColor: open ? 'var(--tk-brand-fg)' : 'var(--tk-text-2)',
+        options: HOURS_30.map((t) => ({
+          value: t, dayKey, side,
+          selected: t === value,
+          bg: t === value ? 'var(--tk-surface-2)' : 'transparent',
+        })),
+      };
+    };
+
+    const days = (src) => DAYS_KEY.map((k, i) => {
+      const d = (src.hours || {})[k] || { open: false };
+      const dur = this.garageDuration(d);
+      return {
+        key: k,
+        label: DAYS_PL[i],
+        isOpen: !!d.open,
+        closed: !d.open,
+        hours: d.open ? d.from + ' - ' + d.to : 'Zamknięte',
+        hoursColor: d.open ? 'var(--tk-text)' : 'var(--tk-text-3)',
+        duration: dur,
+        hasDuration: !!dur,
+        trackBg: d.open ? 'var(--tk-brand)' : 'var(--tk-text-3)',
+        knobLeft: d.open ? '22px' : '2px',
+        fromSel: hourSel(k, 'from', d.from),
+        toSel: hourSel(k, 'to', d.to),
+      };
+    });
+
+    const platnosc = [g.card && 'Karta', g.cash && 'Gotówka'].filter(Boolean).join(', ');
+    return {
+      // karta „Dane warsztatu"
+      name: g.name, phone: g.phone, email: g.email, nip: g.nip,
+      hasNip: !!g.nip,
+      editDetails: openDraft('details'),
+      // karta „Adres warsztatu"
+      street: g.street,
+      cityLine: g.city + (g.quarter ? ', ' + g.quarter : ''),
+      zip: g.zip,
+      editContact: openEditor('contact'),
+      // karta „Godziny otwarcia"
+      week: days(g),
+      editHours: openEditor('hours'),
+      // karta „Logo"
+      hasLogo: !!g.logo,
+      noLogo: !g.logo,
+      logo: g.logo || '',
+      editLogo: openDraft('logo'),
+      // karta „Dodatkowe informacje"
+      platnosc: platnosc || 'Nie wybrano',
+      czesciKlienta: 'Warsztat ' + (g.useClientParts ? '' : 'nie ') + 'pracuje na częściach klienta',
+      editExtra: openDraft('extra'),
+
+      // modal „Dane warsztatu"
+      detailsOpen: s.garageModal === 'details',
+      dName: f.name || '', setName: field('name'),
+      dPhone: f.phone || '', setPhone: field('phone'),
+      dEmail: f.email || '', setEmail: field('email'),
+      dNip: f.nip || '', setNip: field('nip'),
+      saveDetails: save(['name', 'phone', 'email', 'nip']),
+
+      // modal „Szczegóły warsztatu"
+      extraOpen: s.garageModal === 'extra',
+      cardBox: box(!!f.card), toggleCard: flip('card'),
+      cashBox: box(!!f.cash), toggleCash: flip('cash'),
+      partsBox: box(!!f.useClientParts), toggleParts: flip('useClientParts'),
+      saveExtra: save(['card', 'cash', 'useClientParts']),
+
+      // modal „Logo warsztatu"
+      logoOpen: s.garageModal === 'logo',
+      draftHasLogo: !!f.logo,
+      draftNoLogo: !f.logo,
+      draftLogo: f.logo || '',
+      pickLogo: () => this.garagePatch({ logo: 'wgrany' }),
+      dropLogo: () => this.garagePatch({ logo: '' }),
+      saveLogo: save(['logo']),
+
+      // pełny ekran „Edycja danych adresowych warsztatu"
+      contactOpen: s.garageEdit === 'contact',
+      cStreet: f.street || '', setStreet: field('street'),
+      cCity: (f.city || '') + (f.quarter ? ', ' + f.quarter : ''),
+      setCity: (e) => {
+        const [city, quarter] = String(e.target.value).split(',');
+        this.garagePatch({ city: (city || '').trim(), quarter: (quarter || '').trim() });
+      },
+      cZip: f.zip || '', setZip: field('zip'),
+      cDirections: f.directions || '', setDirections: field('directions'),
+      saveContact: save(['street', 'city', 'quarter', 'zip', 'directions']),
+
+      // pełny ekran „Edycja godzin otwarcia"
+      hoursOpen: s.garageEdit === 'hours',
+      draftWeek: days(f),
+      toggleDay: (e) => {
+        const k = e.currentTarget.dataset.day;
+        const cur = ((f.hours || {})[k] || {}).open;
+        this.garageHoursPatch(k, { open: !cur });
+      },
+      toggleHourSel: (e) => {
+        const k = e.currentTarget.dataset.selectId;
+        this.setState((st) => ({ garageSelect: st.garageSelect === k ? null : k }));
+      },
+      pickHour: (e) => {
+        const d = e.currentTarget.dataset;
+        this.garageHoursPatch(d.day, { [d.side]: d.value });
+        this.setState({ garageSelect: null });
+      },
+      saveHours: save(['hours']),
+
+      closeGarageEditor: close,
+      backToSettings: () => this.setState({ screen: 'settings', garageEdit: null, garageModal: null, garageDraft: null }),
+    };
   }
 
   setPanels(carId, opts) {
@@ -6616,7 +7146,10 @@ class Component extends DCLogic {
         const key = e.currentTarget.dataset.settingsRow;
         if (key === 'interface') this.setState({ screen: 'featureSettings' });
         if (key === 'goods') this.setState({ screen: 'goods' });
+        if (key === 'shop') this.setState({ screen: 'garage', garageEdit: null, garageModal: null });
       },
+      isGarage: s.screen === 'garage',
+      garage: this.garageVals(),
       isGoods: s.screen === 'goods',
       isDocs: s.screen === 'docs',
       docsQuery: s.docsQuery || '',
