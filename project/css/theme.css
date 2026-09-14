@@ -50,6 +50,11 @@
   --tk-warn: #D97706;
   --tk-warn-fg: #7A4A00;
   --tk-warn-soft: #FDF4E2;
+
+  /* sezony opon */
+  --tk-season-winter: #3E7CC9;
+  --tk-season-summer: #BC7A10;
+  --tk-season-all: #8A8A93;
   color-scheme: light;
 }
 
@@ -101,6 +106,11 @@
   --tk-warn: #E0982F;
   --tk-warn-fg: #F3CE8A;
   --tk-warn-soft: #3D2E12;
+
+  /* sezony opon */
+  --tk-season-winter: #7FB2EE;
+  --tk-season-summer: #EFBB63;
+  --tk-season-all: #A2A2AA;
   color-scheme: dark;
 }
 

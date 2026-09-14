@@ -1479,7 +1479,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="border-bottom:1px solid {{ set.cardBorder }};background:{{ set.groupBg }}">
                           <div data-set-key="{{ set.key }}" onClick="{{ toggleTireSet }}" style="position:relative;display:grid;grid-template-columns:20px minmax(0,1fr) minmax(0,1fr) 170px 130px 130px 120px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer;background:{{ set.rowBg }}" style-hover="background:var(--tk-surface-2)">
                             <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ set.arrowRotate }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
-                            <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ set.season }}</span>
+                            <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)"><sc-if value="{{ set.seasonHasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ set.seasonIconColor }};-webkit-mask:url({{ set.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ set.seasonIcon }}) center / 16px 16px no-repeat"></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ set.season }}</span></span>
                             <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ set.code }}</span>
                             <span style="position:relative;display:flex;width:fit-content">
                                 <button type="button" data-set-key="{{ set.key }}" onClick="{{ toggleStatusMenu }}" style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 8px 0 10px;border:0;border-radius:6px;font-family:inherit;font-size:14px;line-height:20px;white-space:nowrap;cursor:pointer;background:{{ set.statusBg }};color:{{ set.statusColor }}">
@@ -1655,7 +1655,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                   <div onClick="{{ toggleReleaseOut }}" style="display:grid;grid-template-columns:20px minmax(0,1fr) minmax(0,1fr) 130px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                     <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ release.outArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
-                    <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ release.outSeason }}</span>
+                    <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)"><sc-if value="{{ release.outHasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ release.outIconColor }};-webkit-mask:url({{ release.outIcon }}) center / 16px 16px no-repeat;mask:url({{ release.outIcon }}) center / 16px 16px no-repeat"></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ release.outSeason }}</span></span>
                     <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ release.outCode }}</span>
                     <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ release.outReceived }}</span>
                   </div>
@@ -1706,7 +1706,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </div>
                         <div data-opt="{{ opt.key }}" onClick="{{ toggleOptSet }}" style="display:grid;grid-template-columns:20px minmax(0,1fr) minmax(0,1fr) 130px 130px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                           <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ opt.setArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
-                          <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ opt.setSeason }}</span>
+                          <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)"><sc-if value="{{ opt.setHasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ opt.setIconColor }};-webkit-mask:url({{ opt.setIcon }}) center / 16px 16px no-repeat;mask:url({{ opt.setIcon }}) center / 16px 16px no-repeat"></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.setSeason }}</span></span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ opt.setCode }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ opt.setReceived }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ opt.setReleasedLabel }}</span>
@@ -2158,7 +2158,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                   <div style="background:var(--tk-canvas);border-left:3px solid var(--tk-brand-bd-soft);padding:16px;display:flex;flex-direction:column;gap:12px">
                                                     <div data-set-key="{{ t.key }}" onClick="{{ toggleVisitSet }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
                                                       <span style="display:flex;align-items:center;gap:10px;min-width:0">
-                                                        <span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text)">{{ t.titleFull }}</span>
+                                                        <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ t.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:18px;height:18px;display:block;flex:none;background-color:{{ t.iconColor }};-webkit-mask:url({{ t.icon }}) center / 18px 18px no-repeat;mask:url({{ t.icon }}) center / 18px 18px no-repeat"></span></sc-if><span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.titleFull }}</span></span>
                                                       </span>
                                                       <span style="display:flex;align-items:center;gap:4px;flex:none">
                                                         <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:var(--tk-danger-soft)">
@@ -2177,7 +2177,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                               <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ t.seasonSel.bodyPad }}">
                                                                 <span style="font-size:{{ t.seasonSel.labelSize }};line-height:{{ t.seasonSel.labelLine }};color:var(--tk-text-3)">{{ t.seasonSel.label }}</span>
                                                                 <sc-if value="{{ t.seasonSel.hasValue }}" hint-placeholder-val="{{ false }}">
-                                                                  <span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.seasonSel.value }}</span>
+                                                                  <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ t.seasonSel.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ t.seasonSel.iconColor }};-webkit-mask:url({{ t.seasonSel.icon }}) center / 16px 16px no-repeat;mask:url({{ t.seasonSel.icon }}) center / 16px 16px no-repeat"></span></sc-if><span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.seasonSel.value }}</span></span>
                                                                 </sc-if>
                                                               </span>
                                                               <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transform:{{ t.seasonSel.chevronRotate }}">
@@ -2188,7 +2188,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                               <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:30;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
                                                                 <sc-for list="{{ t.seasonSel.options }}" as="opt" hint-placeholder-count="3">
                                                                   <div data-select-id="{{ t.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
-                                                                    <span>{{ opt.value }}</span>
+                                                                    <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ opt.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ opt.iconColor }};-webkit-mask:url({{ opt.icon }}) center / 16px 16px no-repeat;mask:url({{ opt.icon }}) center / 16px 16px no-repeat"></span></sc-if><span>{{ opt.value }}</span></span>
                                                                     <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
                                                                       <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                                                     </sc-if>
@@ -2384,7 +2384,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="background:var(--tk-canvas);border-left:3px solid var(--tk-brand-bd-soft);padding:16px;display:flex;flex-direction:column;gap:12px">
                       <div data-set-key="{{ t.key }}" onClick="{{ toggleVisitSet }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
                         <span style="display:flex;align-items:center;gap:10px;min-width:0">
-                          <span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text)">{{ t.titleFull }}</span>
+                          <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ t.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:18px;height:18px;display:block;flex:none;background-color:{{ t.iconColor }};-webkit-mask:url({{ t.icon }}) center / 18px 18px no-repeat;mask:url({{ t.icon }}) center / 18px 18px no-repeat"></span></sc-if><span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.titleFull }}</span></span>
                         </span>
                         <span style="display:flex;align-items:center;gap:4px;flex:none">
                           <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:var(--tk-danger-soft)">
@@ -2403,7 +2403,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                 <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ t.seasonSel.bodyPad }}">
                                   <span style="font-size:{{ t.seasonSel.labelSize }};line-height:{{ t.seasonSel.labelLine }};color:var(--tk-text-3)">{{ t.seasonSel.label }}</span>
                                   <sc-if value="{{ t.seasonSel.hasValue }}" hint-placeholder-val="{{ false }}">
-                                    <span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.seasonSel.value }}</span>
+                                    <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ t.seasonSel.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ t.seasonSel.iconColor }};-webkit-mask:url({{ t.seasonSel.icon }}) center / 16px 16px no-repeat;mask:url({{ t.seasonSel.icon }}) center / 16px 16px no-repeat"></span></sc-if><span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.seasonSel.value }}</span></span>
                                   </sc-if>
                                 </span>
                                 <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transform:{{ t.seasonSel.chevronRotate }}">
@@ -2414,7 +2414,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                 <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:30;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
                                   <sc-for list="{{ t.seasonSel.options }}" as="opt" hint-placeholder-count="3">
                                     <div data-select-id="{{ t.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickVisitSetSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
-                                      <span>{{ opt.value }}</span>
+                                      <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ opt.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ opt.iconColor }};-webkit-mask:url({{ opt.icon }}) center / 16px 16px no-repeat;mask:url({{ opt.icon }}) center / 16px 16px no-repeat"></span></sc-if><span>{{ opt.value }}</span></span>
                                       <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
                                         <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                       </sc-if>
@@ -2764,7 +2764,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <sc-for list="{{ tire.panels }}" as="p" hint-placeholder-count="1">
               <div style="border-left:3px solid var(--tk-brand-bd-soft);border-radius:0 10px 10px 0;padding:16px;display:flex;flex-direction:column;gap:2px;margin-bottom:12px;flex:none;background-color:var(--tk-canvas)">
                 <div data-set-key="{{ p.key }}" onClick="{{ toggleTirePanel }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding-bottom:4px">
-                  <span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text)">{{ p.title }}</span>
+                  <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ p.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:18px;height:18px;display:block;flex:none;background-color:{{ p.iconColor }};-webkit-mask:url({{ p.icon }}) center / 18px 18px no-repeat;mask:url({{ p.icon }}) center / 18px 18px no-repeat"></span></sc-if><span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span></span>
                   <span style="width:36px;height:36px;display:flex;justify-content:center;align-items:center">
                     <span style="width:20px;height:20px;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ p.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                   </span>
@@ -2777,7 +2777,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ tire.seasonSel.bodyPad }}">
                             <span style="font-size:{{ tire.seasonSel.labelSize }};line-height:{{ tire.seasonSel.labelLine }};color:var(--tk-text-3)">Sezon</span>
                             <sc-if value="{{ tire.seasonSel.hasValue }}" hint-placeholder-val="{{ false }}">
-                              <span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tire.seasonSel.value }}</span>
+                              <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ tire.seasonSel.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ tire.seasonSel.iconColor }};-webkit-mask:url({{ tire.seasonSel.icon }}) center / 16px 16px no-repeat;mask:url({{ tire.seasonSel.icon }}) center / 16px 16px no-repeat"></span></sc-if><span style="font-size:16px;line-height:20px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tire.seasonSel.value }}</span></span>
                             </sc-if>
                           </span>
                           <span style="display:flex;align-items:center;justify-content:center;width:44px;flex-shrink:0;transform:{{ tire.seasonSel.chevronRotate }}">
@@ -2788,7 +2788,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30;max-height:320px;overflow-y:auto">
                             <sc-for list="{{ tire.seasonSel.options }}" as="opt" hint-placeholder-count="3">
                               <div data-select-id="{{ tire.seasonSel.key }}" data-value="{{ opt.value }}" onClick="{{ pickTireSelect }}" style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ opt.bg }}" style-hover="background:var(--tk-surface-3)">
-                                <span>{{ opt.value }}</span>
+                                <span style="display:flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ opt.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;display:block;flex:none;background-color:{{ opt.iconColor }};-webkit-mask:url({{ opt.icon }}) center / 16px 16px no-repeat;mask:url({{ opt.icon }}) center / 16px 16px no-repeat"></span></sc-if><span>{{ opt.value }}</span></span>
                                 <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
                                   <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                                 </sc-if>
@@ -3434,7 +3434,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="display: flex; align-items: center; gap: 4px; justify-content: space-between">
                           <span style="position:relative;display:inline-flex">
                             <span onMouseEnter="{{ showVisitTip }}" onMouseLeave="{{ hideVisitTip }}" style="display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 4px; font-size: 14px; line-height: 20px; color: var(--tk-text); white-space: nowrap; width: fit-content; cursor: default; background-color: var(--white)">
-                              <span style="width:6px;height:6px;border-radius:50%;flex:none;background:{{ visitTire.dot }}"></span>
+                              <sc-if value="{{ visitTire.seasonHasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:14px;height:14px;display:block;flex:none;background-color:{{ visitTire.seasonIconColor }};-webkit-mask:url({{ visitTire.seasonIcon }}) center / 14px 14px no-repeat;mask:url({{ visitTire.seasonIcon }}) center / 14px 14px no-repeat"></span></sc-if>
                               {{ visitTire.season }}
                               <span style="color:var(--tk-text-2)">·</span>
                               <span style="font-weight:500">{{ visitTire.code }}</span>
@@ -3821,6 +3821,27 @@ const EVENTS = [
 const TIRE_SIZES = [ '175/65 R14', '185/60 R15', '195/65 R15', '205/55 R16', '205/60 R16', '215/55 R17', '215/60 R16', '225/45 R17', '225/45 R18', '225/50 R17', '235/45 R18', '245/40 R18', '245/45 R19', '255/40 R19', '265/35 R19', '275/35 R18'];
 
 const seasonPrefix = (season) => (season === 'Lato' ? 'L' : (season === 'Całoroczne' ? 'C' : 'Z'));
+
+// ikonka sezonu: płatek (zima), słońce (lato), szary płatek (całoroczne)
+const SEASON_ICONS = {
+  Zima: { icon: 'assets/icons/season-snowflake.svg', color: 'var(--tk-season-winter)' },
+  Lato: { icon: 'assets/icons/season-sun.svg', color: 'var(--tk-season-summer)' },
+  'Całoroczne': { icon: 'assets/icons/season-snowflake.svg', color: 'var(--tk-season-all)' },
+};
+const seasonIcon = (season) => SEASON_ICONS[season] || null;
+const seasonBits = (season) => {
+  const m = seasonIcon(season);
+  return { hasIcon: !!m, icon: m ? m.icon : '', iconColor: m ? m.color : 'transparent' };
+};
+const seasonVals = (season, pref) => {
+  const m = seasonIcon(season);
+  const k = pref || 'season';
+  const o = {};
+  o[k + 'HasIcon'] = !!m;
+  o[k + 'Icon'] = m ? m.icon : '';
+  o[k + 'IconColor'] = m ? m.color : 'transparent';
+  return o;
+};
 
 const CODE_SEQ = { Z: 6, L: 3, C: 0 };
 
@@ -4680,7 +4701,7 @@ class Component extends DCLogic {
       const open = openSel === key;
       const has = !!value;
       return {
-        key, value, options: options.map((o) => ({ value: o, selected: o === value, bg: o === value ? 'var(--tk-surface-2)' : 'transparent' })),
+        key, value, options: options.map((o) => ({ value: o, selected: o === value, bg: o === value ? 'var(--tk-surface-2)' : 'transparent', ...seasonBits(o) })), ...seasonBits(value),
         open, hasValue: has,
         border: open ? '2px solid var(--tk-brand-bd)' : '1px solid var(--tk-border-strong)',
         bodyPad: open ? (has ? '8px 12px' : '19px 12px') : (has ? '9px 13px 13px 13px' : '20px 13px'),
@@ -4736,6 +4757,7 @@ class Component extends DCLogic {
           }
           return p.season + (code ? ' nr. ' + code : '');
         })(),
+        ...seasonBits(p.season),
         active: p.key === (f.editKey || 'new') && !f.collapsed,
         arrow: p.key === (f.editKey || 'new') && !f.collapsed ? 'rotate(180deg)' : 'rotate(0deg)',
       })),
@@ -4847,7 +4869,7 @@ class Component extends DCLogic {
       o.showSet = sel === 'existing';
       o.setSeason = other.season;
       o.setCode = other.code;
-      o.setDot = other.season === 'Zima' ? 'var(--tk-info)' : 'var(--tk-warn)';
+      Object.assign(o, seasonVals(other.season, 'set'));
       o.setReleased = other.released || '—';
       o.setReleasedLabel = other.released || '—';
       o.setReceived = other.received || '—';
@@ -4883,7 +4905,7 @@ class Component extends DCLogic {
       open: true,
       outSeason: out ? out.season : '',
       outCode: out ? out.code : '',
-      outDot: out && out.season === 'Zima' ? 'var(--tk-info)' : 'var(--tk-warn)',
+      ...seasonVals(out ? out.season : '', 'out'),
       outReceived: out ? out.received : '',
       outLocation: out ? out.location : '',
       outHasLocation: !!(out && out.location),
@@ -4976,7 +4998,7 @@ class Component extends DCLogic {
         labelLine: has ? '16px' : '20px',
         chevronRotate: open ? 'rotate(180deg)' : 'rotate(0deg)',
         chevronColor: open ? 'var(--tk-brand-fg)' : 'var(--tk-text-2)',
-        options: options.map((o) => ({ value: o, selected: o === value, bg: o === value ? 'var(--tk-surface-2)' : 'transparent' })),
+        options: options.map((o) => ({ value: o, selected: o === value, bg: o === value ? 'var(--tk-surface-2)' : 'transparent', ...seasonBits(o) })), ...seasonBits(value),
       };
     };
     const drafts = withDrafts
@@ -5001,7 +5023,7 @@ class Component extends DCLogic {
         hasCode: !!t.code,
         code: t.code,
         season: season,
-        dot: season === 'Lato' ? 'var(--tk-warn)' : (season === 'Całoroczne' ? 'var(--tk-text-2)' : 'var(--tk-info)'),
+        ...seasonBits(season),
         stored,
         expanded,
         arrow: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -5213,7 +5235,7 @@ class Component extends DCLogic {
       setKey: carId + '::' + t.__idx,
       season: t.season,
       code: t.code,
-      dot: t.season === 'Zima' ? 'var(--tk-info)' : 'var(--tk-warn)',
+      ...seasonVals(t.season),
       open: this.state.visitTireOpen,
       menuOpen: !!this.state.visitTireMenuOpen,
       tipVisible: !!this.state.visitTireTip,
@@ -6244,6 +6266,7 @@ class Component extends DCLogic {
           rowMarker: isOpen ? 'var(--tk-brand)' : 'transparent',
           season: t.season,
           code: t.code,
+          ...seasonVals(t.season),
           statusLabel: stMeta[status].label,
           statusDot: stMeta[status].dot,
           statusBg: stMeta[status].bg,
