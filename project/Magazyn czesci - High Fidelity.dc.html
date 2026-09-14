@@ -1986,7 +1986,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </div>
                           <sc-if value="{{ visitClient.inv.expanded }}" hint-placeholder-val="{{ true }}">
                             <div style="display:flex;flex-direction:column;gap:12px">
-                              <label class="z-field" style="width:100%;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ visitClient.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
+                              <div style="display:flex;align-items:stretch;gap:12px"><label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ visitClient.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
                                 <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                                   <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">{{ visitClient.inv.nipLabel }}</span>
                                   <span style="position:relative;display:block;width:100%">
@@ -1994,7 +1994,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                     <input value="{{ visitClient.inv.nip }}" data-inv-field="nip" onInput="{{ visitClient.inv.onField }}" onBlur="{{ visitClient.inv.onNipBlur }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%">
                                   </span>
                                 </span>
-                              </label>
+                              </label><button type="button" onClick="{{ visitClient.inv.fetchGus }}" disabled="{{ visitClient.inv.gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:{{ visitClient.inv.gusCursor }};opacity:{{ visitClient.inv.gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)">Zaciągnij z GUS</button></div>
                               <sc-if value="{{ visitClient.inv.hasError }}" hint-placeholder-val="{{ false }}">
                                 <span style="font-size:14px;line-height:20px;color:var(--tk-danger)">{{ visitClient.inv.error }}</span>
                               </sc-if>
@@ -3065,7 +3065,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </div>
                           <sc-if value="{{ edit.inv.expanded }}" hint-placeholder-val="{{ true }}">
                             <div style="display:flex;flex-direction:column;gap:12px">
-                              <label class="z-field" style="width:100%;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ edit.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
+                              <div style="display:flex;align-items:stretch;gap:12px"><label class="z-field" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ edit.inv.nipBorder }};border-radius:10px;overflow:hidden;cursor:text">
                                 <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                                   <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">{{ edit.inv.nipLabel }}</span>
                                   <span style="position:relative;display:block;width:100%">
@@ -3073,7 +3073,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                     <input value="{{ edit.inv.nip }}" data-inv-field="nip" onInput="{{ edit.inv.onField }}" onBlur="{{ edit.inv.onNipBlur }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%">
                                   </span>
                                 </span>
-                              </label>
+                              </label><button type="button" onClick="{{ edit.inv.fetchGus }}" disabled="{{ edit.inv.gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:{{ edit.inv.gusCursor }};opacity:{{ edit.inv.gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)">Zaciągnij z GUS</button></div>
                               <sc-if value="{{ edit.inv.hasError }}" hint-placeholder-val="{{ false }}">
                                 <span style="font-size:14px;line-height:20px;color:var(--tk-danger)">{{ edit.inv.error }}</span>
                               </sc-if>
@@ -3751,16 +3751,34 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </span>
                     </button>
                     <sc-if value="{{ evd.wyc.fvHistoryOpen }}" hint-placeholder-val="{{ true }}">
-                    <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
-                      <div style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
-                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div style="text-align:right">Kwota</div><div></div>
+                    <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:{{ evd.wyc.fvListOverflow }}">
+                      <div style="min-width:930px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 60px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div>Status KSeF</div><div style="text-align:right">Kwota</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.fvHistory }}" as="f" hint-placeholder-count="1">
-                        <div data-flash="{{ f.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 120px 60px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }};animation:{{ f.flashAnim }}">
+                        <div data-flash="{{ f.flashMark }}" style="min-width:930px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 60px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }};animation:{{ f.flashAnim }}">
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums">{{ f.numer }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.buyer }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ f.date }}</span>
                           <span><span style="display:inline-flex;align-items:center;padding:4px 12px;border-radius:4px;font-size:14px;line-height:22px;background:{{ f.statusBg }};color:{{ f.statusColor }}">{{ f.status }}</span></span>
+                          <span data-ksef="1" style="position:relative;display:flex;width:fit-content">
+                            <button type="button" onClick="{{ f.toggleKsefMenu }}" style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 8px 0 12px;border:0;border-radius:4px;font-family:inherit;font-size:14px;line-height:22px;white-space:nowrap;cursor:pointer;background:{{ f.ksefBg }};color:{{ f.ksefColor }}">
+                              {{ f.ksef }}
+                              <span style="width:16px;height:16px;display:block;transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ f.ksefChevron }};background-color:{{ f.ksefColor }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 16px 16px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 16px 16px no-repeat"></span>
+                            </button>
+                            <sc-if value="{{ f.ksefMenuOpen }}" hint-placeholder-val="{{ false }}">
+                              <span style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px;z-index:40">
+                                <sc-for list="{{ f.ksefOptions }}" as="opt" hint-placeholder-count="6">
+                                  <span onClick="{{ opt.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:8px;cursor:pointer;background:{{ opt.rowBg }}" style-hover="background:var(--tk-surface-2)">
+                                    <span style="display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:4px;font-size:14px;line-height:22px;white-space:nowrap;background:{{ opt.bg }};color:{{ opt.color }}">{{ opt.label }}</span>
+                                    <sc-if value="{{ opt.current }}" hint-placeholder-val="{{ false }}">
+                                      <span style="width:20px;height:20px;flex-shrink:0;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                                    </sc-if>
+                                  </span>
+                                </sc-for>
+                              </span>
+                            </sc-if>
+                          </span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ f.amt }}</span>
                           <span style="display:flex;justify-content:flex-end">
                             <button type="button" onClick="{{ evd.wyc.downloadPdf }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft);color:var(--tk-brand-fg)" data-tt="Pobierz fakturę PDF" aria-label="Pobierz fakturę PDF" data-tt-pos="left">
@@ -3829,6 +3847,18 @@ const SEASON_ICONS = {
   'Całoroczne': { icon: 'assets/icons/season-snowflake.svg', color: 'var(--tk-season-all)' },
 };
 const seasonIcon = (season) => SEASON_ICONS[season] || null;
+// KSeF: „Zapisz" zostawia fakturę w kolejce, „Zapisz i wyślij" oznacza ją jako wysłaną
+const KSEF_STATUSES = ['Do wysyłki', 'Wysłano', 'W trakcie', 'Błąd wysyłki', 'Brak połączenia', 'Nie dotyczy'];
+const KSEF_TONE = {
+  'Do wysyłki': { bg: 'var(--tk-surface-3)', color: 'var(--tk-text-2)' },
+  'Wysłano': { bg: 'var(--tk-ok-soft)', color: 'var(--tk-ok-fg)' },
+  'W trakcie': { bg: 'var(--tk-brand-soft)', color: 'var(--tk-brand-fg)' },
+  'Błąd wysyłki': { bg: 'var(--tk-danger-soft)', color: 'var(--tk-danger-fg)' },
+  'Brak połączenia': { bg: 'var(--tk-warn-soft)', color: 'var(--tk-warn-fg)' },
+  'Nie dotyczy': { bg: 'transparent', color: 'var(--tk-text-3)' },
+};
+const ksefTone = (label) => KSEF_TONE[label] || KSEF_TONE['Do wysyłki'];
+
 const seasonBits = (season) => {
   const m = seasonIcon(season);
   return { hasIcon: !!m, icon: m ? m.icon : '', iconColor: m ? m.color : 'transparent' };
@@ -4177,6 +4207,7 @@ class Component extends DCLogic {
     fvConfigSrc: null,
     fvConfigVisit: null,
     fvHistory: {},
+    fvKsefMenu: null,
     fvFlash: null,
     docReturn: null,
     offerFlash: null,
@@ -4479,10 +4510,13 @@ class Component extends DCLogic {
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('mouseup', this.onMouseUp);
     this.__closeDocStatus = (e) => {
-      if (!this.state.openDocStatus) return;
       const t = e.target;
-      if (t && t.closest && t.closest('[data-doc]')) return;
-      this.setState({ openDocStatus: null });
+      if (this.state.openDocStatus && !(t && t.closest && t.closest('[data-doc]'))) {
+        this.setState({ openDocStatus: null });
+      }
+      if (this.state.fvKsefMenu && !(t && t.closest && t.closest('[data-ksef]'))) {
+        this.setState({ fvKsefMenu: null });
+      }
     };
     document.addEventListener('click', this.__closeDocStatus);
   }
@@ -5640,6 +5674,9 @@ class Component extends DCLogic {
       fvHistoryOpen: s.fvHistoryOpen !== false,
       fvHistoryChevron: s.fvHistoryOpen === false ? 'rotate(-90deg)' : 'rotate(0deg)',
       toggleFvHistory: () => this.setState((st) => ({ fvHistoryOpen: st.fvHistoryOpen === false })),
+      // rozwinięte menu statusu KSeF wychodzi poza kartę, więc na ten czas
+      // zdejmujemy przycinanie — i tak nikt wtedy nie przewija listy w bok
+      fvListOverflow: String(s.fvKsefMenu || '').indexOf(id + ':') === 0 ? 'visible' : 'auto',
       fvHistory: fvHist.map((h, i) => {
         const tone = (label) => (label === 'Opłacona'
           ? { bg: 'var(--tk-ok-soft)', color: 'var(--tk-ok-fg)' }
@@ -5652,6 +5689,31 @@ class Component extends DCLogic {
           status: h.status,
           statusBg: cur.bg,
           statusColor: cur.color,
+          ksef: h.ksef || 'Do wysyłki',
+          ksefBg: ksefTone(h.ksef || 'Do wysyłki').bg,
+          ksefColor: ksefTone(h.ksef || 'Do wysyłki').color,
+          ksefMenuOpen: s.fvKsefMenu === id + ':' + i,
+          ksefChevron: s.fvKsefMenu === id + ':' + i ? 'rotate(180deg)' : 'rotate(0deg)',
+          toggleKsefMenu: (e) => {
+            if (e && e.stopPropagation) e.stopPropagation();
+            this.setState((st) => ({ fvKsefMenu: st.fvKsefMenu === id + ':' + i ? null : id + ':' + i }));
+          },
+          ksefOptions: KSEF_STATUSES.map((k) => ({
+            label: k,
+            bg: ksefTone(k).bg,
+            color: ksefTone(k).color,
+            current: k === (h.ksef || 'Do wysyłki'),
+            rowBg: k === (h.ksef || 'Do wysyłki') ? 'var(--tk-surface-2)' : 'transparent',
+            pick: (e) => {
+              if (e && e.stopPropagation) e.stopPropagation();
+              this.setState((st) => ({
+                fvKsefMenu: null,
+                fvHistory: Object.assign({}, st.fvHistory, {
+                  [id]: (st.fvHistory[id] || []).map((x, xi) => (xi === i ? Object.assign({}, x, { ksef: k }) : x)),
+                }),
+              }));
+            },
+          })),
           amt: h.amt,
           border: i === fvHist.length - 1 ? 'transparent' : 'var(--tk-border-2)',
           flashAnim: s.fvFlash === id + ':' + i ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
@@ -5818,6 +5880,7 @@ class Component extends DCLogic {
         buyer: (st.buyer && st.buyer.company) || '',
         date: now.getDate() + ' ' + M[now.getMonth()] + ', ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
         status: st.status || 'Wystawiona',
+        ksef: d.mode === 'ksef' ? 'Wysłano' : 'Do wysyłki',
         amt: t.gross || '0,00 zł',
       };
       return {
@@ -5829,7 +5892,8 @@ class Component extends DCLogic {
         fvFlash: id + ':' + (prev.fvHistory[id] || []).length,
       };
     });
-    this.ziloToast('Faktura ' + (st.numer || '') + ' wystawiona');
+    this.ziloToast('Faktura ' + (st.numer || '')
+      + (d.mode === 'ksef' ? ' zapisana i wysłana do KSeF' : ' zapisana'));
     this.flashScroll('fvFlash');
   }
 
@@ -6205,25 +6269,29 @@ class Component extends DCLogic {
         if (key === 'nip') {
           p.nip = this.nipFormat(val);
           p.nipBlurred = false;
-          // potwierdzenie tylko przy przejściu z „brak danych" na „pobrane",
-          // żeby nie wyskakiwało przy każdej korekcie już uzupełnionego numeru
-          if (!f.fetched && this.nipComplete(val)) this.ziloToast('Dane firmy pobrane z GUS');
-          // poprawny numer od razu zaciąga dane — bez osobnego przycisku
-          if (this.nipComplete(val)) {
-            const c = CLIENTS.find((x) => x.id === this.state.clientId) || CLIENTS[0];
-            p.fetched = true;
-            p.company = (c.name.split(' ').pop() || 'Auto') + ' Sp. z o.o.';
-            p.zip = '61-692';
-            p.street = 'ul. Ignacego Dobrogojskiego 30A';
-            p.city = 'Poznań';
-          } else {
-            p.fetched = false;
-            p.company = ''; p.zip = ''; p.street = ''; p.city = '';
-          }
+          // zmiana numeru unieważnia to, co zaciągnęliśmy pod poprzedni
+          if (f.fetched) { p.fetched = false; p.company = ''; p.zip = ''; p.street = ''; p.city = ''; }
         }
         patch(p);
       },
       onNipBlur: () => patch({ nipBlurred: true }),
+      // dane firmowe zaciąga dopiero przycisk — sam wpisany numer niczego nie robi
+      gusDisabled: !nipOk,
+      gusOpacity: nipOk ? '1' : '0.45',
+      gusCursor: nipOk ? 'pointer' : 'not-allowed',
+      fetchGus: (e) => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (!nipOk) return;
+        const c = CLIENTS.find((x) => x.id === this.state.clientId) || CLIENTS[0];
+        patch({
+          fetched: true,
+          company: (c.name.split(' ').pop() || 'Auto') + ' Sp. z o.o.',
+          zip: '61-692',
+          street: 'ul. Ignacego Dobrogojskiego 30A',
+          city: 'Poznań',
+        });
+        this.ziloToast('Dane firmy pobrane z GUS');
+      },
     };
   }
 

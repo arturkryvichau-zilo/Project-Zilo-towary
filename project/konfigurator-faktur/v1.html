@@ -117,8 +117,9 @@ window.__resources = {
       </button>
     </div>
     <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #0A0B29);white-space:nowrap">Wystaw fakturę</span>
-    <div style="display:flex;justify-content:flex-end">
-      <button type="button" onClick="{{ issue }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Wystaw fakturę</button>
+    <div style="display:flex;justify-content:flex-end;gap:12px">
+      <button type="button" onClick="{{ issueKsef }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:1px solid var(--zilo-primary, #222693);border-radius:8px;background:transparent;color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)" style-active="background:var(--tk-brand-soft-2)">Zapisz i wyślij do KSeF</button>
+      <button type="button" onClick="{{ issue }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Zapisz</button>
     </div>
   </header>
 
@@ -153,13 +154,16 @@ window.__resources = {
 
       <section>
         <div class="o-title" style="margin-bottom:14px">Nabywca</div>
-        <label class="o-cell" style="cursor:text;margin-bottom:12px;border-color:{{ nipBorder }}">
-          <span class="o-label">{{ nipLabel }}</span>
-          <span style="position:relative;display:block;width:100%">
-            <span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ nipTyped }}</span><span style="color:var(--grey-3, #979DB0)">{{ nipRest }}</span></span>
-            <input class="o-input" type="text" value="{{ nip }}" onInput="{{ setNip }}" onBlur="{{ onNipBlur }}" style="position:relative">
-          </span>
-        </label>
+        <div style="display:flex;align-items:stretch;gap:12px;margin-bottom:12px">
+          <label class="o-cell" style="flex:1;min-width:0;cursor:text;border-color:{{ nipBorder }}">
+            <span class="o-label">{{ nipLabel }}</span>
+            <span style="position:relative;display:block;width:100%">
+              <span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ nipTyped }}</span><span style="color:var(--grey-3, #979DB0)">{{ nipRest }}</span></span>
+              <input class="o-input" type="text" value="{{ nip }}" onInput="{{ setNip }}" onBlur="{{ onNipBlur }}" style="position:relative">
+            </span>
+          </label>
+          <button type="button" onClick="{{ fetchGus }}" disabled="{{ gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:1px solid var(--grey-3, #979DB0);border-radius:10px;background:var(--tk-surface);color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:{{ gusCursor }};opacity:{{ gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)">Zaciągnij z GUS</button>
+        </div>
         <sc-if value="{{ nipError }}" hint-placeholder-val="{{ false }}">
           <div style="margin:-6px 0 12px;font-size:14px;line-height:20px;color:var(--tk-danger)">NIP musi mieć 10 cyfr.</div>
         </sc-if>
@@ -397,6 +401,17 @@ class Component extends DCLogic {
   }
 
   // Terminy liczone od daty wystawienia — 14 dni to domyslna wartosc na fakturze.
+  // „Zapisz" zostawia fakturę w kolejce, „Zapisz i wyślij" oznacza ją jako wysłaną
+  __emitIssue(mode) {
+    try {
+      parent.postMessage({
+        __fv: 'issue', mode: mode,
+        state: window.__fvState || null,
+        totals: (window.__fvState || {}).totals || null,
+      }, '*');
+    } catch (e) {}
+  }
+
   static terminy(issued) {
     const plus = (days) => {
       const d = new Date(issued.getTime());
@@ -557,16 +572,21 @@ class Component extends DCLogic {
     const gus = p.gus || {};
     const setNip = (e) => {
       const val = e.target.value;
-      const done = Component.nipComplete(val);
-      if (done && !s.fetched) {
-        try { parent.postMessage({ __fv: 'toast', text: 'Dane firmy pobrane z GUS' }, '*'); } catch (err) {}
-      }
-      this.setState(done
-        ? { nip: Component.nipFormat(val), nipBlurred: false, fetched: true, buyerKey: Component.NOWY,
-            company: gus.company || '', street: gus.street || '', zip: gus.zip || '', city: gus.city || '' }
-        : { nip: Component.nipFormat(val), nipBlurred: false, fetched: false, company: '', street: '', zip: '', city: '' });
+      // zmiana numeru unieważnia dane zaciągnięte pod poprzedni
+      const p2 = { nip: Component.nipFormat(val), nipBlurred: false };
+      if (s.fetched) Object.assign(p2, { fetched: false, company: '', street: '', zip: '', city: '' });
+      this.setState(p2);
     };
     const nipOk = Component.nipComplete(s.nip);
+    // dane firmowe zaciąga dopiero przycisk — sam wpisany numer niczego nie robi
+    const fetchGus = () => {
+      if (!nipOk) return;
+      this.setState({
+        fetched: true, buyerKey: Component.NOWY,
+        company: gus.company || '', street: gus.street || '', zip: gus.zip || '', city: gus.city || '',
+      });
+      try { parent.postMessage({ __fv: 'toast', text: 'Dane firmy pobrane z GUS' }, '*'); } catch (err) {}
+    };
 
     const rabatCol = s.showRabat ? ' 154px' : '';
     const bind = (key) => (e) => this.setState({ [key]: e.target.value });
@@ -596,6 +616,10 @@ class Component extends DCLogic {
 
       buyers: buyers, buyerKey: s.buyerKey, setBuyer: pickBuyer,
       nip: s.nip, setNip: setNip,
+      fetchGus: fetchGus,
+      gusDisabled: !nipOk,
+      gusOpacity: nipOk ? '1' : '0.45',
+      gusCursor: nipOk ? 'pointer' : 'not-allowed',
       nipTyped: s.nip,
       nipRest: Component.nipRest(s.nip),
       nipLabel: Component.nipDigits(s.nip).length ? 'NIP' : 'NIP*',
@@ -651,7 +675,8 @@ class Component extends DCLogic {
       waluty: Component.WALUTY, waluta: s.waluta, setWaluta: bind('waluta'),
 
       close: () => { try { parent.postMessage({ __fv: 'close' }, '*'); } catch (e) {} },
-      issue: () => { try { parent.postMessage({ __fv: 'issue', state: window.__fvState || null, totals: (window.__fvState || {}).totals || null }, '*'); } catch (e) {} },
+      issue: () => { this.__emitIssue('save'); },
+      issueKsef: () => { this.__emitIssue('ksef'); },
     };
   }
 }
