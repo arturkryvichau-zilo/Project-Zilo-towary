@@ -2159,9 +2159,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                                     <div data-set-key="{{ t.key }}" onClick="{{ toggleVisitSet }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
                                                       <span style="display:flex;align-items:center;gap:10px;min-width:0">
                                                         <span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text)">{{ t.titleFull }}</span>
-                                                        <sc-if value="{{ t.stored }}" hint-placeholder-val="{{ false }}">
-                                                          <span style="display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:6px;background:var(--tk-ok-soft);color:var(--tk-ok-fg);font-size:14px;line-height:20px;white-space:nowrap">w przechowalni</span>
-                                                        </sc-if>
                                                       </span>
                                                       <span style="display:flex;align-items:center;gap:4px;flex:none">
                                                         <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:var(--tk-danger-soft)">
@@ -2388,9 +2385,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <div data-set-key="{{ t.key }}" onClick="{{ toggleVisitSet }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
                         <span style="display:flex;align-items:center;gap:10px;min-width:0">
                           <span style="font-size:18px;font-weight:500;line-height:28px;color:var(--tk-text)">{{ t.titleFull }}</span>
-                          <sc-if value="{{ t.stored }}" hint-placeholder-val="{{ false }}">
-                            <span style="display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:6px;background:var(--tk-ok-soft);color:var(--tk-ok-fg);font-size:14px;line-height:20px;white-space:nowrap">w przechowalni</span>
-                          </sc-if>
                         </span>
                         <span style="display:flex;align-items:center;gap:4px;flex:none">
                           <span role="button" data-set-key="{{ t.key }}" onClick="{{ removeVisitSet }}" data-tt="Usuń komplet" data-tt-pos="left" aria-label="Usuń komplet" style="position:relative;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;cursor:pointer" style-hover="background:var(--tk-danger-soft)">
@@ -2778,7 +2772,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-if value="{{ p.active }}" hint-placeholder-val="{{ true }}">
                   <div style="border: 1px solid var(--tk-border-2); border-radius: 0px; padding: 16px; display: flex; flex-direction: column; gap: 0; background-color: #FFFFFF00; border-color: #E9ECF100; padding-top: 4px; padding-right: 0px; padding-bottom: 16px; padding-left: 0px; border-style: none; border-width: 0px">
                     <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
-                      <div style="flex:1 1 auto;min-width:0;position:relative">
+                      <div style="flex:1 1 0;min-width:0;position:relative">
                         <div data-select-id="{{ tire.seasonSel.key }}" onClick="{{ toggleTireSelect }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:{{ tire.seasonSel.border }};border-radius:10px;cursor:pointer" style-hover="border-color:var(--tk-border-focus)">
                           <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ tire.seasonSel.bodyPad }}">
                             <span style="font-size:{{ tire.seasonSel.labelSize }};line-height:{{ tire.seasonSel.labelLine }};color:var(--tk-text-3)">Sezon</span>
@@ -2803,6 +2797,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </div>
                         </sc-if>
                       </div>
+                      <label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ tire.locPad }}">
+                          <sc-if value="{{ tire.hasLocation }}" hint-placeholder-val="{{ false }}">
+                            <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Lokalizacja</span>
+                          </sc-if>
+                          <input value="{{ tire.location }}" data-field="location" onInput="{{ onTireField }}" maxLength="40" placeholder="{{ tire.locPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%">
+                        </span>
+                        <span style="display:flex;align-items:flex-end;padding:0 12px 10px 0;font-size:12px;line-height:16px;color:var(--tk-text-3);flex:none">{{ tire.locCount }}</span>
+                      </label>
                     </div>
                     <sc-for list="{{ tire.wheels }}" as="w" hint-placeholder-count="1">
                       <div style="display: flex; gap: 8px; align-items: flex-start; margin-bottom: 12px">
@@ -2872,7 +2875,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                             <input value="{{ w.tread }}" data-wheel-id="{{ w.id }}" data-field="tread" onInput="{{ onTireWheelField }}" placeholder="{{ w.treadPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%">
                           </span>
                         </label>
-                        <label style="width:130px;flex:none;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                        <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                           <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ w.qtyPad }}">
                             <sc-if value="{{ w.qtyFilled }}" hint-placeholder-val="{{ false }}">
                               <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Ilość</span>
@@ -2898,15 +2901,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                   
                   <div style="border: 1px solid var(--tk-border-2); border-radius: 0px; padding: 16px; display: flex; flex-direction: column; gap: 12px; background-color: #FFFFFF00; padding-top: 0px; padding-right: 0px; padding-bottom: 12px; padding-left: 0px; border-color: #E9ECF100; border-width: 0px; border-style: none">
-                      <label style="flex:none;width:100%;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
-                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ tire.locPad }}">
-                          <sc-if value="{{ tire.hasLocation }}" hint-placeholder-val="{{ false }}">
-                            <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Lokalizacja</span>
-                          </sc-if>
-                          <input value="{{ tire.location }}" data-field="location" onInput="{{ onTireField }}" maxLength="40" placeholder="{{ tire.locPh }}" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%">
-                        </span>
-                        <span style="display:flex;align-items:flex-end;padding:0 12px 10px 0;font-size:12px;line-height:16px;color:var(--tk-text-3);flex:none">{{ tire.locCount }}</span>
-                      </label>
                 <div style="display:flex;flex-direction:column;flex:none;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden" style-hover="border-color:var(--tk-border-focus)">
                   <div style="display:flex;align-items:center;gap:2px;padding:8px 12px;border-bottom:1px solid var(--tk-border-2)">
                     <span title="Pogrubienie" style="width:30px;height:30px;border-radius:4px;display:grid;place-items:center;font-size:15px;font-weight:600;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-3)">B</span>
@@ -4733,14 +4727,14 @@ class Component extends DCLogic {
       panels: (f.panels && f.panels.length ? f.panels : [{ key: f.editKey || 'new', season: f.season }]).map((p) => ({
         key: p.key,
         title: (() => {
-          if (!p.season) return 'Komplet opon';
+          if (!p.season) return 'Opony';
           let code = p.code;
           if (!code && p.key && p.key.indexOf('::') > -1) {
             const [cid, idx] = p.key.split('::');
             const found = this.tireSetsFor(cid).find((x) => x.__idx === Number(idx));
             code = found ? found.code : '';
           }
-          return 'Komplet: ' + p.season + (code ? ' nr. ' + code : '');
+          return p.season + (code ? ' nr. ' + code : '');
         })(),
         active: p.key === (f.editKey || 'new') && !f.collapsed,
         arrow: p.key === (f.editKey || 'new') && !f.collapsed ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -5000,10 +4994,10 @@ class Component extends DCLogic {
       const stored = !it.draft && (this.state.setStatus[key] || t.status) === 'in';
       return {
         key,
-        title: it.draft ? 'Nowy komplet' : 'Komplet',
+        title: it.draft ? 'Nowe opony' : 'Opony',
         titleFull: it.draft
-          ? 'Nowy komplet'
-          : ('Komplet: ' + (season || '') + (t.code ? ' nr. ' + t.code : '')).replace(/\s+/g, ' ').trim(),
+          ? 'Nowe opony'
+          : ((season || 'Opony') + (t.code ? ' nr. ' + t.code : '')).replace(/\s+/g, ' ').trim(),
         hasCode: !!t.code,
         code: t.code,
         season: season,
