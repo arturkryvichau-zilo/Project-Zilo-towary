@@ -4509,6 +4509,7 @@ class Component extends DCLogic {
     if (this.__onWycMessage) window.removeEventListener('message', this.__onWycMessage);
     if (this.__closeDocStatus) document.removeEventListener('click', this.__closeDocStatus);
     if (this.__uploadTimer) clearInterval(this.__uploadTimer);
+    if (this.__ksefTimer) clearTimeout(this.__ksefTimer);
   }
 
   slotH() { return this.props.slotHeight ?? 30; }
