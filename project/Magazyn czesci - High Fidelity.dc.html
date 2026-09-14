@@ -512,7 +512,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
     </sc-if>
 
     <sc-if value="{{ fvConfigOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position:fixed;inset:0;z-index:12020;background:var(--tk-canvas);display:flex;flex-direction:column">
+      <div style="position:fixed;inset:0;z-index:12020;background:var(--tk-canvas);display:{{ fvConfigDisplay }};flex-direction:column">
         <iframe src="{{ fvConfigSrc }}" title="Wystaw fakturę" style="flex:1;width:100%;height:100%;border:0;display:block;background:var(--tk-surface)"></iframe>
       </div>
     </sc-if>
@@ -4798,6 +4798,7 @@ class Component extends DCLogic {
     billingEdit: null,
     billingDraft: null,
     connectedBilling: null,
+    fvSellerEdit: false,
     fvFlash: null,
     docReturn: null,
     offerFlash: null,
@@ -5603,6 +5604,16 @@ class Component extends DCLogic {
     return forms;
   }
 
+  pushSellerToFv() {
+    const seller = this.garageSeller();
+    try {
+      const f = document.querySelectorAll('iframe');
+      for (let i = 0; i < f.length; i += 1) {
+        f[i].contentWindow.postMessage({ __fvSeller: seller }, '*');
+      }
+    } catch (e) {}
+  }
+
   // ——— Dane rozliczeniowe i faktury ———
   billingSteps(draft) {
     const tool = BILLING_TOOLS.filter((x) => x.name === draft.name)[0];
@@ -5647,6 +5658,7 @@ class Component extends DCLogic {
       companyCity: g.companyCity || '—',
       editCompany: () => this.setState({
         billingEdit: 'company',
+        fvSellerEdit: false,
         garageDraft: JSON.parse(JSON.stringify(s.garage || GARAGE_SEED)),
       }),
 
@@ -5672,14 +5684,18 @@ class Component extends DCLogic {
       dStreet: f.companyStreet || '', setStreet: patch('companyStreet'),
       dZip: f.companyZip || '', setZip: patch('companyZip'),
       dCity: f.companyCity || '', setCity: patch('companyCity'),
-      closeCompany: () => this.setState({ billingEdit: null, garageDraft: null }),
+      closeCompany: () => this.setState({ billingEdit: null, garageDraft: null, fvSellerEdit: false }),
       saveCompany: () => {
+        // flagę czytamy przed zapisem — zapis ją gasi
+        const fromInvoice = !!this.state.fvSellerEdit;
         this.setState((st) => {
           const next = Object.assign({}, st.garage);
           ['nip', 'company', 'companyStreet', 'companyZip', 'companyCity']
             .forEach((k) => { next[k] = (st.garageDraft || {})[k]; });
-          return { garage: next, billingEdit: null, garageDraft: null };
+          return { garage: next, billingEdit: null, garageDraft: null, fvSellerEdit: false };
         });
+        // wracamy na fakturę z nowymi danymi sprzedawcy, bez przeładowania iframe'a
+        if (fromInvoice) this.pushSellerToFv();
         this.ziloToast('Zmiany zapisane pomyślnie');
       },
 
@@ -6703,6 +6719,18 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ [key]: null }), 2600);
   }
 
+  // sprzedawcą na fakturze jest firma warsztatu z „Danych rozliczeniowych"
+  garageSeller() {
+    const g = this.state.garage || GARAGE_SEED;
+    return {
+      company: g.company || g.name || '',
+      nip: g.nip || '',
+      street: g.companyStreet || '',
+      zip: g.companyZip || '',
+      city: g.companyCity || '',
+    };
+  }
+
   openInvoiceConfig(visitId, opts) {
     // ten sam wzorzec co oferta: znacznik czasu lamie cache iframe'a
     const seq = Date.now() + '-' + (this.__fvSeq = (this.__fvSeq || 0) + 1);
@@ -6759,6 +6787,7 @@ class Component extends DCLogic {
         buyerKey: hasInv ? client.id : '__nowy',
         companies: companies,
         gus: gus,
+        seller: this.garageSeller(),
         uslugi: uslugi,
         towary: towary,
         uwagi: uwagi,
@@ -6772,7 +6801,16 @@ class Component extends DCLogic {
   onFvMessage(d) {
     if (!this.state.fvConfigSrc) return;
     if (d.__fv === 'close') { this.setState({ fvConfigSrc: null, fvConfigVisit: null }); return; }
-    if (d.__fv === 'editSeller') { this.ziloToast('Dane sprzedawcy edytujesz w ustawieniach warsztatu'); return; }
+    if (d.__fv === 'editSeller') {
+      // konfigurator zostaje zamontowany, tylko chowamy go na czas edycji —
+      // inaczej iframe przeładowałby się i zgubił wpisane pozycje
+      this.setState({
+        billingEdit: 'company',
+        fvSellerEdit: true,
+        garageDraft: JSON.parse(JSON.stringify(this.state.garage || GARAGE_SEED)),
+      });
+      return;
+    }
     if (d.__fv === 'toast') { this.ziloToast(String(d.text || '')); return; }
     if (d.__fv !== 'issue') return;
     const id = this.state.fvConfigVisit;
@@ -7712,6 +7750,7 @@ class Component extends DCLogic {
       offerConfigOpen: !!s.offerConfigSrc,
       offerConfigSrc: s.offerConfigSrc || '',
       fvConfigOpen: !!s.fvConfigSrc,
+      fvConfigDisplay: s.fvSellerEdit ? 'none' : 'flex',
       fvConfigSrc: s.fvConfigSrc || '',
       closeWycConfig: () => this.closeWycConfig(),
       wycConfigSrc: s.wycConfigSrc || '',

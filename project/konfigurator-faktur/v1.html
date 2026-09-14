@@ -429,6 +429,7 @@ class Component extends DCLogic {
     const uslugi = Component.seedRows(p.uslugi, false, 1);
     const towary = Component.seedRows(p.towary, true, 1);
     return {
+      sellerOverride: null,
       valueMode: 'netto',
       showRabat: false,
       moreOpen: false,
@@ -535,8 +536,17 @@ class Component extends DCLogic {
     const p = Component.payload();
     const seller = Object.assign(
       { company: 'DM Motors Sp. z o.o.', nip: '118-14-52-946', street: 'ul. Serwisowa 12', zip: '01-424', city: 'Warszawa' },
-      p.seller || {}
+      p.seller || {},
+      s.sellerOverride || {}
     );
+    // rodzic odsyła dane sprzedawcy po zapisaniu ich w ustawieniach warsztatu
+    if (!this.__sellerHook) {
+      this.__sellerHook = (e) => {
+        const d = e && e.data;
+        if (d && d.__fvSeller) this.setState({ sellerOverride: d.__fvSeller });
+      };
+      try { window.addEventListener('message', this.__sellerHook); } catch (err) {}
+    }
     const sumU = this.sumOf('uslugi');
     const sumT = this.sumOf('towary');
     const net = sumU._n + sumT._n;
