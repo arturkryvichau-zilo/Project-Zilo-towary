@@ -4190,6 +4190,7 @@ class Component extends DCLogic {
     fvConfigSrc: null,
     fvConfigVisit: null,
     fvHistory: {},
+    visitTireDraftOnly: false,
     fvFlash: null,
     docReturn: null,
     offerFlash: null,
@@ -4998,6 +4999,7 @@ class Component extends DCLogic {
   setPanels(carId, opts) {
     if (!carId) return [];
     const withDrafts = !opts || opts.drafts !== false;
+    const onlyDrafts = !!(opts && opts.onlyDrafts);
     const forms = this.state.visitTireForms || {};
     const openMap = this.state.visitTireOpenMap || {};
     const mkSel = (setKey, field, value, options, label) => {
@@ -5018,7 +5020,8 @@ class Component extends DCLogic {
     const drafts = withDrafts
       ? (this.state.visitTireDrafts || []).map((k) => ({ __draft: true, __key: k }))
       : [];
-    const items = drafts.map((dr) => ({ draft: dr })).concat(this.tireSetsFor(carId).map((t) => ({ t })));
+    const items = drafts.map((dr) => ({ draft: dr }))
+      .concat(onlyDrafts ? [] : this.tireSetsFor(carId).map((t) => ({ t })));
     return items.map((it) => {
       const t = it.t || { season: '', wheels: [], note: '', code: '', status: 'in', __idx: -1 };
       const key = it.draft ? it.draft.__key : carId + '::' + t.__idx;
@@ -7427,7 +7430,7 @@ class Component extends DCLogic {
       toggleTimeNotify: () => this.setState((st) => ({ timeForm: { ...st.timeForm, notify: !st.timeForm.notify } })),
       visitClient: this.visitClientVals(),
       visitSetsAny: true,
-      visitClientSets: this.setPanels(this.visitCarId()),
+      visitClientSets: this.setPanels(this.visitCarId(), { onlyDrafts: !!s.visitTireDraftOnly }),
       addVisitSetDraft: (e) => {
         e.stopPropagation();
         const key = 'draft' + Date.now();
@@ -7651,7 +7654,7 @@ class Component extends DCLogic {
         }));
       },
       tireSection: { open: !!s.tireSectionOpen && !!s.tireStorageOn },
-      closeTireSection: () => this.setState({ tireSectionOpen: false, visitClientForm: null, visitTireForms: {}, visitTireDrafts: [], visitTireSelect: null }),
+      closeTireSection: () => this.setState({ tireSectionOpen: false, visitClientForm: null, visitTireForms: {}, visitTireDrafts: [], visitTireSelect: null, visitTireDraftOnly: false }),
       saveTireSection: () => {
         const carId = this.visitCarId();
         const forms = this.state.visitTireForms || {};
@@ -7684,6 +7687,7 @@ class Component extends DCLogic {
           visitClientForm: null,
           visitTireForms: {},
           visitTireDrafts: [],
+          visitTireDraftOnly: false,
           editedSets: { ...st.editedSets, ...edits },
           addedSets: added.length ? { ...st.addedSets, [carId]: (st.addedSets[carId] || []).concat(added) } : st.addedSets,
         }));
@@ -7692,6 +7696,7 @@ class Component extends DCLogic {
         const v = this.renderVals();
         v.openTireSection(e);
         if (!this.state.tireStorageOn) return;
+        this.setState({ visitTireDraftOnly: true });
         const key = 'draft' + Date.now();
         this.setState((st) => ({
           visitTireDrafts: (st.visitTireDrafts || []).concat([key]),
@@ -7713,6 +7718,7 @@ class Component extends DCLogic {
         if (sets.length) openMap[car.id + '::' + sets[0].__idx] = true;
         this.setState({
           tireSectionOpen: true,
+          visitTireDraftOnly: false,
           visitClientForm: {
             phone: client.phone, name: client.name, email: client.email || '',
             priceGroup: this.clientGroup(client.id),
@@ -7742,6 +7748,7 @@ class Component extends DCLogic {
         const key = 'draft' + Date.now();
         this.setState({
           tireSectionOpen: true,
+          visitTireDraftOnly: false,
           visitClientForm: {
             phone: client.phone, name: client.name, email: client.email || '',
             priceGroup: this.clientGroup(client.id),
