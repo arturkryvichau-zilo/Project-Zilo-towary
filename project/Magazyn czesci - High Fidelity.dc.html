@@ -1025,10 +1025,12 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <div style="display:flex;flex-direction:column;gap:12px">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
-                <button type="button" onClick="{{ billing.newTool }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                  Połącz narzędzie
-                </button>
+                <sc-if value="{{ billing.canConnect }}" hint-placeholder-val="{{ true }}">
+                  <button type="button" onClick="{{ billing.newTool }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    Połącz narzędzie
+                  </button>
+                </sc-if>
               </div>
 
               <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow:hidden">
@@ -1054,9 +1056,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                 </sc-for>
                 <sc-if value="{{ billing.noTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:26px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Brak połączonych narzędzi. Połącz pierwsze, aby faktury trafiały tam automatycznie.</div>
+                  <div style="padding:26px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Brak połączonego narzędzia. Połącz je, aby faktury trafiały tam automatycznie.</div>
                 </sc-if>
               </div>
+              <sc-if value="{{ billing.hasTool }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)">
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span>
+                  <span style="font-size:14px;line-height:20px">Zilo współpracuje z jednym narzędziem fakturowym naraz. Aby przejść na inne, otwórz „Zarządzaj" i rozłącz obecne.</span>
+                </div>
+              </sc-if>
             </div>
 
           </div>
@@ -1447,7 +1455,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </div>
             <div style="display:flex;flex-direction:column;gap:16px">
               <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
-                <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:20px;display:flex;align-items:center;gap:20px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface)">
+                <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:20px;display:flex;align-items:center;gap:20px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface)">
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
                     <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">{{ opt.name }}</span>
                     <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
@@ -1458,6 +1466,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </sc-if>
                     <sc-if value="{{ opt.isFree }}" hint-placeholder-val="{{ true }}">
                       <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">{{ opt.note }}</span>
+                    </sc-if>
+                    <sc-if value="{{ opt.isBlocked }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">Najpierw rozłącz obecne narzędzie.</span>
                     </sc-if>
                   </span>
                   <span style="width:56px;height:40px;flex:none;border:1px solid var(--tk-border-2);border-radius:6px;display:grid;place-items:center;background:var(--tk-canvas);font-size:13px;line-height:16px;font-weight:600;color:var(--tk-text-2);letter-spacing:0.04em">{{ opt.mark }}</span>
@@ -5681,15 +5692,29 @@ class Component extends DCLogic {
         }),
       })),
       noTools: connected.length === 0,
-      newTool: () => this.setState({ screen: 'billingPick', billingDraft: { name: '', fields: {}, editing: null } }),
-      toolOptions: BILLING_TOOLS.map((t) => ({
-        name: t.name, note: t.note, mark: t.mark,
-        isConnected: connected.some((c) => c.name === t.name),
-        isFree: !connected.some((c) => c.name === t.name),
-      })),
+      // jedno połączenie naraz — żeby zmienić narzędzie, trzeba rozłączyć obecne
+      canConnect: connected.length === 0,
+      hasTool: connected.length > 0,
+      newTool: () => {
+        if (connected.length) return;
+        this.setState({ screen: 'billingPick', billingDraft: { name: '', fields: {}, editing: null } });
+      },
+      toolOptions: BILLING_TOOLS.map((t) => {
+        const mine = connected.some((c) => c.name === t.name);
+        const blocked = !mine && connected.length > 0;
+        return {
+          name: t.name, note: t.note, mark: t.mark,
+          isConnected: mine,
+          isFree: !mine && !blocked,
+          isBlocked: blocked,
+          rowOpacity: blocked ? '0.5' : '1',
+          rowCursor: blocked ? 'not-allowed' : 'pointer',
+        };
+      }),
       pickTool: (e) => {
         const name = e.currentTarget.dataset.tool;
         const existing = connected.filter((c) => c.name === name)[0];
+        if (!existing && connected.length) return;
         this.setState({
           screen: 'billingForm',
           billingDraft: {
@@ -5707,11 +5732,10 @@ class Component extends DCLogic {
       },
       saveTool: () => {
         if (!bDraft.name) return;
-        const next = connected.slice();
-        const idx = next.findIndex((c) => c.name === bDraft.editing);
-        const row = { name: bDraft.name, date: idx >= 0 ? next[idx].date : '21.08.2026', fields: Object.assign({}, bDraft.fields) };
-        if (idx >= 0) next[idx] = row; else next.push(row);
-        this.setState({ connectedBilling: next, screen: 'billing' });
+        const cur = connected.filter((c) => c.name === bDraft.editing)[0];
+        const row = { name: bDraft.name, date: cur ? cur.date : '21.08.2026', fields: Object.assign({}, bDraft.fields) };
+        // lista zawsze ma najwyżej jedną pozycję
+        this.setState({ connectedBilling: [row], screen: 'billing' });
       },
       disconnectTool: () => this.setState({
         connectedBilling: connected.filter((c) => c.name !== bDraft.editing),
