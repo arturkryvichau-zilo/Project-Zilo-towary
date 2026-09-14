@@ -589,6 +589,16 @@ class Component extends DCLogic {
     const rabatCol = s.showRabat ? ' 154px' : '';
     const bind = (key) => (e) => this.setState({ [key]: e.target.value });
 
+    // status prowadzi kwotę: „Opłacona" zaciąga całe brutto, „Wystawiona" wraca do zera.
+    // „Częściowo opłacona" zostawiamy — tam kwotę wpisuje użytkownik.
+    const setStatus = (e) => {
+      const v = e.target.value;
+      const p = { status: v };
+      if (v === 'Opłacona') p.oplacona = Component.money(gross).replace(' zł', '');
+      else if (v === 'Wystawiona') p.oplacona = '0';
+      this.setState(p);
+    };
+
     try {
       window.__fvState = {
         typ: s.typ, numer: s.numer, dataWyst: s.dataWyst, dataSprz: s.dataSprz, miejsce: s.miejsce,
@@ -668,7 +678,7 @@ class Component extends DCLogic {
 
       platnosci: Component.PLATNOSCI, platnosc: s.platnosc, setPlatnosc: bind('platnosc'),
       terminy: Component.terminy(Component.safeDate(s.dataWyst)), termin: s.termin, setTermin: bind('termin'),
-      statusy: Component.STATUSY, status: s.status, setStatus: bind('status'),
+      statusy: Component.STATUSY, status: s.status, setStatus: setStatus,
       oplacona: s.oplacona, setOplacona: bind('oplacona'),
       waluty: Component.WALUTY, waluta: s.waluta, setWaluta: bind('waluta'),
 
