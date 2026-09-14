@@ -3482,11 +3482,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </sc-if>
     
                     <sc-if value="{{ visitTire.emptyOn }}" hint-placeholder-val="{{ false }}">
-                      <div onClick="{{ openClientEditorWithDraft }}" style="margin-top:0;padding:2px 8px;border-radius:8px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                      <div onClick="{{ openTireModal }}" style="margin-top:0;padding:2px 8px;border-radius:8px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                         <div style="display:flex;align-items:center;gap:12px">
                           <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
                           <span style="display:flex;align-items:center;gap:4px;margin-left:auto;flex:none">
-                            <button type="button" onClick="{{ openClientEditorWithDraft }}" style="position:relative;width:30px;height:30px;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
+                            <button type="button" onClick="{{ openTireModal }}" style="position:relative;width:30px;height:30px;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
                               <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                             </button>
                           </span>
