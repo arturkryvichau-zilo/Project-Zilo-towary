@@ -118,8 +118,8 @@ window.__resources = {
     </div>
     <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #0A0B29);white-space:nowrap">Wystaw fakturę</span>
     <div style="display:flex;justify-content:flex-end;gap:12px">
-      <button type="button" onClick="{{ issueKsef }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:1px solid var(--zilo-primary, #222693);border-radius:8px;background:transparent;color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)" style-active="background:var(--tk-brand-soft-2)">Zapisz i wyślij do KSeF</button>
-      <button type="button" onClick="{{ issue }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Zapisz</button>
+      <button type="button" onClick="{{ issue }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:16px;font-weight:500;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Zapisz</button>
+      <button type="button" onClick="{{ issueKsef }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 24px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Zapisz i wyślij do KSeF</button>
     </div>
   </header>
 
@@ -162,7 +162,7 @@ window.__resources = {
               <input class="o-input" type="text" value="{{ nip }}" onInput="{{ setNip }}" onBlur="{{ onNipBlur }}" style="position:relative">
             </span>
           </label>
-          <button type="button" onClick="{{ fetchGus }}" disabled="{{ gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:1px solid var(--grey-3, #979DB0);border-radius:10px;background:var(--tk-surface);color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:{{ gusCursor }};opacity:{{ gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)">Zaciągnij z GUS</button>
+          <button type="button" onClick="{{ fetchGus }}" disabled="{{ gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--zilo-blue-1, #222693);font-family:inherit;font-size:15px;font-weight:500;line-height:22px;white-space:nowrap;cursor:{{ gusCursor }};opacity:{{ gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Zaciągnij z GUS</button>
         </div>
         <sc-if value="{{ nipError }}" hint-placeholder-val="{{ false }}">
           <div style="margin:-6px 0 12px;font-size:14px;line-height:20px;color:var(--tk-danger)">NIP musi mieć 10 cyfr.</div>
@@ -572,10 +572,8 @@ class Component extends DCLogic {
     const gus = p.gus || {};
     const setNip = (e) => {
       const val = e.target.value;
-      // zmiana numeru unieważnia dane zaciągnięte pod poprzedni
-      const p2 = { nip: Component.nipFormat(val), nipBlurred: false };
-      if (s.fetched) Object.assign(p2, { fetched: false, company: '', street: '', zip: '', city: '' });
-      this.setState(p2);
+      // wpisanie NIP-u nie rusza pozostałych pól — można je wypełnić ręcznie
+      this.setState({ nip: Component.nipFormat(val), nipBlurred: false });
     };
     const nipOk = Component.nipComplete(s.nip);
     // dane firmowe zaciąga dopiero przycisk — sam wpisany numer niczego nie robi
