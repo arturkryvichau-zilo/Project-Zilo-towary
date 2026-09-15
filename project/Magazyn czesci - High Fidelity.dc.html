@@ -81,6 +81,7 @@ a { color:var(--tk-brand-fg); text-decoration:none; }
 a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 @keyframes docBulkIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @keyframes zFlash { 0%, 65% { background-color:var(--tk-brand-soft-2); } 100% { background-color:transparent; } }
+@keyframes zSpin { to { transform: rotate(360deg); } }
 
 /* Tooltip — DS · Components/Tooltip. Jeden bąbel na dokument, position:fixed,
    więc żaden overflow rodzica go nie utnie. Pozycjonuje go skrypt na dole strony. */
@@ -791,6 +792,77 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ billing.check.open }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:30;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:520px;display:flex;flex-direction:column;overflow:hidden">
+
+          <sc-if value="{{ billing.check.checking }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:32px 28px;display:flex;align-items:flex-start;gap:16px">
+              <span style="width:28px;height:28px;flex:none;margin-top:2px;border-radius:50%;border:3px solid var(--tk-brand-soft-2);border-top-color:var(--tk-brand);animation:zSpin 800ms linear infinite"></span>
+              <span style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                <span style="font-size:18px;line-height:26px;font-weight:500;color:var(--tk-text-strong)">Sprawdzamy połączenie…</span>
+                <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">Wysyłamy jedno testowe zapytanie. Nic nie zostanie wystawione.</span>
+              </span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ billing.check.isError }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
+              <div style="border-left:3px solid var(--tk-danger);background:var(--tk-danger-soft);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:17px;line-height:24px;font-weight:600;color:var(--tk-danger-fg)">{{ billing.check.errTitle }}</span>
+                <span style="font-size:15px;line-height:22px;color:var(--tk-danger-fg);text-wrap:pretty">{{ billing.check.errHint }}</span>
+              </div>
+              <div style="display:flex;gap:12px;justify-content:flex-end">
+                <button type="button" onClick="{{ billing.check.retry }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;line-height:22px;white-space:nowrap;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Spróbuj ponownie</button>
+                <button type="button" onClick="{{ billing.check.fixData }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Popraw dane</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ billing.check.isCompanies }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--tk-text-strong)">Konto ma więcej niż jedną firmę</span>
+                <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">Nie zgadujemy, która wystawia faktury za naprawy — wybierz ją przed zapisem.</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ billing.check.companies }}" as="co" hint-placeholder-count="2">
+                  <div onClick="{{ co.pick }}" style="border:{{ co.border }};border-radius:10px;background:{{ co.bg }};padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)">
+                    <span style="width:20px;height:20px;flex:none;border-radius:50%;box-sizing:border-box;border:{{ co.dotBorder }};background:var(--tk-surface);transition:border 160ms cubic-bezier(.2,0,0,1)"></span>
+                    <span style="display:flex;flex-direction:column;min-width:0">
+                      <span style="font-size:17px;line-height:24px;color:var(--tk-text)">{{ co.name }}</span>
+                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ co.nip }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:flex-end">
+                <button type="button" onClick="{{ billing.check.confirmCompany }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Zapisz i połącz</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ billing.check.isOk }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
+              <div style="display:flex;align-items:flex-start;gap:14px">
+                <span style="width:36px;height:36px;flex:none;border-radius:50%;background:var(--tk-ok-soft);display:grid;place-items:center">
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-ok);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                </span>
+                <span style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--tk-text-strong)">{{ billing.check.okTitle }}</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">{{ billing.check.okHint }}</span>
+                </span>
+              </div>
+              <div style="display:flex;justify-content:flex-end">
+                <button type="button" onClick="{{ billing.check.finish }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">{{ billing.check.okLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+
         </div>
       </div>
     </sc-if>
@@ -4741,6 +4813,27 @@ const BILLING_TOOLS = [
   ] },
 ];
 
+// zestaw komunikatów jest skończony — ekran nie pokazuje treści błędów dostawcy
+const BILLING_ERRORS = [
+  { key: 'dane-odrzucone', title: '%s odrzuciła te dane',
+    hint: 'Sprawdź, czy klucz jest skopiowany w całości i czy adres konta się zgadza. '
+      + 'Nic nie zapisaliśmy — możesz wkleić go jeszcze raz.' },
+  { key: 'brak-autoryzacji', title: 'Konto nie ma dostępu do API',
+    hint: 'Włącz dostęp dla aplikacji zewnętrznych w panelu %s i spróbuj ponownie.' },
+  { key: 'limit-dostawcy', title: 'Przekroczony limit zapytań',
+    hint: '%s chwilowo nie przyjmuje kolejnych prób. Spróbuj za kilka minut.' },
+  { key: 'awaria-dostawcy', title: '%s nie odpowiada',
+    hint: 'To nie jest problem z Twoimi danymi. Spróbuj ponownie później.' },
+  { key: 'nieznany', title: 'Nie udało się połączyć',
+    hint: 'Coś poszło nie tak po stronie połączenia. Spróbuj ponownie, a jeśli wróci — napisz do nas.' },
+];
+
+// konto w programie do faktur bywa podpięte pod kilka firm — nie zgadujemy
+const BILLING_COMPANIES = [
+  { name: 'Auto-Serwis Nowak', nip: '675 123 45 67' },
+  { name: 'Nowak Nieruchomości', nip: '675 987 65 43' },
+];
+
 const DEFAULT_BILLING = [
   { name: 'Fakturownia', date: '05.08.2026', fields: { domain: 'dmmotors', apiKey: '••••••••••••' } },
 ];
@@ -4820,6 +4913,8 @@ class Component extends DCLogic {
     garageModal: null,
     garageEdit: null,
     garageSelect: null,
+    billingCheck: null,
+    billingErrIdx: 0,
     billingEdit: null,
     billingDraft: null,
     connectedBilling: null,
@@ -5673,6 +5768,96 @@ class Component extends DCLogic {
     }));
   }
 
+  // ——— sprawdzenie połączenia po „Połącz" ———
+  runBillingCheck(row, isEdit) {
+    const txt = Object.keys(row.fields || {}).map((k) => String(row.fields[k] || '')).join(' ').toLowerCase();
+    this.setState({ billingCheck: { phase: 'checking', row: row, isEdit: !!isEdit, pick: 0 } });
+    if (this.__billingTimer) clearTimeout(this.__billingTimer);
+    this.__billingTimer = setTimeout(() => {
+      // prototyp: „blad" w którymkolwiek polu prowadzi przez kolejne komunikaty,
+      // „firmy" — przez wybór firmy; wszystko inne kończy się powodzeniem
+      if (txt.indexOf('blad') > -1 || txt.indexOf('błąd') > -1) {
+        const i = this.state.billingErrIdx || 0;
+        this.setState((st) => ({
+          billingCheck: Object.assign({}, st.billingCheck, { phase: 'error', errIdx: i }),
+          billingErrIdx: (i + 1) % BILLING_ERRORS.length,
+        }));
+        return;
+      }
+      if (txt.indexOf('firmy') > -1) {
+        this.setState((st) => ({ billingCheck: Object.assign({}, st.billingCheck, { phase: 'companies' }) }));
+        return;
+      }
+      this.commitBilling();
+    }, 1600);
+  }
+
+  commitBilling() {
+    const chk = this.state.billingCheck || {};
+    const row = Object.assign({}, chk.row);
+    if (chk.phase === 'companies' || typeof chk.pick === 'number') {
+      const c = BILLING_COMPANIES[chk.pick || 0];
+      if (c && chk.phase === 'companies') row.company = c.name;
+    }
+    this.setState((st) => ({
+      connectedBilling: [row],
+      billingCheck: Object.assign({}, st.billingCheck, { phase: 'ok', row: row }),
+    }));
+  }
+
+  billingCheckVals() {
+    const s = this.state;
+    const chk = s.billingCheck;
+    if (!chk) return { open: false };
+    const name = (chk.row && chk.row.name) || '';
+    const err = BILLING_ERRORS[chk.errIdx || 0];
+    const back = s.fvAfterBilling;
+    const close = () => this.setState({ billingCheck: null });
+    return {
+      open: true,
+      name: name,
+      checking: chk.phase === 'checking',
+      isError: chk.phase === 'error',
+      isCompanies: chk.phase === 'companies',
+      isOk: chk.phase === 'ok',
+
+      errTitle: err.title.replace('%s', name),
+      errHint: err.hint.replace('%s', name),
+      // „Popraw dane" wraca do formularza z tym, co użytkownik już wpisał
+      fixData: close,
+      retry: () => this.runBillingCheck(chk.row, chk.isEdit),
+
+      companies: BILLING_COMPANIES.map((c, i) => ({
+        name: c.name,
+        nip: 'NIP ' + c.nip,
+        picked: (chk.pick || 0) === i,
+        border: (chk.pick || 0) === i ? '2px solid var(--tk-brand-bd)' : '1px solid var(--tk-border)',
+        bg: (chk.pick || 0) === i ? 'var(--tk-brand-soft)' : 'var(--tk-surface)',
+        dotBorder: (chk.pick || 0) === i ? '6px solid var(--tk-brand)' : '2px solid var(--tk-border-strong)',
+        pick: () => this.setState((st) => ({ billingCheck: Object.assign({}, st.billingCheck, { pick: i }) })),
+      })),
+      confirmCompany: () => this.commitBilling(),
+
+      okTitle: chk.isEdit ? 'Połączenie zaktualizowane' : 'Połączono z ' + name,
+      okHint: chk.isEdit
+        ? 'Dane połączenia zostały zapisane.'
+        : 'Faktury wystawione w Zilo trafią do ' + name + '.',
+      // z „Wystaw FV" wracamy prosto na fakturę, inaczej na listę integracji
+      okLabel: back ? 'Przejdź do wystawienia faktury' : 'Gotowe',
+      finish: () => {
+        const toFv = this.state.fvAfterBilling;
+        const wasEdit = chk.isEdit;
+        this.setState({
+          billingCheck: null,
+          screen: toFv ? toFv.screen : 'billing',
+          fvAfterBilling: null,
+        });
+        this.ziloToast(wasEdit ? 'Zmiany zapisane pomyślnie' : 'Połączono z ' + name);
+        if (toFv) this.openInvoiceConfig(toFv.visitId, Object.assign({}, toFv.opts || {}, { force: true }));
+      },
+    };
+  }
+
   billingVals() {
     const s = this.state;
     const g = s.garage || GARAGE_SEED;
@@ -5788,22 +5973,14 @@ class Component extends DCLogic {
         isEdit: !!bDraft.editing,
         steps: this.billingSteps(bDraft),
       },
+      // „Połącz" nie zapisuje od razu — najpierw sprawdzamy połączenie
       saveTool: () => {
         if (!bDraft.name) return;
         const cur = connected.filter((c) => c.name === bDraft.editing)[0];
         const row = { name: bDraft.name, date: cur ? cur.date : '21.08.2026', fields: Object.assign({}, bDraft.fields) };
-        const back = s.fvAfterBilling;
-        // lista zawsze ma najwyżej jedną pozycję
-        this.setState({
-          connectedBilling: [row],
-          screen: back ? back.screen : 'billing',
-          fvAfterBilling: null,
-        });
-        // „Połączono z…" zamiast odmiany przez rodzaj — nazwy bywają różne
-        this.ziloToast(bDraft.editing ? 'Zmiany zapisane pomyślnie' : 'Połączono z ' + bDraft.name);
-        // przyszliśmy tu z „Wystaw FV" — wracamy prosto na fakturę
-        if (back) this.openInvoiceConfig(back.visitId, Object.assign({}, back.opts || {}, { force: true }));
+        this.runBillingCheck(row, !!bDraft.editing);
       },
+      check: this.billingCheckVals(),
       disconnectTool: () => this.setState({
         connectedBilling: connected.filter((c) => c.name !== bDraft.editing),
         screen: 'billing',
