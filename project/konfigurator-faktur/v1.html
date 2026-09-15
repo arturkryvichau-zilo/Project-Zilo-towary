@@ -531,7 +531,7 @@ class Component extends DCLogic {
     const today = Component.safeDate(p.today);
     const uslugi = Component.seedRows(p.uslugi, false, 1);
     const towary = Component.seedRows(p.towary, true, 1);
-    return {
+    return Component.applyPick({
       sellerOverride: null,
       valueMode: 'netto',
       showRabat: false,
@@ -568,7 +568,7 @@ class Component extends DCLogic {
       status: Component.STATUSY[0],
       oplacona: '0',
       waluta: Component.WALUTY[0],
-    };
+    });
   })();
 
   calc(r) {
@@ -637,6 +637,24 @@ class Component extends DCLogic {
       gross: Component.money(t.gross),
       _n: t.net, _g: t.gross, _r: t.rabat,
     };
+  }
+
+  // po wgraniu dokumentu wracamy tu z otwartym popupem i zaznaczonym dokumentem
+  static applyPick(base) {
+    try {
+      const pk = (location.hash || '').match(/[#&]pick=([^&]*)/);
+      if (!pk) return base;
+      base.docPickerOpen = true;
+      const nr = decodeURIComponent(pk[1]);
+      if (nr && nr !== '1') {
+        const doc = Component.docSource().filter((d) => d.nr === nr)[0];
+        if (doc) {
+          base.docPicked = (doc.items || []).map((_, i) => nr + '#' + i);
+          base.docOpenMap = Component.docSource().reduce((m, d) => { m[d.nr] = d.nr === nr; return m; }, {});
+        }
+      }
+    } catch (e) {}
+    return base;
   }
 
   static docSource() {

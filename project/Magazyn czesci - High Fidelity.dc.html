@@ -7036,6 +7036,7 @@ class Component extends DCLogic {
       };
       src += '#fv=' + encodeURIComponent(JSON.stringify(payload));
       src += '&docs=' + encodeURIComponent(JSON.stringify(this.docsPayload()));
+      if (opts && opts.pick) src += '&pick=' + encodeURIComponent(opts.pick);
     } catch (e) {}
     try { src += (src.indexOf('#') >= 0 ? '&' : '#') + 'theme=' + (document.documentElement.getAttribute('data-theme') || 'light'); } catch (e) {}
     this.setState({ fvConfigSrc: src, fvConfigVisit: visitId });
@@ -7141,7 +7142,7 @@ class Component extends DCLogic {
     }));
   }
 
-  openOfferConfig(visitId) {
+  openOfferConfig(visitId, opts) {
     // licznik startuje od 1 przy każdym przeładowaniu strony, więc sam w sobie
     // nie łamie cache przeglądarki — stąd znacznik czasu
     const seq = Date.now() + '-' + (this.__ofrSeq = (this.__ofrSeq || 0) + 1);
@@ -7174,6 +7175,7 @@ class Component extends DCLogic {
       };
       src += '#offer=' + encodeURIComponent(JSON.stringify(payload));
       src += '&docs=' + encodeURIComponent(JSON.stringify(this.docsPayload()));
+      if (opts && opts.pick) src += '&pick=' + encodeURIComponent(opts.pick);
     } catch (e) {}
     try { src += (src.indexOf('#') >= 0 ? '&' : '#') + 'theme=' + (document.documentElement.getAttribute('data-theme') || 'light'); } catch (e) {}
     this.setState({ offerConfigSrc: src, offerConfigVisit: visitId });
@@ -8246,8 +8248,8 @@ class Component extends DCLogic {
             eventId: back.eventId,
             docsList: [{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList()),
           }, () => {
-            if (back.from === 'offer') this.openOfferConfig(back.visit);
-            else if (back.from === 'invoice') this.openInvoiceConfig(back.visit, { force: true });
+            if (back.from === 'offer') this.openOfferConfig(back.visit, { pick: nr });
+            else if (back.from === 'invoice') this.openInvoiceConfig(back.visit, { force: true, pick: nr });
             else this.openWycConfig(back.visit, null, { pick: nr });
           });
           return;
