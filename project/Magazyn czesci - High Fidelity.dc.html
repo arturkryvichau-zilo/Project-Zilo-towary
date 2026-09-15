@@ -4755,7 +4755,9 @@ const SUPPLIER_INFO = {
 
 const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 
-const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0214', ext: 'FV 88213/08/2026', date: '12.08.2026' };
+// świeżo wgrany dokument nosi dzisiejszą datę, żeby wchodził do grupy „Dzisiaj"
+const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0218', ext: 'FV 88213/08/2026',
+  date: TODAY.slice(8, 10) + '.' + TODAY.slice(5, 7) + '.' + TODAY.slice(0, 4) };
 
 
 const DOC_POSITIONS = [
@@ -8234,7 +8236,7 @@ class Component extends DCLogic {
           });
           return;
         }
-        const nr = d.nr || 'ZM/2026/0214';
+        const nr = d.nr || DOC_DRAFT.nr;
         const back = this.state.docReturn;
         if (back) {
           this.setState({
