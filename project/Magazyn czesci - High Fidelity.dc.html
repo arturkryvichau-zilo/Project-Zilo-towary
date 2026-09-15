@@ -7055,6 +7055,7 @@ class Component extends DCLogic {
       return;
     }
     if (d.__fv === 'toast') { this.ziloToast(String(d.text || '')); return; }
+    if (d.__fv === 'addDoc') { this.goUploadDoc('invoice', d.state); return; }
     if (d.__fv !== 'issue') return;
     const id = this.state.fvConfigVisit;
     const st = d.state || {};
@@ -7110,6 +7111,23 @@ class Component extends DCLogic {
   }
 
   // ten sam zestaw dokumentów trafia do wszystkich trzech konfiguratorów
+  // „Wgraj dokument" z konfiguratora: chowamy go, wgrywamy w Towarach i wracamy
+  goUploadDoc(from, st) {
+    const visit = from === 'offer' ? this.state.offerConfigVisit : this.state.fvConfigVisit;
+    this.setState((prev) => ({
+      docReturn: { visit: visit, from: from, state: st || null, screen: prev.screen, eventId: prev.eventId, navKey: prev.navKey },
+      offerConfigSrc: from === 'offer' ? null : prev.offerConfigSrc,
+      offerConfigVisit: from === 'offer' ? null : prev.offerConfigVisit,
+      fvConfigSrc: from === 'invoice' ? null : prev.fvConfigSrc,
+      fvConfigVisit: from === 'invoice' ? null : prev.fvConfigVisit,
+      navKey: 'goods',
+      screen: 'docUpload',
+      docUploadPct: 0,
+      docRows: null,
+      docDraft: null,
+    }));
+  }
+
   docsPayload() {
     return this.docList().slice(0, 12).map((d) => ({
       nr: d.nr,
@@ -7165,6 +7183,7 @@ class Component extends DCLogic {
     if (!this.state.offerConfigSrc) return;
     if (d.__ofr === 'close') { this.setState({ offerConfigSrc: null, offerConfigVisit: null }); return; }
     if (d.__ofr === 'toast') { this.ziloToast(String(d.text || '')); return; }
+    if (d.__ofr === 'addDoc') { this.goUploadDoc('offer', d.state); return; }
     if (d.__ofr !== 'send') return;
     const id = this.state.offerConfigVisit;
     const t = d.totals || {};
@@ -8226,7 +8245,11 @@ class Component extends DCLogic {
             screen: back.screen,
             eventId: back.eventId,
             docsList: [{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList()),
-          }, () => this.openWycConfig(back.visit, null, { pick: nr }));
+          }, () => {
+            if (back.from === 'offer') this.openOfferConfig(back.visit);
+            else if (back.from === 'invoice') this.openInvoiceConfig(back.visit, { force: true });
+            else this.openWycConfig(back.visit, null, { pick: nr });
+          });
           return;
         }
         this.setState({

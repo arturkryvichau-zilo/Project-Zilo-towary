@@ -105,6 +105,8 @@ window.__resources = {
 .zilo-tt { position:fixed; left:0; top:0; z-index:2147483000; box-sizing:border-box; background:rgba(10,11,41,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 0 2px 0 rgba(0,0,0,0.08), 0 4px 4px 0 rgba(0,0,0,0.16); color:var(--tk-on-fill); font-family:'Rubik', -apple-system, 'Segoe UI', sans-serif; font-size:14px; line-height:20px; font-weight:400; font-style:normal; text-align:left; letter-spacing:normal; padding:10px 16px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 120ms cubic-bezier(.2,0,0,1), transform 120ms cubic-bezier(.2,0,0,1); }
 .zilo-tt.is-multiline { white-space:normal; width:260px; }
 .zilo-tt.is-on { opacity:1; transform:translate(0,0); }
+    /* Input w wyszukiwarce popupu — bez własnej ramki, żeby nie robił „drugiego pola" */
+    input.z-input { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 20px; color: var(--grey-1, #242629); background: transparent; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; box-sizing: border-box; }
 </style>
 </helmet>
 
@@ -952,8 +954,10 @@ class Component extends DCLogic {
       clearDocPicked: () => this.setState({ docPicked: [] }),
       setDocQuery: (e) => this.setState({ docQuery: e.target.value }),
       docPicker: this._docPickerVals(),
-      // dokumenty wgrywa się w Towarach — z konfiguratora tylko o tym mówimy
-      addDocument: () => { try { parent.postMessage({ __fv: 'toast', text: 'Dokumenty dodajesz w zakładce Towary' }, '*'); } catch (e) {} },
+      // wgrywanie dokumentu żyje w Towarach — wracamy tu po zapisaniu
+      addDocument: () => {
+        try { parent.postMessage({ __fv: 'addDoc', state: window.__fvState || null }, '*'); } catch (e) {}
+      },
       addFromDocs: () => {
         const picked = this.state.docPicked || [];
         if (!picked.length) return;
