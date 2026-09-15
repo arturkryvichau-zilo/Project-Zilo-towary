@@ -1654,11 +1654,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:24px 28px;display:flex;flex-direction:column">
                     <div style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text);margin-bottom:10px">{{ card.title }}</div>
                     <sc-for list="{{ card.rows }}" as="row" hint-placeholder-count="3">
-                      <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="display:flex;align-items:center;gap:16px;padding:18px 4px;border-bottom:{{ row.border }};cursor:pointer" style-hover="background:var(--tk-surface)">
-                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
-                          <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text)">{{ row.title }}</span>
-                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ row.subtitle }}</span>
-                        </span>
+                      <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:{{ row.border }};cursor:pointer" style-hover="background:var(--tk-surface)">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url({{ row.icon }}) center / 20px 20px no-repeat;mask:url({{ row.icon }}) center / 20px 20px no-repeat"></span>
+                        <span style="flex:1;min-width:0;font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat"></span>
                       </div>
                     </sc-for>
@@ -4671,6 +4669,22 @@ const GARAGE_SEED = {
     sat: { open: true, from: '09:00', to: '13:00' },
     sun: { open: false, from: '09:00', to: '13:00' },
   },
+};
+
+const SETTINGS_ICONS = {
+  shop: 'assets/icons/wrench.svg',
+  billing: 'assets/icons/i-invoice.svg',
+  brands: 'assets/icons/i-tires.svg',
+  holiday: 'assets/icons/i-calendar.svg',
+  employees: 'assets/icons/people.svg',
+  goods: 'assets/nav/parts.svg',
+  interface: 'assets/nav/online.svg',
+  workspaces: 'assets/nav/services.svg',
+  services: 'assets/icons/tab-price.svg',
+  import: 'assets/icons/i-upload-doc.svg',
+  'system-notif': 'assets/icons/i-info.svg',
+  sms: 'assets/icons/i-phone.svg',
+  email: 'assets/icons/i-clipboard-list.svg',
 };
 
 const SETTINGS_COLUMNS = [
@@ -7827,6 +7841,7 @@ class Component extends DCLogic {
           title: c.title,
           rows: c.rows.map((r, i) => ({
             key: r.key, title: r.title, subtitle: r.subtitle,
+            icon: SETTINGS_ICONS[r.key] || 'assets/icons/i-settings.svg',
             border: i === c.rows.length - 1 ? '0 solid transparent' : '1px solid var(--tk-border-2)',
           })),
         })),
