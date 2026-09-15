@@ -4834,6 +4834,13 @@ const BILLING_COMPANIES = [
   { name: 'Nowak Nieruchomości', nip: '675 987 65 43' },
 ];
 
+// prototyp pokazuje wszystkie stany sprawdzenia — jeden na narzędzie
+const BILLING_OUTCOME = {
+  Fakturownia: 'ok',
+  wFirma: 'error',
+  inFakt: 'companies',
+};
+
 const DEFAULT_BILLING = [
   { name: 'Fakturownia', date: '05.08.2026', fields: { domain: 'dmmotors', apiKey: '••••••••••••' } },
 ];
@@ -5770,13 +5777,12 @@ class Component extends DCLogic {
 
   // ——— sprawdzenie połączenia po „Połącz" ———
   runBillingCheck(row, isEdit) {
-    const txt = Object.keys(row.fields || {}).map((k) => String(row.fields[k] || '')).join(' ').toLowerCase();
+    // w prototypie wynik zależy od narzędzia, żeby dało się obejrzeć każdy stan
+    const outcome = BILLING_OUTCOME[row.name] || 'ok';
     this.setState({ billingCheck: { phase: 'checking', row: row, isEdit: !!isEdit, pick: 0 } });
     if (this.__billingTimer) clearTimeout(this.__billingTimer);
     this.__billingTimer = setTimeout(() => {
-      // prototyp: „blad" w którymkolwiek polu prowadzi przez kolejne komunikaty,
-      // „firmy" — przez wybór firmy; wszystko inne kończy się powodzeniem
-      if (txt.indexOf('blad') > -1 || txt.indexOf('błąd') > -1) {
+      if (outcome === 'error') {
         const i = this.state.billingErrIdx || 0;
         this.setState((st) => ({
           billingCheck: Object.assign({}, st.billingCheck, { phase: 'error', errIdx: i }),
@@ -5784,7 +5790,7 @@ class Component extends DCLogic {
         }));
         return;
       }
-      if (txt.indexOf('firmy') > -1) {
+      if (outcome === 'companies') {
         this.setState((st) => ({ billingCheck: Object.assign({}, st.billingCheck, { phase: 'companies' }) }));
         return;
       }
