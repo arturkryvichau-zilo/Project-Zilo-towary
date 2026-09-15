@@ -1627,9 +1627,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
     </sc-if>
 
     <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-canvas)">
+      <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="flex:1;min-height:0;overflow-y:auto">
-          <div style="padding:28px 28px 64px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;background:var(--tk-canvas)">
+          <div style="padding:28px 28px 64px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;background:var(--tk-surface)">
             <sc-for list="{{ settingsColumns }}" as="col" hint-placeholder-count="2">
               <div style="display:flex;flex-direction:column;gap:24px">
                 <sc-for list="{{ col.cards }}" as="card" hint-placeholder-count="2">
