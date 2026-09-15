@@ -798,68 +798,50 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
     <sc-if value="{{ billing.check.open }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed;inset:0;z-index:30;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
-        <div style="background:var(--tk-surface);border-radius:12px;width:100%;max-width:520px;display:flex;flex-direction:column;overflow:hidden">
+        <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:480px;max-width:100%;max-height:calc(100vh - 80px);overflow-y:auto;padding:32px 24px 24px;display:flex;flex-direction:column;align-items:center">
 
           <sc-if value="{{ billing.check.checking }}" hint-placeholder-val="{{ true }}">
-            <div style="padding:32px 28px;display:flex;align-items:flex-start;gap:16px">
-              <span style="width:28px;height:28px;flex:none;margin-top:2px;border-radius:50%;border:3px solid var(--tk-brand-soft-2);border-top-color:var(--tk-brand);animation:zSpin 800ms linear infinite"></span>
-              <span style="display:flex;flex-direction:column;gap:4px;min-width:0">
-                <span style="font-size:18px;line-height:26px;font-weight:500;color:var(--tk-text-strong)">Sprawdzamy połączenie…</span>
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">Wysyłamy jedno testowe zapytanie. Nic nie zostanie wystawione.</span>
-              </span>
-            </div>
+            <span style="width:44px;height:44px;flex:none;border-radius:50%;border:4px solid var(--tk-brand-soft-2);border-top-color:var(--tk-brand);animation:zSpin 800ms linear infinite"></span>
+            <div style="margin-top:20px;font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong);text-align:center;letter-spacing:-0.01em;text-wrap:pretty">Sprawdzamy połączenie…</div>
+            <div style="margin-top:8px;font-size:16px;line-height:22px;color:var(--tk-text-2);text-align:center;text-wrap:pretty">Wysyłamy jedno testowe zapytanie. Nic nie zostanie wystawione.</div>
           </sc-if>
 
           <sc-if value="{{ billing.check.isError }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
-              <div style="border-left:3px solid var(--tk-danger);background:var(--tk-danger-soft);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:6px">
-                <span style="font-size:17px;line-height:24px;font-weight:600;color:var(--tk-danger-fg)">{{ billing.check.errTitle }}</span>
-                <span style="font-size:15px;line-height:22px;color:var(--tk-danger-fg);text-wrap:pretty">{{ billing.check.errHint }}</span>
-              </div>
-              <div style="display:flex;gap:12px;justify-content:flex-end">
-                <button type="button" onClick="{{ billing.check.retry }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:500;line-height:22px;white-space:nowrap;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Spróbuj ponownie</button>
-                <button type="button" onClick="{{ billing.check.fixData }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Popraw dane</button>
-              </div>
+            <span style="width:44px;height:44px;flex:none;border-radius:50%;background:var(--tk-danger-soft);display:grid;place-items:center"><span style="width:24px;height:24px;display:block;background-color:var(--tk-danger);-webkit-mask:url(assets/icons/i-close.svg) center / 24px 24px no-repeat;mask:url(assets/icons/i-close.svg) center / 24px 24px no-repeat"></span></span>
+            <div style="margin-top:20px;font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong);text-align:center;letter-spacing:-0.01em;text-wrap:pretty">{{ billing.check.errTitle }}</div>
+            <div style="margin-top:8px;font-size:16px;line-height:22px;color:var(--tk-text-2);text-align:center;text-wrap:pretty">{{ billing.check.errHint }}</div>
+            <div style="margin-top:24px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <button type="button" onClick="{{ billing.check.retry }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;font-weight:400;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Spróbuj ponownie</button>
+              <button type="button" onClick="{{ billing.check.fixData }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Popraw dane</button>
             </div>
           </sc-if>
 
           <sc-if value="{{ billing.check.isCompanies }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
-              <div style="display:flex;flex-direction:column;gap:4px">
-                <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--tk-text-strong)">Konto ma więcej niż jedną firmę</span>
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">Nie zgadujemy, która wystawia faktury za naprawy — wybierz ją przed zapisem.</span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:12px">
-                <sc-for list="{{ billing.check.companies }}" as="co" hint-placeholder-count="2">
-                  <div onClick="{{ co.pick }}" style="border:{{ co.border }};border-radius:10px;background:{{ co.bg }};padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)">
-                    <span style="width:20px;height:20px;flex:none;border-radius:50%;box-sizing:border-box;border:{{ co.dotBorder }};background:var(--tk-surface);transition:border 160ms cubic-bezier(.2,0,0,1)"></span>
-                    <span style="display:flex;flex-direction:column;min-width:0">
-                      <span style="font-size:17px;line-height:24px;color:var(--tk-text)">{{ co.name }}</span>
-                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ co.nip }}</span>
-                    </span>
-                  </div>
-                </sc-for>
-              </div>
-              <div style="display:flex;justify-content:flex-end">
-                <button type="button" onClick="{{ billing.check.confirmCompany }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">Zapisz i połącz</button>
-              </div>
+            <span style="width:44px;height:44px;flex:none;border-radius:50%;background:var(--tk-brand-soft);display:grid;place-items:center"><span style="width:24px;height:24px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-invoice.svg) center / 24px 24px no-repeat;mask:url(assets/icons/i-invoice.svg) center / 24px 24px no-repeat"></span></span>
+            <div style="margin-top:20px;font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong);text-align:center;letter-spacing:-0.01em;text-wrap:pretty">Konto ma więcej niż jedną firmę</div>
+            <div style="margin-top:8px;font-size:16px;line-height:22px;color:var(--tk-text-2);text-align:center;text-wrap:pretty">Nie zgadujemy, która wystawia faktury za naprawy — wybierz ją przed zapisem.</div>
+            <div style="margin-top:24px;width:100%;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ billing.check.companies }}" as="co" hint-placeholder-count="2">
+                <div onClick="{{ co.pick }}" style="border:{{ co.border }};border-radius:10px;background:{{ co.bg }};padding:14px 16px;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)">
+                  <span style="width:20px;height:20px;flex:none;border-radius:50%;box-sizing:border-box;border:{{ co.dotBorder }};background:var(--tk-surface);transition:border 160ms cubic-bezier(.2,0,0,1)"></span>
+                  <span style="display:flex;flex-direction:column;min-width:0">
+                    <span style="font-size:16px;line-height:22px;color:var(--tk-text)">{{ co.name }}</span>
+                    <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ co.nip }}</span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:24px;width:100%;display:grid;grid-template-columns:1fr;gap:10px">
+              <button type="button" onClick="{{ billing.check.confirmCompany }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Zapisz i połącz</button>
             </div>
           </sc-if>
 
           <sc-if value="{{ billing.check.isOk }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
-              <div style="display:flex;align-items:flex-start;gap:14px">
-                <span style="width:36px;height:36px;flex:none;border-radius:50%;background:var(--tk-ok-soft);display:grid;place-items:center">
-                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-ok);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
-                </span>
-                <span style="display:flex;flex-direction:column;gap:4px;min-width:0">
-                  <span style="font-size:18px;line-height:26px;font-weight:600;color:var(--tk-text-strong)">{{ billing.check.okTitle }}</span>
-                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-wrap:pretty">{{ billing.check.okHint }}</span>
-                </span>
-              </div>
-              <div style="display:flex;justify-content:flex-end">
-                <button type="button" onClick="{{ billing.check.finish }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">{{ billing.check.okLabel }}</button>
-              </div>
+            <span style="width:44px;height:44px;flex:none;border-radius:50%;background:var(--tk-ok-soft);display:grid;place-items:center"><span style="width:24px;height:24px;display:block;background-color:var(--tk-ok);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 24px 24px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 24px 24px no-repeat"></span></span>
+            <div style="margin-top:20px;font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong);text-align:center;letter-spacing:-0.01em;text-wrap:pretty">{{ billing.check.okTitle }}</div>
+            <div style="margin-top:8px;font-size:16px;line-height:22px;color:var(--tk-text-2);text-align:center;text-wrap:pretty">{{ billing.check.okHint }}</div>
+            <div style="margin-top:24px;width:100%;display:grid;grid-template-columns:1fr;gap:10px">
+              <button type="button" onClick="{{ billing.check.finish }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">{{ billing.check.okLabel }}</button>
             </div>
           </sc-if>
 
