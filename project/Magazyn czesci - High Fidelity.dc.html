@@ -366,7 +366,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">VAT</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Wartość netto</span>
                   <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Wartość brutto</span>
-                  <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Sug. cena prod.</span>
+                  <span style="text-align: right; font-size: 14px; color: var(--grey-2)">Cena detaliczna</span>
                 </div>
                 <sc-for list="{{ docDetail.rows }}" as="p" hint-placeholder-count="5">
                   <div onClick="{{ p.toggle }}" style="cursor:pointer;min-width: 1430px; display: grid; grid-template-columns: 40px minmax(200px,1.5fr) minmax(180px,1.1fr) minmax(140px,0.8fr) 140px 130px 90px 130px 130px 120px; gap: 16px; padding: 14px 20px; align-items: center; border-bottom: 1px solid {{ p.border }}; font-size: 15px; line-height: 22px; color: var(--tk-text); background: {{ p.rowBg }}; padding-top: 16px; padding-bottom: 16px; padding-left: 24px; padding-right: 24px" style-hover="background:var(--tk-canvas)">
@@ -1009,7 +1009,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
                       </label>
                       <div style="display: none; flex-direction: column; justify-content: center; height: 62px; box-sizing: border-box; padding: 9px 13px; background: var(--tk-surface-2); border: 1px solid var(--tk-border-2); border-radius: 8px">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Sug. cena prod.</span>
+                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cena detaliczna</span>
                         <span style="font-size:16px;line-height:24px;color:var(--tk-text-3);white-space:nowrap">{{ r.msrpPlain }}</span>
                       </div>
                       <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
@@ -4581,6 +4581,22 @@ const NOTES = {
 };
 
 const DOC_SEED = [
+  { nr: 'ZM/2026/0217', ext: 'FV 74980/08/2026', supplier: 'Inter Cars', date: '13.08.2026', status: 'W trakcie', rows: [
+    { name: 'Wycieraczki przód (komplet)', code: 'AP24U', producer: 'Bosch', unit: 'Komplet', qty: '1', price: '96,00', vat: '23', msrp: '149,00' },
+    { name: 'Płyn do spryskiwaczy zimowy 5L', code: 'WIN -22', producer: 'K2', unit: 'Opakowanie', qty: '2', price: '24,00', vat: '23', msrp: '39,00' },
+  ] },
+  { nr: 'ZM/2026/0216', ext: 'WZ 5610/08/2026', supplier: 'Auto Partner', date: '13.08.2026', status: 'W trakcie', rows: [
+    { name: 'Filtr kabinowy węglowy', code: 'CUK 2939', producer: 'MANN', unit: 'Sztuka', qty: '2', price: '64,00', vat: '23', msrp: '98,00' },
+    { name: 'Żarówka H7 55W', code: 'H7 STD', producer: 'Osram', unit: 'Sztuka', qty: '4', price: '18,00', vat: '23', msrp: '29,00' },
+    { name: 'Odmrażacz do szyb 500 ml', code: 'DEF 500', producer: 'K2', unit: 'Sztuka', qty: '3', price: '14,00', vat: '23', msrp: '' },
+  ] },
+  { nr: 'ZM/2026/0215', ext: 'FV 74655/08/2026', supplier: 'Gordon', date: '12.08.2026', status: 'Dostarczony', rows: [
+    { name: 'Akumulator 74Ah 680A', code: 'S4 008', producer: 'Bosch', unit: 'Sztuka', qty: '1', price: '398,00', vat: '23', msrp: '549,00' },
+  ] },
+  { nr: 'ZM/2026/0214', ext: 'WZ 5580/08/2026', supplier: 'Elit Polska', date: '12.08.2026', status: 'Dostarczony', rows: [
+    { name: 'Tarcze hamulcowe tył', code: '24.0110-0245.1', producer: 'ATE', unit: 'Sztuka', qty: '2', price: '132,00', vat: '23', msrp: '199,00' },
+    { name: 'Klocki hamulcowe tył', code: 'GDB1621', producer: 'TRW', unit: 'Komplet', qty: '1', price: '158,00', vat: '23', msrp: '239,00' },
+  ] },
   { nr: 'ZM/2026/0213', ext: 'FV 74221/08/2026', supplier: 'Auto Partner', date: '12.08.2026', status: 'W trakcie', rows: [
     { name: 'Klocki hamulcowe przód', code: 'GDB1330', producer: 'TRW', unit: 'Sztuka', qty: '1', price: '184,00', vat: '23', msrp: '289,00' },
     { name: 'Tarcze hamulcowe przód', code: '24.0122-0187.1', producer: 'ATE', unit: 'Sztuka', qty: '2', price: '146,00', vat: '23', msrp: '219,00' },
@@ -4589,10 +4605,10 @@ const DOC_SEED = [
     { name: 'Amortyzator tylny', code: '314 875', producer: 'SACHS', unit: 'Sztuka', qty: '2', price: '219,00', vat: '23', msrp: '' },
     { name: 'Świece zapłonowe (zestaw 4)', code: 'ZKR7A-10', producer: 'NGK', unit: 'Zestaw', qty: '1', price: '84,00', vat: '23', msrp: '' },
   ] },
-  { nr: 'ZM/2026/0212', ext: 'WZ 5512/08/2026', supplier: 'Auto Partner', date: '08.08.2026', status: 'Dostarczony', rows: [
+  { nr: 'ZM/2026/0212', ext: 'WZ 5512/08/2026', supplier: 'Auto Partner', date: '11.08.2026', status: 'Dostarczony', rows: [
     { name: 'Filtr powietrza', code: 'C 30 130', producer: 'MANN', unit: 'Sztuka', qty: '3', price: '52,00', vat: '23', msrp: '79,00' },
   ] },
-  { nr: 'ZM/2026/0211', ext: 'FV 71980/07/2026', supplier: 'Inter Cars', date: '28.07.2026', status: 'Dostarczony', rows: [
+  { nr: 'ZM/2026/0211', ext: 'FV 71980/07/2026', supplier: 'Inter Cars', date: '08.08.2026', status: 'Dostarczony', rows: [
     { name: 'Pasek rozrządu — zestaw', code: 'KP15607XS', producer: 'Gates', unit: 'Zestaw', qty: '1', price: '412,00', vat: '23', msrp: '589,00' },
   ] },
   { nr: 'ZM/2026/0210', ext: 'WZ 5340/07/2026', supplier: 'Gordon', date: '21.07.2026', status: 'Dostarczony', rows: [
@@ -7213,7 +7229,7 @@ class Component extends DCLogic {
       src += (src.indexOf('#') >= 0 ? '&' : '#') + 'car=' + encodeURIComponent(JSON.stringify(car));
       const groups = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).map((g) => ({ name: g.name, pct: g.pct, mode: g.mode }));
       src += '&groups=' + encodeURIComponent(JSON.stringify(groups));
-      const docs = this.docList().slice(0, 6).map((d) => ({
+      const docs = this.docList().slice(0, 12).map((d) => ({
         nr: d.nr,
         supplier: d.supplier,
         date: d.date,

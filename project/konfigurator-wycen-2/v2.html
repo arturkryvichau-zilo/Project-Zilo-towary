@@ -590,39 +590,57 @@ window.__resources = {
         </div>
 
         <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 30px 24px;display:flex;flex-direction:column;gap:12px;">
-          <sc-for list="{{ docPicker.docs }}" as="doc" hint-placeholder-count="3">
-            <div style="flex:none;border:1px solid var(--grey-5);border-radius:12px;background:var(--tk-surface);overflow:hidden;">
-              <div onClick="{{ doc.toggle }}" style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:var(--grey-7);" style-hover="background:var(--grey-6);">
-                <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ doc.chevron }} ;transition:transform 160ms var(--ease-standard);">
+          <sc-for list="{{ docPicker.groups }}" as="grp" hint-placeholder-count="2">
+            <div style="flex:none;display:flex;flex-direction:column;gap:12px;">
+              <div onClick="{{ grp.toggle }}" style="display:flex;align-items:center;gap:10px;padding:6px 4px;cursor:pointer;border-radius:8px;" style-hover="background:var(--grey-7);">
+                <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ grp.chevron }} ;transition:transform 160ms var(--ease-standard);">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </span>
-                <span style="font-size:16px;line-height:22px;font-weight:600;color:var(--grey-1);white-space:nowrap;">{{ doc.nr }}</span>
-                <span style="font-size:15px;line-height:22px;color:var(--grey-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ doc.supplier }} · {{ doc.date }}</span>
-                <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ doc.count }}</span>
+                <span style="font-size:15px;line-height:22px;font-weight:600;color:var(--grey-1);white-space:nowrap;">{{ grp.label }}</span>
+                <sc-if value="{{ grp.showDate }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:14px;line-height:20px;color:var(--grey-2);white-space:nowrap;">{{ grp.date }}</span>
+                </sc-if>
+                <span style="margin-left:auto;font-size:14px;line-height:20px;color:var(--grey-2);white-space:nowrap;">{{ grp.count }}</span>
               </div>
-              <sc-if value="{{ doc.open }}" hint-placeholder-val="{{ true }}">
-                <div style="border-top:1px solid var(--grey-5);">
-                  <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;padding:10px 20px;background:var(--tk-surface);border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
-                    <span onClick="{{ doc.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ doc.allBorder }};border-radius:4px;background: {{ doc.allBg }} ;display:grid;place-items:center;cursor:pointer;">
-                      <sc-if value="{{ doc.someChecked }}" hint-placeholder-val="{{ false }}">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ doc.allIconPath }}" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                      </sc-if>
-                    </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Sug. cena prod.</span><span style="text-align:right;">Wartość netto</span><span style="text-align:right;">Wartość brutto</span>
+              <sc-if value="{{ grp.open }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <sc-for list="{{ grp.docs }}" as="doc" hint-placeholder-count="2">
+                <div style="flex:none;border:1px solid var(--grey-5);border-radius:12px;background:var(--tk-surface);overflow:hidden;">
+                  <div onClick="{{ doc.toggle }}" style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:var(--grey-7);" style-hover="background:var(--grey-6);">
+                    <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ doc.chevron }} ;transition:transform 160ms var(--ease-standard);">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </span>
+                    <span style="font-size:16px;line-height:22px;font-weight:600;color:var(--grey-1);white-space:nowrap;">{{ doc.nr }}</span>
+                    <span style="font-size:15px;line-height:22px;color:var(--grey-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ doc.supplier }}</span>
+                    <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ doc.count }}</span>
                   </div>
-                  <sc-for list="{{ doc.items }}" as="it" hint-placeholder-count="3">
-                    <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
-                      <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ it.boxBorder }};border-radius:4px;background: {{ it.boxBg }} ;display:grid;place-items:center;">
-                        <sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}">
-                          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </sc-if>
-                      </span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.name }}</span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.indeks }}</span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.producent }}</span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.netto }}</span>
-                      <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.brutto }}</span>
+                  <sc-if value="{{ doc.open }}" hint-placeholder-val="{{ true }}">
+                    <div style="border-top:1px solid var(--grey-5);">
+                      <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;padding:10px 20px;background:var(--tk-surface);border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
+                        <span onClick="{{ doc.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ doc.allBorder }};border-radius:4px;background: {{ doc.allBg }} ;display:grid;place-items:center;cursor:pointer;">
+                          <sc-if value="{{ doc.someChecked }}" hint-placeholder-val="{{ false }}">
+                            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ doc.allIconPath }}" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                          </sc-if>
+                        </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Cena detaliczna</span><span style="text-align:right;">Wartość netto</span><span style="text-align:right;">Wartość brutto</span>
+                      </div>
+                      <sc-for list="{{ doc.items }}" as="it" hint-placeholder-count="3">
+                        <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
+                          <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ it.boxBorder }};border-radius:4px;background: {{ it.boxBg }} ;display:grid;place-items:center;">
+                            <sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}">
+                              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </sc-if>
+                          </span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.name }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.indeks }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.producent }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.netto }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.brutto }}</span>
+                        </div>
+                      </sc-for>
                     </div>
+                  </sc-if>
+                </div>
                   </sc-for>
                 </div>
               </sc-if>
@@ -1080,6 +1098,25 @@ class Component extends DCLogic {
     return row;
   }
 
+  // „13.08.2026" → liczba, żeby dało się sortować i porównywać dni
+  static dayKey(d) {
+    const m = String(d || '').match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    return m ? Number(m[3] + m[2] + m[1]) : 0;
+  }
+
+  static dayLabel(date, today) {
+    const k = Component.dayKey(date);
+    const t = Component.dayKey(today);
+    if (!k || !t) return date;
+    if (k === t) return 'Dzisiaj';
+    const day = 24 * 3600 * 1000;
+    const iso = (n) => new Date(Math.floor(n / 10000), Math.floor(n / 100) % 100 - 1, n % 100);
+    const diff = Math.round((iso(t) - iso(k)) / day);
+    if (diff === 1) return 'Wczoraj';
+    if (diff === 2) return 'Przedwczoraj';
+    return date;
+  }
+
   _docPickerVals() {
     const s = this.state;
     const q = (s.docQuery || '').toLowerCase();
@@ -1091,8 +1128,16 @@ class Component extends DCLogic {
     })();
     const picked = s.docPicked || [];
     const money = (v) => Component.fmt(Component.parseNum(v));
+    // najświeższy dokument wyznacza „dzisiaj"; pokazujemy cztery ostatnie dni
+    const days = [];
+    source.forEach((d) => { if (days.indexOf(d.date) === -1) days.push(d.date); });
+    days.sort((a, b) => Component.dayKey(b) - Component.dayKey(a));
+    const today = days[0];
+    const keepDays = days.slice(0, 4);
+    const dayOpen = s.docDayMap || {};
     const docs = [];
     source.forEach((d) => {
+      if (keepDays.indexOf(d.date) === -1) return;
       const items = (d.items || []).map((it, i) => ({ it: it, key: d.nr + '#' + i }))
         .filter(({ it }) => !q
           || (it.name || '').toLowerCase().indexOf(q) !== -1
@@ -1127,6 +1172,7 @@ class Component extends DCLogic {
           const cur = st.docOpenMap || (() => { const m = {}; source.forEach((x, i) => { m[x.nr] = i < 1; }); return m; })();
           return { docOpenMap: Object.assign({}, cur, { [d.nr]: !cur[d.nr] }) };
         }),
+        day: d.date,
         items: items.map(({ it, key }) => {
           const on = picked.indexOf(key) !== -1;
           const netto = Component.parseNum(it.cena);
@@ -1149,12 +1195,33 @@ class Component extends DCLogic {
         }),
       });
     });
+    // dokumenty w grupach dziennych, od najnowszego dnia
+    const groups = [];
+    keepDays.forEach((date) => {
+      const inDay = docs.filter((d) => d.day === date);
+      if (!inDay.length) return;
+      // przy wyszukiwaniu rozwijamy wszystko, żeby wynik było widać
+      const isOpen = q ? true : dayOpen[date] !== false;
+      groups.push({
+        key: date,
+        label: Component.dayLabel(date, today),
+        date: date,
+        showDate: Component.dayLabel(date, today) !== date,
+        count: String(inDay.length) + (inDay.length === 1 ? ' dokument' : (inDay.length < 5 ? ' dokumenty' : ' dokumentów')),
+        open: isOpen,
+        chevron: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+        toggle: () => this.setState((st) => ({
+          docDayMap: Object.assign({}, st.docDayMap || {}, { [date]: (st.docDayMap || {})[date] === false }),
+        })),
+        docs: inDay,
+      });
+    });
     const n = picked.length;
     return {
       open: !!s.docPickerOpen,
       query: s.docQuery || '',
-      docs: docs,
-      empty: docs.length === 0,
+      groups: groups,
+      empty: groups.length === 0,
       countLabel: n ? ('Zaznaczono: ' + n) : '',
       hasPicked: n > 0,
       ctaCursor: n ? 'pointer' : 'not-allowed',
@@ -1282,7 +1349,7 @@ class Component extends DCLogic {
         nextTowarId: s.nextTowarId + 1,
       })),
 
-      openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null }),
+      openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null, docDayMap: null }),
       addDocument: () => {
         try { parent.postMessage({ __wyc: 'addDoc', state: window.__wycState || null }, '*'); } catch (e) {}
       },
