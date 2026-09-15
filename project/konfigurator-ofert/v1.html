@@ -310,10 +310,7 @@ window.__resources = {
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </span>
                 <span style="color: {{ grp.color }} ;font-size:16px;white-space:nowrap;">{{ grp.label }}</span>
-                <sc-if value="{{ grp.showDate }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size:14px;line-height:20px;color:var(--grey-2);white-space:nowrap;">{{ grp.date }}</span>
-                </sc-if>
-                <span style="font-size:12px;color:var(--zilo-primary);background:var(--zilo-primary-5);padding:4px;border-radius:15px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:500;flex:none;margin-left:4px;">{{ grp.count }}</span>
+                <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ grp.count }}</span>
               </div>
               <sc-if value="{{ grp.open }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;flex-direction:column;gap:8px;padding:12px;">
@@ -323,7 +320,7 @@ window.__resources = {
                     <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ doc.chevron }} ;transition:transform 160ms var(--ease-standard);">
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </span>
-                    <span style="font-size:16px;line-height:22px;font-weight:600;color:var(--grey-1);white-space:nowrap;">{{ doc.nr }}</span>
+                    <span style="font-size:16px;line-height:22px;font-weight:400;color:var(--grey-1);white-space:nowrap;">{{ doc.nr }}</span>
                     <span style="font-size:15px;line-height:22px;color:var(--grey-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ doc.supplier }}</span>
                     <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ doc.count }}</span>
                   </div>
@@ -584,28 +581,29 @@ class Component extends DCLogic {
     return m ? Number(m[3] + m[2] + m[1]) : 0;
   }
 
+  static DOW_PL = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+  static MON_PL = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
+
+  // dzisiaj i wczoraj po nazwie, dalej „Środa 12 sie"
   static dayLabel(date, today) {
     const k = Component.dayKey(date);
     const t = Component.dayKey(today);
-    if (!k || !t) return date;
-    if (k === t) return 'Dzisiaj';
-    const day = 24 * 3600 * 1000;
+    if (!k) return date;
     const iso = (n) => new Date(Math.floor(n / 10000), Math.floor(n / 100) % 100 - 1, n % 100);
-    const diff = Math.round((iso(t) - iso(k)) / day);
-    if (diff === 1) return 'Wczoraj';
-    if (diff === 2) return 'Przedwczoraj';
-    return date;
+    if (t) {
+      const diff = Math.round((iso(t) - iso(k)) / (24 * 3600 * 1000));
+      if (diff === 0) return 'Dzisiaj';
+      if (diff === 1) return 'Wczoraj';
+    }
+    const d = iso(k);
+    return Component.DOW_PL[d.getDay()] + ' ' + d.getDate() + ' ' + Component.MON_PL[d.getMonth()];
   }
 
   _docPickerVals() {
     const s = this.state;
     const q = (s.docQuery || '').toLowerCase();
     const source = Component.docSource();
-    const openMap = s.docOpenMap || (() => {
-      const m = {};
-      source.forEach((d, i) => { m[d.nr] = i < 1; });
-      return m;
-    })();
+    const openMap = s.docOpenMap || null;
     const picked = s.docPicked || [];
     const money = (v) => Component.fmt(Component.num(v));
     // najświeższy dokument wyznacza „dzisiaj"; pokazujemy cztery ostatnie dni
@@ -625,7 +623,8 @@ class Component extends DCLogic {
           || (it.producent || '').toLowerCase().indexOf(q) !== -1
           || (d.nr || '').toLowerCase().indexOf(q) !== -1);
       if (!items.length) return;
-      const isOpen = q ? true : !!openMap[d.nr];
+      // domyślnie rozwinięte są dokumenty z dzisiaj; szukanie rozwija wszystko
+      const isOpen = q ? true : (openMap && openMap[d.nr] !== undefined ? !!openMap[d.nr] : d.date === today);
       const keys = items.map((x) => x.key);
       const onCount = keys.filter((k) => picked.indexOf(k) !== -1).length;
       const allOn = onCount > 0 && onCount === keys.length;
@@ -649,8 +648,9 @@ class Component extends DCLogic {
         open: isOpen,
         chevron: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
         toggle: () => this.setState((st) => {
-          const cur = st.docOpenMap || (() => { const m = {}; source.forEach((x, i) => { m[x.nr] = i < 1; }); return m; })();
-          return { docOpenMap: Object.assign({}, cur, { [d.nr]: !cur[d.nr] }) };
+          const cur = st.docOpenMap || {};
+          const now = cur[d.nr] !== undefined ? cur[d.nr] : d.date === today;
+          return { docOpenMap: Object.assign({}, cur, { [d.nr]: !now }) };
         }),
         day: d.date,
         items: items.map(({ it, key }) => {
@@ -677,11 +677,12 @@ class Component extends DCLogic {
     });
     // dokumenty w grupach dziennych, od najnowszego dnia
     const groups = [];
-    keepDays.forEach((date) => {
+    keepDays.forEach((date, di) => {
       const inDay = docs.filter((d) => d.day === date);
       if (!inDay.length) return;
-      // przy wyszukiwaniu rozwijamy wszystko, żeby wynik było widać
-      const isOpen = q ? true : dayOpen[date] !== false;
+      // otwarte są dwa pierwsze dni; szukanie rozwija wszystko
+      const def = di < 2;
+      const isOpen = q ? true : (dayOpen[date] !== undefined ? dayOpen[date] : def);
       groups.push({
         key: date,
         label: Component.dayLabel(date, today),
@@ -692,9 +693,11 @@ class Component extends DCLogic {
         open: isOpen,
         headBorder: isOpen ? '1px solid var(--grey-5)' : '1px solid transparent',
         chevron: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-        toggle: () => this.setState((st) => ({
-          docDayMap: Object.assign({}, st.docDayMap || {}, { [date]: (st.docDayMap || {})[date] === false }),
-        })),
+        toggle: () => this.setState((st) => {
+          const cur = st.docDayMap || {};
+          const now = cur[date] !== undefined ? cur[date] : def;
+          return { docDayMap: Object.assign({}, cur, { [date]: !now }) };
+        }),
         docs: inDay,
       });
     });
