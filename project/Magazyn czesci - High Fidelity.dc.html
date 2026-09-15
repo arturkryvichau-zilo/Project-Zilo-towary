@@ -1635,12 +1635,14 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-for list="{{ col.cards }}" as="card" hint-placeholder-count="2">
                   <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:10px;display:flex;flex-direction:column">
                     <div style="padding:12px 10px;font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">{{ card.title }}</div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;align-self:stretch">
                     <sc-for list="{{ card.rows }}" as="row" hint-placeholder-count="3">
-                      <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="display:flex;align-items:center;gap:8px;padding:12px;border-top:{{ row.border }};border-radius:8px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                        <span style="flex:1;min-width:0;font-size:16px;line-height:24px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
+                      <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="align-self:stretch;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:{{ row.border }};cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                        <span style="flex:1 0 0;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:12px 0;font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat"></span>
                       </div>
                     </sc-for>
+                    </div>
                   </div>
                 </sc-for>
               </div>
@@ -7809,7 +7811,7 @@ class Component extends DCLogic {
           title: c.title,
           rows: c.rows.map((r, i) => ({
             key: r.key, title: r.title, subtitle: r.subtitle,
-            border: '1px solid var(--tk-border-2)',
+            border: i === c.rows.length - 1 ? '1px solid transparent' : '1px solid var(--tk-border-2)',
           })),
         })),
       })),
