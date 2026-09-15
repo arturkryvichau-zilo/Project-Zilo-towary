@@ -7035,6 +7035,7 @@ class Component extends DCLogic {
         uwagi: uwagi,
       };
       src += '#fv=' + encodeURIComponent(JSON.stringify(payload));
+      src += '&docs=' + encodeURIComponent(JSON.stringify(this.docsPayload()));
     } catch (e) {}
     try { src += (src.indexOf('#') >= 0 ? '&' : '#') + 'theme=' + (document.documentElement.getAttribute('data-theme') || 'light'); } catch (e) {}
     this.setState({ fvConfigSrc: src, fvConfigVisit: visitId });
@@ -7108,6 +7109,20 @@ class Component extends DCLogic {
     this.ziloToast('Faktura ' + numer + ' otwarta w programie do fakturowania');
   }
 
+  // ten sam zestaw dokumentów trafia do wszystkich trzech konfiguratorów
+  docsPayload() {
+    return this.docList().slice(0, 12).map((d) => ({
+      nr: d.nr,
+      supplier: d.supplier,
+      date: d.date,
+      // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
+      // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
+      items: (d.rows || []).map((r) => ({
+        name: r.name, indeks: r.code, producent: r.producer || '', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
+      })),
+    }));
+  }
+
   openOfferConfig(visitId) {
     // licznik startuje od 1 przy każdym przeładowaniu strony, więc sam w sobie
     // nie łamie cache przeglądarki — stąd znacznik czasu
@@ -7140,6 +7155,7 @@ class Component extends DCLogic {
         komentarz: st.komentarz || '',
       };
       src += '#offer=' + encodeURIComponent(JSON.stringify(payload));
+      src += '&docs=' + encodeURIComponent(JSON.stringify(this.docsPayload()));
     } catch (e) {}
     try { src += (src.indexOf('#') >= 0 ? '&' : '#') + 'theme=' + (document.documentElement.getAttribute('data-theme') || 'light'); } catch (e) {}
     this.setState({ offerConfigSrc: src, offerConfigVisit: visitId });
@@ -7148,6 +7164,7 @@ class Component extends DCLogic {
   onOfferMessage(d) {
     if (!this.state.offerConfigSrc) return;
     if (d.__ofr === 'close') { this.setState({ offerConfigSrc: null, offerConfigVisit: null }); return; }
+    if (d.__ofr === 'toast') { this.ziloToast(String(d.text || '')); return; }
     if (d.__ofr !== 'send') return;
     const id = this.state.offerConfigVisit;
     const t = d.totals || {};
@@ -7229,17 +7246,7 @@ class Component extends DCLogic {
       src += (src.indexOf('#') >= 0 ? '&' : '#') + 'car=' + encodeURIComponent(JSON.stringify(car));
       const groups = (this.state.priceGroups || DEFAULT_PRICE_GROUPS).map((g) => ({ name: g.name, pct: g.pct, mode: g.mode }));
       src += '&groups=' + encodeURIComponent(JSON.stringify(groups));
-      const docs = this.docList().slice(0, 12).map((d) => ({
-        nr: d.nr,
-        supplier: d.supplier,
-        date: d.date,
-        // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
-        // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
-        items: (d.rows || []).map((r) => ({
-          name: r.name, indeks: r.code, producent: r.producer || '', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
-        })),
-      }));
-      src += '&docs=' + encodeURIComponent(JSON.stringify(docs));
+      src += '&docs=' + encodeURIComponent(JSON.stringify(this.docsPayload()));
     } catch (e) {}
     this.__wycFocus = focus || null;
     this.__wycSend = !!(opts && opts.send);
