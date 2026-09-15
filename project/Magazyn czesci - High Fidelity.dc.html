@@ -1487,13 +1487,13 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </div>
               </sc-for>
               <div style="height:1px;background:var(--tk-border-2);margin:8px 0"></div>
-              <a href="https://fakturownia.pl" target="_blank" rel="noopener" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:20px;display:flex;align-items:center;gap:20px;text-decoration:none;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
+              <div onClick="{{ billing.startWithSignup }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:20px;display:flex;align-items:center;gap:20px;text-decoration:none;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
                 <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
                   <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Nie masz jeszcze programu do faktur?</span>
                   <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">Polecamy założyć konto w Fakturownia.pl.</span>
                 </span>
                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
-              </a>
+              </div>
             </div>
           </div>
         </div>
@@ -1536,6 +1536,13 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <span style="font-size:15px;line-height:22px;color:var(--tk-text-2)">{{ st.infoLabel }}</span>
                       <span style="font-size:16px;line-height:22px;color:var(--tk-text);text-wrap:pretty">{{ st.infoValue }}</span>
                     </div>
+                  </sc-if>
+
+                  <sc-if value="{{ st.hasCta }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ st.ctaHref }}" target="_blank" rel="noopener" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;text-decoration:none;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
+                      {{ st.ctaLabel }}
+                      <span style="width:18px;height:18px;flex:none;display:block;background-color:currentColor;transform:rotate(-45deg);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 18px 18px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 18px 18px no-repeat"></span>
+                    </a>
                   </sc-if>
 
                   <sc-if value="{{ st.hasField }}" hint-placeholder-val="{{ false }}">
@@ -4696,6 +4703,16 @@ const DOC_DRAFT_ROWS = [
 ];
 
 // Narzędzia fakturowe — ten sam wzorzec co integracje z hurtowniami
+const SIGNUP_STEP = {
+  title: 'Załóż konto w Fakturowni',
+  info: 'Wymagane działanie:',
+  infoValue: 'Fakturownia to jeden z najpopularniejszych programów do faktur w Polsce — obsługuje KSeF, '
+    + 'faktury cykliczne i wysyłkę do klienta jednym kliknięciem, a dane same trafiają do księgowej. '
+    + 'Konto zakładasz bezpośrednio u nich — Zilo nie pośredniczy w płatności. Plan wystarczający dla '
+    + 'warsztatu kosztuje ok. 27 zł miesięcznie; darmowy ma limit trzech faktur na miesiąc.',
+  cta: { label: 'Załóż konto w Fakturowni', href: 'https://fakturownia.pl' },
+};
+
 const BILLING_TOOLS = [
   { name: 'Fakturownia', mark: 'FKT', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
     { title: 'Wygeneruj token API', info: 'Wymagane działanie:', infoValue: 'W Fakturowni wejdź w Ustawienia → Ustawienia konta → Integracja i skopiuj kod autoryzacyjny API.' },
@@ -5628,13 +5645,18 @@ class Component extends DCLogic {
     const tool = BILLING_TOOLS.filter((x) => x.name === draft.name)[0];
     if (!tool) return [];
     const fields = draft.fields || {};
-    return tool.steps.map((st, i) => ({
+    // wchodząc przez „Nie masz jeszcze programu?" zaczynamy od założenia konta
+    const steps = draft.signup ? [SIGNUP_STEP].concat(tool.steps) : tool.steps;
+    return steps.map((st, i) => ({
       no: String(i + 1),
       title: st.title,
-      border: i === tool.steps.length - 1 ? 'transparent' : 'var(--tk-border-2)',
+      border: i === steps.length - 1 ? 'transparent' : 'var(--tk-border-2)',
       hasInfo: !!st.info,
       infoLabel: st.info || '',
       infoValue: st.infoValue || '',
+      hasCta: !!st.cta,
+      ctaLabel: st.cta ? st.cta.label : '',
+      ctaHref: st.cta ? st.cta.href : '',
       hasField: !!st.field,
       fieldLabel: st.label || '',
       value: fields[st.field] || '',
@@ -5741,6 +5763,11 @@ class Component extends DCLogic {
           rowOpacity: blocked ? '0.5' : '1',
           rowCursor: blocked ? 'not-allowed' : 'pointer',
         };
+      }),
+      // podpowiedź prowadzi do tego samego formularza, tylko z krokiem zakładania konta
+      startWithSignup: () => this.setState({
+        screen: 'billingForm',
+        billingDraft: { name: 'Fakturownia', fields: {}, editing: null, signup: true },
       }),
       pickTool: (e) => {
         const name = e.currentTarget.dataset.tool;
