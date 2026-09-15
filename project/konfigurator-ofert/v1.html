@@ -309,7 +309,7 @@ window.__resources = {
                 <span style="display:grid;place-items:center;width:20px;height:20px;flex:none;color:var(--grey-2);transform: {{ grp.chevron }} ;transition:transform 160ms var(--ease-standard);">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </span>
-                <span style="color: {{ grp.color }} ;font-size:16px;white-space:nowrap;">{{ grp.label }}</span>
+                <span style="color: {{ grp.color }} ;font-size:16px;font-weight:500;white-space:nowrap;">{{ grp.label }}</span>
                 <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--zilo-primary-5);font-size:13px;line-height:20px;color:var(--zilo-primary);flex:none;">{{ grp.count }}</span>
               </div>
               <sc-if value="{{ grp.open }}" hint-placeholder-val="{{ true }}">
