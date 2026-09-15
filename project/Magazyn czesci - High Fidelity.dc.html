@@ -1638,7 +1638,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;align-self:stretch">
                     <sc-for list="{{ card.rows }}" as="row" hint-placeholder-count="3">
                       <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="align-self:stretch;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:{{ row.border }};cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                        <span style="flex:1 0 0;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:12px 0;font-size:18px;line-height:28px;font-weight:400;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
+                        <span style="flex:1 0 0;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:14px 0;font-size:18px;line-height:28px;font-weight:400;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat"></span>
                       </div>
                     </sc-for>
