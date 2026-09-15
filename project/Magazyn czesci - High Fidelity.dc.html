@@ -1634,7 +1634,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div style="display:flex;flex-direction:column;gap:24px">
                 <sc-for list="{{ col.cards }}" as="card" hint-placeholder-count="2">
                   <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:10px;display:flex;flex-direction:column">
-                    <div style="padding:12px 10px;font-size:18px;line-height:26px;font-weight:500;color:var(--tk-text-strong)">{{ card.title }}</div>
+                    <div style="padding:12px 10px;font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">{{ card.title }}</div>
                     <sc-for list="{{ card.rows }}" as="row" hint-placeholder-count="3">
                       <div data-settings-row="{{ row.key }}" onClick="{{ openSettingsRow }}" style="display:flex;align-items:center;gap:8px;padding:12px;border-top:{{ row.border }};border-radius:8px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                         <span style="flex:1;min-width:0;font-size:16px;line-height:24px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ row.title }}</span>
