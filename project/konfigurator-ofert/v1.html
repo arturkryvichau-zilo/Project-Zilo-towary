@@ -680,8 +680,8 @@ class Component extends DCLogic {
     keepDays.forEach((date, di) => {
       const inDay = docs.filter((d) => d.day === date);
       if (!inDay.length) return;
-      // otwarte są dwa pierwsze dni; szukanie rozwija wszystko
-      const def = di < 2;
+      // otwarty jest tylko dzisiejszy dzień; szukanie rozwija wszystko
+      const def = di < 1;
       const isOpen = q ? true : (dayOpen[date] !== undefined ? dayOpen[date] : def);
       groups.push({
         key: date,
