@@ -392,12 +392,8 @@ window.__resources = {
           </sc-if>
         </div>
 
-        <div style="flex:none;display:flex;align-items:center;gap:8px;padding:16px 30px;border-top:1px solid var(--grey-5);">
-          <button type="button" onClick="{{ addDocument }}" style="flex:none; font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-            Dodaj dokument
-          </button>
-          <span style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:flex-end;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
+        <div style="flex:none;display:flex;align-items:center;gap:12px;padding:16px 30px;border-top:1px solid var(--grey-5);">
+          <span style="flex:1;min-width:0;display:inline-flex;align-items:center;gap:8px;font-size:15px;line-height:22px;color:var(--grey-1);">
             {{ docPicker.countLabel }}
             <sc-if value="{{ docPicker.hasPicked }}" hint-placeholder-val="{{ false }}">
               <button type="button" onClick="{{ clearDocPicked }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:var(--zilo-primary-5);color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);" data-tt="Odznacz wszystkie" aria-label="Odznacz wszystkie">
@@ -405,6 +401,7 @@ window.__resources = {
               </button>
             </sc-if>
           </span>
+          <button type="button" onClick="{{ addDocument }}" style="flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary-5);color:var(--zilo-primary);font-family:var(--font-sans);font-weight:500;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);">Wgraj dokument</button>
           <button type="button" onClick="{{ addFromDocs }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor: {{ docPicker.ctaCursor }} ;opacity: {{ docPicker.ctaOpacity }} ;pointer-events: {{ docPicker.ctaEvents }} ;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-hover, #1C2082);" style-active="background:var(--zilo-primary-press, #161A6E);">Dodaj do faktury</button>
         </div>
       </div>
@@ -953,7 +950,7 @@ class Component extends DCLogic {
       clearDocPicked: () => this.setState({ docPicked: [] }),
       setDocQuery: (e) => this.setState({ docQuery: e.target.value }),
       docPicker: this._docPickerVals(),
-      // „Dodaj dokument" żyje w Towarach — z konfiguratora tylko o tym mówimy
+      // dokumenty wgrywa się w Towarach — z konfiguratora tylko o tym mówimy
       addDocument: () => { try { parent.postMessage({ __fv: 'toast', text: 'Dokumenty dodajesz w zakładce Towary' }, '*'); } catch (e) {} },
       addFromDocs: () => {
         const picked = this.state.docPicked || [];
