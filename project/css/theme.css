@@ -89,9 +89,10 @@
   --tk-info-fg: #A8C4F7;
   --tk-info-soft: #1A2748;
   --tk-inverse: #ECECEC;
-  --tk-nav: #101010;
-  --tk-nav-fg: #E6E6E6;
-  --tk-nav-hover: #2C2C2C;
+  /* pasek nawigacji zostaje w kolorze z jasnego motywu */
+  --tk-nav: #0A0B29;
+  --tk-nav-fg: #EBEBEE;
+  --tk-nav-hover: #272843;
   --tk-ok: #3FBF89;
   --tk-ok-fg: #8FE3B8;
   --tk-ok-soft: #1B3D28;
