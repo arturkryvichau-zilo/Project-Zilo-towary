@@ -1108,7 +1108,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="display:flex;cursor:{{ opt.rowCursor }}">
                   <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                     <span style="display:flex;align-items:center;gap:12px">
-                      <img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)">
+                      <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
                       <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
                       <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                     </span>
@@ -4804,6 +4804,12 @@ const BILLING_TOOLS = [
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Wklej klucz do faktur', field: 'apiKey', label: 'Klucz API (faktura)', hint: 'Klucz znajdziesz w iFirma w sekcji Narzędzia → API.' },
   ] },
+  { name: 'Comarch Optima', mark: 'OPT', note: 'Eksport faktur do Comarch ERP Optima.', steps: [
+    { title: 'Włącz usługę Comarch Cloud', info: 'Wymagane działanie:', infoValue: 'Poproś opiekuna Comarch o włączenie dostępu API dla Twojej bazy.' },
+    { title: 'Podaj login', field: 'login', label: 'Login' },
+    { title: 'Podaj hasło', field: 'pass', label: 'Hasło' },
+    { title: 'Podaj nazwę bazy', field: 'db', label: 'Nazwa bazy danych' },
+  ] },
 ];
 
 // zestaw komunikatów jest skończony — ekran nie pokazuje treści błędów dostawcy
@@ -5941,7 +5947,7 @@ class Component extends DCLogic {
         const mine = connected.some((c) => c.name === t.name);
         const blocked = !mine && connected.length > 0;
         return {
-          name: t.name, note: t.note, mark: t.mark, logo: t.logo,
+          name: t.name, note: t.note, mark: t.mark, logo: t.logo, hasLogo: !!t.logo, noLogo: !t.logo,
           isConnected: mine,
           isFree: !mine && !blocked,
           isBlocked: blocked,
