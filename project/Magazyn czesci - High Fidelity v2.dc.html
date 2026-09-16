@@ -1103,22 +1103,22 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
               </div>
 
-              <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
                 <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="5">
-                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px 20px;display:flex;align-items:center;gap:20px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
-                    <span style="flex:1;min-width:0;display:flex;align-items:center;gap:12px">
-                      <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);white-space:nowrap">{{ opt.name }}</span>
-                      <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
-                        <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);flex:none">
-                          <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
-                          Połączono
-                        </span>
-                      </sc-if>
-                      <sc-if value="{{ opt.isBlocked }}" hint-placeholder-val="{{ false }}">
-                        <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);white-space:nowrap">Najpierw rozłącz obecne narzędzie.</span>
-                      </sc-if>
+                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
+                    <span style="display:flex;align-items:center;gap:12px">
+                      <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                     </span>
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
+                    <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
+                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
+                        Połączono
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ opt.isBlocked }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-3);text-wrap:pretty">Najpierw rozłącz obecne narzędzie.</span>
+                    </sc-if>
                   </div>
                 </sc-for>
               </div>
