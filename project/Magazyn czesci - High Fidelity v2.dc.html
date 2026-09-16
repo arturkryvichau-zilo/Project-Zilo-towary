@@ -4028,76 +4028,92 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </sc-if>
 
               <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
-                <div style="padding: 14px 16px; margin: 0 12px; display: flex; flex-direction: column; gap: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px; margin-left: 0px; margin-right: 0px">
-                  
-                  <div onClick="{{ openTireSection }}" style="background: var(--tk-canvas); border-left: 3px solid var(--tk-brand-bd-soft); border-bottom: 1px solid var(--tk-border-2); padding: 6px 10px 6px 8px; display: flex; flex-direction: column; gap: 0px; cursor: pointer; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; padding-left: 12px; justify-content: flex-start; align-items: stretch" style-hover="background:var(--tk-surface-2)">
-    
-                    <sc-if value="{{ visitTire.hasOn }}" hint-placeholder-val="{{ true }}">
-                      <div style="padding: 0px; border-radius: 0px; display: flex; flex-direction: column; gap: 4px">
-                        <div style="display: flex; align-items: center; gap: 4px; justify-content: space-between">
-                          <span style="position:relative;display:inline-flex">
-                            <span onMouseEnter="{{ showVisitTip }}" onMouseLeave="{{ hideVisitTip }}" style="display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 4px; font-size: 14px; line-height: 20px; color: var(--tk-text); white-space: nowrap; width: fit-content; cursor: default; background-color: var(--white)">
-                              <sc-if value="{{ visitTire.seasonHasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:14px;height:14px;display:block;flex:none;background-color:{{ visitTire.seasonIconColor }};-webkit-mask:url({{ visitTire.seasonIcon }}) center / 14px 14px no-repeat;mask:url({{ visitTire.seasonIcon }}) center / 14px 14px no-repeat"></span></sc-if>
-                              {{ visitTire.season }}
-                              <span style="color:var(--tk-text-2)">·</span>
-                              <span style="font-weight:500">{{ visitTire.code }}</span>
-                            </span>
-                            <sc-if value="{{ visitTire.tipVisible }}" hint-placeholder-val="{{ false }}" data-tip-visit="1">
-                              <span style="position:absolute;bottom: calc(100% + 8px); left: -8px;z-index:40;display:block;background:var(--tk-surface);border:1px solid var(--tk-border-2);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:12px 14px;pointer-events:none;white-space:nowrap;max-width:none">
-                                <sc-if value="{{ visitTire.tipHasLocation }}" hint-placeholder-val="{{ false }}">
-                                <span style="display:block;font-size:12px;line-height:16px;color:var(--tk-text-2);padding-bottom:10px">Lokalizacja: <span style="color:var(--tk-text);font-weight:500">{{ visitTire.tipLocation }}</span></span>
-                              </sc-if>
-                              <span style="display:grid;grid-template-columns:{{ visitTire.tipCols }};column-gap:18px">
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3);padding-bottom:6px">Producent</span>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3);padding-bottom:6px">Profil</span>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3);padding-bottom:6px">Felga</span>
-                                  <sc-if value="{{ visitTire.tipHasTread }}" hint-placeholder-val="{{ true }}">
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3);padding-bottom:6px">Gł. bieżnika</span>
-                                  </sc-if>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3);padding-bottom:6px">Ilość</span>
-                                  <sc-for list="{{ visitTire.tipWheels }}" as="w" hint-placeholder-count="2">
-                                    <span style="display:contents">
-                                      <span style="font-size:12px;line-height:16px;color:var(--tk-text);padding:6px 0;border-top:1px solid {{ w.rowBorder }}">{{ w.maker }}</span>
-                                      <span style="font-size:12px;line-height:16px;color:var(--tk-text);padding:6px 0;border-top:1px solid {{ w.rowBorder }}">{{ w.size }}</span>
-                                      <span style="font-size:12px;line-height:16px;color:var(--tk-text);padding:6px 0;border-top:1px solid {{ w.rowBorder }}">{{ w.rim }}</span>
-                                      <sc-if value="{{ w.showTread }}" hint-placeholder-val="{{ true }}">
-                                        <span style="font-size:12px;line-height:16px;color:var(--tk-text);padding:6px 0;border-top:1px solid {{ w.rowBorder }}">{{ w.tread }}</span>
-                                      </sc-if>
-                                      <span style="font-size:12px;line-height:16px;color:var(--tk-text);padding:6px 0;border-top:1px solid {{ w.rowBorder }}">{{ w.qty }}</span>
-                                    </span>
-                                  </sc-for>
-                                </span>
-                                <span style="display:block;font-size:12px;line-height:16px;color:var(--tk-text-2);margin-top:14px">{{ visitTire.tipMeta }}</span>
-                              </span>
-                            </sc-if>
-                          </span>
-                          <span style="display: flex; align-items: center; gap: 4px; margin-left: 8px; flex: none; justify-content: flex-end">
-                            <button type="button" onClick="{{ openRelease }}" style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 4px 12px; border: 0; border-radius: 4px; background: var(--tk-brand-soft); color: var(--tk-brand-fg); font-family: inherit; font-size: 15px; line-height: 22px; cursor: pointer" style-hover="background:var(--tk-brand-soft-2)">
-                              Wydaj opony
-                              <span style="width: 20px; height: 20px; flex: none; display: none; background-color:var(--tk-brand-fg); -webkit-mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
-                            </button>
-                          <div onClick="{{ openTireSection }}" style="position:relative;width:36px;height:36px;display:flex;justify-content:center;align-items:center;cursor:pointer;flex:none" data-tt="Edytuj opony" aria-label="Edytuj opony">
-                            <span style="width: 20px; height: 20px; display: block; background-color: var(--zilo-blue-1); -webkit-mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat; mask: url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
-                          </div>
-                          </span>
-                        </div>
-                      </div>
-                    </sc-if>
-    
-                    <sc-if value="{{ visitTire.emptyOn }}" hint-placeholder-val="{{ false }}">
-                      <div onClick="{{ openTireSectionWithDraft }}" style="margin-top:0;padding:2px 8px;border-radius:8px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                        <div style="display:flex;align-items:center;gap:12px">
-                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
-                          <span style="display:flex;align-items:center;gap:4px;margin-left:auto;flex:none">
-                            <button type="button" onClick="{{ openTireSectionWithDraft }}" style="position:relative;width:30px;height:30px;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                            </button>
-                          </span>
-                        </div>
-                      </div>
-                    </sc-if>
+                <section style="display:flex;flex-direction:column;gap:12px">
+
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <button type="button" onClick="{{ vtTable.toggleSection }}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:transparent;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--tk-text)">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ vtTable.sectionArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                      <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Opony w przechowalni</span>
+                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ vtTable.count }}</span>
+                    </button>
+                    <button type="button" onClick="{{ openTireSection }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                      Edytuj
+                    </button>
                   </div>
-                </div>
+
+                  <sc-if value="{{ vtTable.sectionOpen }}" hint-placeholder-val="{{ true }}">
+                    <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
+
+                      <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                          <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
+                        </div>
+                        <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
+                          <div style="border-bottom:1px solid {{ t.rowBorder }}">
+                            <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                              <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
+                                <sc-if value="{{ t.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
+                                  <span style="width:16px;height:16px;display:block;flex:none;background-color:{{ t.seasonIconColor }};-webkit-mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                                </sc-if>
+                                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.season }}</span>
+                              </span>
+                              <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.code }}</span>
+                              <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.location }}</span>
+                              <span style="font-size:15px;line-height:22px;color:var(--tk-text);white-space:nowrap">{{ t.received }}</span>
+                              <span style="display:flex;justify-content:flex-end">
+                                <button type="button" onClick="{{ t.release }}" style="display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Wydaj komplet</button>
+                              </span>
+                            </div>
+
+                            <sc-if value="{{ t.expanded }}" hint-placeholder-val="{{ false }}">
+                              <div style="padding:0 20px 16px 56px;display:flex;flex-direction:column;gap:12px">
+                                <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:10px 0;border-bottom:1px solid var(--tk-border-2)">
+                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Producent</span>
+                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Profil</span>
+                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Felga</span>
+                                  <sc-if value="{{ t.hasTread }}" hint-placeholder-val="{{ true }}">
+                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Gł. bieżnika</span>
+                                  </sc-if>
+                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Ilość</span>
+                                </div>
+                                <sc-for list="{{ t.wheels }}" as="w" hint-placeholder-count="1">
+                                  <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:8px 0;border-top:1px solid {{ w.border }};font-size:15px;line-height:22px;color:var(--tk-text)">
+                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ w.maker }}</span>
+                                    <span>{{ w.size }}</span>
+                                    <span>{{ w.rim }}</span>
+                                    <sc-if value="{{ w.showTread }}" hint-placeholder-val="{{ true }}">
+                                      <span>{{ w.tread }}</span>
+                                    </sc-if>
+                                    <span>{{ w.qty }}</span>
+                                  </div>
+                                </sc-for>
+                                <sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}">
+                                  <div style="display:flex;gap:16px;align-items:flex-start">
+                                    <span style="flex:none;font-size:15px;line-height:22px;color:var(--tk-text-3)">Notatka</span>
+                                    <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">{{ t.note }}</span>
+                                  </div>
+                                </sc-if>
+                              </div>
+                            </sc-if>
+                          </div>
+                        </sc-for>
+                      </sc-if>
+
+                      <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
+                        <div onClick="{{ openTireSectionWithDraft }}" style="display:flex;align-items:center;gap:12px;padding:18px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                          <span style="flex:1;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
+                          <button type="button" onClick="{{ openTireSectionWithDraft }}" style="position:relative;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
+                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                          </button>
+                        </div>
+                      </sc-if>
+
+                    </div>
+                  </sc-if>
+
+                </section>
               </sc-if>
             </div>
             </div>
@@ -6417,6 +6433,72 @@ class Component extends DCLogic {
     return car ? car.id : null;
   }
 
+  // wydanie kompletu działa tak samo, tylko wie, o który komplet chodzi
+  openReleaseFor(setKey) {
+    if (!setKey) return;
+    const carId = this.visitCarId();
+    const sets = carId ? this.tireSetsFor(carId) : [];
+    const hasOther = sets.some((t) => (carId + '::' + t.__idx) !== setKey);
+    this.setState({
+      releaseSelect: null,
+      releaseForm: { setKey: setKey, outOpen: false, choice: hasOther ? 'existing' : 'new', newSeason: '', newMaker: '', newQty: '4', newSize: '', newRim: '', newTread: '', newLocation: '', note: '' },
+    });
+  }
+
+  visitTireTable() {
+    const s = this.state;
+    const carId = this.visitCarId();
+    const on = !!s.tireStorageOn;
+    const sets = carId
+      ? this.tireSetsFor(carId).filter((t) => (s.setStatus[carId + '::' + t.__idx] || t.status) === 'in')
+      : [];
+    const openMap = s.vtRowOpen || {};
+    return {
+      on: on && !!carId,
+      has: on && sets.length > 0,
+      hasOn: on && sets.length > 0,
+      empty: on && !!carId && sets.length === 0,
+      emptyOn: on && !!carId && sets.length === 0,
+      count: String(sets.length),
+      sectionOpen: s.vtSectionOpen !== false,
+      sectionArrow: s.vtSectionOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
+      toggleSection: () => this.setState((st) => ({ vtSectionOpen: st.vtSectionOpen === false })),
+      rows: sets.map((t, i) => {
+        const key = carId + '::' + t.__idx;
+        const expanded = !!openMap[key];
+        const spec = this.specRows(t.wheels);
+        const anyTread = spec.some((r) => !!r.tread);
+        return Object.assign({
+          key: key,
+          season: t.season,
+          code: t.code,
+          location: t.location || '—',
+          received: t.received || '—',
+          rowBorder: i === sets.length - 1 ? 'transparent' : 'var(--tk-border-2)',
+          expanded: expanded,
+          arrow: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+          toggle: () => this.setState((st) => ({
+            vtRowOpen: Object.assign({}, st.vtRowOpen, { [key]: !(st.vtRowOpen || {})[key] }),
+          })),
+          hasNote: !!t.note,
+          note: t.note || '',
+          specCols: anyTread ? 'minmax(0,1.2fr) minmax(0,1fr) 120px 140px 90px' : 'minmax(0,1.2fr) minmax(0,1fr) 120px 90px',
+          hasTread: anyTread,
+          wheels: spec.map((r, wi) => ({
+            maker: r.maker || '—',
+            size: r.size || '—',
+            rim: r.rim || '—',
+            tread: r.tread || '—',
+            showTread: anyTread,
+            qty: String(r.qty),
+            border: wi === 0 ? 'transparent' : 'var(--tk-border-2)',
+          })),
+          release: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.openReleaseFor(key); },
+        }, seasonVals(t.season));
+      }),
+    };
+  }
+
   visitTireVals() {
     const carId = this.visitCarId();
     const sets = carId ? this.tireSetsFor(carId).filter((t) => (this.state.setStatus[carId + '::' + t.__idx] || t.status) === 'in') : [];
@@ -8640,6 +8722,7 @@ class Component extends DCLogic {
         }
         : { open: false },
       visitTire: this.visitTireVals(),
+      vtTable: this.visitTireTable(),
       timeEdit: this.timeEditVals(),
       openTimeEdit: () => {
         const ev = s.events.find((x) => x.id === s.eventId);
