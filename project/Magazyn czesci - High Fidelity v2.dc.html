@@ -4100,7 +4100,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                             <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
                           </div>
                           <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
-                            <div style="border-bottom:1px solid {{ t.rowBorder }};background:{{ t.rowBg }}">
+                            <div style="border-bottom:1px solid {{ t.rowBorder }}">
                               <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                                 <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
@@ -6519,8 +6519,6 @@ class Component extends DCLogic {
             isDoc: f === 'doc',
             isPhoto: f !== 'doc',
           })),
-          // rozwinięty wiersz dostaje tło, tak jak u klienta
-          rowBg: expanded ? 'var(--tk-surface-2)' : 'transparent',
           specCols: anyTread ? '1fr 1fr 0.7fr 0.9fr 0.6fr' : '1fr 1fr 0.7fr 0.6fr',
           hasTread: anyTread,
           wheels: spec.map((r, wi) => ({
