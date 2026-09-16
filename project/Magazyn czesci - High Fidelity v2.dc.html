@@ -1108,7 +1108,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="display:flex;cursor:{{ opt.rowCursor }}">
                   <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                     <span style="display:flex;align-items:center;gap:12px">
-                      <span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span>
+                      <img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)">
                       <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
                       <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                     </span>
@@ -4834,22 +4834,22 @@ const SIGNUP_STEP = {
 };
 
 const BILLING_TOOLS = [
-  { name: 'Fakturownia', mark: 'FKT', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
+  { name: 'Fakturownia', mark: 'FKT', logo: 'assets/logos/fakturownia.png', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
     { title: 'Wygeneruj token API', info: 'Wymagane działanie:', infoValue: 'W Fakturowni wejdź w Ustawienia → Ustawienia konta → Integracja i skopiuj kod autoryzacyjny API.' },
     { title: 'Podaj adres konta', field: 'domain', label: 'Adres konta', hint: 'Pierwszy człon adresu, np. „mojwarsztat" z mojwarsztat.fakturownia.pl.' },
     { title: 'Wklej token API', field: 'apiKey', label: 'Token API' },
   ] },
-  { name: 'wFirma', mark: 'WF', note: 'Faktury i KSeF po stronie wFirma, wystawianie z poziomu Zilo.', steps: [
+  { name: 'wFirma', mark: 'WF', logo: 'assets/logos/wfirma.png', note: 'Faktury i KSeF po stronie wFirma, wystawianie z poziomu Zilo.', steps: [
     { title: 'Włącz dostęp API', info: 'Wymagane działanie:', infoValue: 'W wFirma wejdź w Ustawienia → Integracje → API i włącz dostęp dla aplikacji zewnętrznych.' },
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Wklej klucz API', field: 'apiKey', label: 'Klucz API' },
     { title: 'Podaj identyfikator firmy', field: 'company', label: 'ID firmy', hint: 'Znajdziesz go w adresie panelu po zalogowaniu.' },
   ] },
-  { name: 'inFakt', mark: 'INF', note: 'Automatyczne przesyłanie faktur do inFakt.', steps: [
+  { name: 'inFakt', mark: 'INF', logo: 'assets/logos/infakt.png', note: 'Automatyczne przesyłanie faktur do inFakt.', steps: [
     { title: 'Wygeneruj klucz API', info: 'Wymagane działanie:', infoValue: 'W inFakt wejdź w Ustawienia → API i wygeneruj klucz dla Zilo.' },
     { title: 'Wklej klucz API', field: 'apiKey', label: 'Klucz API' },
   ] },
-  { name: 'iFirma', mark: 'IFR', note: 'Wystawiaj faktury bezpośrednio w iFirma.', steps: [
+  { name: 'iFirma', mark: 'IFR', logo: 'assets/logos/ifirma.png', note: 'Wystawiaj faktury bezpośrednio w iFirma.', steps: [
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Wklej klucz do faktur', field: 'apiKey', label: 'Klucz API (faktura)', hint: 'Klucz znajdziesz w iFirma w sekcji Narzędzia → API.' },
   ] },
@@ -5990,7 +5990,7 @@ class Component extends DCLogic {
         const mine = connected.some((c) => c.name === t.name);
         const blocked = !mine && connected.length > 0;
         return {
-          name: t.name, note: t.note, mark: t.mark,
+          name: t.name, note: t.note, mark: t.mark, logo: t.logo,
           isConnected: mine,
           isFree: !mine && !blocked,
           isBlocked: blocked,
