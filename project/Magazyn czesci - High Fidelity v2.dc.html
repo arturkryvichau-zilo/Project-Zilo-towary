@@ -2975,13 +2975,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="flex:1;min-height:0;overflow-y:auto">
             <div style="display:flex;flex-direction:column;padding:24px 0;gap:24px">
               <div style="padding:0 28px;display:flex;flex-direction:column;gap:14px">
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:28px;font-weight:500">
-                  Przechowalnia opon
-                  <button type="button" onClick="{{ addVisitSetDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                    Nowy komplet
-                  </button>
-                </div>
+                <sc-if value="{{ storageHeaderOn }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:28px;font-weight:500">
+                    Przechowalnia opon
+                    <button type="button" onClick="{{ addVisitSetDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                      Nowy komplet
+                    </button>
+                  </div>
+                </sc-if>
                 <div style="display:flex;flex-direction:column;gap:12px">
                   <sc-for list="{{ visitClientSets }}" as="t" hint-placeholder-count="1">
                     <div style="background:var(--tk-canvas);border-left:3px solid var(--tk-brand-bd-soft);padding:16px;display:flex;flex-direction:column;gap:12px">
@@ -8823,6 +8825,8 @@ class Component extends DCLogic {
       visitClient: this.visitClientVals(),
       visitSetsAny: true,
       visitClientSets: this.setPanels(this.visitCarId(), { onlyDrafts: !!s.visitTireDraftOnly }),
+      // przy dodawaniu kompletu nagłówek i „Nowy komplet" tylko rozpraszają
+      storageHeaderOn: !s.visitTireDraftOnly,
       addVisitSetDraft: (e) => {
         e.stopPropagation();
         const key = 'draft' + Date.now();
