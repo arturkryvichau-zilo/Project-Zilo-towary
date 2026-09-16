@@ -4068,18 +4068,22 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
                   <div style="height:1px;background:var(--tk-border);margin:0 4px"></div>
 
-                <sc-if value="{{ vtTable.on }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ extrasOn }}" hint-placeholder-val="{{ true }}">
                   <div style="background:var(--tk-surface);border:1px solid var(--tk-border-2);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:4px">
                     <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodatkowe możliwości:</span>
                     <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
-                      <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                        Komplet opon
-                      </button>
-                      <button type="button" disabled="{{ soonDisabled }}" aria-disabled="true" data-tt="Wkrótce" data-tt-pos="bottom" style="position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:not-allowed">
-                        <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                        Auto zastępcze
-                      </button>
+                      <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ true }}">
+                        <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
+                          <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                          Komplet opon
+                        </button>
+                      </sc-if>
+                      <sc-if value="{{ courtesy.canAdd }}" hint-placeholder-val="{{ true }}">
+                        <button type="button" onClick="{{ courtesy.add }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
+                          <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                          Auto zastępcze
+                        </button>
+                      </sc-if>
                     </span>
                   </div>
                 </sc-if>
@@ -4182,6 +4186,71 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </sc-if>
 
 </div>
+                    </sc-if>
+
+                  </section>
+                </sc-if>
+
+                <sc-if value="{{ courtesy.on }}" hint-placeholder-val="{{ true }}">
+                  <section style="display:flex;flex-direction:column;gap:12px">
+
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <button type="button" onClick="{{ courtesy.toggleSection }}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:transparent;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--tk-text)">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ courtesy.sectionArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                        <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Auto zastępcze</span>
+                        <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ courtesy.count }}</span>
+                      </button>
+                    </div>
+
+                    <sc-if value="{{ courtesy.sectionOpen }}" hint-placeholder-val="{{ true }}">
+                      <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
+
+                        <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;padding:12px 20px;background:var(--tk-surface);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                          <span></span><span>Pojazd</span><span>Nr rejestracyjny</span><span>Stan licznika</span><span>Wydano</span><span></span>
+                        </div>
+
+                        <div>
+                          <div onClick="{{ courtesy.toggleRow }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                            <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ courtesy.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                            <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ courtesy.model }}</span>
+                            <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ courtesy.plate }}</span>
+                            <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ courtesy.mileage }}</span>
+                            <span style="font-size:15px;line-height:22px;color:var(--tk-text);white-space:nowrap">{{ courtesy.issued }}</span>
+                            <span style="display:flex;justify-content:flex-end;align-items:center;gap:8px">
+                              <button type="button" disabled="{{ soonDisabled }}" aria-disabled="true" data-tt="Wkrótce" data-tt-pos="left" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:not-allowed;display:inline-flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span></button>
+                              <button type="button" disabled="{{ soonDisabled }}" aria-disabled="true" data-tt="Wkrótce" data-tt-pos="left" style="position:relative;display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:not-allowed">Przyjmij zwrot</button>
+                            </span>
+                          </div>
+
+                          <sc-if value="{{ courtesy.expanded }}" hint-placeholder-val="{{ false }}">
+                            <div style="padding:0 20px 20px 20px;display:flex;flex-direction:column;gap:16px">
+                              <div style="border:1px solid var(--tk-border-2);border-radius:8px;overflow:hidden;background:var(--tk-surface)">
+                                <div style="display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:16px;padding:10px 16px;background:var(--tk-surface);border-bottom:1px solid var(--tk-border-2);font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">
+                                  <span>Paliwo</span><span>Skrzynia</span><span>Rocznik</span><span>Kaucja</span>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:16px;padding:12px 16px;align-items:center;font-size:15px;line-height:22px;color:var(--tk-text)">
+                                  <span>{{ courtesy.fuel }}</span><span>{{ courtesy.gearbox }}</span><span>{{ courtesy.year }}</span><span>{{ courtesy.deposit }}</span>
+                                </div>
+                              </div>
+                              <div style="display:flex;flex-direction:column;gap:12px">
+                                <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:baseline">
+                                  <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Umowa</span>
+                                  <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ courtesy.contract }}</span>
+                                </div>
+                                <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:baseline">
+                                  <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Zwrot planowany</span>
+                                  <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ courtesy.due }}</span>
+                                </div>
+                                <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:baseline">
+                                  <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Notatka</span>
+                                  <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ courtesy.note }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </sc-if>
+                        </div>
+
+                      </div>
                     </sc-if>
 
                   </section>
@@ -4932,6 +5001,21 @@ const fromMin = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + Strin
 const MONTHS = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
 const MONTHS_NOM = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const WD_FULL = ['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'];
+
+// auto zastępcze: jedno auto na pokaz, pola wypełnione z góry
+const COURTESY_SEED = {
+  model: 'Škoda Fabia',
+  plate: 'PO 4821K',
+  mileage: '84 210 km',
+  issued: '16.09.2026',
+  fuel: 'Benzyna',
+  gearbox: 'Manualna',
+  year: '2022',
+  deposit: '500 zł',
+  contract: 'Umowa 114/2026',
+  due: '17.09.2026, 17:00',
+  note: 'Zwrot z pełnym bakiem.',
+};
 
 class Component extends DCLogic {
   state = {
@@ -6469,6 +6553,40 @@ class Component extends DCLogic {
       releaseSelect: null,
       releaseForm: { setKey: setKey, outOpen: false, choice: hasOther ? 'existing' : 'new', newSeason: '', newMaker: '', newQty: '4', newSize: '', newRim: '', newTread: '', newLocation: '', note: '' },
     });
+  }
+
+  visitCourtesy() {
+    const s = this.state;
+    const ev = s.eventId;
+    const added = !!(s.courtesyOn || {})[ev];
+    const open = !!(s.courtesySectionOpen || {})[ev];
+    const rowOpen = !!(s.courtesyRowOpen || {})[ev];
+    return Object.assign({}, COURTESY_SEED, {
+      on: added,
+      canAdd: !added,
+      count: '1',
+      sectionOpen: open,
+      sectionArrow: open ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleSection: () => this.setState((st) => ({
+        courtesySectionOpen: Object.assign({}, st.courtesySectionOpen, { [st.eventId]: !(st.courtesySectionOpen || {})[st.eventId] }),
+      })),
+      // dodanie od razu rozwija sekcję, tak jak przy komplecie opon
+      add: () => this.setState((st) => ({
+        courtesyOn: Object.assign({}, st.courtesyOn, { [st.eventId]: true }),
+        courtesySectionOpen: Object.assign({}, st.courtesySectionOpen, { [st.eventId]: true }),
+      })),
+      expanded: rowOpen,
+      arrow: rowOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleRow: () => this.setState((st) => ({
+        courtesyRowOpen: Object.assign({}, st.courtesyRowOpen, { [st.eventId]: !(st.courtesyRowOpen || {})[st.eventId] }),
+      })),
+    });
+  }
+
+  // pasek znika, kiedy obie sekcje są już na widoku
+  visitExtrasOn() {
+    const t = this.visitTireTable();
+    return t.on && (t.emptyOn || this.visitCourtesy().canAdd);
   }
 
   visitTireTable() {
@@ -8761,6 +8879,8 @@ class Component extends DCLogic {
         : { open: false },
       visitTire: this.visitTireVals(),
       vtTable: this.visitTireTable(),
+      courtesy: this.visitCourtesy(),
+      extrasOn: this.visitExtrasOn(),
       // funkcje jeszcze nierobione — przyciski są w widoku, ale zablokowane
       soonDisabled: true,
       timeEdit: this.timeEditVals(),
