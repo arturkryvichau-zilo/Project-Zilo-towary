@@ -4072,7 +4072,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
                   <div style="height:1px;background:var(--tk-border);margin:0 4px"></div>
 
-                <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:0 4px">
+                    <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                      Przyjmij komplet
+                    </button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
                   <section style="display:flex;flex-direction:column;gap:12px">
 
                     <div style="display:flex;align-items:center;gap:10px">
@@ -4146,16 +4155,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </sc-for>
                         </sc-if>
 
-                        <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
-                          <div onClick="{{ openTireSectionWithDraft }}" style="display:flex;align-items:center;gap:12px;padding:18px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                            <span style="flex:1;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
-                            <button type="button" onClick="{{ openTireSectionWithDraft }}" style="position:relative;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
-                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                            </button>
-                          </div>
-                        </sc-if>
-
-                      </div>
+</div>
                     </sc-if>
 
                   </section>
@@ -6463,9 +6463,11 @@ class Component extends DCLogic {
       empty: on && !!carId && sets.length === 0,
       emptyOn: on && !!carId && sets.length === 0,
       count: String(sets.length),
-      sectionOpen: s.vtSectionOpen !== false,
-      sectionArrow: s.vtSectionOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
-      toggleSection: () => this.setState((st) => ({ vtSectionOpen: st.vtSectionOpen === false })),
+      sectionOpen: !!(s.vtSectionOpen || {})[s.eventId],
+      sectionArrow: (s.vtSectionOpen || {})[s.eventId] ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleSection: () => this.setState((st) => ({
+        vtSectionOpen: Object.assign({}, st.vtSectionOpen, { [st.eventId]: !(st.vtSectionOpen || {})[st.eventId] }),
+      })),
       rows: sets.map((t, i) => {
         const key = carId + '::' + t.__idx;
         const expanded = !!openMap[key];
