@@ -1099,41 +1099,28 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </section>
 
             <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
-                <sc-if value="{{ billing.canConnect }}" hint-placeholder-val="{{ true }}">
-                  <button type="button" onClick="{{ billing.newTool }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                    Połącz narzędzie
-                  </button>
-                </sc-if>
               </div>
 
-              <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow:hidden">
-                <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(140px,0.8fr) minmax(160px,0.8fr) 130px;gap:16px;padding:12px 20px;background:var(--tk-surface-2);border-bottom:1px solid var(--tk-border-2);font-size:14px;color:var(--tk-text-2)">
-                  <span>Nazwa narzędzia</span><span>Data połączenia</span><span>Status połączenia</span><span></span>
-                </div>
-                <sc-for list="{{ billing.tools }}" as="c" hint-placeholder-count="1">
-                  <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(140px,0.8fr) minmax(160px,0.8fr) 130px;gap:16px;padding:14px 20px;align-items:center;border-bottom:1px solid {{ c.rowBorder }};font-size:15px;color:var(--tk-text)">
-                    <span>{{ c.name }}</span>
-                    <span style="color:var(--tk-text-2)">{{ c.date }}</span>
-                    <span>
-                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:{{ c.statusColor }};background:{{ c.statusBg }}">
-                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:{{ c.statusDot }}"></span>
-                        {{ c.status }}
-                      </span>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="5">
+                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px 20px;display:flex;align-items:center;gap:20px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
+                    <span style="flex:1;min-width:0;display:flex;align-items:center;gap:12px">
+                      <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);white-space:nowrap">{{ opt.name }}</span>
+                      <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
+                        <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);flex:none">
+                          <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
+                          Połączono
+                        </span>
+                      </sc-if>
+                      <sc-if value="{{ opt.isBlocked }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size:15px;line-height:22px;color:var(--tk-text-3);white-space:nowrap">Najpierw rozłącz obecne narzędzie.</span>
+                      </sc-if>
                     </span>
-                    <span style="display:flex;justify-content:flex-end">
-                      <button type="button" data-tool="{{ c.name }}" onClick="{{ c.action }}" style="display:inline-flex;align-items:center;gap:6px;height:auto;padding:0;border:0;background:transparent;font-family:inherit;font-size:14px;line-height:22px;color:var(--tk-brand-fg);cursor:pointer;transition:color 200ms cubic-bezier(.2,0,0,1)" style-hover="color:var(--tk-brand-fg-strong)">
-                        {{ c.actionLabel }}
-                        <span style="width:16px;height:16px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat"></span>
-                      </button>
-                    </span>
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                   </div>
                 </sc-for>
-                <sc-if value="{{ billing.noTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><span style="font-size:16px;line-height:24px;color:var(--tk-text)">Nie masz jeszcze połączonego narzędzia.</span><span style="max-width:420px;font-size:14px;line-height:20px;color:var(--tk-text-3)">Po połączeniu faktury wystawione w Zilo trafią tam automatycznie.</span></div>
-                </sc-if>
               </div>
             </div>
 
