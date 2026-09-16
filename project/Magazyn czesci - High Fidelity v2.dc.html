@@ -4082,11 +4082,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                         Komplet opon
                       </button>
-                      <button type="button" aria-disabled="true" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-text-3);font-family:inherit;font-size:15px;line-height:22px;cursor:default">
+                      <button type="button" disabled="{{ soonDisabled }}" aria-disabled="true" data-tt="Wkrótce" data-tt-pos="bottom" style="position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-text-3);font-family:inherit;font-size:15px;line-height:22px;cursor:not-allowed">
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                         Auto zastępcze
                       </button>
-                      <button type="button" aria-disabled="true" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-text-3);font-family:inherit;font-size:15px;line-height:22px;cursor:default">
+                      <button type="button" disabled="{{ soonDisabled }}" aria-disabled="true" data-tt="Wkrótce" data-tt-pos="bottom" style="position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-text-3);font-family:inherit;font-size:15px;line-height:22px;cursor:not-allowed">
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                         Załączniki
                       </button>
@@ -8774,6 +8774,8 @@ class Component extends DCLogic {
         : { open: false },
       visitTire: this.visitTireVals(),
       vtTable: this.visitTireTable(),
+      // funkcje jeszcze nierobione — przyciski są w widoku, ale zablokowane
+      soonDisabled: true,
       timeEdit: this.timeEditVals(),
       openTimeEdit: () => {
         const ev = s.events.find((x) => x.id === s.eventId);
