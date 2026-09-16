@@ -1117,9 +1117,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         Połączono
                       </span>
                     </sc-if>
-                    <sc-if value="{{ opt.isRecommended }}" hint-placeholder-val="{{ false }}">
-                      <span style="display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-brand-fg);background:var(--tk-brand-soft);width:fit-content">Polecane</span>
-                    </sc-if>
                   </div>
                 </sc-for>
               </div>
@@ -4786,7 +4783,7 @@ const SIGNUP_STEP = {
 };
 
 const BILLING_TOOLS = [
-  { name: 'Fakturownia', mark: 'FKT', recommended: true, note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
+  { name: 'Fakturownia', mark: 'FKT', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
     { title: 'Wygeneruj token API', info: 'Wymagane działanie:', infoValue: 'W Fakturowni wejdź w Ustawienia → Ustawienia konta → Integracja i skopiuj kod autoryzacyjny API.' },
     { title: 'Podaj adres konta', field: 'domain', label: 'Adres konta', hint: 'Pierwszy człon adresu, np. „mojwarsztat" z mojwarsztat.fakturownia.pl.' },
     { title: 'Wklej token API', field: 'apiKey', label: 'Token API' },
@@ -5872,11 +5869,8 @@ class Component extends DCLogic {
     const bDraft = s.billingDraft || { name: '', fields: {}, editing: null };
     const patch = (key) => (e) => this.garagePatch({ [key]: e.target.value });
 
-    const tip = BILLING_TOOLS.find((t) => t.recommended) || BILLING_TOOLS[0];
-
     return {
       noneConnected: connected.length === 0,
-      recommendedName: tip.name,
       nip: g.nip || '—',
       companyName: g.company || '—',
       companyStreet: g.companyStreet || '—',
@@ -5955,8 +5949,6 @@ class Component extends DCLogic {
           isConnected: mine,
           isFree: !mine && !blocked,
           isBlocked: blocked,
-          // polecamy tylko dopóki warsztat nie ma żadnego narzędzia
-          isRecommended: !!t.recommended && connected.length === 0,
           rowOpacity: blocked ? '0.5' : '1',
           rowCursor: blocked ? 'not-allowed' : 'pointer',
           hoverBd: blocked ? 'var(--tk-border)' : 'var(--tk-brand-bd)',
