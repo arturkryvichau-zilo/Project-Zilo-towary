@@ -1105,7 +1105,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
               <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
                 <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
-                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:{{ opt.hoverBd }}">
+                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:{{ opt.hoverBd }};background:{{ opt.hoverBg }}">
                     <span style="display:flex;align-items:center;gap:12px">
                       <span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span>
                       <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
@@ -1120,7 +1120,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                 </sc-for>
                 <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
-                  <div onClick="{{ billing.startWithSignup }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd)">
+                  <div onClick="{{ billing.startWithSignup }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                     <span style="display:flex;align-items:center;gap:12px">
                       <span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center"><span style="width:20px;height:20px;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span></span>
                       <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur?</span>
@@ -6002,6 +6002,7 @@ class Component extends DCLogic {
           rowOpacity: blocked ? '0.5' : '1',
           rowCursor: blocked ? 'not-allowed' : 'pointer',
           hoverBd: blocked ? 'var(--tk-border)' : 'var(--tk-brand-bd)',
+          hoverBg: blocked ? 'var(--tk-surface)' : 'var(--tk-surface-2)',
         };
       }),
       // podpowiedź prowadzi do tego samego formularza, tylko z krokiem zakładania konta
