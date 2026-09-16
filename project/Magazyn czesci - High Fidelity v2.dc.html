@@ -4075,11 +4075,14 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="height:1px;background:var(--tk-border);margin:0 4px"></div>
 
                 <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:0 4px">
-                    <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                      Komplet opon
-                    </button>
+                  <div style="background:var(--tk-note-bg);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodatkowe możliwości:</span>
+                    <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+                      <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-surface);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:border-color 200ms var(--ease-standard),background 200ms var(--ease-standard)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-brand-soft)">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                        Komplet opon
+                      </button>
+                    </span>
                   </div>
                 </sc-if>
 
