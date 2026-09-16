@@ -1121,16 +1121,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                   </div>
                 </sc-for>
-                <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
-                  <div onClick="{{ billing.startWithSignup }}" style="border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
-                    <span style="display:flex;align-items:center;gap:12px">
-                      <span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center"><span style="width:20px;height:20px;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span></span>
-                      <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur?</span>
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
-                    </span>
-                  </div>
-                </sc-if>
               </div>
+              <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
+              </sc-if>
             </div>
 
           </div>
