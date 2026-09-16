@@ -4027,94 +4027,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </div>
                 </sc-if>
 
-              <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
-                <section style="display:flex;flex-direction:column;gap:12px">
-
-                  <div style="display:flex;align-items:center;gap:10px">
-                    <button type="button" onClick="{{ vtTable.toggleSection }}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:transparent;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--tk-text)">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ vtTable.sectionArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
-                      <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Opony w przechowalni</span>
-                      <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ vtTable.count }}</span>
-                    </button>
-                    <button type="button" onClick="{{ openTireSection }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
-                      Edytuj
-                    </button>
-                  </div>
-
-                  <sc-if value="{{ vtTable.sectionOpen }}" hint-placeholder-val="{{ true }}">
-                    <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
-
-                      <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
-                        <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
-                          <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
-                        </div>
-                        <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
-                          <div style="border-bottom:1px solid {{ t.rowBorder }}">
-                            <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
-                              <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
-                                <sc-if value="{{ t.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
-                                  <span style="width:16px;height:16px;display:block;flex:none;background-color:{{ t.seasonIconColor }};-webkit-mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat"></span>
-                                </sc-if>
-                                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.season }}</span>
-                              </span>
-                              <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.code }}</span>
-                              <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.location }}</span>
-                              <span style="font-size:15px;line-height:22px;color:var(--tk-text);white-space:nowrap">{{ t.received }}</span>
-                              <span style="display:flex;justify-content:flex-end">
-                                <button type="button" onClick="{{ t.release }}" style="display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Wydaj komplet</button>
-                              </span>
-                            </div>
-
-                            <sc-if value="{{ t.expanded }}" hint-placeholder-val="{{ false }}">
-                              <div style="padding:0 20px 16px 56px;display:flex;flex-direction:column;gap:12px">
-                                <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:10px 0;border-bottom:1px solid var(--tk-border-2)">
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Producent</span>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Profil</span>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Felga</span>
-                                  <sc-if value="{{ t.hasTread }}" hint-placeholder-val="{{ true }}">
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Gł. bieżnika</span>
-                                  </sc-if>
-                                  <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Ilość</span>
-                                </div>
-                                <sc-for list="{{ t.wheels }}" as="w" hint-placeholder-count="1">
-                                  <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:8px 0;border-top:1px solid {{ w.border }};font-size:15px;line-height:22px;color:var(--tk-text)">
-                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ w.maker }}</span>
-                                    <span>{{ w.size }}</span>
-                                    <span>{{ w.rim }}</span>
-                                    <sc-if value="{{ w.showTread }}" hint-placeholder-val="{{ true }}">
-                                      <span>{{ w.tread }}</span>
-                                    </sc-if>
-                                    <span>{{ w.qty }}</span>
-                                  </div>
-                                </sc-for>
-                                <sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}">
-                                  <div style="display:flex;gap:16px;align-items:flex-start">
-                                    <span style="flex:none;font-size:15px;line-height:22px;color:var(--tk-text-3)">Notatka</span>
-                                    <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">{{ t.note }}</span>
-                                  </div>
-                                </sc-if>
-                              </div>
-                            </sc-if>
-                          </div>
-                        </sc-for>
-                      </sc-if>
-
-                      <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
-                        <div onClick="{{ openTireSectionWithDraft }}" style="display:flex;align-items:center;gap:12px;padding:18px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
-                          <span style="flex:1;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
-                          <button type="button" onClick="{{ openTireSectionWithDraft }}" style="position:relative;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
-                            <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                          </button>
-                        </div>
-                      </sc-if>
-
-                    </div>
-                  </sc-if>
-
-                </section>
-              </sc-if>
             </div>
             </div>
 
@@ -4157,6 +4069,97 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </div>
                     <div style="font-size:16px;line-height:22px;padding:6px 4px;color:{{ evd.priceColor }}" style-hover="background:var(--tk-surface-2)">{{ evd.price }}</div>
                   </div>
+
+                  <div style="height:1px;background:var(--tk-border);margin:0 4px"></div>
+
+                <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
+                  <section style="display:flex;flex-direction:column;gap:12px">
+
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <button type="button" onClick="{{ vtTable.toggleSection }}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:transparent;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--tk-text)">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ vtTable.sectionArrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                        <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Opony w przechowalni</span>
+                        <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ vtTable.count }}</span>
+                      </button>
+                      <button type="button" onClick="{{ openTireSection }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                        Edytuj
+                      </button>
+                    </div>
+
+                    <sc-if value="{{ vtTable.sectionOpen }}" hint-placeholder-val="{{ true }}">
+                      <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
+
+                        <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                            <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
+                          </div>
+                          <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
+                            <div style="border-bottom:1px solid {{ t.rowBorder }}">
+                              <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
+                                <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
+                                  <sc-if value="{{ t.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
+                                    <span style="width:16px;height:16px;display:block;flex:none;background-color:{{ t.seasonIconColor }};-webkit-mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ t.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                                  </sc-if>
+                                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.season }}</span>
+                                </span>
+                                <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.code }}</span>
+                                <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.location }}</span>
+                                <span style="font-size:15px;line-height:22px;color:var(--tk-text);white-space:nowrap">{{ t.received }}</span>
+                                <span style="display:flex;justify-content:flex-end">
+                                  <button type="button" onClick="{{ t.release }}" style="display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Wydaj komplet</button>
+                                </span>
+                              </div>
+
+                              <sc-if value="{{ t.expanded }}" hint-placeholder-val="{{ false }}">
+                                <div style="padding:0 20px 16px 56px;display:flex;flex-direction:column;gap:12px">
+                                  <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:10px 0;border-bottom:1px solid var(--tk-border-2)">
+                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Producent</span>
+                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Profil</span>
+                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Felga</span>
+                                    <sc-if value="{{ t.hasTread }}" hint-placeholder-val="{{ true }}">
+                                      <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Gł. bieżnika</span>
+                                    </sc-if>
+                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Ilość</span>
+                                  </div>
+                                  <sc-for list="{{ t.wheels }}" as="w" hint-placeholder-count="1">
+                                    <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:8px 0;border-top:1px solid {{ w.border }};font-size:15px;line-height:22px;color:var(--tk-text)">
+                                      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ w.maker }}</span>
+                                      <span>{{ w.size }}</span>
+                                      <span>{{ w.rim }}</span>
+                                      <sc-if value="{{ w.showTread }}" hint-placeholder-val="{{ true }}">
+                                        <span>{{ w.tread }}</span>
+                                      </sc-if>
+                                      <span>{{ w.qty }}</span>
+                                    </div>
+                                  </sc-for>
+                                  <sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}">
+                                    <div style="display:flex;gap:16px;align-items:flex-start">
+                                      <span style="flex:none;font-size:15px;line-height:22px;color:var(--tk-text-3)">Notatka</span>
+                                      <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">{{ t.note }}</span>
+                                    </div>
+                                  </sc-if>
+                                </div>
+                              </sc-if>
+                            </div>
+                          </sc-for>
+                        </sc-if>
+
+                        <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ false }}">
+                          <div onClick="{{ openTireSectionWithDraft }}" style="display:flex;align-items:center;gap:12px;padding:18px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                            <span style="flex:1;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text-2)">Dodaj komplet do przechowalni</span>
+                            <button type="button" onClick="{{ openTireSectionWithDraft }}" style="position:relative;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:var(--tk-brand-soft);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Nowy komplet" aria-label="Nowy komplet">
+                              <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                            </button>
+                          </div>
+                        </sc-if>
+
+                      </div>
+                    </sc-if>
+
+                  </section>
+                </sc-if>
 
                   <!-- Załączniki ukryte na czas testów: zdejmij sc-if i przestaw attachmentsOn, żeby wróciły. -->
                   <sc-if value="{{ attachmentsOn }}" hint-placeholder-val="{{ false }}">
