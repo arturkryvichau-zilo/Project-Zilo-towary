@@ -4096,11 +4096,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
 
                         <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
-                          <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                          <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;padding:12px 20px;background:var(--tk-surface);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
                             <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
                           </div>
                           <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
-                            <div style="border-bottom:1px solid {{ t.rowBorder }}">
+                            <div style="border-bottom:1px solid {{ t.rowBorder }};background:{{ t.rowBg }}">
                               <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                                 <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
@@ -4119,35 +4119,61 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               </div>
 
                               <sc-if value="{{ t.expanded }}" hint-placeholder-val="{{ false }}">
-                                <div style="padding:0 20px 16px 56px;display:flex;flex-direction:column;gap:12px">
-                                  <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:10px 0;border-bottom:1px solid var(--tk-border-2)">
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Producent</span>
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Profil</span>
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Felga</span>
+                              <div style="padding:0 20px 20px 20px;display:flex;flex-direction:column;gap:16px">
+                                <div style="border:1px solid var(--tk-border-2);border-radius:8px;overflow:hidden;background:var(--tk-surface)">
+                                  <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:10px 16px;background:var(--tk-surface);border-bottom:1px solid var(--tk-border-2);font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">
+                                    <span>Producent</span><span>Profil</span><span>Felga</span>
                                     <sc-if value="{{ t.hasTread }}" hint-placeholder-val="{{ true }}">
-                                      <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Gł. bieżnika</span>
+                                      <span>Gł. bieżnika</span>
                                     </sc-if>
-                                    <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--tk-text-3)">Ilość</span>
+                                    <span>Ilość</span>
                                   </div>
-                                  <sc-for list="{{ t.wheels }}" as="w" hint-placeholder-count="1">
-                                    <div style="display:grid;grid-template-columns:{{ t.specCols }};gap:16px;padding:8px 0;border-top:1px solid {{ w.border }};font-size:15px;line-height:22px;color:var(--tk-text)">
-                                      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ w.maker }}</span>
-                                      <span>{{ w.size }}</span>
-                                      <span>{{ w.rim }}</span>
+                                  <sc-for list="{{ t.wheels }}" as="w" hint-placeholder-count="2">
+                                    <div style="display:grid;grid-template-columns:{{ w.cols }};gap:16px;padding:12px 16px;align-items:center;border-bottom:1px solid {{ w.rowBorder }};font-size:15px;line-height:22px;color:var(--tk-text)">
+                                      <span>{{ w.maker }}</span><span>{{ w.size }}</span><span>{{ w.rim }}</span>
                                       <sc-if value="{{ w.showTread }}" hint-placeholder-val="{{ true }}">
                                         <span>{{ w.tread }}</span>
                                       </sc-if>
                                       <span>{{ w.qty }}</span>
                                     </div>
                                   </sc-for>
-                                  <sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}">
-                                    <div style="display:flex;gap:16px;align-items:flex-start">
-                                      <span style="flex:none;font-size:15px;line-height:22px;color:var(--tk-text-3)">Notatka</span>
-                                      <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">{{ t.note }}</span>
-                                    </div>
-                                  </sc-if>
                                 </div>
-                              </sc-if>
+                                <sc-if value="{{ t.hasMeta }}" hint-placeholder-val="{{ true }}">
+                                  <div style="display:flex;flex-direction:column;gap:12px">
+                                    <sc-if value="{{ t.hasLocation }}" hint-placeholder-val="{{ false }}">
+                                      <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:baseline">
+                                        <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Lokalizacja</span>
+                                        <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.locationText }}</span>
+                                      </div>
+                                    </sc-if>
+                                    <sc-if value="{{ t.hasNote }}" hint-placeholder-val="{{ false }}">
+                                      <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:baseline">
+                                        <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Notatka</span>
+                                        <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.note }}</span>
+                                      </div>
+                                    </sc-if>
+                                    <sc-if value="{{ t.hasFiles }}" hint-placeholder-val="{{ false }}">
+                                      <div style="display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:start">
+                                        <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Zdjęcia i pliki</span>
+                                        <span style="display:flex;flex-wrap:wrap;gap:8px">
+                                          <sc-for list="{{ t.files }}" as="f" hint-placeholder-count="3">
+                                            <span style="width:56px;height:56px;border-radius:8px;border:1px solid var(--tk-border-2);background:var(--tk-surface);display:grid;place-items:center">
+                                              <sc-if value="{{ f.isDoc }}" hint-placeholder-val="{{ false }}">
+                                                <span style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-2)">PDF</span>
+                                              </sc-if>
+                                              <sc-if value="{{ f.isPhoto }}" hint-placeholder-val="{{ true }}">
+                                                <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-attach.svg) center / 20px 20px no-repeat"></span>
+                                              </sc-if>
+                                            </span>
+                                          </sc-for>
+                                        </span>
+                                      </div>
+                                    </sc-if>
+                                  </div>
+                                </sc-if>
+                              </div>
+                            </sc-if>
+
                             </div>
                           </sc-for>
                         </sc-if>
@@ -6484,7 +6510,18 @@ class Component extends DCLogic {
           })),
           hasNote: !!t.note,
           note: t.note || '',
-          specCols: anyTread ? 'minmax(0,1.2fr) minmax(0,1fr) 120px 140px 90px' : 'minmax(0,1.2fr) minmax(0,1fr) 120px 90px',
+          hasLocation: !!t.location,
+          locationText: t.location || '',
+          hasFiles: (t.files || []).length > 0,
+          hasMeta: !!t.location || !!t.note || (t.files || []).length > 0,
+          files: (t.files || []).map((f, fi) => ({
+            key: key + '-' + fi,
+            isDoc: f === 'doc',
+            isPhoto: f !== 'doc',
+          })),
+          // rozwinięty wiersz dostaje tło, tak jak u klienta
+          rowBg: expanded ? 'var(--tk-surface-2)' : 'transparent',
+          specCols: anyTread ? '1fr 1fr 0.7fr 0.9fr 0.6fr' : '1fr 1fr 0.7fr 0.6fr',
           hasTread: anyTread,
           wheels: spec.map((r, wi) => ({
             maker: r.maker || '—',
@@ -6493,7 +6530,8 @@ class Component extends DCLogic {
             tread: r.tread || '—',
             showTread: anyTread,
             qty: String(r.qty),
-            border: wi === 0 ? 'transparent' : 'var(--tk-border-2)',
+            cols: anyTread ? '1fr 1fr 0.7fr 0.9fr 0.6fr' : '1fr 1fr 0.7fr 0.6fr',
+            rowBorder: wi === spec.length - 1 ? 'transparent' : 'var(--tk-border-2)',
           })),
           release: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.openReleaseFor(key); },
         }, seasonVals(t.season));
