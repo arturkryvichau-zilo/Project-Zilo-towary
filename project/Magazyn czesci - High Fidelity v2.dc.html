@@ -4090,22 +4090,18 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <span style="font-size:16px;line-height:22px;font-weight:500;text-align:left">Opony w przechowalni</span>
                         <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:12px;font-weight:600">{{ vtTable.count }}</span>
                       </button>
-                      <button type="button" onClick="{{ openTireSection }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
-                        <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
-                        Edytuj
-                      </button>
                     </div>
 
                     <sc-if value="{{ vtTable.sectionOpen }}" hint-placeholder-val="{{ true }}">
                       <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow:hidden">
 
                         <sc-if value="{{ vtTable.hasOn }}" hint-placeholder-val="{{ true }}">
-                          <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                          <div style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;padding:12px 20px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
                             <span></span><span>Sezon</span><span>ID kompletu</span><span>Lokalizacja</span><span>Przyjęto</span><span></span>
                           </div>
                           <sc-for list="{{ vtTable.rows }}" as="t" hint-placeholder-count="1">
                             <div style="border-bottom:1px solid {{ t.rowBorder }}">
-                              <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 150px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                              <div onClick="{{ t.toggle }}" style="display:grid;grid-template-columns:20px 130px 130px minmax(0,1fr) 130px 190px;gap:16px;align-items:center;padding:14px 20px;cursor:pointer" style-hover="background:var(--tk-surface-2)">
                                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-inverse);transition:transform 0.2s ease-in-out;transform:{{ t.arrow }};-webkit-mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-down.svg) center / 20px 20px no-repeat"></span>
                                 <span style="display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;line-height:22px;color:var(--tk-text)">
                                   <sc-if value="{{ t.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
@@ -4116,8 +4112,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                                 <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ t.code }}</span>
                                 <span style="font-size:15px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.location }}</span>
                                 <span style="font-size:15px;line-height:22px;color:var(--tk-text);white-space:nowrap">{{ t.received }}</span>
-                                <span style="display:flex;justify-content:flex-end">
+                                <span style="display:flex;justify-content:flex-end;align-items:center;gap:4px">
                                   <button type="button" onClick="{{ t.release }}" style="display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Wydaj komplet</button>
+                                <button type="button" onClick="{{ openTireSection }}" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft)" data-tt="Edytuj komplet" aria-label="Edytuj komplet" data-tt-pos="left"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span></button>
                                 </span>
                               </div>
 
