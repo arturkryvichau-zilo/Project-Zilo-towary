@@ -1110,7 +1110,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 48px">
 
             <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px">
-              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Opony w przechowalni</h1>
+              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Przechowalnia opon</h1>
               <button type="button" onClick="{{ reports.downloadCsv }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
                 Pobierz CSV
@@ -1957,7 +1957,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                       <sc-if value="{{ car.tireColOn }}" hint-placeholder-val="{{ true }}">
   <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
-                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Opony w przechowalni</span>
+                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Przechowalnia opon</span>
                           <sc-if value="{{ car.hasTires }}" hint-placeholder-val="{{ true }}">
                             <span style="position:relative;display:inline-flex;width:fit-content">
                               <span data-tire-id="{{ car.tireId }}" onMouseEnter="{{ showTireTip }}" onMouseLeave="{{ hideTireTip }}" style="display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 4px; background: var(--tk-surface-3); font-size: 14px; line-height: 20px; color: var(--tk-text); cursor: pointer">
@@ -2159,7 +2159,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;flex-direction:column;gap:12px">
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-                    <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Opony w przechowalni</span>
+                    <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Przechowalnia opon</span>
                     <button type="button" onClick="{{ openTireModal }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
                       <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                       Nowy komplet
@@ -4299,15 +4299,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <sc-if value="{{ evd.wyc.hasQuote }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:14px">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow-x:{{ evd.wyc.servicesOverflow }}">
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
                         <div>Usługi</div>
-                        <div>Osoby przypisane</div>
+                        <div>Pracownik</div>
+                        <div>Czas pracy</div>
                         <div style="text-align:right">Wartość netto</div>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.services }}" as="r" hint-placeholder-count="2">
-                        <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
+                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
                           <span onClick="{{ r.openName }}" style="font-size:15px;line-height:22px;color:{{ r.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.name }}</span>
                           <span style="position:relative;display:flex;align-items:center;min-width:0">
                             <span onClick="{{ r.togglePeople }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:38px;padding:0 10px;border:1px solid {{ r.personBorder }};border-radius:6px;background:var(--tk-surface);font-size:15px;line-height:22px;color:{{ r.personColor }};cursor:pointer;transition:border-color 150ms" style-hover="border-color:var(--tk-border-strong);background:var(--tk-canvas)">
@@ -4327,6 +4328,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               </span>
                             </sc-if>
                           </span>
+                          <span onClick="{{ r.openTime }}" style="font-size:15px;line-height:22px;color:{{ r.timeColor }};white-space:nowrap;border-radius:6px;cursor:pointer;padding:2px 6px;margin:-2px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.time }}</span>
                           
                           <span onClick="{{ r.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.net }}</span>
                           <span onClick="{{ r.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.gross }}</span>
@@ -4335,11 +4337,12 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </button></span>
                         </div>
                       </sc-for>
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
                         <button type="button" onClick="{{ evd.wyc.addUsluga }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
                           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                          Dodaj usługę
+                          Nowa usługa
                         </button>
+                        <span></span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesNet }}</span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesGross }}</span>
@@ -4371,7 +4374,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
                         <button type="button" onClick="{{ evd.wyc.addTowar }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
                           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                          Dodaj towar
+                          Nowy towar
                         </button>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsNet }}</span>
@@ -4982,11 +4985,8 @@ const BRANDS = {
 const YEARS = (() => { const a = []; for (let y = 2026; y > 1986; y -= 1) a.push(String(y)); return a; })();
 
 const PEOPLE = [
-  { id: 'e1', initials: 'AK', name: 'Aleksander Kowalski' },
-  { id: 'e2', initials: 'AK', name: 'Andrzej Kowalski' },
   { id: 'e3', initials: 'PN', name: 'Paweł Nowak' },
   { id: 'e4', initials: 'FD', name: 'Filip Domański' },
-  { id: 'e5', initials: 'AW', name: 'Aleksander Wójcik' },
   { id: 'e6', initials: 'JK', name: 'Jakub Kuźniar' },
 ];
 
@@ -6769,6 +6769,39 @@ class Component extends DCLogic {
     return days;
   }
 
+  // wybór pracownika w wierszu — ten sam w usługach i w towarach
+  rowPersonVals(key, seed) {
+    const s = this.state;
+    const picked = (s.rowPeople || {})[key];
+    const personName = picked !== undefined ? picked : (seed || '');
+    return {
+      togglePeople: (e) => {
+        e.stopPropagation();
+        this.setState((st) => ({ rowPeopleMenu: st.rowPeopleMenu === key ? null : key }));
+      },
+      peopleOpen: s.rowPeopleMenu === key,
+      personBorder: s.rowPeopleMenu === key ? 'var(--tk-brand-bd)' : 'var(--tk-border)',
+      person: personName || '— brak —',
+      personColor: personName ? 'var(--tk-text)' : 'var(--tk-text-2)',
+      hasPerson: !!personName,
+      initials: String(personName || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase(),
+      peopleOptions: [{ id: '', name: '— brak —', initials: '' }].concat(PEOPLE).map((p) => ({
+        name: p.name,
+        initials: p.initials,
+        hasAvatar: !!p.id,
+        bg: personName === (p.id ? p.name : '') ? 'var(--tk-surface-2)' : 'transparent',
+        color: p.id ? 'var(--tk-text)' : 'var(--tk-text-2)',
+        pick: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({
+            rowPeople: Object.assign({}, st.rowPeople, { [key]: p.id ? p.name : '' }),
+            rowPeopleMenu: null,
+          }));
+        },
+      })),
+    };
+  }
+
   qnum(v) {
     const n = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(/[^0-9,.-]/g, '').replace(',', '.'));
     return isNaN(n) ? 0 : n;
@@ -6868,31 +6901,9 @@ class Component extends DCLogic {
       empty: false,
       servicesOverflow: s.rowPeopleMenu ? 'visible' : 'auto',
       services: uslugiList.map(({ r, i: ri }) => {
-        const picked = (s.rowPeople || {})[id + ':' + ri];
-        const personName = picked !== undefined ? picked : ((r && r.person) || '');
         const key = id + ':' + ri;
-        const menu = {
-          togglePeople: (e) => {
-            e.stopPropagation();
-            this.setState((st) => ({ rowPeopleMenu: st.rowPeopleMenu === key ? null : key }));
-          },
-          peopleOpen: s.rowPeopleMenu === key,
-          personBorder: s.rowPeopleMenu === key ? 'var(--tk-brand-bd)' : 'var(--tk-border)',
-          peopleOptions: [{ id: '', name: '— brak —', initials: '' }].concat(PEOPLE).map((p) => ({
-            name: p.name,
-            initials: p.initials,
-            hasAvatar: !!p.id,
-            bg: personName === (p.id ? p.name : '') ? 'var(--tk-surface-2)' : 'transparent',
-            color: p.id ? 'var(--tk-text)' : 'var(--tk-text-2)',
-            pick: (e) => {
-              e.stopPropagation();
-              this.setState((st) => ({
-                rowPeople: Object.assign({}, st.rowPeople, { [key]: p.id ? p.name : '' }),
-                rowPeopleMenu: null,
-              }));
-            },
-          })),
-        };
+        const menu = this.rowPersonVals(key, (r && r.person) || '');
+        const czas = this.qnum(r.czas);
         return Object.assign(menu, {
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'name' }); },
         openPerson: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'person' }); },
@@ -6900,11 +6911,11 @@ class Component extends DCLogic {
         openGross: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'brutto' }); },
         name: r.name && r.name.trim() ? r.name : '—',
         nameColor: 'var(--tk-text)',
-        hasPerson: !!r.person,
         hasPersonLabel: true,
-        initials: initials(personName),
-        person: personName || '— brak —',
-        personColor: personName ? 'var(--tk-text)' : 'var(--tk-text-2)',
+        // «Przeprac. czas» z konfiguratora — nie wpływa na kwoty, służy rozliczeniu pracownika
+        time: czas > 0 ? String(r.czas).replace('.', ',') + ' h' : '—',
+        timeColor: czas > 0 ? 'var(--tk-text)' : 'var(--tk-text-3)',
+        openTime: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'czas' }); },
         net: this.moneyPl(r.c.net),
         gross: this.moneyPl(r.c.gross),
         remove: () => this.removeQuoteRow(id, 'usluga', ri),
@@ -7385,7 +7396,7 @@ class Component extends DCLogic {
     this.setState({ wycConfigSrc: src, wycConfigVisit: visitId });
   }
 
-  // Raport „Opony w przechowalni" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
+  // Raport „Przechowalnia opon" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
   reportRows() {
     const s = this.state;
     const out = [];
@@ -7434,8 +7445,8 @@ class Component extends DCLogic {
       toggleNav: () => this.setState((st) => ({ reportsNavOpen: st.reportsNavOpen === false })),
       navItems: [
         { key: 'payroll', label: 'Rozliczenia pracowników', ready: false },
-        { key: 'tires', label: 'Opony w przechowalni', ready: true },
-      ].map((it) => {
+        { key: 'tires', label: 'Przechowalnia opon', ready: true },
+      ].filter((it) => it.key !== 'tires' || s.tireStorageOn).map((it) => {
         const active = it.ready && (s.reportsTab || 'tires') === it.key;
         return {
           key: it.key,
@@ -8713,7 +8724,8 @@ class Component extends DCLogic {
       isEventOpen: !!evd,
       goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.scrollToDayStart()),
       goClients: () => this.setState({ screen: 'clients', eventId: null }),
-      navItems: NAV.filter((n) => !n.hidden).map((n) => {
+      // Raporty mają na razie tylko przechowalnię opon — bez niej nie ma czego pokazywać
+      navItems: NAV.filter((n) => !n.hidden && !(n.key === 'reports' && !s.tireStorageOn)).map((n) => {
         const active = n.key === s.navKey;
         return {
           key: n.key,
@@ -8730,7 +8742,7 @@ class Component extends DCLogic {
         else if (key === 'clients') this.setState({ navKey: key, screen: 'clients', eventId: null });
         else if (key === 'settings') this.setState({ navKey: key, screen: 'settings', eventId: null, moreOpen: false });
         else if (key === 'goods') this.setState({ navKey: key, screen: 'docs', eventId: null, moreOpen: false });
-        else if (key === 'reports') this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false });
+        else if (key === 'reports') { if (this.state.tireStorageOn) this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false }); }
         else this.setState({ navKey: key, moreOpen: false });
       },
 
