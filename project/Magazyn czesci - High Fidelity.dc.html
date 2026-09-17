@@ -602,7 +602,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text)">Dane podstawowe warsztatu</div>
               </div>
               <div style="padding:20px 28px;border-bottom:1px solid var(--tk-border-2);display:flex;flex-direction:column;gap:14px">
-                <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa warsztatu</span><input value="{{ garage.dName }}" onInput="{{ garage.setName }}" placeholder="np. Serwis DobryMechanik.pl" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+                <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa warsztatu</span><input value="{{ garage.dName }}" onInput="{{ garage.setName }}" placeholder="np. DM Motors Mechanika Pojazdowa" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
                 <div style="background:var(--tk-note-bg);border-radius:10px;padding:16px 20px;font-size:15px;line-height:22px;color:var(--tk-note-fg);text-wrap:pretty">Jeśli chcesz zmienić nazwę, skontaktuj się z obsługą klienta: <span style="font-weight:500">kontakt@dobrymechanik.pl</span></div>
               </div>
               <div style="padding:20px 28px;border-bottom:1px solid transparent;display:flex;flex-direction:column;gap:14px">
@@ -640,7 +640,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </div>
               <div style="padding:20px 28px;border-bottom:1px solid var(--tk-border-2);display:flex;flex-direction:column;gap:14px">
                 <div style="display:flex;align-items:stretch;gap:12px"><label style="flex:1 1 0;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">NIP</span><span style="position:relative;display:block;width:100%"><span aria-hidden="true" style="position:absolute;left:0;top:0;pointer-events:none;font-family:inherit;font-size:16px;line-height:20px;white-space:pre"><span style="color:transparent">{{ billing.dNip }}</span><span style="color:var(--tk-text-3)">{{ billing.dNipRest }}</span></span><input value="{{ billing.dNip }}" onInput="{{ billing.setNip }}" style="position:relative;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></span></label><button type="button" onClick="{{ billing.fetchGus }}" disabled="{{ billing.gusDisabled }}" style="flex:none;height:56px;padding:0 18px;border:0;border-radius:10px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;font-weight:500;white-space:nowrap;cursor:{{ billing.gusCursor }};opacity:{{ billing.gusOpacity }};transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">Zaciągnij z GUS</button></div>
-                <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa firmy</span><input value="{{ billing.dCompany }}" onInput="{{ billing.setCompany }}" placeholder="np. Serwis DobryMechanik Sp. z o.o." style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
+                <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Nazwa firmy</span><input value="{{ billing.dCompany }}" onInput="{{ billing.setCompany }}" placeholder="np. DM Motors Mechanika Pojazdowa" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
               </div>
               <div style="padding:20px 28px;border-bottom:1px solid transparent;display:flex;flex-direction:column;gap:14px">
                 <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px"><span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Ulica i numer</span><input value="{{ billing.dStreet }}" onInput="{{ billing.setStreet }}" placeholder="ul. Kwiatowa 10d" style="font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);background:transparent;border:0;outline:0;padding:0;width:100%"></span></label>
@@ -4748,18 +4748,18 @@ const HOURS_30 = (() => {
 const godzinPL = (n) => (n === 1 ? 'godzina' : (n >= 2 && n <= 4 ? 'godziny' : 'godzin'));
 
 const GARAGE_SEED = {
-  name: 'Serwis DobryMechanik.pl',
+  name: 'DM Motors Mechanika Pojazdowa',
   phone: '601 234 567',
   email: 'kontakt@serwis-dm.pl',
-  nip: '779 241 96 34',
-  company: 'Serwis DobryMechanik Sp. z o.o.',
-  companyStreet: 'ul. Ignacego Dobrogojskiego 30A',
-  companyZip: '61-692',
-  companyCity: 'Poznań',
-  street: 'ul. Ignacego Dobrogojskiego 30A',
-  city: 'Poznań',
-  quarter: 'Nowe Miasto',
-  zip: '61-692',
+  nip: '779 244 53 10',
+  company: 'DM Motors Mechanika Pojazdowa',
+  companyStreet: 'Pruszkowska 29a/166',
+  companyZip: '02-119',
+  companyCity: 'Warszawa',
+  street: 'Pruszkowska 29a/166',
+  city: 'Warszawa',
+  quarter: 'Ochota',
+  zip: '02-119',
   directions: 'Wjazd od podwórza, zieloną bramą obok myjni.',
   card: true,
   cash: true,
@@ -6004,10 +6004,10 @@ class Component extends DCLogic {
       fetchGus: () => {
         if (!this.nipComplete(f.nip)) return;
         this.garagePatch({
-          company: (String(g.name || 'Serwis').split(' ')[0] || 'Serwis') + ' Sp. z o.o.',
-          companyStreet: 'ul. Ignacego Dobrogojskiego 30A',
-          companyZip: '61-692',
-          companyCity: 'Poznań',
+          company: 'DM Motors Mechanika Pojazdowa',
+          companyStreet: 'Pruszkowska 29a/166',
+          companyZip: '02-119',
+          companyCity: 'Warszawa',
         });
         this.ziloToast('Dane firmy pobrane z GUS');
       },
