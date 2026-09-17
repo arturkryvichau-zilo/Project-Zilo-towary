@@ -9885,6 +9885,53 @@ class Component extends DCLogic {
     };
   }
 }
+
+// ——— pokaz „towary + faktury" ———
+// Cała część oponiarska zostaje na widoku, ale nie da się w nią wejść:
+// wejścia oddają komunikat zamiast otwierać przechowalnię.
+const TIRES_LOCKED_MSG = 'Przechowalnia opon jest poza tym pokazem';
+const TIRES_LOCKED_KEYS = [
+  'openTireModal', 'openTireSection', 'openTireSectionWithDraft',
+  'addVisitSetDraft', 'toggleVisitSet', 'removeVisitSet',
+  'toggleTireSet', 'toggleStatusMenu', 'toggleTireMenu', 'pickStatus',
+  'openRelease', 'confirmRelease',
+  'openFeatureDialog', 'toggleFeatureDraft', 'saveFeatureDialog',
+];
+const __renderValsFull = Component.prototype.renderVals;
+Component.prototype.renderVals = function () {
+  const v = __renderValsFull.call(this);
+  const stop = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    this.ziloToast(TIRES_LOCKED_MSG);
+  };
+  const lock = (obj, keys) => {
+    if (!obj) return;
+    keys.forEach((k) => { if (typeof obj[k] === 'function') obj[k] = stop; });
+  };
+
+  lock(v, TIRES_LOCKED_KEYS);
+  ((v.detail && v.detail.storage && v.detail.storage.sets) || []).forEach((r) => lock(r, ['toggle', 'open', 'release']));
+  (v.visitClientSets || []).forEach((r) => lock(r, ['toggle', 'release']));
+
+  // Raporty zostają w pasku, ale klik nie przenosi na ekran raportu
+  const nav = v.onNavClick;
+  if (typeof nav === 'function') {
+    v.onNavClick = (e) => {
+      if (e && e.currentTarget && e.currentTarget.dataset.navKey === 'reports') return stop(e);
+      return nav(e);
+    };
+  }
+  // to samo z „Widocznością funkcji" w ustawieniach
+  const row = v.openSettingsRow;
+  if (typeof row === 'function') {
+    v.openSettingsRow = (e) => {
+      const key = e && e.currentTarget && e.currentTarget.dataset.settingsRow;
+      if (key === 'interface') return stop(e);
+      return row(e);
+    };
+  }
+  return v;
+};
 </script>
 <script>
 /* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
