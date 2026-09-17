@@ -1075,6 +1075,118 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
+    <sc-if value="{{ isReports }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;height:100%;overflow:hidden;background:var(--tk-surface)">
+
+        <aside style="flex:none;width:{{ reports.navWidth }};display:flex;flex-direction:column;border-right:1px solid var(--tk-border-2);background:var(--tk-surface)">
+          <div style="display:flex;align-items:center;justify-content:space-between;height:60px;flex:none;box-sizing:border-box;padding:{{ reports.navHeadPad }};border-bottom:1px solid var(--tk-border-2);font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text)">
+            <sc-if value="{{ reports.navOpen }}" hint-placeholder-val="{{ true }}">
+              <div>Raporty</div>
+            </sc-if>
+            <div role="button" onClick="{{ reports.toggleNav }}" data-tt="{{ reports.navTip }}" data-tt-pos="right" style="position:relative;height:100%;padding:0 18px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--tk-brand-soft);cursor:pointer">
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-panel.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-panel.svg) center / 20px 20px no-repeat"></span>
+            </div>
+          </div>
+
+          <sc-if value="{{ reports.navOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 12px;display:flex;flex-direction:column;gap:12px 0">
+              <div style="border-bottom:1px solid var(--tk-border-2);font-size:16px;line-height:22px;color:var(--tk-text)">
+                <div style="margin:12px 0 4px;display:flex;flex-direction:column;gap:4px">
+                  <sc-for list="{{ reports.navItems }}" as="it" hint-placeholder-count="2">
+                    <div data-report="{{ it.key }}" onClick="{{ reports.pickNav }}" data-tt="{{ it.tip }}" data-tt-pos="right" style="position:relative;min-height:46px;display:flex;align-items:center;padding:0 12px;background:{{ it.bg }};color:{{ it.color }};cursor:{{ it.cursor }}">
+                      <span style="display:flex;align-items:center;justify-content:space-between;width:100%">
+                        {{ it.label }}
+                        <span style="width:16px;height:16px;flex:none;display:block;margin-left:16px;background-color:currentColor;-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat"></span>
+                      </span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </aside>
+
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 48px">
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px">
+              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Opony w przechowalni</h1>
+              <button type="button" onClick="{{ reports.downloadCsv }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
+                Pobierz CSV
+              </button>
+            </div>
+
+            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px">
+              <label style="display:flex;align-items:stretch;height:56px;max-width:420px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                <span style="display:flex;align-items:center;padding-left:13px;flex:none">
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat"></span>
+                </span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:{{ reports.search.gap }};padding:{{ reports.search.pad }};box-sizing:border-box">
+                  <sc-if value="{{ reports.search.filled }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Szukaj kompletu</span>
+                  </sc-if>
+                  <input value="{{ reports.query }}" onInput="{{ reports.setQuery }}" placeholder="{{ reports.search.placeholder }}" style="width:100%;border:0;outline:none;background:transparent;padding:0;font-family:inherit;font-weight:400;font-size:16px;line-height:20px;color:var(--tk-text)">
+                </span>
+              </label>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));gap:16px;margin-bottom:24px">
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Komplety w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.inCount }}</span>
+              </div>
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.winterIconColor }};-webkit-mask:url({{ reports.winterIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.winterIcon }}) center / 20px 20px no-repeat"></span>
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Zimowe opony w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.winterCount }}</span>
+              </div>
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.summerIconColor }};-webkit-mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat"></span>
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Letnie opony w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.summerCount }}</span>
+              </div>
+            </div>
+
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow-x:auto">
+              <div style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                <span>Przyjęto</span><span>Klient</span><span>Pojazd</span><span>Rejestracja</span><span>Sezon</span><span>ID</span><span>Lokalizacja</span><span>Status</span><span></span>
+              </div>
+              <sc-for list="{{ reports.rows }}" as="r" hint-placeholder-count="5">
+                <div data-client-id="{{ r.clientId }}" data-car-idx="{{ r.carIdx }}" data-set-key="{{ r.key }}" onClick="{{ openReportRow }}" style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;align-items:center;border-bottom:1px solid {{ r.rowBorder }};font-size:16px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                  <span style="white-space:nowrap">{{ r.received }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.clientName }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.carName }}</span>
+                  <span style="white-space:nowrap">{{ r.plate }}</span>
+                  <span style="display:flex;align-items:center;gap:8px;min-width:0">
+                    <sc-if value="{{ r.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
+                      <span style="width:16px;height:16px;flex:none;display:block;background-color:{{ r.seasonIconColor }};-webkit-mask:url({{ r.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ r.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                    </sc-if>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.season }}</span>
+                  </span>
+                  <span style="white-space:nowrap">{{ r.code }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.location }}</span>
+                  <span>
+                    <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:4px;font-size:14px;line-height:22px;white-space:nowrap;color:{{ r.statusColor }};background:{{ r.statusBg }}">
+                      <span style="width:6px;height:6px;border-radius:50%;flex:none;background:{{ r.statusDot }}"></span>
+                      {{ r.status }}
+                    </span>
+                  </span>
+                  <span style="display:flex;justify-content:flex-end">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat"></span>
+                  </span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ reports.empty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:26px 24px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Żaden komplet nie pasuje do wyszukiwania.</div>
+              </sc-if>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isBilling }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
@@ -1099,42 +1211,32 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </section>
 
             <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
                 <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
-                <sc-if value="{{ billing.canConnect }}" hint-placeholder-val="{{ true }}">
-                  <button type="button" onClick="{{ billing.newTool }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                    Połącz narzędzie
-                  </button>
-                </sc-if>
               </div>
 
-              <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow:hidden">
-                <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(140px,0.8fr) minmax(160px,0.8fr) 130px;gap:16px;padding:12px 20px;background:var(--tk-surface-2);border-bottom:1px solid var(--tk-border-2);font-size:14px;color:var(--tk-text-2)">
-                  <span>Nazwa narzędzia</span><span>Data połączenia</span><span>Status połączenia</span><span></span>
-                </div>
-                <sc-for list="{{ billing.tools }}" as="c" hint-placeholder-count="1">
-                  <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(140px,0.8fr) minmax(160px,0.8fr) 130px;gap:16px;padding:14px 20px;align-items:center;border-bottom:1px solid {{ c.rowBorder }};font-size:15px;color:var(--tk-text)">
-                    <span>{{ c.name }}</span>
-                    <span style="color:var(--tk-text-2)">{{ c.date }}</span>
-                    <span>
-                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:{{ c.statusColor }};background:{{ c.statusBg }}">
-                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:{{ c.statusDot }}"></span>
-                        {{ c.status }}
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
+                <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
+                  <div style="display:flex;cursor:{{ opt.rowCursor }}">
+                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
+                    <span style="display:flex;align-items:center;gap:12px">
+                      <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
+                      <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
+                    </span>
+                    <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
+                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
+                        Połączono
                       </span>
-                    </span>
-                    <span style="display:flex;justify-content:flex-end">
-                      <button type="button" data-tool="{{ c.name }}" onClick="{{ c.action }}" style="display:inline-flex;align-items:center;gap:6px;height:auto;padding:0;border:0;background:transparent;font-family:inherit;font-size:14px;line-height:22px;color:var(--tk-brand-fg);cursor:pointer;transition:color 200ms cubic-bezier(.2,0,0,1)" style-hover="color:var(--tk-brand-fg-strong)">
-                        {{ c.actionLabel }}
-                        <span style="width:16px;height:16px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat"></span>
-                      </button>
-                    </span>
+                    </sc-if>
+                  </div>
                   </div>
                 </sc-for>
-                <sc-if value="{{ billing.noTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><span style="font-size:16px;line-height:24px;color:var(--tk-text)">Nie masz jeszcze połączonego narzędzia.</span><span style="max-width:420px;font-size:14px;line-height:20px;color:var(--tk-text-3)">Po połączeniu faktury wystawione w Zilo trafią tam automatycznie.</span></div>
-                </sc-if>
               </div>
+              <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
+              </sc-if>
             </div>
 
           </div>
@@ -4342,7 +4444,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <sc-if value="{{ evd.wyc.fvHistoryOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
                       <div style="min-width:1010px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 140px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
-                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Status</div><div>KSeF</div><div style="text-align:right">Kwota</div><div></div>
+                        <div>Numer</div><div>Nabywca</div><div>Wystawiono</div><div>Płatność</div><div>KSeF</div><div style="text-align:right">Kwota</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.fvHistory }}" as="f" hint-placeholder-count="1">
                         <div data-flash="{{ f.flashMark }}" style="min-width:1010px;display:grid;grid-template-columns:130px minmax(150px,1.2fr) 150px 170px 170px 120px 140px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ f.border }};animation:{{ f.flashAnim }}">
@@ -4789,26 +4891,26 @@ const SIGNUP_STEP = {
 };
 
 const BILLING_TOOLS = [
-  { name: 'Fakturownia', mark: 'FKT', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
+  { name: 'Fakturownia', mark: 'FKT', logo: 'assets/logos/fakturownia.png', note: 'Wystawiaj faktury z Zilo i trzymaj je w Fakturowni.', steps: [
     { title: 'Wygeneruj token API', info: 'Wymagane działanie:', infoValue: 'W Fakturowni wejdź w Ustawienia → Ustawienia konta → Integracja i skopiuj kod autoryzacyjny API.' },
     { title: 'Podaj adres konta', field: 'domain', label: 'Adres konta', hint: 'Pierwszy człon adresu, np. „mojwarsztat" z mojwarsztat.fakturownia.pl.' },
     { title: 'Wklej token API', field: 'apiKey', label: 'Token API' },
   ] },
-  { name: 'wFirma', mark: 'WF', note: 'Faktury i KSeF po stronie wFirma, wystawianie z poziomu Zilo.', steps: [
+  { name: 'wFirma', mark: 'WF', logo: 'assets/logos/wfirma.png', note: 'Faktury i KSeF po stronie wFirma, wystawianie z poziomu Zilo.', steps: [
     { title: 'Włącz dostęp API', info: 'Wymagane działanie:', infoValue: 'W wFirma wejdź w Ustawienia → Integracje → API i włącz dostęp dla aplikacji zewnętrznych.' },
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Wklej klucz API', field: 'apiKey', label: 'Klucz API' },
     { title: 'Podaj identyfikator firmy', field: 'company', label: 'ID firmy', hint: 'Znajdziesz go w adresie panelu po zalogowaniu.' },
   ] },
-  { name: 'inFakt', mark: 'INF', note: 'Automatyczne przesyłanie faktur do inFakt.', steps: [
+  { name: 'inFakt', mark: 'INF', logo: 'assets/logos/infakt.png', note: 'Automatyczne przesyłanie faktur do inFakt.', steps: [
     { title: 'Wygeneruj klucz API', info: 'Wymagane działanie:', infoValue: 'W inFakt wejdź w Ustawienia → API i wygeneruj klucz dla Zilo.' },
     { title: 'Wklej klucz API', field: 'apiKey', label: 'Klucz API' },
   ] },
-  { name: 'iFirma', mark: 'IFR', note: 'Wystawiaj faktury bezpośrednio w iFirma.', steps: [
+  { name: 'iFirma', mark: 'IFR', logo: 'assets/logos/ifirma.png', note: 'Wystawiaj faktury bezpośrednio w iFirma.', steps: [
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Wklej klucz do faktur', field: 'apiKey', label: 'Klucz API (faktura)', hint: 'Klucz znajdziesz w iFirma w sekcji Narzędzia → API.' },
   ] },
-  { name: 'Comarch Optima', mark: 'OPT', note: 'Eksport faktur do Comarch ERP Optima.', steps: [
+  { name: 'Comarch Optima', mark: 'OPT', logo: 'assets/logos/comarch.png', note: 'Eksport faktur do Comarch ERP Optima.', steps: [
     { title: 'Włącz usługę Comarch Cloud', info: 'Wymagane działanie:', infoValue: 'Poproś opiekuna Comarch o włączenie dostępu API dla Twojej bazy.' },
     { title: 'Podaj login', field: 'login', label: 'Login' },
     { title: 'Podaj hasło', field: 'pass', label: 'Hasło' },
@@ -4905,6 +5007,9 @@ class Component extends DCLogic {
     resize: null,
     clientId: 'c12',
     carIdx: 0,
+    reportsQuery: '',
+    reportsNavOpen: true,
+    reportsTab: 'tires',
     query: '',
     page: 1,
     eventId: null,
@@ -5876,6 +5981,7 @@ class Component extends DCLogic {
     const patch = (key) => (e) => this.garagePatch({ [key]: e.target.value });
 
     return {
+      noneConnected: connected.length === 0,
       nip: g.nip || '—',
       companyName: g.company || '—',
       companyStreet: g.companyStreet || '—',
@@ -5950,12 +6056,13 @@ class Component extends DCLogic {
         const mine = connected.some((c) => c.name === t.name);
         const blocked = !mine && connected.length > 0;
         return {
-          name: t.name, note: t.note, mark: t.mark,
+          name: t.name, note: t.note, mark: t.mark, logo: t.logo, hasLogo: !!t.logo, noLogo: !t.logo,
           isConnected: mine,
           isFree: !mine && !blocked,
           isBlocked: blocked,
           rowOpacity: blocked ? '0.5' : '1',
           rowCursor: blocked ? 'not-allowed' : 'pointer',
+          rowPointer: blocked ? 'none' : 'auto',
         };
       }),
       // podpowiedź prowadzi do tego samego formularza, tylko z krokiem zakładania konta
@@ -7070,7 +7177,7 @@ class Component extends DCLogic {
       const entry = {
         numer: st.numer || '',
         buyer: (st.buyer && st.buyer.company) || '',
-        date: now.getDate() + ' ' + M[now.getMonth()] + ', ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
+        date: now.getDate() + ' ' + M[now.getMonth()] + ' ' + now.getFullYear(),
         status: st.status || 'Wystawiona',
         ksef: d.mode === 'ksef' ? 'W trakcie' : 'Do wysyłki',
         amt: t.gross || '0,00 zł',
@@ -7276,6 +7383,121 @@ class Component extends DCLogic {
     this.__wycSend = !!(opts && opts.send);
     try { src += (src.indexOf('#') >= 0 ? '&' : '#') + 'theme=' + (document.documentElement.getAttribute('data-theme') || 'light'); } catch (e) {}
     this.setState({ wycConfigSrc: src, wycConfigVisit: visitId });
+  }
+
+  // Raport „Opony w przechowalni" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
+  reportRows() {
+    const s = this.state;
+    const out = [];
+    CLIENTS.forEach((cl) => {
+      (cl.cars || []).forEach((car, carIdx) => {
+        this.tireSetsFor(car.id).forEach((t) => {
+          const key = car.id + '::' + t.__idx;
+          const stored = (s.setStatus[key] || t.status || 'in') === 'in';
+          out.push({
+            key: key,
+            clientId: cl.id,
+            clientName: cl.name,
+            carIdx: String(carIdx),
+            carName: (car.brand + ' ' + car.model).trim(),
+            plate: car.plate || '—',
+            season: t.season || '—',
+            code: t.code || '—',
+            location: t.location || '—',
+            received: t.received || '—',
+            stored: stored,
+          });
+        });
+      });
+    });
+    return out;
+  }
+
+  reportsVals() {
+    const s = this.state;
+    const q = (s.reportsQuery || '').trim().toLowerCase();
+    const all = this.reportRows();
+    const hit = (r) => [r.clientName, r.carName, r.plate, r.code, r.location, r.season]
+      .join(' ').toLowerCase().indexOf(q) !== -1;
+    const rows = q ? all.filter(hit) : all;
+    const inStore = all.filter((r) => r.stored);
+    const bySeason = (name) => inStore.filter((r) => r.season === name).length;
+
+    const navOpen = s.reportsNavOpen !== false;
+
+    return Object.assign({
+      // lewa nawigacja 1:1 z NotificationsNavigation.vue (Marketing w zilo-front-v2)
+      navOpen: navOpen,
+      navWidth: navOpen ? '240px' : 'auto',
+      navHeadPad: navOpen ? '8px 0 8px 20px' : '0',
+      navTip: navOpen ? 'Zwiń' : 'Rozwiń',
+      toggleNav: () => this.setState((st) => ({ reportsNavOpen: st.reportsNavOpen === false })),
+      navItems: [
+        { key: 'payroll', label: 'Rozliczenia pracowników', ready: false },
+        { key: 'tires', label: 'Opony w przechowalni', ready: true },
+      ].map((it) => {
+        const active = it.ready && (s.reportsTab || 'tires') === it.key;
+        return {
+          key: it.key,
+          label: it.label,
+          bg: active ? 'var(--tk-brand-soft)' : 'transparent',
+          color: it.ready ? 'var(--tk-text)' : 'var(--tk-text-2)',
+          cursor: it.ready ? 'pointer' : 'not-allowed',
+          tip: it.ready ? '' : 'Wkrótce',
+        };
+      }),
+      pickNav: (e) => {
+        const key = e.currentTarget.dataset.report;
+        if (key !== 'tires') return;
+        this.setState({ reportsTab: key });
+      },
+      total: String(all.length),
+      inCount: String(inStore.length),
+      winterCount: String(bySeason('Zima')),
+      summerCount: String(bySeason('Lato')),
+      empty: rows.length === 0,
+      hasRows: rows.length > 0,
+      query: s.reportsQuery || '',
+      setQuery: (e) => this.setState({ reportsQuery: e.target.value }),
+      search: {
+        filled: (s.reportsQuery || '').length > 0,
+        gap: (s.reportsQuery || '') ? '2px' : '0px',
+        pad: (s.reportsQuery || '') ? '9px 13px' : '20px 13px',
+        placeholder: (s.reportsQuery || '') ? '' : 'Szukaj po kliencie, aucie lub ID',
+      },
+      downloadCsv: () => this.downloadReportCsv(),
+      rows: rows.map((r, i) => Object.assign({}, r, {
+        rowBorder: i === rows.length - 1 ? 'transparent' : 'var(--tk-border-2)',
+        status: r.stored ? 'W przechowalni' : 'Wydane',
+        statusBg: r.stored ? 'var(--tk-ok-soft)' : 'var(--tk-surface-2)',
+        statusColor: r.stored ? 'var(--tk-ok-fg)' : 'var(--tk-text-2)',
+        statusDot: r.stored ? 'var(--tk-ok)' : 'var(--tk-text-3)',
+      }, seasonVals(r.season))),
+    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'));
+  }
+
+  downloadReportCsv() {
+    const head = ['Przyjeto', 'Klient', 'Pojazd', 'Rejestracja', 'Sezon', 'ID kompletu', 'Lokalizacja', 'Status'];
+    const cell = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+    const lines = [head.join(';')].concat(this.reportRows().map((r) => [
+      r.received, r.clientName, r.carName, r.plate, r.season, r.code, r.location,
+      r.stored ? 'W przechowalni' : 'Wydane',
+    ].map(cell).join(';')));
+    // BOM, żeby Excel nie połamał polskich znaków
+    const csv = '\ufeff' + lines.join('\r\n');
+    try {
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'opony-w-przechowalni.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      this.ziloToast('Pobrano raport — ' + (lines.length - 1) + ' kompletów');
+    } catch (err) {
+      this.ziloToast('Nie udało się pobrać pliku');
+    }
   }
 
   ziloToast(text) {
@@ -7888,6 +8110,8 @@ class Component extends DCLogic {
       isBillingForm: s.screen === 'billingForm',
       billing: this.billingVals(),
       isGoods: s.screen === 'goods',
+      isReports: s.screen === 'reports',
+      reports: this.reportsVals(),
       isDocs: s.screen === 'docs',
       docsQuery: s.docsQuery || '',
       setDocsQuery: (e) => this.setState({ docsQuery: e.target.value }),
@@ -8506,6 +8730,7 @@ class Component extends DCLogic {
         else if (key === 'clients') this.setState({ navKey: key, screen: 'clients', eventId: null });
         else if (key === 'settings') this.setState({ navKey: key, screen: 'settings', eventId: null, moreOpen: false });
         else if (key === 'goods') this.setState({ navKey: key, screen: 'docs', eventId: null, moreOpen: false });
+        else if (key === 'reports') this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false });
         else this.setState({ navKey: key, moreOpen: false });
       },
 
@@ -9453,6 +9678,18 @@ class Component extends DCLogic {
       prevPage: () => this.setState((st) => ({ page: Math.max(1, st.page - 1) })),
       nextPage: () => this.setState((st) => ({ page: Math.min(totalPages, st.page + 1) })),
       openClient: (e) => this.setState({ screen: 'client', clientId: e.currentTarget.dataset.clientId, carIdx: 0 }),
+      // z raportu wchodzimy na kartę klienta, na to auto, z rozwiniętym tym kompletem
+      openReportRow: (e) => {
+        const d = e.currentTarget.dataset;
+        this.setState({
+          screen: 'client',
+          clientId: d.clientId,
+          carIdx: Number(d.carIdx) || 0,
+          openTireSet: d.setKey,
+          openTireMenu: null,
+          statusMenu: null,
+        });
+      },
       selectCar: (e) => this.setState({ carIdx: Number(e.currentTarget.dataset.carIndex) }),
       openEventFromVisit: (e) => {
         const id = e.currentTarget.dataset.eventId;
