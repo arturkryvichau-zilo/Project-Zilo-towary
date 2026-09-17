@@ -12,7 +12,7 @@
   function set(t) { el.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); }
   try {
     var m = (location.hash || '').match(/[#&]theme=(dark|light)/);
-    set(m ? m[1] : (localStorage.getItem('zilo-theme') || 'light'));
+    set(m ? m[1] : 'light');
   } catch (e) { set('light'); }
   // konfiguratory żyją w iframe'ach — rodzic przełącza je razem ze sobą
   addEventListener('message', function (e) {
