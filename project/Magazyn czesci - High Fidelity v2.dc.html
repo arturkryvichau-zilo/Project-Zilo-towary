@@ -4557,8 +4557,7 @@ const ST = {
 };
 
 const EVENTS = [
-  { id: 'r32', ws: 'w3', d: 3, t: '08:00', dur: 60, brand: 'BMW', model: '320d E90', plate: 'KR 5588T', reason: 'Wymiana opon', st: 'trakcie', client: 'Tomasz Nowak', phone: '604 771 118', veh: { year: '2010', engine: '2.0 d 177 KM', vin: 'WBAVC91050K118330' } },
-  { id: 'r30', ws: 'w1', d: 3, t: '10:00', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'nowa', client: 'Marek Zieliński', phone: '601 233 981', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
+  { id: 'r30', ws: 'w1', d: 3, t: '08:00', dur: 60, brand: 'Volkswagen', model: 'Passat B8', plate: 'W7203S', reason: 'Wymiana oleju z filtrem', st: 'nowa', client: 'Marek Zieliński', phone: '601 233 981', veh: { year: '2020', engine: '2.0 TDI', vin: 'WVWZZZ3CZLE045128' } },
 ];
 
 
@@ -5134,7 +5133,7 @@ class Component extends DCLogic {
     addedSets: {},
     editedSets: {},
     seasonClash: null,
-    tireStorageOn: true,
+    tireStorageOn: false,
     featureDialogOpen: false,
     featureDraft: true,
     visitTireOpen: false,
@@ -10026,55 +10025,6 @@ class Component extends DCLogic {
     };
   }
 }
-
-// ——— pokaz „towary + faktury" ———
-// Cała część oponiarska zostaje na widoku, ale nie da się w nią wejść:
-// wejścia oddają komunikat zamiast otwierać przechowalnię.
-const TIRES_LOCKED_MSG = 'Przechowalnia opon jest poza tym pokazem';
-const TIRES_LOCKED_KEYS = [
-  'openTireModal', 'openTireSection', 'openTireSectionWithDraft',
-  'addVisitSetDraft', 'toggleVisitSet', 'removeVisitSet',
-  'toggleTireSet', 'toggleStatusMenu', 'toggleTireMenu', 'pickStatus',
-  'openRelease', 'confirmRelease',
-  'openFeatureDialog', 'toggleFeatureDraft', 'saveFeatureDialog',
-];
-const __renderValsFull = Component.prototype.renderVals;
-Component.prototype.renderVals = function () {
-  const v = __renderValsFull.call(this);
-  const stop = (e) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    this.ziloToast(TIRES_LOCKED_MSG);
-  };
-  const lock = (obj, keys) => {
-    if (!obj) return;
-    keys.forEach((k) => { if (typeof obj[k] === 'function') obj[k] = stop; });
-  };
-
-  lock(v, TIRES_LOCKED_KEYS);
-  lock(v.vtTable, ['toggleSection']);
-  ((v.vtTable && v.vtTable.rows) || []).forEach((r) => lock(r, ['toggle', 'release']));
-  ((v.detail && v.detail.storage && v.detail.storage.sets) || []).forEach((r) => lock(r, ['toggle', 'open', 'release']));
-  (v.visitClientSets || []).forEach((r) => lock(r, ['toggle', 'release']));
-
-  // Raporty zostają w pasku, ale klik nie przenosi na ekran raportu
-  const nav = v.onNavClick;
-  if (typeof nav === 'function') {
-    v.onNavClick = (e) => {
-      if (e && e.currentTarget && e.currentTarget.dataset.navKey === 'reports') return stop(e);
-      return nav(e);
-    };
-  }
-  // to samo z „Widocznością funkcji" w ustawieniach
-  const row = v.openSettingsRow;
-  if (typeof row === 'function') {
-    v.openSettingsRow = (e) => {
-      const key = e && e.currentTarget && e.currentTarget.dataset.settingsRow;
-      if (key === 'interface') return stop(e);
-      return row(e);
-    };
-  }
-  return v;
-};
 </script>
 <script>
 /* Tooltip (DS · Components/Tooltip) — jeden bąbel doklejony do <body>.
