@@ -1110,7 +1110,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 48px">
 
             <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px">
-              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Opony w przechowalni</h1>
+              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Przechowalnia opon</h1>
               <button type="button" onClick="{{ reports.downloadCsv }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
                 <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
                 Pobierz CSV
@@ -1957,7 +1957,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                       <sc-if value="{{ car.tireColOn }}" hint-placeholder-val="{{ true }}">
   <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
-                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Opony w przechowalni</span>
+                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">Przechowalnia opon</span>
                           <sc-if value="{{ car.hasTires }}" hint-placeholder-val="{{ true }}">
                             <span style="position:relative;display:inline-flex;width:fit-content">
                               <span data-tire-id="{{ car.tireId }}" onMouseEnter="{{ showTireTip }}" onMouseLeave="{{ hideTireTip }}" style="display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 4px; background: var(--tk-surface-3); font-size: 14px; line-height: 20px; color: var(--tk-text); cursor: pointer">
@@ -2159,7 +2159,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <sc-if value="{{ tiresEnabled }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;flex-direction:column;gap:12px">
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-                    <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Opony w przechowalni</span>
+                    <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Przechowalnia opon</span>
                     <button type="button" onClick="{{ openTireModal }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
                       <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
                       Nowy komplet
@@ -7399,7 +7399,7 @@ class Component extends DCLogic {
     this.setState({ wycConfigSrc: src, wycConfigVisit: visitId });
   }
 
-  // Raport „Opony w przechowalni" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
+  // Raport „Przechowalnia opon" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
   reportRows() {
     const s = this.state;
     const out = [];
@@ -7448,7 +7448,7 @@ class Component extends DCLogic {
       toggleNav: () => this.setState((st) => ({ reportsNavOpen: st.reportsNavOpen === false })),
       navItems: [
         { key: 'payroll', label: 'Rozliczenia pracowników', ready: false },
-        { key: 'tires', label: 'Opony w przechowalni', ready: true },
+        { key: 'tires', label: 'Przechowalnia opon', ready: true },
       ].map((it) => {
         const active = it.ready && (s.reportsTab || 'tires') === it.key;
         return {

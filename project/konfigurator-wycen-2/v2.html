@@ -227,7 +227,6 @@ window.__resources = {
     <div style="display:flex;flex-direction:column;gap:8px;">
       <!-- Card header: Segmented Control — wartości netto / brutto -->
       <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;">
-        <button type="button" class="o-add" onClick="{{ toggleRabat }}" style="background:{{ rabatBg }}"><i style="{{ rabatIcon }}"></i>Rabat</button>
         <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
