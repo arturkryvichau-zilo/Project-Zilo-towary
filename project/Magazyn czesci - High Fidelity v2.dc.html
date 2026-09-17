@@ -4176,17 +4176,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
                   <div style="height:1px;background:var(--tk-border);margin:0 4px"></div>
 
-                <sc-if value="{{ extrasOn }}" hint-placeholder-val="{{ true }}">
-                  <div style="background:var(--tk-surface);border:1px solid var(--tk-border-2);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:4px">
-                    <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Dodatkowe możliwości:</span>
-                    <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
-                      <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ true }}">
-                        <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)">
-                          <span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                          Komplet opon
-                        </button>
-                      </sc-if>
-                    </span>
+                <sc-if value="{{ vtTable.emptyOn }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;font-weight:500;padding:0 4px">
+                      Opony w przechowalni
+                      <button type="button" onClick="{{ openTireSectionWithDraft }}" style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                        Nowy komplet opon
+                      </button>
+                    </div>
+                    <div style="font-size:16px;line-height:22px;padding:6px 4px;color:var(--tk-text-2)">Brak kompletów w przechowalni</div>
                   </div>
                 </sc-if>
 
@@ -6583,12 +6582,6 @@ class Component extends DCLogic {
       releaseSelect: null,
       releaseForm: { setKey: setKey, outOpen: false, choice: hasOther ? 'existing' : 'new', newSeason: '', newMaker: '', newQty: '4', newSize: '', newRim: '', newTread: '', newLocation: '', note: '' },
     });
-  }
-
-  // pasek znika, kiedy sekcja opon jest już na widoku
-  visitExtrasOn() {
-    const t = this.visitTireTable();
-    return t.on && t.emptyOn;
   }
 
   visitTireTable() {
@@ -8999,7 +8992,6 @@ class Component extends DCLogic {
         : { open: false },
       visitTire: this.visitTireVals(),
       vtTable: this.visitTireTable(),
-      extrasOn: this.visitExtrasOn(),
       timeEdit: this.timeEditVals(),
       openTimeEdit: () => {
         const ev = s.events.find((x) => x.id === s.eventId);
