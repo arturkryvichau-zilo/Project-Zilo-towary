@@ -68,7 +68,7 @@ window.__resources = {
     .z-tri-cell.is-filled .z-tri-label, .z-tri-cell:focus-within .z-tri-label { font-size:12px; line-height:16px; }
     .z-tri-cell.is-filled .z-tri-value, .z-tri-cell:focus-within .z-tri-value { opacity:1; height:auto; pointer-events:auto; }
     a:hover { color: var(--zilo-blue-2); text-decoration: underline; }
-    /* Ikona „i" w polu „Przeprac. czas" + tooltip (hover tylko na ikonę) */
+    /* Ikona „i" w polu „Czas pracy" + tooltip (hover tylko na ikonę) */
     .z-czas-info { position:absolute; right:11px; top:50%; transform:translateY(-50%); width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--grey-3); cursor:help; z-index:5; }
     .z-czas-info:hover { color:var(--zilo-blue-1); }
     /* ─── Segmented Control (design system) ─── */
@@ -278,10 +278,10 @@ window.__resources = {
                 </div>
               </sc-if>
             </div>
-            <!-- Przeprac. czas (tri-state: domyślnie etykieta; po fokusie/uzupełnieniu pole + „h" obok liczby) -->
+            <!-- Czas pracy (tri-state: domyślnie etykieta; po fokusie/uzupełnieniu pole + „h" obok liczby) -->
             <label class="z-input-cell z-tri-cell {{ row.czasCellClass }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;position:relative;">
               <div class="z-tri-body">
-                <div class="z-tri-label">Przeprac. czas</div>
+                <div class="z-tri-label">Czas pracy</div>
                 <div class="z-tri-value" style="display:flex;align-items:baseline;gap:2px;">
                   <input data-wyc-field="czas" class="z-input" type="text" inputMode="decimal" value="{{ row.czas }}" onChange="{{ row.setCzas }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}" style="field-sizing:content;width:auto;min-width:1ch;max-width:6ch;">
                   <span style="font-size:16px;line-height:20px;color:var(--grey-1);flex-shrink:0;">h</span>
@@ -357,11 +357,11 @@ window.__resources = {
           </div>
         </sc-for>
 
-        <!-- Footer: + Dodaj usługę | totals -->
+        <!-- Footer: + Nowa usługa | totals -->
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-left: 0px">
           <button onClick="{{ addRobocizna }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-            Dodaj usługę
+            Nowa usługa
           </button>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
@@ -478,12 +478,12 @@ window.__resources = {
           </div>
         </sc-for>
 
-        <!-- Footer: + Dodaj towar | totals -->
+        <!-- Footer: + Nowy towar | totals -->
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-left: 0px">
           <div style="display:flex;align-items:center;gap:16px;flex:none">
           <button onClick="{{ addTowar }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-            Dodaj towar
+            Nowy towar
           </button>
           <button onClick="{{ openDocPicker }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; margin-left: -8px" style-hover="background:var(--zilo-primary-5);">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
