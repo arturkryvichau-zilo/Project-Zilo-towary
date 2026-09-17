@@ -7446,7 +7446,7 @@ class Component extends DCLogic {
       navItems: [
         { key: 'payroll', label: 'Rozliczenia pracowników', ready: false },
         { key: 'tires', label: 'Przechowalnia opon', ready: true },
-      ].map((it) => {
+      ].filter((it) => it.key !== 'tires' || s.tireStorageOn).map((it) => {
         const active = it.ready && (s.reportsTab || 'tires') === it.key;
         return {
           key: it.key,
@@ -8724,7 +8724,8 @@ class Component extends DCLogic {
       isEventOpen: !!evd,
       goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.scrollToDayStart()),
       goClients: () => this.setState({ screen: 'clients', eventId: null }),
-      navItems: NAV.filter((n) => !n.hidden).map((n) => {
+      // Raporty mają na razie tylko przechowalnię opon — bez niej nie ma czego pokazywać
+      navItems: NAV.filter((n) => !n.hidden && !(n.key === 'reports' && !s.tireStorageOn)).map((n) => {
         const active = n.key === s.navKey;
         return {
           key: n.key,
@@ -8741,7 +8742,7 @@ class Component extends DCLogic {
         else if (key === 'clients') this.setState({ navKey: key, screen: 'clients', eventId: null });
         else if (key === 'settings') this.setState({ navKey: key, screen: 'settings', eventId: null, moreOpen: false });
         else if (key === 'goods') this.setState({ navKey: key, screen: 'docs', eventId: null, moreOpen: false });
-        else if (key === 'reports') this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false });
+        else if (key === 'reports') { if (this.state.tireStorageOn) this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false }); }
         else this.setState({ navKey: key, moreOpen: false });
       },
 
