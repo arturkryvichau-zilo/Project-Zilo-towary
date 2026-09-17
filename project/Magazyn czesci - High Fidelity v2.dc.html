@@ -4399,35 +4399,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </div>
 
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow-x:auto">
-                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
                         <div>Towary</div>
-                        <div>Pracownik</div>
                         <div>Numer dokumentu</div>
                         <div style="text-align:right">Wartość netto</div>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.goods }}" as="g" hint-placeholder-count="2">
-                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
+                        <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
                           <span onClick="{{ g.openName }}" style="font-size:15px;line-height:22px;color:{{ g.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.name }}</span>
-                          <span style="position:relative;display:flex;align-items:center;min-width:0">
-                            <span onClick="{{ g.togglePeople }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:38px;padding:0 10px;border:1px solid {{ g.personBorder }};border-radius:6px;background:var(--tk-surface);font-size:15px;line-height:22px;color:{{ g.personColor }};cursor:pointer;transition:border-color 150ms" style-hover="border-color:var(--tk-border-strong);background:var(--tk-canvas)">
-                              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.person }}</span>
-                              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M5.23 7.2a.75.75 0 011.06 0L10 10.94l3.71-3.74a.75.75 0 011.06 1.06l-4.24 4.27a.75.75 0 01-1.07 0L5.23 8.26a.75.75 0 010-1.06z" fill="var(--tk-text-2)"></path></svg>
-                            </span>
-                            <sc-if value="{{ g.peopleOpen }}" hint-placeholder-val="{{ false }}">
-                              <span style="position:absolute;top:calc(100% + 6px);left:0;min-width:220px;background:var(--tk-surface);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.16), 0 2px 6px rgba(10,11,41,0.06);padding:6px;z-index:20;display:flex;flex-direction:column;gap:2px">
-                                <sc-for list="{{ g.peopleOptions }}" as="p" hint-placeholder-count="4">
-                                  <button type="button" onClick="{{ p.pick }}" style="display:flex;align-items:center;gap:10px;border:0;background:{{ p.bg }};padding:8px;cursor:pointer;text-align:left;border-radius:6px;font-family:inherit;font-size:15px;line-height:22px;color:{{ p.color }}" style-hover="background:var(--tk-surface-3)">
-                                    <sc-if value="{{ p.hasAvatar }}" hint-placeholder-val="{{ false }}">
-                                      <span style="width:26px;height:26px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--tk-brand-fg-strong);background:var(--tk-brand-soft)">{{ p.initials }}</span>
-                                    </sc-if>
-                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span>
-                                  </button>
-                                </sc-for>
-                              </span>
-                            </sc-if>
-                          </span>
                           <span style="font-size:15px;line-height:22px;color:{{ g.docColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums">{{ g.doc }}</span>
                           <span onClick="{{ g.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.net }}</span>
                           <span onClick="{{ g.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.gross }}</span>
@@ -4438,12 +4419,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </span>
                         </div>
                       </sc-for>
-                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
+                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
                         <button type="button" onClick="{{ evd.wyc.addTowar }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
                           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
                           Nowy towar
                         </button>
-                        <span></span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsNet }}</span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsGross }}</span>
@@ -7070,7 +7050,7 @@ class Component extends DCLogic {
         remove: () => this.removeQuoteRow(id, 'usluga', ri),
       });
       }),
-      goods: goodsList.map(({ g, i: gi }) => Object.assign(this.rowPersonVals(id + ':t' + gi, (g && g.person) || ''), {
+      goods: goodsList.map(({ g, i: gi }) => ({
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: gi, field: 'towar' }); },
         doc: g.doc || '',
         docColor: g.doc ? 'var(--tk-text-2)' : 'var(--tk-text-3)',
