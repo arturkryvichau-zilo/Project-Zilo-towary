@@ -4789,7 +4789,6 @@ const SETTINGS_COLUMNS = [
         { key: 'employees', title: 'Pracownicy', subtitle: 'Zarządzaj dostępem zespołu, rolami i danymi pracowników.' },
       ] },
       { title: 'Wygląd Zilo', rows: [
-        { key: 'interface', title: 'Interface', subtitle: 'Dostosuj wygląd panelu — motyw, gęstość widoków i domyślny układ kalendarza.' },
       ] },
     ],
   },
@@ -4965,7 +4964,7 @@ const NAV = [
   { key: 'services', label: 'Usługi', icon: 'assets/nav/services.svg' , hidden: true },
   { key: 'online', label: 'Profile Online', icon: 'assets/nav/online.svg' , hidden: true },
   { key: 'marketing', label: 'Marketing', icon: 'assets/nav/marketing.svg' },
-  { key: 'reports', label: 'Raporty', icon: 'assets/nav/reports.svg', fill: 'assets/nav/reports-fill.svg' },
+  { key: 'reports', label: 'Raporty', icon: 'assets/nav/reports.svg', fill: 'assets/nav/reports-fill.svg', hidden: true },
   { key: 'settings', label: 'Ustawienia', icon: 'assets/nav/settings.svg' },
 ];
 
@@ -5086,7 +5085,7 @@ class Component extends DCLogic {
     addedSets: {},
     editedSets: {},
     seasonClash: null,
-    tireStorageOn: true,
+    tireStorageOn: false,
     featureDialogOpen: false,
     featureDraft: true,
     visitTireOpen: false,

@@ -5,10 +5,6 @@
       "destination": "/Magazyn%20czesci%20-%20High%20Fidelity.dc.html"
     },
     {
-      "source": "/v2",
-      "destination": "/Magazyn%20czesci%20-%20High%20Fidelity%20v2.dc.html"
-    },
-    {
       "source": "/oferta",
       "destination": "/konfigurator-ofert/v1.html"
     },
