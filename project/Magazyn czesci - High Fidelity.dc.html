@@ -8724,8 +8724,8 @@ class Component extends DCLogic {
       isEventOpen: !!evd,
       goCalendar: () => this.setState({ screen: 'calendar', eventId: null }, () => this.scrollToDayStart()),
       goClients: () => this.setState({ screen: 'clients', eventId: null }),
-      // Raporty mają na razie tylko przechowalnię opon — bez niej nie ma czego pokazywać
-      navItems: NAV.filter((n) => !n.hidden && !(n.key === 'reports' && !s.tireStorageOn)).map((n) => {
+      // Raporty zostają w pasku nawet przy wyłączonej przechowalni — tyle że nie wpuszczają dalej
+      navItems: NAV.filter((n) => !n.hidden).map((n) => {
         const active = n.key === s.navKey;
         return {
           key: n.key,
