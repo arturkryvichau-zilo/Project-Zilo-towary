@@ -1078,15 +1078,38 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
     <sc-if value="{{ isReports }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;height:100%;overflow:hidden;background:var(--tk-surface)">
 
-        <aside style="width:264px;flex:none;border-right:1px solid var(--tk-border-2);display:flex;flex-direction:column;gap:20px;padding:32px 16px">
-          <div style="font-size:26px;line-height:36px;font-weight:600;color:var(--tk-text-strong);padding:0 12px;letter-spacing:-0.4px">Raporty</div>
-          <nav style="display:flex;flex-direction:column;gap:2px">
-            <button type="button" data-tt="Wkrótce" data-tt-pos="right" style="position:relative;display:flex;align-items:center;padding:10px 12px;border:0;border-radius:8px;background:transparent;font-family:inherit;font-size:16px;line-height:22px;color:var(--tk-text);text-align:left;cursor:not-allowed">Rozliczenia pracowników</button>
-            <span style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:16px;line-height:22px;font-weight:500">
-              <span style="flex:1;min-width:0">Opony w przechowalni</span>
-              <span style="font-size:14px;line-height:20px;color:var(--tk-brand-fg)">{{ reports.total }}</span>
-            </span>
-          </nav>
+        <aside style="flex:none;width:{{ reports.navWidth }};display:flex;flex-direction:column;border-right:1px solid var(--tk-border-2);background:var(--tk-surface)">
+          <div style="display:flex;align-items:center;justify-content:space-between;height:60px;flex:none;box-sizing:border-box;padding:{{ reports.navHeadPad }};border-bottom:1px solid var(--tk-border-2);font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text)">
+            <sc-if value="{{ reports.navOpen }}" hint-placeholder-val="{{ true }}">
+              <div>Raporty</div>
+            </sc-if>
+            <div role="button" onClick="{{ reports.toggleNav }}" data-tt="{{ reports.navTip }}" data-tt-pos="right" style="position:relative;height:100%;padding:0 18px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--tk-brand-soft);cursor:pointer">
+              <span style="width:20px;height:20px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-panel.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-panel.svg) center / 20px 20px no-repeat"></span>
+            </div>
+          </div>
+
+          <sc-if value="{{ reports.navOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 12px;display:flex;flex-direction:column;gap:12px 0">
+              <div style="border-bottom:1px solid var(--tk-border-2);font-size:16px;line-height:22px;color:var(--tk-text)">
+                <div style="font-weight:500;min-height:46px;display:flex;padding:0 8px;align-items:center;justify-content:space-between">
+                  <span style="display:flex;gap:0 12px;align-items:center">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/nav/reports.svg) center / 20px 20px no-repeat;mask:url(assets/nav/reports.svg) center / 20px 20px no-repeat"></span>
+                    <span style="min-height:46px;display:flex;align-items:center">Zestawienia</span>
+                  </span>
+                </div>
+                <div style="margin:4px 0">
+                  <sc-for list="{{ reports.navItems }}" as="it" hint-placeholder-count="2">
+                    <div data-report="{{ it.key }}" onClick="{{ reports.pickNav }}" data-tt="{{ it.tip }}" data-tt-pos="right" style="position:relative;min-height:46px;display:flex;align-items:center;padding:0 12px;margin-left:26px;background:{{ it.bg }};color:{{ it.color }};cursor:{{ it.cursor }}">
+                      <span style="display:flex;align-items:center;justify-content:space-between;width:100%">
+                        {{ it.label }}
+                        <span style="width:16px;height:16px;flex:none;display:block;margin-left:16px;background-color:currentColor;-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 16px 16px no-repeat"></span>
+                      </span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
         </aside>
 
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
@@ -4991,6 +5014,8 @@ class Component extends DCLogic {
     clientId: 'c12',
     carIdx: 0,
     reportsQuery: '',
+    reportsNavOpen: true,
+    reportsTab: 'tires',
     query: '',
     page: 1,
     eventId: null,
@@ -7404,7 +7429,34 @@ class Component extends DCLogic {
     const inStore = all.filter((r) => r.stored);
     const bySeason = (name) => inStore.filter((r) => r.season === name).length;
 
+    const navOpen = s.reportsNavOpen !== false;
+
     return Object.assign({
+      // lewa nawigacja 1:1 z NotificationsNavigation.vue (Marketing w zilo-front-v2)
+      navOpen: navOpen,
+      navWidth: navOpen ? '240px' : 'auto',
+      navHeadPad: navOpen ? '8px 0 8px 20px' : '0',
+      navTip: navOpen ? 'Zwiń' : 'Rozwiń',
+      toggleNav: () => this.setState((st) => ({ reportsNavOpen: st.reportsNavOpen === false })),
+      navItems: [
+        { key: 'payroll', label: 'Rozliczenia pracowników', ready: false },
+        { key: 'tires', label: 'Opony w przechowalni', ready: true },
+      ].map((it) => {
+        const active = it.ready && (s.reportsTab || 'tires') === it.key;
+        return {
+          key: it.key,
+          label: it.label,
+          bg: active ? 'var(--tk-brand-soft)' : 'transparent',
+          color: it.ready ? 'var(--tk-text)' : 'var(--tk-text-2)',
+          cursor: it.ready ? 'pointer' : 'not-allowed',
+          tip: it.ready ? '' : 'Wkrótce',
+        };
+      }),
+      pickNav: (e) => {
+        const key = e.currentTarget.dataset.report;
+        if (key !== 'tires') return;
+        this.setState({ reportsTab: key });
+      },
       total: String(all.length),
       inCount: String(inStore.length),
       winterCount: String(bySeason('Zima')),
