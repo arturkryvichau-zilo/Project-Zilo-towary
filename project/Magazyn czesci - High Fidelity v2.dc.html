@@ -4347,15 +4347,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <sc-if value="{{ evd.wyc.hasQuote }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:14px">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow-x:{{ evd.wyc.servicesOverflow }}">
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
                         <div>Usługi</div>
-                        <div>Osoby przypisane</div>
+                        <div>Pracownik</div>
+                        <div>Czas pracy</div>
                         <div style="text-align:right">Wartość netto</div>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.services }}" as="r" hint-placeholder-count="2">
-                        <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
+                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
                           <span onClick="{{ r.openName }}" style="font-size:15px;line-height:22px;color:{{ r.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.name }}</span>
                           <span style="position:relative;display:flex;align-items:center;min-width:0">
                             <span onClick="{{ r.togglePeople }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:38px;padding:0 10px;border:1px solid {{ r.personBorder }};border-radius:6px;background:var(--tk-surface);font-size:15px;line-height:22px;color:{{ r.personColor }};cursor:pointer;transition:border-color 150ms" style-hover="border-color:var(--tk-border-strong);background:var(--tk-canvas)">
@@ -4375,6 +4376,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               </span>
                             </sc-if>
                           </span>
+                          <span onClick="{{ r.openTime }}" style="font-size:15px;line-height:22px;color:{{ r.timeColor }};white-space:nowrap;border-radius:6px;cursor:pointer;padding:2px 6px;margin:-2px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.time }}</span>
                           
                           <span onClick="{{ r.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.net }}</span>
                           <span onClick="{{ r.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.gross }}</span>
@@ -4383,11 +4385,12 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </button></span>
                         </div>
                       </sc-for>
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
                         <button type="button" onClick="{{ evd.wyc.addUsluga }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
                           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                          Dodaj usługę
+                          Nowa usługa
                         </button>
+                        <span></span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesNet }}</span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesGross }}</span>
@@ -4396,16 +4399,35 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </div>
 
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);overflow-x:auto">
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
                         <div>Towary</div>
+                        <div>Pracownik</div>
                         <div>Numer dokumentu</div>
                         <div style="text-align:right">Wartość netto</div>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.goods }}" as="g" hint-placeholder-count="2">
-                        <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
+                        <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--tk-border-2)" style-hover="background:var(--tk-canvas)">
                           <span onClick="{{ g.openName }}" style="font-size:15px;line-height:22px;color:{{ g.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.name }}</span>
+                          <span style="position:relative;display:flex;align-items:center;min-width:0">
+                            <span onClick="{{ g.togglePeople }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:38px;padding:0 10px;border:1px solid {{ g.personBorder }};border-radius:6px;background:var(--tk-surface);font-size:15px;line-height:22px;color:{{ g.personColor }};cursor:pointer;transition:border-color 150ms" style-hover="border-color:var(--tk-border-strong);background:var(--tk-canvas)">
+                              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.person }}</span>
+                              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M5.23 7.2a.75.75 0 011.06 0L10 10.94l3.71-3.74a.75.75 0 011.06 1.06l-4.24 4.27a.75.75 0 01-1.07 0L5.23 8.26a.75.75 0 010-1.06z" fill="var(--tk-text-2)"></path></svg>
+                            </span>
+                            <sc-if value="{{ g.peopleOpen }}" hint-placeholder-val="{{ false }}">
+                              <span style="position:absolute;top:calc(100% + 6px);left:0;min-width:220px;background:var(--tk-surface);border-radius:10px;box-shadow:0 12px 32px rgba(10,11,41,0.16), 0 2px 6px rgba(10,11,41,0.06);padding:6px;z-index:20;display:flex;flex-direction:column;gap:2px">
+                                <sc-for list="{{ g.peopleOptions }}" as="p" hint-placeholder-count="4">
+                                  <button type="button" onClick="{{ p.pick }}" style="display:flex;align-items:center;gap:10px;border:0;background:{{ p.bg }};padding:8px;cursor:pointer;text-align:left;border-radius:6px;font-family:inherit;font-size:15px;line-height:22px;color:{{ p.color }}" style-hover="background:var(--tk-surface-3)">
+                                    <sc-if value="{{ p.hasAvatar }}" hint-placeholder-val="{{ false }}">
+                                      <span style="width:26px;height:26px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--tk-brand-fg-strong);background:var(--tk-brand-soft)">{{ p.initials }}</span>
+                                    </sc-if>
+                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span>
+                                  </button>
+                                </sc-for>
+                              </span>
+                            </sc-if>
+                          </span>
                           <span style="font-size:15px;line-height:22px;color:{{ g.docColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums">{{ g.doc }}</span>
                           <span onClick="{{ g.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.net }}</span>
                           <span onClick="{{ g.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.gross }}</span>
@@ -4416,11 +4438,12 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </span>
                         </div>
                       </sc-for>
-                      <div style="min-width:640px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
+                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px;gap:12px;align-items:center;padding:12px 16px">
                         <button type="button" onClick="{{ evd.wyc.addTowar }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
                           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                          Dodaj towar
+                          Nowy towar
                         </button>
+                        <span></span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsNet }}</span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsGross }}</span>
@@ -6895,6 +6918,39 @@ class Component extends DCLogic {
     return days;
   }
 
+  // wybór pracownika w wierszu — ten sam w usługach i w towarach
+  rowPersonVals(key, seed) {
+    const s = this.state;
+    const picked = (s.rowPeople || {})[key];
+    const personName = picked !== undefined ? picked : (seed || '');
+    return {
+      togglePeople: (e) => {
+        e.stopPropagation();
+        this.setState((st) => ({ rowPeopleMenu: st.rowPeopleMenu === key ? null : key }));
+      },
+      peopleOpen: s.rowPeopleMenu === key,
+      personBorder: s.rowPeopleMenu === key ? 'var(--tk-brand-bd)' : 'var(--tk-border)',
+      person: personName || '— brak —',
+      personColor: personName ? 'var(--tk-text)' : 'var(--tk-text-2)',
+      hasPerson: !!personName,
+      initials: String(personName || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase(),
+      peopleOptions: [{ id: '', name: '— brak —', initials: '' }].concat(PEOPLE).map((p) => ({
+        name: p.name,
+        initials: p.initials,
+        hasAvatar: !!p.id,
+        bg: personName === (p.id ? p.name : '') ? 'var(--tk-surface-2)' : 'transparent',
+        color: p.id ? 'var(--tk-text)' : 'var(--tk-text-2)',
+        pick: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({
+            rowPeople: Object.assign({}, st.rowPeople, { [key]: p.id ? p.name : '' }),
+            rowPeopleMenu: null,
+          }));
+        },
+      })),
+    };
+  }
+
   qnum(v) {
     const n = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(/[^0-9,.-]/g, '').replace(',', '.'));
     return isNaN(n) ? 0 : n;
@@ -6994,31 +7050,9 @@ class Component extends DCLogic {
       empty: false,
       servicesOverflow: s.rowPeopleMenu ? 'visible' : 'auto',
       services: uslugiList.map(({ r, i: ri }) => {
-        const picked = (s.rowPeople || {})[id + ':' + ri];
-        const personName = picked !== undefined ? picked : ((r && r.person) || '');
         const key = id + ':' + ri;
-        const menu = {
-          togglePeople: (e) => {
-            e.stopPropagation();
-            this.setState((st) => ({ rowPeopleMenu: st.rowPeopleMenu === key ? null : key }));
-          },
-          peopleOpen: s.rowPeopleMenu === key,
-          personBorder: s.rowPeopleMenu === key ? 'var(--tk-brand-bd)' : 'var(--tk-border)',
-          peopleOptions: [{ id: '', name: '— brak —', initials: '' }].concat(PEOPLE).map((p) => ({
-            name: p.name,
-            initials: p.initials,
-            hasAvatar: !!p.id,
-            bg: personName === (p.id ? p.name : '') ? 'var(--tk-surface-2)' : 'transparent',
-            color: p.id ? 'var(--tk-text)' : 'var(--tk-text-2)',
-            pick: (e) => {
-              e.stopPropagation();
-              this.setState((st) => ({
-                rowPeople: Object.assign({}, st.rowPeople, { [key]: p.id ? p.name : '' }),
-                rowPeopleMenu: null,
-              }));
-            },
-          })),
-        };
+        const menu = this.rowPersonVals(key, (r && r.person) || '');
+        const czas = this.qnum(r.czas);
         return Object.assign(menu, {
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'name' }); },
         openPerson: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'person' }); },
@@ -7026,17 +7060,17 @@ class Component extends DCLogic {
         openGross: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'brutto' }); },
         name: r.name && r.name.trim() ? r.name : '—',
         nameColor: 'var(--tk-text)',
-        hasPerson: !!r.person,
         hasPersonLabel: true,
-        initials: initials(personName),
-        person: personName || '— brak —',
-        personColor: personName ? 'var(--tk-text)' : 'var(--tk-text-2)',
+        // «Przeprac. czas» z konfiguratora — nie wpływa na kwoty, służy rozliczeniu pracownika
+        time: czas > 0 ? String(r.czas).replace('.', ',') + ' h' : '—',
+        timeColor: czas > 0 ? 'var(--tk-text)' : 'var(--tk-text-3)',
+        openTime: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'czas' }); },
         net: this.moneyPl(r.c.net),
         gross: this.moneyPl(r.c.gross),
         remove: () => this.removeQuoteRow(id, 'usluga', ri),
       });
       }),
-      goods: goodsList.map(({ g, i: gi }) => ({
+      goods: goodsList.map(({ g, i: gi }) => Object.assign(this.rowPersonVals(id + ':t' + gi, (g && g.person) || ''), {
         openName: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: gi, field: 'towar' }); },
         doc: g.doc || '',
         docColor: g.doc ? 'var(--tk-text-2)' : 'var(--tk-text-3)',
