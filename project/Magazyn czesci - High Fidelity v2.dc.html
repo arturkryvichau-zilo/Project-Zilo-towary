@@ -16,7 +16,7 @@
     set(m ? m[1] : (localStorage.getItem('zilo-theme') || 'light'));
   } catch (e) { set('light'); }
   // adres z #reset czyści dokumenty dodane przez testera (klucz z DOCS_STORE_KEY)
-  try { if (/[#&]reset\b/.test(location.hash)) localStorage.removeItem('zilo-towary-docs'); } catch (e) {}
+  try { if (/[#&]reset\b/.test(location.hash)) { localStorage.removeItem('zilo-towary-docs-v2'); localStorage.removeItem('zilo-towary-docs'); } } catch (e) {}
   // konfiguratory żyją w iframe'ach — rodzic przełącza je razem ze sobą
   addEventListener('message', function (e) {
     var d = e && e.data;
@@ -4906,15 +4906,20 @@ const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 // zadanie 2 zastało to, co powstało w zadaniu 1. localStorage jest per
 // przeglądarka i per domena, więc kolejny tester zaczyna od pustej listy.
 // Wyczyszczenie: adres z #reset.
-const DOCS_STORE_KEY = 'zilo-towary-docs';
+// v2, bo pierwsza wersja zapisywała całą listę — razem z danymi startowymi.
+// Przez to skrócenie listy nie docierało do nikogo, kto raz wgrał dokument.
+const DOCS_STORE_KEY = 'zilo-towary-docs-v2';
+const isSeedDoc = (d) => DOC_SEED.some((x) => x.nr === (d && d.nr));
+// trzymamy wyłącznie dokumenty dodane przez testera; reszta zawsze z danych startowych
 const loadDocs = () => {
   try {
-    const list = JSON.parse(localStorage.getItem(DOCS_STORE_KEY) || 'null');
-    return Array.isArray(list) && list.length ? list : null;
+    const mine = JSON.parse(localStorage.getItem(DOCS_STORE_KEY) || 'null');
+    const own = Array.isArray(mine) ? mine.filter((d) => d && d.nr && !isSeedDoc(d)) : [];
+    return own.length ? own.concat(DOC_SEED) : null;
   } catch (e) { return null; }
 };
 const saveDocs = (list) => {
-  try { localStorage.setItem(DOCS_STORE_KEY, JSON.stringify(list)); } catch (e) {}
+  try { localStorage.setItem(DOCS_STORE_KEY, JSON.stringify(list.filter((d) => !isSeedDoc(d)))); } catch (e) {}
   return list;
 };
 
