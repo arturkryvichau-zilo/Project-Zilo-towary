@@ -15,6 +15,8 @@
     var m = (location.hash || '').match(/[#&]theme=(dark|light)/);
     set(m ? m[1] : (localStorage.getItem('zilo-theme') || 'light'));
   } catch (e) { set('light'); }
+  // adres z #reset czyści dokumenty dodane przez testera (klucz z DOCS_STORE_KEY)
+  try { if (/[#&]reset\b/.test(location.hash)) localStorage.removeItem('zilo-towary-docs'); } catch (e) {}
   // konfiguratory żyją w iframe'ach — rodzic przełącza je razem ze sobą
   addEventListener('message', function (e) {
     var d = e && e.data;
@@ -4910,6 +4912,23 @@ const SUPPLIER_INFO = {
 const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 
 // świeżo wgrany dokument nosi dzisiejszą datę, żeby wchodził do grupy „Dzisiaj"
+// Test w Useberry bywa pocięty na zadania, a między nimi strona wczytuje się od
+// nowa. Dokumenty dodane przez testera trzymamy więc w jego przeglądarce, żeby
+// zadanie 2 zastało to, co powstało w zadaniu 1. localStorage jest per
+// przeglądarka i per domena, więc kolejny tester zaczyna od pustej listy.
+// Wyczyszczenie: adres z #reset.
+const DOCS_STORE_KEY = 'zilo-towary-docs';
+const loadDocs = () => {
+  try {
+    const list = JSON.parse(localStorage.getItem(DOCS_STORE_KEY) || 'null');
+    return Array.isArray(list) && list.length ? list : null;
+  } catch (e) { return null; }
+};
+const saveDocs = (list) => {
+  try { localStorage.setItem(DOCS_STORE_KEY, JSON.stringify(list)); } catch (e) {}
+  return list;
+};
+
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0218', ext: 'FV 88213/08/2026',
   date: TODAY.slice(8, 10) + '.' + TODAY.slice(5, 7) + '.' + TODAY.slice(0, 4) };
 
@@ -5103,7 +5122,7 @@ class Component extends DCLogic {
     docStatuses: {},
     docId: null,
     docEditing: null,
-    docsList: null,
+    docsList: loadDocs(),
     docSel: [],
     refReady: false,
     assignedVisitCar: '',
@@ -8592,9 +8611,9 @@ class Component extends DCLogic {
             docEditing: null,
             docDraft: null,
             docRows: null,
-            docsList: this.docList().map((x) => (x.nr === editing
+            docsList: saveDocs(this.docList().map((x) => (x.nr === editing
               ? Object.assign({}, x, { nr: d.nr, ext: d.ext, supplier: d.supplier, date: d.date, rows: rows })
-              : x)),
+              : x))),
           });
           return;
         }
@@ -8610,7 +8629,7 @@ class Component extends DCLogic {
             navKey: back.navKey,
             screen: back.screen,
             eventId: back.eventId,
-            docsList: [{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList()),
+            docsList: saveDocs([{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList())),
           }, () => {
             if (back.from === 'offer') this.openOfferConfig(back.visit, { pick: nr });
             else if (back.from === 'invoice') this.openInvoiceConfig(back.visit, { force: true, pick: nr });
@@ -8626,10 +8645,10 @@ class Component extends DCLogic {
           docDraft: null,
           docRows: null,
           docSel: [],
-          docsList: [{
+          docsList: saveDocs([{
             nr: nr, ext: d.ext, supplier: d.supplier, date: d.date,
             status: 'Dostarczony', rows: rows,
-          }].concat(this.docList()),
+          }].concat(this.docList())),
         });
       },
       docs: (() => {
