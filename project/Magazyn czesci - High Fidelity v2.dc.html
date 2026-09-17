@@ -1075,6 +1075,101 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
+    <sc-if value="{{ isReports }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;height:100%;overflow:hidden;background:var(--tk-surface)">
+
+        <aside style="width:264px;flex:none;border-right:1px solid var(--tk-border-2);display:flex;flex-direction:column;gap:20px;padding:32px 16px">
+          <div style="font-size:26px;line-height:36px;font-weight:600;color:var(--tk-text-strong);padding:0 12px;letter-spacing:-0.4px">Raporty</div>
+          <nav style="display:flex;flex-direction:column;gap:2px">
+            <button type="button" data-tt="Wkrótce" data-tt-pos="right" style="position:relative;display:flex;align-items:center;padding:10px 12px;border:0;border-radius:8px;background:transparent;font-family:inherit;font-size:16px;line-height:22px;color:var(--tk-text);text-align:left;cursor:not-allowed">Rozliczenia pracowników</button>
+            <span style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-size:16px;line-height:22px;font-weight:500">
+              <span style="flex:1;min-width:0">Opony w przechowalni</span>
+              <span style="font-size:14px;line-height:20px;color:var(--tk-brand-fg)">{{ reports.total }}</span>
+            </span>
+          </nav>
+        </aside>
+
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:32px 40px 48px">
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px">
+              <h1 style="font-size:26px;line-height:40px;font-weight:600;color:var(--tk-text);margin:0;letter-spacing:-0.4px">Opony w przechowalni</h1>
+              <button type="button" onClick="{{ reports.downloadCsv }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-hover)" style-active="background:var(--tk-brand-press)">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-on-fill);-webkit-mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-download.svg) center / 20px 20px no-repeat"></span>
+                Pobierz CSV
+              </button>
+            </div>
+
+            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px">
+              <label style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                <span style="display:flex;align-items:center;padding-left:13px;flex:none">
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat"></span>
+                </span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:{{ reports.search.gap }};padding:{{ reports.search.pad }};box-sizing:border-box">
+                  <sc-if value="{{ reports.search.filled }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Szukaj kompletu</span>
+                  </sc-if>
+                  <input value="{{ reports.query }}" onInput="{{ reports.setQuery }}" placeholder="{{ reports.search.placeholder }}" style="width:100%;border:0;outline:none;background:transparent;padding:0;font-family:inherit;font-weight:400;font-size:16px;line-height:20px;color:var(--tk-text)">
+                </span>
+              </label>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));gap:16px;margin-bottom:24px">
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Komplety w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.inCount }}</span>
+              </div>
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.winterIconColor }};-webkit-mask:url({{ reports.winterIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.winterIcon }}) center / 20px 20px no-repeat"></span>
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Zimowe opony w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.winterCount }}</span>
+              </div>
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.summerIconColor }};-webkit-mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat"></span>
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Letnie opony w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.summerCount }}</span>
+              </div>
+            </div>
+
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow-x:auto">
+              <div style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;background:var(--tk-canvas);border-bottom:1px solid var(--tk-border-2);font-size:14px;line-height:20px;color:var(--tk-text-2)">
+                <span>Przyjęto</span><span>Klient</span><span>Pojazd</span><span>Rejestracja</span><span>Sezon</span><span>ID</span><span>Lokalizacja</span><span>Status</span><span></span>
+              </div>
+              <sc-for list="{{ reports.rows }}" as="r" hint-placeholder-count="5">
+                <div data-client-id="{{ r.clientId }}" onClick="{{ openClient }}" style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;align-items:center;border-bottom:1px solid {{ r.rowBorder }};font-size:16px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                  <span style="white-space:nowrap">{{ r.received }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.clientName }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.carName }}</span>
+                  <span style="white-space:nowrap">{{ r.plate }}</span>
+                  <span style="display:flex;align-items:center;gap:8px;min-width:0">
+                    <sc-if value="{{ r.seasonHasIcon }}" hint-placeholder-val="{{ true }}">
+                      <span style="width:16px;height:16px;flex:none;display:block;background-color:{{ r.seasonIconColor }};-webkit-mask:url({{ r.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ r.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                    </sc-if>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.season }}</span>
+                  </span>
+                  <span style="white-space:nowrap">{{ r.code }}</span>
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.location }}</span>
+                  <span>
+                    <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:4px;font-size:14px;line-height:22px;white-space:nowrap;color:{{ r.statusColor }};background:{{ r.statusBg }}">
+                      <span style="width:6px;height:6px;border-radius:50%;flex:none;background:{{ r.statusDot }}"></span>
+                      {{ r.status }}
+                    </span>
+                  </span>
+                  <span style="display:flex;justify-content:flex-end">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-3);-webkit-mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-chevron-right.svg) center / 20px 20px no-repeat"></span>
+                  </span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ reports.empty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:26px 24px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Żaden komplet nie pasuje do wyszukiwania.</div>
+              </sc-if>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isBilling }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
@@ -4944,6 +5039,7 @@ class Component extends DCLogic {
     resize: null,
     clientId: 'c12',
     carIdx: 0,
+    reportsQuery: '',
     query: '',
     page: 1,
     eventId: null,
@@ -7403,6 +7499,94 @@ class Component extends DCLogic {
     this.setState({ wycConfigSrc: src, wycConfigVisit: visitId });
   }
 
+  // Raport „Opony w przechowalni" — jeden wiersz na komplet, ze wszystkich aut wszystkich klientów
+  reportRows() {
+    const s = this.state;
+    const out = [];
+    CLIENTS.forEach((cl) => {
+      (cl.cars || []).forEach((car, carIdx) => {
+        this.tireSetsFor(car.id).forEach((t) => {
+          const key = car.id + '::' + t.__idx;
+          const stored = (s.setStatus[key] || t.status || 'in') === 'in';
+          out.push({
+            key: key,
+            clientId: cl.id,
+            clientName: cl.name,
+            carIdx: String(carIdx),
+            carName: (car.brand + ' ' + car.model).trim(),
+            plate: car.plate || '—',
+            season: t.season || '—',
+            code: t.code || '—',
+            location: t.location || '—',
+            received: t.received || '—',
+            stored: stored,
+          });
+        });
+      });
+    });
+    return out;
+  }
+
+  reportsVals() {
+    const s = this.state;
+    const q = (s.reportsQuery || '').trim().toLowerCase();
+    const all = this.reportRows();
+    const hit = (r) => [r.clientName, r.carName, r.plate, r.code, r.location, r.season]
+      .join(' ').toLowerCase().indexOf(q) !== -1;
+    const rows = q ? all.filter(hit) : all;
+    const inStore = all.filter((r) => r.stored);
+    const bySeason = (name) => inStore.filter((r) => r.season === name).length;
+
+    return Object.assign({
+      total: String(all.length),
+      inCount: String(inStore.length),
+      winterCount: String(bySeason('Zima')),
+      summerCount: String(bySeason('Lato')),
+      empty: rows.length === 0,
+      hasRows: rows.length > 0,
+      query: s.reportsQuery || '',
+      setQuery: (e) => this.setState({ reportsQuery: e.target.value }),
+      search: {
+        filled: (s.reportsQuery || '').length > 0,
+        gap: (s.reportsQuery || '') ? '2px' : '0px',
+        pad: (s.reportsQuery || '') ? '9px 13px' : '20px 13px',
+        placeholder: (s.reportsQuery || '') ? '' : 'Szukaj po kliencie, rejestracji, ID kompletu lub lokalizacji',
+      },
+      downloadCsv: () => this.downloadReportCsv(),
+      rows: rows.map((r, i) => Object.assign({}, r, {
+        rowBorder: i === rows.length - 1 ? 'transparent' : 'var(--tk-border-2)',
+        status: r.stored ? 'W przechowalni' : 'Wydane',
+        statusBg: r.stored ? 'var(--tk-ok-soft)' : 'var(--tk-surface-2)',
+        statusColor: r.stored ? 'var(--tk-ok-fg)' : 'var(--tk-text-2)',
+        statusDot: r.stored ? 'var(--tk-ok)' : 'var(--tk-text-3)',
+      }, seasonVals(r.season))),
+    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'));
+  }
+
+  downloadReportCsv() {
+    const head = ['Przyjeto', 'Klient', 'Pojazd', 'Rejestracja', 'Sezon', 'ID kompletu', 'Lokalizacja', 'Status'];
+    const cell = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+    const lines = [head.join(';')].concat(this.reportRows().map((r) => [
+      r.received, r.clientName, r.carName, r.plate, r.season, r.code, r.location,
+      r.stored ? 'W przechowalni' : 'Wydane',
+    ].map(cell).join(';')));
+    // BOM, żeby Excel nie połamał polskich znaków
+    const csv = '\ufeff' + lines.join('\r\n');
+    try {
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'opony-w-przechowalni.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      this.ziloToast('Pobrano raport — ' + (lines.length - 1) + ' kompletów');
+    } catch (err) {
+      this.ziloToast('Nie udało się pobrać pliku');
+    }
+  }
+
   ziloToast(text) {
     this.setState({ assignToast: text, assignToastRun: false, assignedVisitId: null });
     if (this.__assignToastTimer) clearTimeout(this.__assignToastTimer);
@@ -8013,6 +8197,8 @@ class Component extends DCLogic {
       isBillingForm: s.screen === 'billingForm',
       billing: this.billingVals(),
       isGoods: s.screen === 'goods',
+      isReports: s.screen === 'reports',
+      reports: this.reportsVals(),
       isDocs: s.screen === 'docs',
       docsQuery: s.docsQuery || '',
       setDocsQuery: (e) => this.setState({ docsQuery: e.target.value }),
@@ -8631,6 +8817,7 @@ class Component extends DCLogic {
         else if (key === 'clients') this.setState({ navKey: key, screen: 'clients', eventId: null });
         else if (key === 'settings') this.setState({ navKey: key, screen: 'settings', eventId: null, moreOpen: false });
         else if (key === 'goods') this.setState({ navKey: key, screen: 'docs', eventId: null, moreOpen: false });
+        else if (key === 'reports') this.setState({ navKey: key, screen: 'reports', eventId: null, moreOpen: false });
         else this.setState({ navKey: key, moreOpen: false });
       },
 
