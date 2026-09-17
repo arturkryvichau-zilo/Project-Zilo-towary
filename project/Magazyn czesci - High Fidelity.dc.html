@@ -1091,7 +1091,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <sc-if value="{{ reports.navOpen }}" hint-placeholder-val="{{ true }}">
             <div style="padding:0 12px;display:flex;flex-direction:column;gap:12px 0">
               <div style="border-bottom:1px solid var(--tk-border-2);font-size:16px;line-height:22px;color:var(--tk-text)">
-                <div style="margin:4px 0">
+                <div style="margin:12px 0 4px;display:flex;flex-direction:column;gap:4px">
                   <sc-for list="{{ reports.navItems }}" as="it" hint-placeholder-count="2">
                     <div data-report="{{ it.key }}" onClick="{{ reports.pickNav }}" data-tt="{{ it.tip }}" data-tt-pos="right" style="position:relative;min-height:46px;display:flex;align-items:center;padding:0 12px;background:{{ it.bg }};color:{{ it.color }};cursor:{{ it.cursor }}">
                       <span style="display:flex;align-items:center;justify-content:space-between;width:100%">
