@@ -1136,7 +1136,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <span>Przyjęto</span><span>Klient</span><span>Pojazd</span><span>Rejestracja</span><span>Sezon</span><span>ID</span><span>Lokalizacja</span><span>Status</span><span></span>
               </div>
               <sc-for list="{{ reports.rows }}" as="r" hint-placeholder-count="5">
-                <div data-client-id="{{ r.clientId }}" onClick="{{ openClient }}" style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;align-items:center;border-bottom:1px solid {{ r.rowBorder }};font-size:16px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-2)">
+                <div data-client-id="{{ r.clientId }}" data-car-idx="{{ r.carIdx }}" data-set-key="{{ r.key }}" onClick="{{ openReportRow }}" style="min-width:1180px;display:grid;grid-template-columns:130px minmax(160px,1.1fr) minmax(170px,1.2fr) 130px 120px 100px minmax(180px,1.4fr) 170px 40px;gap:16px;padding:16px 24px;align-items:center;border-bottom:1px solid {{ r.rowBorder }};font-size:16px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-2)">
                   <span style="white-space:nowrap">{{ r.received }}</span>
                   <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.clientName }}</span>
                   <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.carName }}</span>
@@ -9769,6 +9769,18 @@ class Component extends DCLogic {
       prevPage: () => this.setState((st) => ({ page: Math.max(1, st.page - 1) })),
       nextPage: () => this.setState((st) => ({ page: Math.min(totalPages, st.page + 1) })),
       openClient: (e) => this.setState({ screen: 'client', clientId: e.currentTarget.dataset.clientId, carIdx: 0 }),
+      // z raportu wchodzimy na kartę klienta, na to auto, z rozwiniętym tym kompletem
+      openReportRow: (e) => {
+        const d = e.currentTarget.dataset;
+        this.setState({
+          screen: 'client',
+          clientId: d.clientId,
+          carIdx: Number(d.carIdx) || 0,
+          openTireSet: d.setKey,
+          openTireMenu: null,
+          statusMenu: null,
+        });
+      },
       selectCar: (e) => this.setState({ carIdx: Number(e.currentTarget.dataset.carIndex) }),
       openEventFromVisit: (e) => {
         const id = e.currentTarget.dataset.eventId;
