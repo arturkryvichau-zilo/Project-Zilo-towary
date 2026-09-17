@@ -7550,7 +7550,7 @@ class Component extends DCLogic {
         filled: (s.reportsQuery || '').length > 0,
         gap: (s.reportsQuery || '') ? '2px' : '0px',
         pad: (s.reportsQuery || '') ? '9px 13px' : '20px 13px',
-        placeholder: (s.reportsQuery || '') ? '' : 'Szukaj po kliencie, rejestracji, ID kompletu lub lokalizacji',
+        placeholder: (s.reportsQuery || '') ? '' : 'Szukaj po kliencie, aucie lub ID',
       },
       downloadCsv: () => this.downloadReportCsv(),
       rows: rows.map((r, i) => Object.assign({}, r, {
