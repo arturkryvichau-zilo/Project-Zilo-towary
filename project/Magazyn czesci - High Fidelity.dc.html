@@ -1290,6 +1290,23 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
+      <sc-if value="{{ billing.disconnectAsk }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;inset:0;z-index:12;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+          <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Rozłączyć {{ billing.connectedName }}?</span>
+              <button type="button" onClick="{{ billing.cancelDisconnect }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:var(--tk-surface-2);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
+                <span style="width:16px;height:16px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+              </button>
+            </div>
+            <div style="margin-top:14px;font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">Faktury przestaną wychodzić z Zilo, a dane firmy znikną z tego ekranu. Połączyć możesz w każdej chwili.</div>
+            <div style="margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <button type="button" onClick="{{ billing.cancelDisconnect }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-brand-fg);font-family:inherit;font-size:17px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
+              <button type="button" onClick="{{ billing.confirmDisconnect }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:17px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Rozłącz</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
     <sc-if value="{{ isGarage }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
@@ -5096,6 +5113,7 @@ class Component extends DCLogic {
     billingEdit: null,
     billingDraft: null,
     connectedBilling: null,
+    billingDisconnectAsk: false,
     fvSellerEdit: false,
     fvAfterBilling: null,
     fvFlash: null,
@@ -6162,9 +6180,13 @@ class Component extends DCLogic {
         this.runBillingCheck(row, !!bDraft.editing);
       },
       check: this.billingCheckVals(),
-      // rozłączenie z poziomu ekranu, bez wchodzenia w konfigurator
-      disconnectConnected: () => {
-        this.setState({ connectedBilling: [], billingEdit: null, billingDraft: null });
+      // rozłączenie z poziomu ekranu, bez wchodzenia w konfigurator — z pytaniem
+      connectedName: (connected[0] && connected[0].name) || 'narzędzie',
+      disconnectAsk: !!s.billingDisconnectAsk,
+      disconnectConnected: () => this.setState({ billingDisconnectAsk: true }),
+      cancelDisconnect: () => this.setState({ billingDisconnectAsk: false }),
+      confirmDisconnect: () => {
+        this.setState({ connectedBilling: [], billingEdit: null, billingDraft: null, billingDisconnectAsk: false });
         this.ziloToast('Narzędzie fakturowe rozłączone');
       },
       disconnectTool: () => this.setState({
