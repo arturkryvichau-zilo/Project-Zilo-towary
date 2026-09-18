@@ -1245,7 +1245,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
 
             <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Integracja z narzędziem fakturowym</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Integracja z narzędziem fakturowym</span><sc-if value="{{ billing.hasConnected }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ billing.disconnectConnected }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>Rozłącz</button></sc-if></div>
                 <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
                 <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
                   <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
@@ -6210,6 +6210,11 @@ class Component extends DCLogic {
         this.runBillingCheck(row, !!bDraft.editing);
       },
       check: this.billingCheckVals(),
+      // rozłączenie z poziomu ekranu, bez wchodzenia w konfigurator
+      disconnectConnected: () => {
+        this.setState({ connectedBilling: [], billingEdit: null, billingDraft: null });
+        this.ziloToast('Narzędzie fakturowe rozłączone');
+      },
       disconnectTool: () => this.setState({
         connectedBilling: connected.filter((c) => c.name !== bDraft.editing),
         screen: 'billing',
