@@ -516,7 +516,7 @@ window.__resources = {
       <div style="background: var(--grey-6); border-radius: 10px; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; justify-content: center; border-width: 1px; border-style: solid; border-color: var(--tk-border)">
         <sc-if value="{{ discount.off }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;justify-content:flex-start;padding-bottom:10px;border-bottom:1px solid var(--grey-4);">
-            <button type="button" onClick="{{ discount.add }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; margin-left: -4px" style-hover="background:var(--zilo-primary-5);">
+            <button type="button" onClick="{{ discount.add }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
               Rabat
             </button>
@@ -537,11 +537,11 @@ window.__resources = {
               </sc-if>
             </span>
             <span style="color:var(--grey-1);font-weight:400;white-space:nowrap">− {{ discount.amountDisplay }} zł</span>
+            <button type="button" onClick="{{ discount.remove }}" data-tt="Usuń rabat" data-tt-pos="top" aria-label="Usuń rabat" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color 200ms var(--ease-standard)" style-hover="color:var(--zilo-blue-2);">
+              <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
+            </button>
             <button type="button" onClick="{{ discount.edit }}" data-tt="Edytuj rabat" data-tt-pos="top" aria-label="Edytuj rabat" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color 200ms var(--ease-standard)" style-hover="color:var(--zilo-blue-2);">
               <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
-            </button>
-            <button type="button" onClick="{{ discount.remove }}" data-tt="Usuń rabat" data-tt-pos="top" aria-label="Usuń rabat" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color 200ms var(--ease-standard)" style-hover="color:var(--zilo-blue-2);">
-              <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
             </button>
           </div>
         </sc-if>
