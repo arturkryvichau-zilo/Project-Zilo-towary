@@ -199,7 +199,6 @@ window.__resources = {
 
     <div style="display:flex;flex-direction:column;gap:8px">
       <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px">
-        <button type="button" class="o-add" onClick="{{ toggleRabat }}" style="background:{{ rabatBg }}"><i style="{{ rabatIcon }}"></i>Rabat</button>
         <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segNetto }}" onClick="{{ pickNetto }}">Netto</button>
           <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ segBrutto }}" onClick="{{ pickBrutto }}">Brutto</button>
@@ -225,7 +224,7 @@ window.__resources = {
           </sc-for>
 
           <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
-            <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Dodaj usługę</button>
+            <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Nowa usługa</button>
             <span style="display:flex;gap:24px;padding-right:46px">
               <span class="o-sum">{{ sumU.label }}: <b>{{ sumU.value }}</b></span>
             </span>
@@ -248,7 +247,7 @@ window.__resources = {
           </sc-for>
 
           <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
-            <span style="display:flex;align-items:center;gap:8px"><button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Dodaj towar</button><button type="button" class="o-add" onClick="{{ openDocPicker }}"><i></i>Towar z zamówienia</button></span>
+            <span style="display:flex;align-items:center;gap:8px"><button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Nowy towar</button><button type="button" class="o-add" onClick="{{ openDocPicker }}"><i></i>Towar z zamówienia</button></span>
             <span style="display:flex;gap:24px;padding-right:46px">
               <span class="o-sum">{{ sumT.label }}: <b>{{ sumT.value }}</b></span>
             </span>
@@ -825,7 +824,7 @@ class Component extends DCLogic {
     const s = this.state;
     const p = Component.payload();
     const seller = Object.assign(
-      { company: 'DM Motors Sp. z o.o.', nip: '118-14-52-946', street: 'ul. Serwisowa 12', zip: '01-424', city: 'Warszawa' },
+      { company: 'DM Motors Mechanika Pojazdowa', nip: '779 244 53 10', street: 'Pruszkowska 29a/166', zip: '02-119', city: 'Warszawa' },
       p.seller || {},
       s.sellerOverride || {}
     );
