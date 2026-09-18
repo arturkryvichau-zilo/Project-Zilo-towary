@@ -192,7 +192,7 @@ window.__resources = {
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
           <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Nowa usługa</button>
           <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">{{ sumU.label }}: <b>{{ sumU.value }}</b></span>
+            <span class="o-sum">Suma netto: <b>{{ sumU.net }}</b></span><span class="o-sum">Suma VAT: <b>{{ sumU.vat }}</b></span><span class="o-sum">Suma brutto: <b>{{ sumU.gross }}</b></span>
           </span>
         </div>
 
@@ -215,7 +215,7 @@ window.__resources = {
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
           <span style="display:flex;align-items:center;gap:8px"><button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Nowy towar</button><button type="button" class="o-add" onClick="{{ openDocPicker }}"><i></i>Towar z zamówienia</button></span>
           <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">{{ sumT.label }}: <b>{{ sumT.value }}</b></span>
+            <span class="o-sum">Suma netto: <b>{{ sumT.net }}</b></span><span class="o-sum">Suma VAT: <b>{{ sumT.vat }}</b></span><span class="o-sum">Suma brutto: <b>{{ sumT.gross }}</b></span>
           </span>
         </div>
 
@@ -226,30 +226,10 @@ window.__resources = {
     <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,0.85fr);gap:12px;align-items:stretch;margin-top:10px">
 
       <div style="display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
-        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;text-decoration:underline;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-            </svg>
-          </button>
-        </div>
         <textarea class="o-input" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" value="{{ notatka }}" onInput="{{ setNotatka }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
       </div>
 
       <div style="display:flex;flex-direction:column;background:var(--tk-surface);border:1px solid var(--grey-3, #979DB0);border-radius:10px;overflow:hidden;min-height:140px">
-        <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--grey-5, #E9ECF1);color:var(--grey-1, #242629)">
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;font-style:italic;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;text-decoration:underline;font-size:15px;font-family:inherit;border-radius:4px" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-            </svg>
-          </button>
-        </div>
         <textarea class="o-input" placeholder="Komentarz dla klienta" value="{{ komentarz }}" onInput="{{ setKomentarz }}" style="flex:1;padding:16px;font-size:16px;line-height:24px;border:0;outline:0;resize:none;box-sizing:border-box"></textarea>
       </div>
 
