@@ -1190,11 +1190,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Letnie opony w przechowalni</span>
                 <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.summerCount }}</span>
               </div>
-              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
-                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.allYearIconColor }};-webkit-mask:url({{ reports.allYearIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.allYearIcon }}) center / 20px 20px no-repeat"></span>
-                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Całoroczne opony w przechowalni</span>
-                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.allYearCount }}</span>
-              </div>
             </div>
 
             <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;overflow-x:auto">
@@ -7547,7 +7542,6 @@ class Component extends DCLogic {
       inCount: String(inStore.length),
       winterCount: String(bySeason('Zima')),
       summerCount: String(bySeason('Lato')),
-      allYearCount: String(bySeason('Całoroczne')),
       // filtry: status kompletu i sezon — obok wyszukiwarki, każdy z własnym menu
       statusFilter: {
         label: REPORT_STATUS_LABEL[status] || REPORT_STATUS_LABEL.all,
@@ -7598,7 +7592,7 @@ class Component extends DCLogic {
         statusColor: r.stored ? 'var(--tk-ok-fg)' : 'var(--tk-text-2)',
         statusDot: r.stored ? 'var(--tk-ok)' : 'var(--tk-text-3)',
       }, seasonVals(r.season))),
-    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'), seasonVals('Całoroczne', 'allYear'));
+    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'));
   }
 
   downloadReportCsv() {
