@@ -576,7 +576,6 @@ window.__resources = {
         <div style="flex:none;display:flex;align-items:flex-start;gap:16px;padding:24px 30px 16px;">
           <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
             <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">{{ discount.title }}</span>
-            <span style="font-size:15px;line-height:22px;color:var(--grey-2);">Zejdzie z sumy wyceny i będzie widoczny dla klienta na wydruku.</span>
           </div>
           <button type="button" onClick="{{ discount.cancel }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);color:var(--grey-1);cursor:pointer;display:grid;place-items:center">
             <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M1 1l10 10M11 1L1 11"></path></svg>
@@ -600,20 +599,17 @@ window.__resources = {
           <div style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--grey-2)">ILE</span>
             <div style="display:flex;align-items:stretch;gap:12px">
-              <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Rodzaj rabatu" style="flex:none">
+              <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Rodzaj rabatu" style="flex:none;--seg-h:56px">
                 <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segPercent }}" onClick="{{ discount.pickPercent }}">%</button>
                 <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segAmount }}" onClick="{{ discount.pickAmount }}">zł</button>
               </div>
-              <label class="z-input-cell" style="flex:1;min-width:0;display:flex;align-items:stretch;height:46px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;overflow:hidden;cursor:text">
-                <div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:0 13px">
-                  <input class="z-input" type="text" inputMode="decimal" value="{{ discount.value }}" onChange="{{ discount.setValue }}" onInput="{{ discount.setValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}" placeholder="0" style="flex:1;min-width:0">
-                  <span style="font-size:15px;line-height:22px;color:var(--grey-2);flex:none">{{ discount.unit }}</span>
+              <label class="z-input-cell" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;overflow:hidden;cursor:text">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ discount.fieldLabel }}</div>
+                  <input class="z-input" type="text" inputMode="decimal" value="{{ discount.value }}" onChange="{{ discount.setValue }}" onInput="{{ discount.setValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
                 </div>
               </label>
             </div>
-            <sc-if value="{{ discount.showHint }}" hint-placeholder-val="{{ false }}">
-              <span style="font-size:13px;line-height:18px;color:var(--grey-2)">{{ discount.hint }}</span>
-            </sc-if>
             <sc-if value="{{ discount.overflow }}" hint-placeholder-val="{{ false }}">
               <span style="font-size:13px;line-height:18px;color:var(--zilo-red-1, #C0392B)">{{ discount.overflowText }}</span>
             </sc-if>
@@ -968,11 +964,10 @@ class Component extends DCLogic {
         const v = e.target.value;
         this.setState((x) => ({ discountDraft: Object.assign({}, x.discountDraft, { value: v }) }));
       },
-      unit: draft && draft.type === 'percent' ? '%' : 'zł',
-      hint: isBrutto
-        ? 'Kwotę podajesz w brutto — tak jak całą wycenę'
-        : 'Kwotę podajesz w netto — tak jak całą wycenę',
-      showHint: !!draft && draft.type === 'amount',
+      // etykieta pola niesie jednostkę — tak jak „Cena netto (zł)" w wierszu
+      fieldLabel: draft && draft.type === 'percent'
+        ? 'Rabat (%)'
+        : (isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)'),
       overflow: overflow,
       overflowText: 'Rabat nie może być większy niż wartość zakresu',
       previewAmount: Component.fmt(draftAmount),
