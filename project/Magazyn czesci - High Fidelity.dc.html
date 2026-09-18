@@ -1201,16 +1201,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
         <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 28px 40px">
           <div style="display:flex;flex-direction:column;gap:32px;width:100%">
 
-            <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane firmy</span><button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
-              <div style="padding:20px;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:24px">
-                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.nip }}</span></div>
-                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyName }}</span></div>
-                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Ulica i numer</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyStreet }}</span></div>
-                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Kod pocztowy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.companyZip }}</span></div>
-                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Miejscowość</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyCity }}</span></div>
-              </div>
-            </section>
 
             <div style="display:flex;flex-direction:column;gap:12px">
               <div style="display:flex;align-items:center;gap:12px">
@@ -1240,6 +1230,24 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
               </sc-if>
             </div>
+
+            <sc-if value="{{ billing.hasConnected }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Dane firmy</span>
+                  <button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button>
+                </div>
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
+                <div style="padding:20px;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:24px">
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.nip }}</span></div>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyName }}</span></div>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Ulica i numer</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyStreet }}</span></div>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Kod pocztowy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.companyZip }}</span></div>
+                  <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Miejscowość</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyCity }}</span></div>
+              </div>
+              </section>
+              </div>
+            </sc-if>
 
           </div>
         </div>
@@ -5995,6 +6003,8 @@ class Component extends DCLogic {
 
     return {
       noneConnected: connected.length === 0,
+      // dane firmy pokazujemy dopiero po połączeniu — wcześniej nie ma ich skąd wziąć
+      hasConnected: connected.length > 0,
       nip: g.nip || '—',
       companyName: g.company || '—',
       companyStreet: g.companyStreet || '—',
