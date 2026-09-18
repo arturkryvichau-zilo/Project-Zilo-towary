@@ -1119,8 +1119,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </button>
             </div>
 
-            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px">
-              <label style="display:flex;align-items:stretch;height:56px;max-width:420px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <label style="flex:1 1 320px;display:flex;align-items:stretch;height:56px;max-width:420px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
                 <span style="display:flex;align-items:center;padding-left:13px;flex:none">
                   <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat"></span>
                 </span>
@@ -1131,6 +1131,48 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <input value="{{ reports.query }}" onInput="{{ reports.setQuery }}" placeholder="{{ reports.search.placeholder }}" style="width:100%;border:0;outline:none;background:transparent;padding:0;font-family:inherit;font-weight:400;font-size:16px;line-height:20px;color:var(--tk-text)">
                 </span>
               </label>
+              <div style="position:relative;flex:none">
+                <button type="button" onClick="{{ reports.statusFilter.toggle }}" style="display:inline-flex;align-items:center;gap:8px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  {{ reports.statusFilter.label }}
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.statusFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                </button>
+                <sc-if value="{{ reports.statusFilter.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
+                    <sc-for list="{{ reports.statusFilter.options }}" as="opt" hint-placeholder-count="3">
+                      <div onClick="{{ opt.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-size:15px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-3)">
+                        <span>{{ opt.label }}</span>
+                        <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div style="position:relative;flex:none">
+                <button type="button" onClick="{{ reports.seasonFilter.toggle }}" style="display:inline-flex;align-items:center;gap:8px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  {{ reports.seasonFilter.label }}
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.seasonFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                </button>
+                <sc-if value="{{ reports.seasonFilter.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
+                    <sc-for list="{{ reports.seasonFilter.options }}" as="opt" hint-placeholder-count="4">
+                      <div onClick="{{ opt.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-size:15px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-3)">
+                        <span style="display:inline-flex;align-items:center;gap:8px;min-width:0">
+                          <sc-if value="{{ opt.hasIcon }}" hint-placeholder-val="{{ true }}">
+                            <span style="width:16px;height:16px;flex:none;display:block;background-color:{{ opt.seasonIconColor }};-webkit-mask:url({{ opt.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ opt.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                          </sc-if>
+                          {{ opt.label }}
+                        </span>
+                        <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
             </div>
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));gap:16px;margin-bottom:24px">
@@ -5065,6 +5107,9 @@ const MONTHS = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca',
 const MONTHS_NOM = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const WD_FULL = ['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'];
 
+// etykiety filtra statusu w raporcie przechowalni
+const REPORT_STATUS_LABEL = { all: 'Status: wszystkie', in: 'W przechowalni', out: 'Wydane' };
+
 class Component extends DCLogic {
   state = {
     screen: 'calendar',
@@ -5077,6 +5122,9 @@ class Component extends DCLogic {
     clientId: 'c12',
     carIdx: 0,
     reportsQuery: '',
+    reportsStatus: 'all',
+    reportsSeason: 'all',
+    reportsMenu: null,
     reportsNavOpen: true,
     reportsTab: 'tires',
     query: '',
@@ -7576,10 +7624,15 @@ class Component extends DCLogic {
   reportsVals() {
     const s = this.state;
     const q = (s.reportsQuery || '').trim().toLowerCase();
+    const status = s.reportsStatus || 'all';
+    const season = s.reportsSeason || 'all';
     const all = this.reportRows();
     const hit = (r) => [r.clientName, r.carName, r.plate, r.code, r.location, r.season]
       .join(' ').toLowerCase().indexOf(q) !== -1;
-    const rows = q ? all.filter(hit) : all;
+    const rows = all
+      .filter((r) => (q ? hit(r) : true))
+      .filter((r) => (status === 'all' ? true : (status === 'in') === r.stored))
+      .filter((r) => (season === 'all' ? true : r.season === season));
     const inStore = all.filter((r) => r.stored);
     const bySeason = (name) => inStore.filter((r) => r.season === name).length;
 
@@ -7615,6 +7668,38 @@ class Component extends DCLogic {
       inCount: String(inStore.length),
       winterCount: String(bySeason('Zima')),
       summerCount: String(bySeason('Lato')),
+      // filtry: status kompletu i sezon — obok wyszukiwarki, każdy z własnym menu
+      statusFilter: {
+        label: REPORT_STATUS_LABEL[status] || REPORT_STATUS_LABEL.all,
+        open: s.reportsMenu === 'status',
+        toggle: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({ reportsMenu: st.reportsMenu === 'status' ? null : 'status' }));
+        },
+        chevron: s.reportsMenu === 'status' ? 'rotate(180deg)' : 'rotate(0deg)',
+        options: ['all', 'in', 'out'].map((k) => ({
+          key: k,
+          label: REPORT_STATUS_LABEL[k],
+          selected: status === k,
+          pick: (e) => { e.stopPropagation(); this.setState({ reportsStatus: k, reportsMenu: null }); },
+        })),
+      },
+      seasonFilter: {
+        label: season === 'all' ? 'Sezon: wszystkie' : 'Sezon: ' + season.toLowerCase(),
+        open: s.reportsMenu === 'season',
+        toggle: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({ reportsMenu: st.reportsMenu === 'season' ? null : 'season' }));
+        },
+        chevron: s.reportsMenu === 'season' ? 'rotate(180deg)' : 'rotate(0deg)',
+        options: ['all', 'Zima', 'Lato', 'Całoroczne'].map((k) => Object.assign({
+          key: k,
+          label: k === 'all' ? 'Wszystkie sezony' : k,
+          selected: season === k,
+          hasIcon: k !== 'all',
+          pick: (e) => { e.stopPropagation(); this.setState({ reportsSeason: k, reportsMenu: null }); },
+        }, k === 'all' ? { seasonIcon: '', seasonIconColor: 'transparent' } : seasonVals(k))),
+      },
       empty: rows.length === 0,
       hasRows: rows.length > 0,
       query: s.reportsQuery || '',
