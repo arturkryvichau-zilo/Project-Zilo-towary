@@ -1119,8 +1119,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </button>
             </div>
 
-            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px">
-              <label style="display:flex;align-items:stretch;height:56px;max-width:420px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+            <div style="background:var(--tk-surface-2);border-radius:12px;padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <label style="flex:1 1 320px;display:flex;align-items:stretch;height:56px;max-width:420px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
                 <span style="display:flex;align-items:center;padding-left:13px;flex:none">
                   <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-search.svg) center / 20px 20px no-repeat"></span>
                 </span>
@@ -1131,6 +1131,48 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <input value="{{ reports.query }}" onInput="{{ reports.setQuery }}" placeholder="{{ reports.search.placeholder }}" style="width:100%;border:0;outline:none;background:transparent;padding:0;font-family:inherit;font-weight:400;font-size:16px;line-height:20px;color:var(--tk-text)">
                 </span>
               </label>
+              <div style="position:relative;flex:none">
+                <button type="button" onClick="{{ reports.statusFilter.toggle }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:220px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left">{{ reports.statusFilter.label }}</span>
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.statusFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                </button>
+                <sc-if value="{{ reports.statusFilter.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
+                    <sc-for list="{{ reports.statusFilter.options }}" as="opt" hint-placeholder-count="3">
+                      <div onClick="{{ opt.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-size:15px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-3)">
+                        <span>{{ opt.label }}</span>
+                        <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div style="position:relative;flex:none">
+                <button type="button" onClick="{{ reports.seasonFilter.toggle }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:220px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left">{{ reports.seasonFilter.label }}</span>
+                  <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.seasonFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                </button>
+                <sc-if value="{{ reports.seasonFilter.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;min-width:220px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;z-index:30">
+                    <sc-for list="{{ reports.seasonFilter.options }}" as="opt" hint-placeholder-count="4">
+                      <div onClick="{{ opt.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-size:15px;line-height:22px;color:var(--tk-text);cursor:pointer" style-hover="background:var(--tk-surface-3)">
+                        <span style="display:inline-flex;align-items:center;gap:8px;min-width:0">
+                          <sc-if value="{{ opt.hasIcon }}" hint-placeholder-val="{{ true }}">
+                            <span style="width:16px;height:16px;flex:none;display:block;background-color:{{ opt.seasonIconColor }};-webkit-mask:url({{ opt.seasonIcon }}) center / 16px 16px no-repeat;mask:url({{ opt.seasonIcon }}) center / 16px 16px no-repeat"></span>
+                          </sc-if>
+                          {{ opt.label }}
+                        </span>
+                        <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
             </div>
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));gap:16px;margin-bottom:24px">
@@ -1201,51 +1243,70 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
         <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 28px 40px">
           <div style="display:flex;flex-direction:column;gap:32px;width:100%">
 
+
             <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane firmy</span><button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
-              <div style="padding:20px;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:24px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Integracja z narzędziem fakturowym</span><sc-if value="{{ billing.hasConnected }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ billing.disconnectConnected }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>Rozłącz</button></sc-if></div>
+                <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
+                  <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
+                    <div style="display:flex;cursor:{{ opt.rowCursor }}">
+                    <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
+                      <span style="display:flex;align-items:center;gap:12px">
+                        <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
+                        <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
+                      </span>
+                      <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
+                        <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
+                          <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
+                          Połączono
+                        </span>
+                      </sc-if>
+                    </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
+                </sc-if>
+                </div>
+            </section>
+
+            <sc-if value="{{ billing.hasConnected }}" hint-placeholder-val="{{ true }}">
+              <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane firmy</span><button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
+                <div style="padding:20px;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:24px">
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.nip }}</span></div>
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyName }}</span></div>
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Ulica i numer</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyStreet }}</span></div>
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Kod pocztowy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.companyZip }}</span></div>
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Miejscowość</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyCity }}</span></div>
               </div>
-            </section>
-
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;align-items:center;gap:12px">
-                <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
-              </div>
-
-              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
-                <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
-                  <div style="display:flex;cursor:{{ opt.rowCursor }}">
-                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
-                    <span style="display:flex;align-items:center;gap:12px">
-                      <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
-                      <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
-                    </span>
-                    <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
-                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
-                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
-                        Połączono
-                      </span>
-                    </sc-if>
-                  </div>
-                  </div>
-                </sc-for>
-              </div>
-              <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
-              </sc-if>
-            </div>
+              </section>
+            </sc-if>
 
           </div>
         </div>
       </div>
     </sc-if>
 
+      <sc-if value="{{ billing.disconnectAsk }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;inset:0;z-index:12;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+          <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Rozłączyć {{ billing.connectedName }}?</span>
+              <button type="button" onClick="{{ billing.cancelDisconnect }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:var(--tk-surface-2);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-brand-soft-2)" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
+                <span style="width:16px;height:16px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+              </button>
+            </div>
+            <div style="margin-top:14px;font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">Faktury przestaną wychodzić z Zilo, a dane firmy znikną z tego ekranu. Połączyć możesz w każdej chwili.</div>
+            <div style="margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <button type="button" onClick="{{ billing.cancelDisconnect }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-brand-fg);font-family:inherit;font-size:17px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">Anuluj</button>
+              <button type="button" onClick="{{ billing.confirmDisconnect }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:17px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-hover)">Rozłącz</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
     <sc-if value="{{ isGarage }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;background:var(--tk-surface)">
         <div style="min-height:70px;flex:none;display:flex;align-items:center;gap:14px;padding:0 28px">
@@ -5009,6 +5070,9 @@ const MONTHS = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca',
 const MONTHS_NOM = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const WD_FULL = ['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'];
 
+// etykiety filtra statusu w raporcie przechowalni
+const REPORT_STATUS_LABEL = { all: 'Status: wszystkie', in: 'W przechowalni', out: 'Wydane' };
+
 class Component extends DCLogic {
   state = {
     screen: 'calendar',
@@ -5021,6 +5085,9 @@ class Component extends DCLogic {
     clientId: 'c12',
     carIdx: 0,
     reportsQuery: '',
+    reportsStatus: 'all',
+    reportsSeason: 'all',
+    reportsMenu: null,
     reportsNavOpen: true,
     reportsTab: 'tires',
     query: '',
@@ -5046,6 +5113,7 @@ class Component extends DCLogic {
     billingEdit: null,
     billingDraft: null,
     connectedBilling: null,
+    billingDisconnectAsk: false,
     fvSellerEdit: false,
     fvAfterBilling: null,
     fvFlash: null,
@@ -5995,6 +6063,8 @@ class Component extends DCLogic {
 
     return {
       noneConnected: connected.length === 0,
+      // dane firmy pokazujemy dopiero po połączeniu — wcześniej nie ma ich skąd wziąć
+      hasConnected: connected.length > 0,
       nip: g.nip || '—',
       companyName: g.company || '—',
       companyStreet: g.companyStreet || '—',
@@ -6110,6 +6180,15 @@ class Component extends DCLogic {
         this.runBillingCheck(row, !!bDraft.editing);
       },
       check: this.billingCheckVals(),
+      // rozłączenie z poziomu ekranu, bez wchodzenia w konfigurator — z pytaniem
+      connectedName: (connected[0] && connected[0].name) || 'narzędzie',
+      disconnectAsk: !!s.billingDisconnectAsk,
+      disconnectConnected: () => this.setState({ billingDisconnectAsk: true }),
+      cancelDisconnect: () => this.setState({ billingDisconnectAsk: false }),
+      confirmDisconnect: () => {
+        this.setState({ connectedBilling: [], billingEdit: null, billingDraft: null, billingDisconnectAsk: false });
+        this.ziloToast('Narzędzie fakturowe rozłączone');
+      },
       disconnectTool: () => this.setState({
         connectedBilling: connected.filter((c) => c.name !== bDraft.editing),
         screen: 'billing',
@@ -7440,10 +7519,15 @@ class Component extends DCLogic {
   reportsVals() {
     const s = this.state;
     const q = (s.reportsQuery || '').trim().toLowerCase();
+    const status = s.reportsStatus || 'all';
+    const season = s.reportsSeason || 'all';
     const all = this.reportRows();
     const hit = (r) => [r.clientName, r.carName, r.plate, r.code, r.location, r.season]
       .join(' ').toLowerCase().indexOf(q) !== -1;
-    const rows = q ? all.filter(hit) : all;
+    const rows = all
+      .filter((r) => (q ? hit(r) : true))
+      .filter((r) => (status === 'all' ? true : (status === 'in') === r.stored))
+      .filter((r) => (season === 'all' ? true : r.season === season));
     const inStore = all.filter((r) => r.stored);
     const bySeason = (name) => inStore.filter((r) => r.season === name).length;
 
@@ -7479,6 +7563,38 @@ class Component extends DCLogic {
       inCount: String(inStore.length),
       winterCount: String(bySeason('Zima')),
       summerCount: String(bySeason('Lato')),
+      // filtry: status kompletu i sezon — obok wyszukiwarki, każdy z własnym menu
+      statusFilter: {
+        label: REPORT_STATUS_LABEL[status] || REPORT_STATUS_LABEL.all,
+        open: s.reportsMenu === 'status',
+        toggle: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({ reportsMenu: st.reportsMenu === 'status' ? null : 'status' }));
+        },
+        chevron: s.reportsMenu === 'status' ? 'rotate(180deg)' : 'rotate(0deg)',
+        options: ['all', 'in', 'out'].map((k) => ({
+          key: k,
+          label: REPORT_STATUS_LABEL[k],
+          selected: status === k,
+          pick: (e) => { e.stopPropagation(); this.setState({ reportsStatus: k, reportsMenu: null }); },
+        })),
+      },
+      seasonFilter: {
+        label: season === 'all' ? 'Sezon: wszystkie' : 'Sezon: ' + season.toLowerCase(),
+        open: s.reportsMenu === 'season',
+        toggle: (e) => {
+          e.stopPropagation();
+          this.setState((st) => ({ reportsMenu: st.reportsMenu === 'season' ? null : 'season' }));
+        },
+        chevron: s.reportsMenu === 'season' ? 'rotate(180deg)' : 'rotate(0deg)',
+        options: ['all', 'Zima', 'Lato', 'Całoroczne'].map((k) => Object.assign({
+          key: k,
+          label: k === 'all' ? 'Wszystkie sezony' : k,
+          selected: season === k,
+          hasIcon: k !== 'all',
+          pick: (e) => { e.stopPropagation(); this.setState({ reportsSeason: k, reportsMenu: null }); },
+        }, k === 'all' ? { seasonIcon: '', seasonIconColor: 'transparent' } : seasonVals(k))),
+      },
       empty: rows.length === 0,
       hasRows: rows.length > 0,
       query: s.reportsQuery || '',

@@ -134,6 +134,29 @@ window.__resources = {
       <!-- Row 1: Pojazd + Klient cards -->
       <div style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px">
 
+        <!-- Klient card -->
+        <div style="display: flex; gap: 20px; align-items: center; background: var(--tk-surface); border: 1px solid var(--grey-4); border-radius: 10px; padding: 20px 24px; padding-top: 12px; padding-bottom: 12px; padding-left: 20px; padding-right: 20px">
+          <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <!-- Ikonka Klient (Custom) -->
+            <svg width="44" height="44" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M14.4387 33.4566C11.6271 29.554 23.2425 27.0628 23.4465 24.088C23.7085 20.2657 20.6694 14.1413 25.8519 14.0041C31.0343 13.8668 33.2353 17.2145 34.7953 22.1672C37.17 29.7059 18.1762 38.6442 14.4387 33.4566Z" fill="var(--tk-brand-soft-3)"></path>
+              <g clip-path="url(#klient-clip)">
+                <path d="M17.9902 15.8532C18.2544 15.8532 18.4688 15.6389 18.4688 15.3747V14.8633C18.4688 14.5989 18.2544 14.3848 17.9902 14.3848C17.7258 14.3848 17.5117 14.5989 17.5117 14.8633V15.3747C17.5117 15.6389 17.7258 15.8532 17.9902 15.8532Z" fill="var(--tk-text)"></path>
+                <path d="M24.127 15.8532C24.3914 15.8532 24.6055 15.6389 24.6055 15.3747V14.8633C24.6055 14.5989 24.3914 14.3848 24.127 14.3848C23.8628 14.3848 23.6484 14.5989 23.6484 14.8633V15.3747C23.6484 15.6389 23.8628 15.8532 24.127 15.8532Z" fill="var(--tk-text)"></path>
+                <path d="M32.5635 27.9802L28.0104 26.2291L26.8557 24.6894C26.5653 24.3023 26.0522 24.1874 25.6315 24.3936V22.3733C27.1934 21.0649 28.1886 19.101 28.1886 16.9088V16.8756C28.1995 16.8759 28.2105 16.8759 28.2215 16.8759C29.3315 16.8759 30.2345 15.9729 30.2345 14.8631C30.2345 14.1129 29.8217 13.4577 29.2114 13.1115V9.74848C29.2114 6.94667 26.932 4.66699 24.1299 4.66699H17.9927C17.2425 4.66699 16.5873 5.07971 16.2411 5.68982H15.9468C14.273 5.68982 12.9112 7.05184 12.9112 8.72565V13.1115C12.3008 13.4577 11.8881 14.1129 11.8881 14.8631C11.8881 15.9729 12.7911 16.8759 13.9011 16.8759C13.9121 16.8759 13.9231 16.8759 13.934 16.8756V16.9088C13.934 19.101 14.9292 21.0649 16.4911 22.3733V24.3936C16.0704 24.1877 15.5572 24.3023 15.2669 24.6894L14.1122 26.2291L9.5591 27.9802C8.19907 28.5033 7.28516 29.8339 7.28516 31.2909V36.8551C7.28516 37.1193 7.49949 37.3337 7.76367 37.3337C8.02785 37.3337 8.24219 37.1193 8.24219 36.8551V31.2909C8.24219 30.9789 8.30001 30.6751 8.40618 30.3914L11.2613 32.5328C11.6539 32.8271 11.8881 33.2959 11.8881 33.7864V36.8551C11.8881 37.1193 12.1025 37.3337 12.3666 37.3337C12.6308 37.3337 12.8452 37.1193 12.8452 36.8551V33.7864C12.8452 32.9961 12.4678 32.2412 11.8355 31.7669L8.90314 29.5677C9.17205 29.2654 9.512 29.0237 9.90254 28.8734L14.2939 27.1844L17.4424 30.3329C17.726 30.6165 18.1031 30.7725 18.5041 30.7725C18.9051 30.7725 19.2822 30.6165 19.5658 30.3329L20.5829 29.3158V36.8551C20.5829 37.1193 20.797 37.3337 21.0614 37.3337C21.3256 37.3337 21.5399 37.1193 21.5399 36.8551V29.3158L22.5568 30.3329C22.8404 30.6165 23.2175 30.7725 23.6185 30.7725C24.0195 30.7725 24.3966 30.6165 24.6802 30.3329L26.0026 29.0105C26.1895 28.8236 26.1895 28.5205 26.0026 28.3336C25.8159 28.1469 25.5129 28.1469 25.3259 28.3336L24.0035 29.6562C23.9006 29.7589 23.764 29.8155 23.6185 29.8155C23.4732 29.8155 23.3364 29.7589 23.2337 29.6562L21.8031 28.2254L26.0447 25.2564C26.0594 25.2462 26.0791 25.2491 26.0898 25.2636L27.0783 26.5813L26.8602 26.7993C26.6735 26.9863 26.6735 27.2893 26.8602 27.476C27.0471 27.6629 27.3502 27.6629 27.5371 27.476L27.8284 27.1844L32.2201 28.8734C32.6106 29.0237 32.9503 29.2654 33.2195 29.5677L30.2871 31.7672C29.6548 32.2412 29.2772 32.9961 29.2772 33.7864V36.8551C29.2772 37.1193 29.4915 37.3337 29.7557 37.3337C30.0201 37.3337 30.2342 37.1193 30.2342 36.8551V33.7864C30.2342 33.2957 30.4687 32.8269 30.8613 32.5326L33.7164 30.3912C33.8226 30.6748 33.8804 30.9789 33.8804 31.2909V36.8551C33.8804 37.1193 34.0945 37.3337 34.3589 37.3337C34.6231 37.3337 34.8374 37.1193 34.8374 36.8551V31.2909C34.8374 29.8339 33.9235 28.5033 32.5635 27.9802ZM18.8889 29.6562C18.7862 29.7589 18.6494 29.8155 18.5041 29.8155C18.3586 29.8155 18.222 29.7589 18.119 29.6562L15.0443 26.5813L16.0328 25.2636C16.0432 25.2494 16.0632 25.2462 16.0779 25.2564L20.3197 28.2254L18.8889 29.6562ZM24.6742 25.0473L21.0614 27.5764L17.4481 25.0473V23.05C18.5083 23.676 19.7435 24.0359 21.0614 24.0359C22.3791 24.0359 23.6143 23.676 24.6742 23.05V25.0473ZM21.0004 23.0786C17.6036 23.0457 14.8911 20.2272 14.8911 16.83V16.3164C14.8911 16.2092 14.8609 16.102 14.7961 16.0165C14.6653 15.8441 14.4449 15.784 14.2523 15.8525C14.1267 15.8972 14.0118 15.9188 13.9011 15.9188C13.3189 15.9188 12.8452 15.4453 12.8452 14.8631C12.8452 14.2809 13.3189 13.8071 13.9011 13.8071C14.0118 13.8071 14.1267 13.8288 14.2523 13.8737C14.3737 13.9168 14.5107 13.9081 14.6261 13.851C16.0515 13.1405 16.6232 11.7435 16.6469 11.6845C16.7451 11.439 16.6257 11.1606 16.3802 11.0624C16.1347 10.9642 15.8563 11.0836 15.7584 11.3291C15.7541 11.3395 15.3454 12.3367 14.3592 12.9077C14.2047 12.8695 14.0534 12.8504 13.9011 12.8504C13.8902 12.8504 13.8792 12.8509 13.8682 12.8511V8.72565C13.8682 7.57746 14.7988 6.64685 15.947 6.64685H15.9807C15.9804 6.65782 15.9799 6.66878 15.9799 6.67975C15.9799 6.95913 16.2192 7.18244 16.5038 7.15627C16.7508 7.13334 16.9342 6.91626 16.937 6.66828C16.9432 6.09132 17.4142 5.62402 17.9927 5.62402H24.1299C26.4078 5.62402 28.2544 7.47055 28.2544 9.74848V12.8509C28.2434 12.8509 28.2324 12.8501 28.2215 12.8501C28.0582 12.8501 27.8957 12.8718 27.7297 12.9159C26.7425 12.48 26.2937 11.2222 26.1688 10.8027C26.2409 10.7666 26.3129 10.7292 26.3847 10.6908C26.6164 10.5669 26.7216 10.2786 26.6027 10.0441C26.4806 9.80306 26.185 9.71134 25.9488 9.8387C24.0085 10.8835 21.9016 11.0632 19.6862 10.3728C18.0161 9.85241 16.9038 9.00553 16.8796 8.98709C16.671 8.82484 16.3705 8.86273 16.2085 9.07108C16.0462 9.27968 16.0839 9.58025 16.2925 9.7425C16.3421 9.78138 17.5321 10.697 19.3669 11.2757C20.3377 11.5818 21.3059 11.7341 22.2557 11.7341C23.2952 11.7341 24.3121 11.5506 25.2853 11.1873C25.4877 11.8193 26.0704 13.2364 27.3529 13.7959C27.469 13.8468 27.5952 13.8709 27.7218 13.8719H27.722C27.8125 13.8729 27.9025 13.859 27.9904 13.837C28.0707 13.8169 28.1469 13.8071 28.2215 13.8071C28.8037 13.8071 29.2774 14.2807 29.2774 14.8629C29.2774 15.4451 28.8037 15.9186 28.2215 15.9186C28.1118 15.9186 27.9982 15.8974 27.8738 15.8535C27.7776 15.8196 27.6717 15.8144 27.574 15.8441C27.3644 15.9079 27.2315 16.097 27.2315 16.3031V16.9085C27.2315 20.3314 24.4305 23.112 21.0004 23.0786Z" fill="var(--tk-text)"></path>
+                <path d="M23.0566 19.9554C23.2978 19.8475 23.4057 19.5643 23.2978 19.3232C23.1898 19.082 22.9067 18.9739 22.6655 19.0819C21.0553 19.803 19.4813 19.0957 19.4583 19.0851C19.2195 18.9735 18.9351 19.0764 18.823 19.3151C18.7105 19.5542 18.8131 19.8393 19.0523 19.9517C19.1051 19.9766 19.9522 20.3657 21.1048 20.3657C21.6969 20.3657 22.3696 20.2629 23.0566 19.9554Z" fill="var(--tk-text)"></path>
+              </g>
+              <defs><clipPath id="klient-clip"><rect width="32.6667" height="32.6667" fill="white" transform="translate(4.66797 4.66699)"></rect></clipPath></defs>
+            </svg>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">Marek Kowalski</div>
+            <a data-car="phone" href="tel:+48516375467" style="font-size:16px;line-height:24px;color:var(--zilo-blue-1);text-decoration:underline;text-underline-offset:3px;font-weight:400;">+48 516 375 467</a>
+            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">marek.kowalski@gmail.com</div>
+            <div data-car="grupa" style="font-size:16px;line-height:24px;color:var(--grey-1);">Klient detaliczny +45%</div>
+          </div>
+        </div>
+
         <!-- Pojazd card -->
         <div style="display: flex; gap: 20px; align-items: center; background: var(--tk-surface); border: 1px solid var(--grey-4); border-radius: 10px; padding: 20px 24px; padding-top: 12px; padding-bottom: 12px; padding-left: 20px; padding-right: 20px">
           <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
@@ -161,29 +184,6 @@ window.__resources = {
                 </svg>
               </button>
             </div>
-          </div>
-        </div>
-
-        <!-- Klient card -->
-        <div style="display: flex; gap: 20px; align-items: center; background: var(--tk-surface); border: 1px solid var(--grey-4); border-radius: 10px; padding: 20px 24px; padding-top: 12px; padding-bottom: 12px; padding-left: 20px; padding-right: 20px">
-          <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-            <!-- Ikonka Klient (Custom) -->
-            <svg width="44" height="44" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M14.4387 33.4566C11.6271 29.554 23.2425 27.0628 23.4465 24.088C23.7085 20.2657 20.6694 14.1413 25.8519 14.0041C31.0343 13.8668 33.2353 17.2145 34.7953 22.1672C37.17 29.7059 18.1762 38.6442 14.4387 33.4566Z" fill="var(--tk-brand-soft-3)"></path>
-              <g clip-path="url(#klient-clip)">
-                <path d="M17.9902 15.8532C18.2544 15.8532 18.4688 15.6389 18.4688 15.3747V14.8633C18.4688 14.5989 18.2544 14.3848 17.9902 14.3848C17.7258 14.3848 17.5117 14.5989 17.5117 14.8633V15.3747C17.5117 15.6389 17.7258 15.8532 17.9902 15.8532Z" fill="var(--tk-text)"></path>
-                <path d="M24.127 15.8532C24.3914 15.8532 24.6055 15.6389 24.6055 15.3747V14.8633C24.6055 14.5989 24.3914 14.3848 24.127 14.3848C23.8628 14.3848 23.6484 14.5989 23.6484 14.8633V15.3747C23.6484 15.6389 23.8628 15.8532 24.127 15.8532Z" fill="var(--tk-text)"></path>
-                <path d="M32.5635 27.9802L28.0104 26.2291L26.8557 24.6894C26.5653 24.3023 26.0522 24.1874 25.6315 24.3936V22.3733C27.1934 21.0649 28.1886 19.101 28.1886 16.9088V16.8756C28.1995 16.8759 28.2105 16.8759 28.2215 16.8759C29.3315 16.8759 30.2345 15.9729 30.2345 14.8631C30.2345 14.1129 29.8217 13.4577 29.2114 13.1115V9.74848C29.2114 6.94667 26.932 4.66699 24.1299 4.66699H17.9927C17.2425 4.66699 16.5873 5.07971 16.2411 5.68982H15.9468C14.273 5.68982 12.9112 7.05184 12.9112 8.72565V13.1115C12.3008 13.4577 11.8881 14.1129 11.8881 14.8631C11.8881 15.9729 12.7911 16.8759 13.9011 16.8759C13.9121 16.8759 13.9231 16.8759 13.934 16.8756V16.9088C13.934 19.101 14.9292 21.0649 16.4911 22.3733V24.3936C16.0704 24.1877 15.5572 24.3023 15.2669 24.6894L14.1122 26.2291L9.5591 27.9802C8.19907 28.5033 7.28516 29.8339 7.28516 31.2909V36.8551C7.28516 37.1193 7.49949 37.3337 7.76367 37.3337C8.02785 37.3337 8.24219 37.1193 8.24219 36.8551V31.2909C8.24219 30.9789 8.30001 30.6751 8.40618 30.3914L11.2613 32.5328C11.6539 32.8271 11.8881 33.2959 11.8881 33.7864V36.8551C11.8881 37.1193 12.1025 37.3337 12.3666 37.3337C12.6308 37.3337 12.8452 37.1193 12.8452 36.8551V33.7864C12.8452 32.9961 12.4678 32.2412 11.8355 31.7669L8.90314 29.5677C9.17205 29.2654 9.512 29.0237 9.90254 28.8734L14.2939 27.1844L17.4424 30.3329C17.726 30.6165 18.1031 30.7725 18.5041 30.7725C18.9051 30.7725 19.2822 30.6165 19.5658 30.3329L20.5829 29.3158V36.8551C20.5829 37.1193 20.797 37.3337 21.0614 37.3337C21.3256 37.3337 21.5399 37.1193 21.5399 36.8551V29.3158L22.5568 30.3329C22.8404 30.6165 23.2175 30.7725 23.6185 30.7725C24.0195 30.7725 24.3966 30.6165 24.6802 30.3329L26.0026 29.0105C26.1895 28.8236 26.1895 28.5205 26.0026 28.3336C25.8159 28.1469 25.5129 28.1469 25.3259 28.3336L24.0035 29.6562C23.9006 29.7589 23.764 29.8155 23.6185 29.8155C23.4732 29.8155 23.3364 29.7589 23.2337 29.6562L21.8031 28.2254L26.0447 25.2564C26.0594 25.2462 26.0791 25.2491 26.0898 25.2636L27.0783 26.5813L26.8602 26.7993C26.6735 26.9863 26.6735 27.2893 26.8602 27.476C27.0471 27.6629 27.3502 27.6629 27.5371 27.476L27.8284 27.1844L32.2201 28.8734C32.6106 29.0237 32.9503 29.2654 33.2195 29.5677L30.2871 31.7672C29.6548 32.2412 29.2772 32.9961 29.2772 33.7864V36.8551C29.2772 37.1193 29.4915 37.3337 29.7557 37.3337C30.0201 37.3337 30.2342 37.1193 30.2342 36.8551V33.7864C30.2342 33.2957 30.4687 32.8269 30.8613 32.5326L33.7164 30.3912C33.8226 30.6748 33.8804 30.9789 33.8804 31.2909V36.8551C33.8804 37.1193 34.0945 37.3337 34.3589 37.3337C34.6231 37.3337 34.8374 37.1193 34.8374 36.8551V31.2909C34.8374 29.8339 33.9235 28.5033 32.5635 27.9802ZM18.8889 29.6562C18.7862 29.7589 18.6494 29.8155 18.5041 29.8155C18.3586 29.8155 18.222 29.7589 18.119 29.6562L15.0443 26.5813L16.0328 25.2636C16.0432 25.2494 16.0632 25.2462 16.0779 25.2564L20.3197 28.2254L18.8889 29.6562ZM24.6742 25.0473L21.0614 27.5764L17.4481 25.0473V23.05C18.5083 23.676 19.7435 24.0359 21.0614 24.0359C22.3791 24.0359 23.6143 23.676 24.6742 23.05V25.0473ZM21.0004 23.0786C17.6036 23.0457 14.8911 20.2272 14.8911 16.83V16.3164C14.8911 16.2092 14.8609 16.102 14.7961 16.0165C14.6653 15.8441 14.4449 15.784 14.2523 15.8525C14.1267 15.8972 14.0118 15.9188 13.9011 15.9188C13.3189 15.9188 12.8452 15.4453 12.8452 14.8631C12.8452 14.2809 13.3189 13.8071 13.9011 13.8071C14.0118 13.8071 14.1267 13.8288 14.2523 13.8737C14.3737 13.9168 14.5107 13.9081 14.6261 13.851C16.0515 13.1405 16.6232 11.7435 16.6469 11.6845C16.7451 11.439 16.6257 11.1606 16.3802 11.0624C16.1347 10.9642 15.8563 11.0836 15.7584 11.3291C15.7541 11.3395 15.3454 12.3367 14.3592 12.9077C14.2047 12.8695 14.0534 12.8504 13.9011 12.8504C13.8902 12.8504 13.8792 12.8509 13.8682 12.8511V8.72565C13.8682 7.57746 14.7988 6.64685 15.947 6.64685H15.9807C15.9804 6.65782 15.9799 6.66878 15.9799 6.67975C15.9799 6.95913 16.2192 7.18244 16.5038 7.15627C16.7508 7.13334 16.9342 6.91626 16.937 6.66828C16.9432 6.09132 17.4142 5.62402 17.9927 5.62402H24.1299C26.4078 5.62402 28.2544 7.47055 28.2544 9.74848V12.8509C28.2434 12.8509 28.2324 12.8501 28.2215 12.8501C28.0582 12.8501 27.8957 12.8718 27.7297 12.9159C26.7425 12.48 26.2937 11.2222 26.1688 10.8027C26.2409 10.7666 26.3129 10.7292 26.3847 10.6908C26.6164 10.5669 26.7216 10.2786 26.6027 10.0441C26.4806 9.80306 26.185 9.71134 25.9488 9.8387C24.0085 10.8835 21.9016 11.0632 19.6862 10.3728C18.0161 9.85241 16.9038 9.00553 16.8796 8.98709C16.671 8.82484 16.3705 8.86273 16.2085 9.07108C16.0462 9.27968 16.0839 9.58025 16.2925 9.7425C16.3421 9.78138 17.5321 10.697 19.3669 11.2757C20.3377 11.5818 21.3059 11.7341 22.2557 11.7341C23.2952 11.7341 24.3121 11.5506 25.2853 11.1873C25.4877 11.8193 26.0704 13.2364 27.3529 13.7959C27.469 13.8468 27.5952 13.8709 27.7218 13.8719H27.722C27.8125 13.8729 27.9025 13.859 27.9904 13.837C28.0707 13.8169 28.1469 13.8071 28.2215 13.8071C28.8037 13.8071 29.2774 14.2807 29.2774 14.8629C29.2774 15.4451 28.8037 15.9186 28.2215 15.9186C28.1118 15.9186 27.9982 15.8974 27.8738 15.8535C27.7776 15.8196 27.6717 15.8144 27.574 15.8441C27.3644 15.9079 27.2315 16.097 27.2315 16.3031V16.9085C27.2315 20.3314 24.4305 23.112 21.0004 23.0786Z" fill="var(--tk-text)"></path>
-                <path d="M23.0566 19.9554C23.2978 19.8475 23.4057 19.5643 23.2978 19.3232C23.1898 19.082 22.9067 18.9739 22.6655 19.0819C21.0553 19.803 19.4813 19.0957 19.4583 19.0851C19.2195 18.9735 18.9351 19.0764 18.823 19.3151C18.7105 19.5542 18.8131 19.8393 19.0523 19.9517C19.1051 19.9766 19.9522 20.3657 21.1048 20.3657C21.6969 20.3657 22.3696 20.2629 23.0566 19.9554Z" fill="var(--tk-text)"></path>
-              </g>
-              <defs><clipPath id="klient-clip"><rect width="32.6667" height="32.6667" fill="white" transform="translate(4.66797 4.66699)"></rect></clipPath></defs>
-            </svg>
-          </div>
-          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
-            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">Marek Kowalski</div>
-            <a data-car="phone" href="tel:+48516375467" style="font-size:16px;line-height:24px;color:var(--zilo-blue-1);text-decoration:underline;text-underline-offset:3px;font-weight:400;">+48 516 375 467</a>
-            <div style="font-size:16px;line-height:24px;color:var(--grey-1);">marek.kowalski@gmail.com</div>
-            <div data-car="grupa" style="font-size:16px;line-height:24px;color:var(--grey-1);">Klient detaliczny +45%</div>
           </div>
         </div>
       </div>
@@ -366,12 +366,9 @@ window.__resources = {
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <span>Rabat: <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
             </sc-if>
-            <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
-              <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
-            </sc-if>
-            <sc-if value="{{ showBrutto }}" hint-placeholder-val="{{ true }}">
-              <span>Suma brutto: <span style="font-weight:500;">{{ robBruttoDisplay }} zł</span></span>
-            </sc-if>
+            <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
+            <span>Suma VAT: <span style="font-weight:500;">{{ robVatDisplay }} zł</span></span>
+            <span>Suma brutto: <span style="font-weight:500;">{{ robBruttoDisplay }} zł</span></span>
           </div>
         </div>
       </div>
@@ -493,12 +490,9 @@ window.__resources = {
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <span>Rabat: <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
             </sc-if>
-            <sc-if value="{{ showNetto }}" hint-placeholder-val="{{ true }}">
-              <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
-            </sc-if>
-            <sc-if value="{{ showBrutto }}" hint-placeholder-val="{{ true }}">
-              <span>Suma brutto: <span style="font-weight:500;">{{ towBruttoDisplay }} zł</span></span>
-            </sc-if>
+            <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
+            <span>Suma VAT: <span style="font-weight:500;">{{ towVatDisplay }} zł</span></span>
+            <span>Suma brutto: <span style="font-weight:500;">{{ towBruttoDisplay }} zł</span></span>
           </div>
         </div>
       </div>
@@ -510,31 +504,11 @@ window.__resources = {
 
       <!-- Notatka wewnętrzna -->
       <div style="display: flex; flex-direction: column; background: var(--tk-surface); border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: var(--tk-border-strong)">
-        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; padding-left: 14px; padding-right: 14px">
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-            </svg>
-          </button>
-        </div>
         <textarea class="z-input" placeholder="Notatka wewnętrzna (niewidoczna dla klienta)" value="{{ notatka }}" onChange="{{ setNotatka }}" style="flex:1;padding:16px;font-family:var(--font-sans);font-size:16px;line-height:22px;color:var(--grey-1);background:transparent;border:0;outline:0;width:100%;box-sizing:border-box;resize:none;"></textarea>
       </div>
 
       <!-- Komentarz dla klienta -->
       <div style="display: flex; flex-direction: column; background: var(--tk-surface); border: 1px solid var(--grey-4); border-radius: 10px; overflow: hidden; min-height: 140px; border-color: var(--tk-border-strong)">
-        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--grey-5); color: var(--grey-1); padding-top: 4px; padding-bottom: 4px; border-color: var(--tk-border)">
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Pogrubienie" aria-label="Pogrubienie" data-tt-pos="bottom">B</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;font-style:italic;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Kursywa" aria-label="Kursywa" data-tt-pos="bottom">I</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;text-decoration:underline;font-size:15px;font-family:var(--font-sans);border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Podkreślenie" aria-label="Podkreślenie" data-tt-pos="bottom">U</button>
-          <button style="position:relative;width:28px;height:28px;border:0;background:transparent;color:var(--grey-1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;" style-hover="background:var(--grey-6);" data-tt="Lista" aria-label="Lista" data-tt-pos="bottom">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2.5 4H13.5M2.5 8H13.5M2.5 12H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-            </svg>
-          </button>
-        </div>
         <textarea class="z-input" placeholder="Komentarz dla klienta" value="{{ komentarz }}" onChange="{{ setKomentarz }}" style="flex:1;padding:16px;font-family:var(--font-sans);font-size:16px;line-height:22px;color:var(--grey-1);background:transparent;border:0;outline:0;width:100%;box-sizing:border-box;resize:none;"></textarea>
       </div>
 
@@ -548,7 +522,6 @@ window.__resources = {
           <span style="color:var(--grey-1);">Suma VAT:</span>
           <span style="color:var(--grey-1);font-weight:400;">{{ totalVatDisplay }} zł</span>
         </div>
-
         <!-- Rabat globalny (suma rabatów z wszystkich grup) -->
         <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
@@ -984,12 +957,12 @@ class Component extends DCLogic {
       commitBrutto,
 
       // Przełącznik Netto / Brutto — jedna komórka ceny, zakupu i wartości
-      cenaLabel: isBrutto ? 'Cena brutto' : 'Cena netto',
+      cenaLabel: isBrutto ? 'Cena brutto (zł)' : 'Cena netto (zł)',
       cenaValue: isBrutto ? Component.fmt(Component.parseNum(r.cena) * vRate) : r.cena,
       setCenaValue: isBrutto
         ? (e) => this._patchRow(collection, r.id, { cena: Component.fmt(Component.parseNum(e.target.value) / vRate) })
         : set('cena'),
-      kosztLabel: isBrutto ? 'Cena zakupu brutto' : 'Cena zakupu netto',
+      kosztLabel: isBrutto ? 'Zakup brutto (zł)' : 'Zakup netto (zł)',
       kosztValue: isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00'),
       setKosztValue: (e) => {
         const val = Component.parseNum(e.target.value);
@@ -997,7 +970,7 @@ class Component extends DCLogic {
           ? { kosztBrutto: e.target.value, koszt: Component.fmtPrice(val / vRate) }
           : { koszt: e.target.value, kosztBrutto: Component.fmt(val * vRate) });
       },
-      sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
+      sumaLabel: isBrutto ? 'Wartość brutto (zł)' : 'Wartość netto (zł)',
       setSumaInput: isBrutto ? set('bruttoEditing') : set('nettoEditing'),
       commitSuma: isBrutto ? commitBrutto : commitNetto,
 
