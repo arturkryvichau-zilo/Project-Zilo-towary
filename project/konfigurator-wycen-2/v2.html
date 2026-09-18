@@ -869,20 +869,9 @@ class Component extends DCLogic {
     const brutto = netto + vatAmt;
     return { netto, brutto, rabatAmt, vatAmt };
   }
-  // zmiana trybu nie może ruszyć kwoty rabatu w złotówkach — przy rabacie
-  // kwotowym przeliczamy wpisaną wartość między netto a brutto
+  // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
   switchValueMode(mode) {
-    this.setState((st) => {
-      const d = st.discount;
-      if (!d || d.type !== 'amount' || st.valueMode === mode) return { valueMode: mode };
-      const rows = Component.discountRows(st, d.scope);
-      const baseNet = rows.reduce((a, r) => a + Component.rowNet(r), 0);
-      const baseGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
-      if (baseNet <= 0 || baseGross <= 0) return { valueMode: mode };
-      const v = Component.parseNum(d.value);
-      const next = mode === 'brutto' ? v * baseGross / baseNet : v * baseNet / baseGross;
-      return { valueMode: mode, discount: Object.assign({}, d, { value: Component.fmtPrice(next) }) };
-    });
+    this.setState({ valueMode: mode });
   }
 
   // zdarzenia idą do PostHoga rodzica — konfigurator siedzi w iframie bez własnego
@@ -896,16 +885,13 @@ class Component extends DCLogic {
   discountVals(d, amount, netBefore) {
     const st = this.state;
     const draft = st.discountDraft;
-    const isBrutto = st.valueMode === 'brutto';
     const base = (scope) => Component.discountRows(st, scope).reduce((a, r) => a + Component.rowNet(r), 0);
     const scopeLabel = { all: 'Wszystko', services: 'Usługi', goods: 'Towary' };
 
     // kwota wpisana ręcznie mogła przestać mieścić się w zakresie
     const draftBase = draft ? base(draft.scope) : 0;
     const draftValue = draft ? Component.parseNum(draft.value) : 0;
-    const overflow = !!draft && draft.type === 'amount' && draftValue > 0 && draftValue > (isBrutto
-      ? Component.discountRows(st, draft.scope).reduce((a, r) => a + Component.rowGross(r), 0)
-      : draftBase);
+    const overflow = !!draft && draft.type === 'amount' && draftValue > 0 && draftValue > draftBase;
     const draftAmount = draft ? Component.discountNet(st, draft) : 0;
     const draftVat = (() => {
       if (!draft) return 0;
@@ -965,9 +951,7 @@ class Component extends DCLogic {
         this.setState((x) => ({ discountDraft: Object.assign({}, x.discountDraft, { value: v }) }));
       },
       // etykieta pola niesie jednostkę — tak jak „Cena netto (zł)" w wierszu
-      fieldLabel: draft && draft.type === 'percent'
-        ? 'Rabat (%)'
-        : (isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)'),
+      fieldLabel: draft && draft.type === 'percent' ? 'Rabat (%)' : 'Rabat netto (zł)',
       overflow: overflow,
       overflowText: 'Rabat nie może być większy niż wartość zakresu',
       previewAmount: Component.fmt(draftAmount),
@@ -1047,11 +1031,8 @@ class Component extends DCLogic {
     const value = Component.parseNum(d.value);
     if (value <= 0) return 0;
     if (d.type === 'percent') return Component.round2(baseNet * Math.min(value, 100) / 100);
-    if (state.valueMode === 'brutto') {
-      const baseGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
-      const gross = Math.min(value, baseGross);
-      return baseGross > 0 ? Component.round2(gross * baseNet / baseGross) : 0;
-    }
+    // kwota jest zawsze kwotą netto — rabat schodzi z sumy netto, niezależnie
+    // od tego, czy wycena jest pokazywana w netto czy w brutto
     return Component.round2(Math.min(value, baseNet));
   }
 
