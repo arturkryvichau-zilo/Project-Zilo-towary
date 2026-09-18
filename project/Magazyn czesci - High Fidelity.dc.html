@@ -1132,8 +1132,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </span>
               </label>
               <div style="position:relative;flex:none">
-                <button type="button" onClick="{{ reports.statusFilter.toggle }}" style="display:inline-flex;align-items:center;gap:8px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
-                  {{ reports.statusFilter.label }}
+                <button type="button" onClick="{{ reports.statusFilter.toggle }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:220px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left">{{ reports.statusFilter.label }}</span>
                   <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.statusFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
                 </button>
                 <sc-if value="{{ reports.statusFilter.open }}" hint-placeholder-val="{{ false }}">
@@ -1151,8 +1151,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </div>
 
               <div style="position:relative;flex:none">
-                <button type="button" onClick="{{ reports.seasonFilter.toggle }}" style="display:inline-flex;align-items:center;gap:8px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
-                  {{ reports.seasonFilter.label }}
+                <button type="button" onClick="{{ reports.seasonFilter.toggle }}" style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:220px;height:56px;padding:0 8px 0 16px;border:1px solid var(--tk-border-strong);border-radius:10px;background:var(--tk-surface);font-family:inherit;font-size:15px;color:var(--tk-text);cursor:pointer;white-space:nowrap;transition:border-color 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left">{{ reports.seasonFilter.label }}</span>
                   <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);transition:transform 160ms cubic-bezier(.2,0,0,1);transform:{{ reports.seasonFilter.chevron }};-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
                 </button>
                 <sc-if value="{{ reports.seasonFilter.open }}" hint-placeholder-val="{{ false }}">
@@ -1189,6 +1189,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.summerIconColor }};-webkit-mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.summerIcon }}) center / 20px 20px no-repeat"></span>
                 <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Letnie opony w przechowalni</span>
                 <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.summerCount }}</span>
+              </div>
+              <div style="background:var(--tk-surface-2);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px">
+                <span style="width:20px;height:20px;flex:none;display:block;background-color:{{ reports.allYearIconColor }};-webkit-mask:url({{ reports.allYearIcon }}) center / 20px 20px no-repeat;mask:url({{ reports.allYearIcon }}) center / 20px 20px no-repeat"></span>
+                <span style="flex:1;min-width:0;font-size:16px;line-height:22px;color:var(--tk-text-2)">Całoroczne opony w przechowalni</span>
+                <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">{{ reports.allYearCount }}</span>
               </div>
             </div>
 
@@ -7542,6 +7547,7 @@ class Component extends DCLogic {
       inCount: String(inStore.length),
       winterCount: String(bySeason('Zima')),
       summerCount: String(bySeason('Lato')),
+      allYearCount: String(bySeason('Całoroczne')),
       // filtry: status kompletu i sezon — obok wyszukiwarki, każdy z własnym menu
       statusFilter: {
         label: REPORT_STATUS_LABEL[status] || REPORT_STATUS_LABEL.all,
@@ -7592,7 +7598,7 @@ class Component extends DCLogic {
         statusColor: r.stored ? 'var(--tk-ok-fg)' : 'var(--tk-text-2)',
         statusDot: r.stored ? 'var(--tk-ok)' : 'var(--tk-text-3)',
       }, seasonVals(r.season))),
-    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'));
+    }, seasonVals('Zima', 'winter'), seasonVals('Lato', 'summer'), seasonVals('Całoroczne', 'allYear'));
   }
 
   downloadReportCsv() {
