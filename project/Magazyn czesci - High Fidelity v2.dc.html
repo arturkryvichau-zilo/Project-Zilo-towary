@@ -1244,42 +1244,37 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="display:flex;flex-direction:column;gap:32px;width:100%">
 
 
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;align-items:center;gap:12px">
-                <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Integracja z narzędziem fakturowym</span>
-              </div>
-
-              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
-                <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
-                  <div style="display:flex;cursor:{{ opt.rowCursor }}">
-                  <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
-                    <span style="display:flex;align-items:center;gap:12px">
-                      <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
-                      <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
-                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
-                    </span>
-                    <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
-                      <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
-                        <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
-                        Połączono
+            <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Integracja z narzędziem fakturowym</span></div>
+                <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;align-items:stretch">
+                  <sc-for list="{{ billing.toolOptions }}" as="opt" hint-placeholder-count="4">
+                    <div style="display:flex;cursor:{{ opt.rowCursor }}">
+                    <div data-tool="{{ opt.name }}" onClick="{{ billing.pickTool }}" style="flex:1;min-width:0;border:1px solid var(--tk-border);border-radius:10px;background:var(--tk-surface);padding:16px;display:flex;flex-direction:column;gap:8px;opacity:{{ opt.rowOpacity }};cursor:{{ opt.rowCursor }};pointer-events:{{ opt.rowPointer }};transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
+                      <span style="display:flex;align-items:center;gap:12px">
+                        <sc-if value="{{ opt.hasLogo }}" hint-placeholder-val="{{ true }}"><img src="{{ opt.logo }}" alt="" style="width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--tk-border-2);object-fit:contain;background:var(--tk-surface)"></sc-if><sc-if value="{{ opt.noLogo }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;border:1px solid var(--tk-border-2);border-radius:8px;background:var(--tk-canvas);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;letter-spacing:0.04em;color:var(--tk-text-3)">{{ opt.mark }}</span></sc-if>
+                        <span style="flex:1;min-width:0;font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ opt.name }}</span>
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-arrow-right.svg) center / 20px 20px no-repeat"></span>
                       </span>
-                    </sc-if>
-                  </div>
-                  </div>
-                </sc-for>
-              </div>
-              <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
-              </sc-if>
-            </div>
+                      <sc-if value="{{ opt.isConnected }}" hint-placeholder-val="{{ false }}">
+                        <span style="display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;font-size:14px;line-height:20px;color:var(--tk-ok-fg);background:var(--tk-ok-soft);width:fit-content">
+                          <span style="width:6px;height:6px;border-radius:50%;flex:none;background:var(--tk-ok)"></span>
+                          Połączono
+                        </span>
+                      </sc-if>
+                    </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ billing.noneConnected }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-wrap:pretty">Nie masz jeszcze programu do faktur? <button type="button" onClick="{{ billing.startWithSignup }}" style="display:inline;padding:0;border:0;background:transparent;font-family:inherit;font-size:inherit;line-height:inherit;color:var(--tk-brand-fg);text-decoration:underline;cursor:pointer">Załóż konto w Fakturowni ›</button></span>
+                </sc-if>
+                </div>
+            </section>
 
             <sc-if value="{{ billing.hasConnected }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                  <span style="font-size:18px;font-weight:600;color:var(--tk-text)">Dane firmy</span>
-                  <button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button>
-                </div>
               <section style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--tk-border-2)"><span style="font-size:20px;line-height:28px;font-weight:500;color:var(--tk-text-strong)">Dane firmy</span><button type="button" onClick="{{ billing.editCompany }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--tk-brand-soft-2)"><span style="width:20px;height:20px;flex:none;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>Edytuj</button></div>
                 <div style="padding:20px;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:24px">
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">NIP</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);font-variant-numeric:tabular-nums;white-space:nowrap">{{ billing.nip }}</span></div>
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Nazwa firmy</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyName }}</span></div>
@@ -1288,7 +1283,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">Miejscowość</span><span style="font-size:16px;line-height:22px;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ billing.companyCity }}</span></div>
               </div>
               </section>
-              </div>
             </sc-if>
 
           </div>
