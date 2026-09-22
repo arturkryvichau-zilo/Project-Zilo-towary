@@ -368,9 +368,6 @@ window.__resources = {
             Nowa usługa
           </button>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
-            <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat: <span style="font-weight:500;">{{ robRabatDisplay }} zł</span></span>
-            </sc-if>
             <span>Suma netto: <span style="font-weight:500;">{{ robNettoDisplay }} zł</span></span>
             <span>Suma VAT: <span style="font-weight:500;">{{ robVatDisplay }} zł</span></span>
             <span>Suma brutto: <span style="font-weight:500;">{{ robBruttoDisplay }} zł</span></span>
@@ -497,9 +494,6 @@ window.__resources = {
           </button>
           </div>
           <div style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;">
-            <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
-              <span>Rabat: <span style="font-weight:500;">{{ towRabatDisplay }} zł</span></span>
-            </sc-if>
             <span>Suma netto: <span style="font-weight:500;">{{ towNettoDisplay }} zł</span></span>
             <span>Suma VAT: <span style="font-weight:500;">{{ towVatDisplay }} zł</span></span>
             <span>Suma brutto: <span style="font-weight:500;">{{ towBruttoDisplay }} zł</span></span>
@@ -2088,11 +2082,9 @@ class Component extends DCLogic {
       robNettoDisplay:   Component.fmt(robNetto),
       robBruttoDisplay:  Component.fmt(robBrutto),
       robVatDisplay:     Component.fmt(robVat),
-      robRabatDisplay:   Component.fmt(robRabat),
       towNettoDisplay:   Component.fmt(towNetto),
       towBruttoDisplay:  Component.fmt(towBrutto),
       towVatDisplay:     Component.fmt(towVat),
-      towRabatDisplay:   Component.fmt(towRabat),
       totalNettoDisplay:  Component.grFmt(calc.net),
       totalBruttoDisplay: Component.grFmt(calc.gross),
       totalVatDisplay:    Component.grFmt(calc.vat),
