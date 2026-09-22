@@ -7034,33 +7034,89 @@ class Component extends DCLogic {
     return isNaN(n) ? 0 : n;
   }
 
-  qcalc(r) {
-    const q = this.qnum(r.qty), v = this.qnum(r.vat);
+  qbase(r) {
+    const q = this.qnum(r.qty);
     // konfigurator trzyma cenę jednostkową jako int w 1/10000 zł (cenaU);
     // tekst `cena` jest tylko lustrem, więc bierzemy liczbę, gdy jest
     const c = r.cenaU != null ? r.cenaU / 10000 : this.qnum(r.cena);
-    const base = Math.round(q * c * 100) / 100;
-    // konfigurator trzyma rabat pozycji jako kwotę netto w groszach (r.manual);
-    // starsze wyceny miały procent w r.rabat — czytamy oba, żeby nic nie przepadło
-    const cut = r.manual != null
-      ? Math.min(this.qnum(r.manual) / 100, base)
-      : base * (this.qnum(r.rabat) / 100);
+    return Math.round(q * c * 100);            // wartość pozycji w groszach
+  }
+
+  // Rabat wyceny jest intencją zapisaną w dokumencie (st.discount) — kwoty przy
+  // pozycjach liczą się z niej tak samo jak w konfiguratorze: proporcjonalnie do
+  // wartości pozycji, z resztą groszową. Ręcznie rozpisane kwoty (r.manual)
+  // wygrywają. Bez tego szczegóły wizyty pokazywały kwoty sprzed rabatu.
+  qsplit(st) {
+    const out = {};
+    const rows = [];
+    const push = (r, g, i) => rows.push({ r: r, key: g + ':' + i, g: g });
+    if (st && Array.isArray(st.groups)) {
+      let ui = 0, ti = 0;
+      st.groups.forEach((grp) => {
+        push(grp.robocizna || {}, 'u', ui += 1);
+        (grp.towars || []).forEach((t) => push(t, 't', ti += 1));
+      });
+    } else if (st) {
+      (st.robociznas || []).forEach((r, i) => push(r, 'u', i));
+      (st.towars || []).forEach((t, i) => push(t, 't', i));
+    }
+    rows.forEach((x) => { out[x.key] = x.r.manual != null ? Math.min(this.qnum(x.r.manual), this.qbase(x.r)) : 0; });
+
+    const d = st && st.discount;
+    if (!d || d.custom) return out;
+    const inScope = rows.filter((x) => (d.scope === 'uslugi' ? x.g === 'u' : (d.scope === 'towary' ? x.g === 't' : true)));
+    const base = inScope.reduce((a, x) => a + this.qbase(x.r), 0);
+    if (base <= 0) return out;
+    let amount;
+    if (d.mode === 'pct') {
+      amount = Math.round(base * this.qnum(d.value) / 100);
+    } else {
+      let want = Math.round(this.qnum(d.value) * 100);
+      if (d.unit === 'gross') {
+        const grossBase = inScope.reduce((a, x) => a + Math.round(this.qbase(x.r) * (100 + this.qnum(x.r.vat)) / 100), 0);
+        want = grossBase > 0 ? Math.round(want * base / grossBase) : want;
+      }
+      amount = Math.min(want, base);
+    }
+    let rest = amount;
+    const parts = [];
+    inScope.forEach((x) => {
+      const exact = amount * this.qbase(x.r) / base;
+      const fl = Math.floor(exact);
+      out[x.key] += fl;
+      rest -= fl;
+      parts.push({ key: x.key, frac: exact - fl, base: this.qbase(x.r) });
+    });
+    parts.sort((a, b) => (b.frac - a.frac) || (b.base - a.base));
+    for (let i = 0; i < rest; i += 1) out[parts[i % parts.length].key] += 1;
+    return out;
+  }
+
+  qcalc(r, discGr) {
+    const v = this.qnum(r.vat);
+    const base = this.qbase(r);
+    // starsze wyceny miały rabat jako procent w r.rabat — czytamy go, gdy nie ma kwoty
+    const cut = discGr != null
+      ? Math.min(discGr, base)
+      : (r.manual != null ? Math.min(this.qnum(r.manual), base) : Math.round(base * this.qnum(r.rabat) / 100));
     const net = base - cut;
     // kwota rabatu idzie dalej — podsumowanie wyceny pokazuje ją obok sum
-    return { net: net, gross: net * (1 + v / 100), cut: cut };
+    return { net: net / 100, gross: Math.round(net * (100 + v) / 100) / 100, cut: cut / 100 };
   }
 
   quoteRows(st) {
     const uslugi = [], towary = [];
+    const split = this.qsplit(st);          // rabat rozdzielony na pozycje, raz na wycenę
     if (st && Array.isArray(st.groups)) {
+      let ui = 0, ti = 0;
       st.groups.forEach((g) => {
         const r = g.robocizna || {};
-        uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r) });
-        (g.towars || []).forEach((t) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t) }));
+        uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r, split['u:' + (ui += 1)]) });
+        (g.towars || []).forEach((t) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t, split['t:' + (ti += 1)]) }));
       });
     } else if (st && Array.isArray(st.robociznas)) {
-      st.robociznas.forEach((r) => uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r) }));
-      (st.towars || []).forEach((t) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t) }));
+      st.robociznas.forEach((r, i) => uslugi.push({ name: r.name, person: r.person || r.osoba || '', czas: r.czas || '', c: this.qcalc(r, split['u:' + i]) }));
+      (st.towars || []).forEach((t, i) => towary.push({ name: t.name, doc: t.doc || '', c: this.qcalc(t, split['t:' + i]) }));
     }
     return { uslugi: uslugi, towary: towary };
   }
