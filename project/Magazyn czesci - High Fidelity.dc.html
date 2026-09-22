@@ -4448,6 +4448,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
                     <div style="display:flex;align-items:center;gap:16px;padding:0 4px">
                       <span style="margin-left:auto;display:flex;gap:24px;font-size:15px;line-height:22px;color:var(--tk-text-2);font-variant-numeric:tabular-nums">
+                        <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
+                          <span style="color: var(--black)">Rabat: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.rabat }}</b></span>
+                        </sc-if>
                         <span style="color: var(--black)">Suma netto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.sumNet }}</b></span>
                         <span style="color: var(--black)">Suma brutto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.sumGross }}</b></span>
                       </span>
@@ -6911,7 +6914,8 @@ class Component extends DCLogic {
       ? Math.min(this.qnum(r.manual) / 100, base)
       : base * (this.qnum(r.rabat) / 100);
     const net = base - cut;
-    return { net: net, gross: net * (1 + v / 100) };
+    // kwota rabatu idzie dalej — podsumowanie wyceny pokazuje ją obok sum
+    return { net: net, gross: net * (1 + v / 100), cut: cut };
   }
 
   quoteRows(st) {
@@ -6991,6 +6995,7 @@ class Component extends DCLogic {
     const hasQuote = !!saved || goods.length > 0;
     const initials = (n) => String(n || '').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase();
     const sum = (list, k) => list.reduce((a, x) => a + (x.c[k] || 0), 0);
+    const rabat = sum(rows.uslugi, 'cut') + sum(goods, 'cut');
     const uN = sum(rows.uslugi, 'net'), uB = sum(rows.uslugi, 'gross');
     const tN = sum(goods, 'net'), tB = sum(goods, 'gross');
     const hist = (s.offerHistory || {})[id] || [];
@@ -7040,6 +7045,9 @@ class Component extends DCLogic {
       servicesGross: this.moneyPl(uB),
       goodsNet: this.moneyPl(tN),
       goodsGross: this.moneyPl(tB),
+      // rabat pokazujemy w podsumowaniu wyceny tak samo jak sumy — tylko gdy jest
+      hasRabat: rabat > 0,
+      rabat: this.moneyPl(rabat),
       sumNet: this.moneyPl(uN + tN),
       sumGross: this.moneyPl(uB + tB),
       openConfig: () => this.openWycConfig(id),

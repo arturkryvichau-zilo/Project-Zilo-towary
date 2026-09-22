@@ -70,6 +70,11 @@ window.__resources = {
     .o-sum { font-size:15px; line-height:22px; color:var(--grey-2, #6B707D); white-space:nowrap; }
     .o-sum b { font-weight:500; color:var(--grey-1, #242629); }
     /* ─── Segmented Control (design system) ─── */
+    /* pola modala rabatu — te same co w konfiguratorze wycen */
+    .z-input-cell { transition: box-shadow 200ms var(--ease-standard); }
+    .z-input-cell:focus-within { box-shadow: inset 0 0 0 1px var(--zilo-blue-1); border-color: var(--zilo-blue-1); }
+    input.z-input { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 20px; color: var(--grey-1); background: transparent; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; box-sizing: border-box; }
+    input.z-input::placeholder { color: var(--grey-3); opacity: 1; }
     .ds-seg {
       --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
       --seg-bg: var(--grey-6); --seg-fg-off: var(--grey-2); --seg-fg-on: var(--black);
@@ -182,7 +187,7 @@ window.__resources = {
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
             </sc-if>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
             <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
@@ -205,7 +210,7 @@ window.__resources = {
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}"></label>
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <label class="o-cell" style="cursor:text"><span class="o-label">Rabat (%)</span><input class="o-input" type="text" value="{{ r.rabat }}" onInput="{{ r.setRabat }}"></label>
+              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
             </sc-if>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}"></label>
             <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
@@ -234,6 +239,45 @@ window.__resources = {
       </div>
 
       <div style="background:var(--grey-6, #F0F1F5);border:1px solid var(--grey-4, #DCE0E6);border-radius:10px;padding:22px 28px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <div style="display:flex;flex-direction:column;margin-bottom:-14px">
+          <sc-if value="{{ discount.off }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;justify-content:flex-start">
+              <button type="button" onClick="{{ discount.add }}" style="font-family:var(--font-sans);font-weight:400;font-size:15px;line-height:22px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:6px 4px;border-radius:6px" style-hover="background:var(--zilo-primary-5);">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                Rabat
+              </button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;margin-bottom:14px">
+              <span style="color:var(--grey-2)">{{ discount.beforeLabel }}</span>
+              <span style="color:var(--grey-2);font-weight:400">{{ discount.beforeDisplay }} zł</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px;background:var(--tk-surface);border-radius:8px;padding:8px 10px;font-size:16px;line-height:22px;margin-bottom:16px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                  <span style="color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ discount.label }}</span>
+                  <sc-if value="{{ discount.clamped }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px;line-height:18px;color:var(--red);text-wrap:pretty">{{ discount.clampedText }}</span>
+                  </sc-if>
+                </span>
+                <span style="color:var(--grey-1);font-weight:400;white-space:nowrap">− {{ discount.amountDisplay }} zł</span>
+                <button type="button" onClick="{{ discount.remove }}" data-tt="Usuń rabat" data-tt-pos="top" aria-label="Usuń rabat" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center" style-hover="color:var(--zilo-blue-2);">
+                  <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
+                </button>
+                <button type="button" onClick="{{ discount.edit }}" data-tt="Edytuj rabat" data-tt-pos="top" aria-label="Edytuj rabat" style="position:relative;width:30px;height:30px;flex:none;padding:4px;border:0;background:transparent;color:var(--zilo-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center" style-hover="color:var(--zilo-blue-2);">
+                  <span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat;mask:url(../assets/icons/i-edit.svg) center / 20px 20px no-repeat"></span>
+                </button>
+              </div>
+              <sc-if value="{{ discount.isCustom }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ discount.restore }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:30px;flex:none;padding:4px 10px;border:0;border-radius:4px;background:var(--tk-brand-soft);color:var(--tk-brand-fg);font-family:inherit;font-size:14px;line-height:22px;font-weight:500;cursor:pointer" style-hover="background:var(--tk-brand-soft-2)">{{ discount.backLabel }}</button>
+              </sc-if>
+            </div>
+          </sc-if>
+          <div style="height:1px;background:var(--grey-4);margin:0 0 16px"></div>
+        </div>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
           <span style="color:var(--grey-1, #242629)">Suma netto:</span>
           <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.net }}</span>
@@ -242,12 +286,6 @@ window.__resources = {
           <span style="color:var(--grey-1, #242629)">Suma VAT:</span>
           <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.vat }}</span>
         </div>
-        <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px">
-            <span style="color:var(--grey-1, #242629)">Rabat:</span>
-            <span style="color:var(--grey-1, #242629);font-weight:400">{{ total.rabat }}</span>
-          </div>
-        </sc-if>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;line-height:26px;padding-top:4px">
           <span style="color:var(--zilo-blue-1, #222693);font-weight:500">Suma brutto:</span>
           <span style="color:var(--zilo-blue-1, #222693);font-weight:500">{{ total.gross }}</span>
@@ -356,6 +394,96 @@ window.__resources = {
     </div>
   </sc-if>
 </div>
+  <sc-if value="{{ discount.open }}" hint-placeholder-val="{{ false }}">
+    <div data-disc-modal onKeyDown="{{ discount.keys }}" style="position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(10,11,41,0.45)">
+      <div onClick="{{ discount.cancel }}" style="position:absolute;inset:0;"></div>
+      <div style="position:relative;width:100%;max-width:620px;background:var(--tk-surface);border-radius:20px;box-shadow:0 24px 60px rgba(10,11,41,0.24);display:flex;flex-direction:column;overflow:hidden">
+
+        <div style="flex:none;display:flex;align-items:center;gap:16px;padding:24px 30px 16px;">
+          <div style="flex:1;min-width:0;display:flex;align-items:center;gap:16px">
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">{{ discount.title }}</span>
+          </div>
+          <button type="button" onClick="{{ discount.cancel }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
+            <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M1 1l10 10M11 1L1 11"></path></svg>
+          </button>
+        </div>
+
+        <div style="flex:none;padding:0 30px 20px;display:flex;flex-direction:column;gap:20px">
+
+          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px">
+            <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości" style="flex:none">
+              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segNetto }}" onClick="{{ discount.pickNettoMode }}">Netto</button>
+              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segBrutto }}" onClick="{{ discount.pickBruttoMode }}">Brutto</button>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Na co</span>
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px">
+              <sc-for list="{{ discount.scopes }}" as="sc" hint-placeholder-count="3">
+                <div onClick="{{ sc.pick }}" style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid {{ sc.border }};border-radius:10px;background:{{ sc.bg }};opacity:{{ sc.opacity }};cursor:{{ sc.cursor }};transition:border-color 150ms, background 150ms">
+                  <span style="font-size:15px;line-height:22px;color:var(--grey-1)">{{ sc.label }}</span>
+                  <span style="font-size:13px;line-height:18px;color:var(--grey-2);white-space:nowrap">{{ sc.baseDisplay }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Ile</span>
+            <div style="display:flex;align-items:stretch;gap:12px">
+              <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Rodzaj rabatu" style="flex:none;--seg-h:56px">
+                <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segPercent }}" onClick="{{ discount.pickPercent }}">%</button>
+                <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segAmount }}" onClick="{{ discount.pickAmount }}">zł</button>
+              </div>
+              <label class="z-input-cell" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;overflow:hidden;cursor:text">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                  <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ discount.fieldLabel }}</div>
+                  <input data-disc-amount class="z-input" type="text" inputMode="decimal" value="{{ discount.value }}" onChange="{{ discount.setValue }}" onInput="{{ discount.setValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                </div>
+              </label>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px">
+              <sc-for list="{{ discount.quick }}" as="q" hint-placeholder-count="6">
+                <button type="button" onClick="{{ q.pick }}" style="border:1px solid {{ q.border }};background:{{ q.bg }};color:{{ q.color }};border-radius:18px;padding:0 15px;min-height:38px;font-family:var(--font-sans);font-size:13.5px;line-height:20px;cursor:pointer;transition:background-color 200ms var(--ease-standard)">{{ q.label }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ discount.hasError }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:13px;line-height:18px;color:var(--red);text-wrap:pretty">{{ discount.errorText }}</span>
+            </sc-if>
+          </div>
+
+          <div style="background:var(--grey-6);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px;line-height:22px;color:var(--grey-1)">
+              <span>Rabat</span>
+              <span style="font-weight:400">− {{ discount.previewAmount }} zł</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px;line-height:22px;color:var(--grey-1)">
+              <span>{{ discount.previewTotalLabel }}</span>
+              <span style="font-weight:500">{{ discount.previewTotal }} zł</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:center;gap:12px;padding:16px 30px 24px;border-top:1px solid var(--grey-5)">
+          <sc-if value="{{ discount.isEdit }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ discount.removeFromModal }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--red); cursor: pointer; display: inline-flex; align-items: center; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--red-4);">Usuń rabat</button>
+          </sc-if>
+          <span style="flex:1"></span>
+          <div style="flex:none;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <button type="button" onClick="{{ discount.cancel }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary-5);color:var(--zilo-primary);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard)" style-hover="background:var(--zilo-primary-4);">Anuluj</button>
+            <button type="button" onClick="{{ discount.save }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;opacity: {{ discount.saveOpacity }} ;cursor: {{ discount.saveCursor }} ;pointer-events: {{ discount.saveEvents }} ;transition:background-color 200ms var(--ease-standard);">{{ discount.saveLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ discount.toastOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:220;display:flex;align-items:center;gap:16px;background:var(--grey-1);color:var(--tk-surface);border-radius:10px;padding:13px 16px;box-shadow:0 6px 22px rgba(10,11,41,0.30);font-family:var(--font-sans);font-size:14px;line-height:20px">
+      <span>{{ discount.toastText }}</span>
+      <button type="button" onClick="{{ discount.undo }}" style="border:0;background:transparent;color:var(--tk-surface);font-family:var(--font-sans);font-size:14px;line-height:20px;font-weight:500;text-decoration:underline;cursor:pointer;padding:0">Cofnij</button>
+    </div>
+  </sc-if>
 </x-dc>
 
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
@@ -386,6 +514,567 @@ class Component extends DCLogic {
     return Component.fmt(n).replace(/\B(?=(\d{3})+(?!\d)(?=,))/g, ' ') + ' zł';
   }
 
+  // ── Rabat — rdzeń przeniesiony z konfiguratora wycen (RABATY-SPEC §3) ──
+  // Kwoty w GROSZACH, cena jednostkowa w jednostkach 1/10000 zł (cztery miejsca),
+  // bo cena liczona wstecz z wartości nie mieści się w groszu (104,07 / 12 = 8,6725).
+  static U = 10000;
+
+static u(v) { return Math.round(Component.num(v) * Component.U); }
+
+static uOf(r, field) {
+    const key = field === 'koszt' ? 'kosztU' : 'cenaU';
+    return r[key] != null ? r[key] : Component.u(r[field]);
+  }
+
+static fmtU(units) {
+    // równe grosze pokazujemy z dwoma miejscami, ułamek grosza z czterema
+    return units % 100 === 0
+      ? Component.fmt(units / Component.U)
+      : String(units / Component.U).replace('.', ',');
+  }
+
+static baseFromU(qty, units) { return Math.round(Component.num(qty) * units / 100); }
+
+static rowKey(collection, r) { return (collection === 'towary' ? 't:' : 'u:') + r.id; }
+
+static tagRows(list, collection) {
+    return (list || []).map((r) => Object.assign({}, r, { _k: Component.rowKey(collection, r) }));
+  }
+
+static allRows(state) {
+    return Component.tagRows(state.uslugi, 'uslugi').concat(Component.tagRows(state.towary, 'towary'));
+  }
+
+static rowsInScope(state, scope) {
+    if (scope === 'uslugi') return Component.tagRows(state.uslugi, 'uslugi');
+    if (scope === 'towary') return Component.tagRows(state.towary, 'towary');
+    return Component.allRows(state);
+  }
+
+static scopeBase(state, scope) {
+    return Component.rowsInScope(state, scope).reduce((a, r) => a + Component.rowBase(r), 0);
+  }
+
+static scopeGross(state, scope) {
+    return Component.rowsInScope(state, scope).reduce((a, r) => a + Component.rowGross(r), 0);
+  }
+
+static grossToNetInScope(state, scope, gross) {
+    const base = Component.scopeBase(state, scope);
+    const bg = Component.scopeGross(state, scope);
+    return bg > 0 ? Math.round(gross * base / bg) : 0;
+  }
+
+static discountAmount(state, d) {
+    const base = Component.scopeBase(state, d ? d.scope : 'all');
+    if (!d) return { amount: 0, clamped: false, base: base };
+    if (d.mode === 'pct') {
+      // procent jest identyczny w netto i brutto — liczymy od netto
+      return { amount: Math.round(base * Component.num(d.value) / 100), clamped: false, base: base };
+    }
+    let want = Component.gr(d.value);
+    if (d.unit === 'gross') {
+      const bg = Component.scopeGross(state, d.scope);
+      const clamped = want > bg;
+      want = Component.grossToNetInScope(state, d.scope, Math.min(want, bg));
+      return { amount: Math.min(want, base), clamped: clamped, base: base };
+    }
+    return { amount: Math.min(want, base), clamped: want > base, base: base };
+  }
+
+static distribute(R, rows) {
+    const out = {};
+    const base = rows.reduce((s, r) => s + Component.rowBase(r), 0);
+    rows.forEach((r) => { out[r._k] = 0; });
+    if (base <= 0 || R <= 0) return out;
+
+    let rest = R;
+    const parts = [];
+    rows.forEach((r) => {
+      const exact = R * Component.rowBase(r) / base;
+      const fl = Math.floor(exact);
+      out[r._k] = fl;
+      rest -= fl;
+      parts.push({ id: r._k, frac: exact - fl, base: Component.rowBase(r) });
+    });
+    parts.sort((a, b) => (b.frac - a.frac) || (b.base - a.base));
+    for (let i = 0; i < rest; i += 1) out[parts[i % parts.length].id] += 1;
+    return out;
+  }
+
+static computeQuote(state, override) {
+    const d = override !== undefined ? override : state.discount;
+    const rows = Component.allRows(state);
+    const per = {};
+    rows.forEach((r) => {
+      per[r._k] = r.manual == null ? 0 : Math.min(r.manual, Component.rowBase(r));
+    });
+
+    const info = { amount: 0, clamped: false, base: 0, custom: !!(d && d.custom), splitSum: 0 };
+    if (d) {
+      if (!d.custom) {
+        const calc = Component.discountAmount(state, d);
+        info.amount = calc.amount; info.clamped = calc.clamped; info.base = calc.base;
+        const inScope = Component.rowsInScope(state, d.scope);
+        const split = Component.distribute(calc.amount, inScope);
+        inScope.forEach((r) => { per[r._k] += split[r._k]; });
+        info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
+      } else {
+        info.base = Component.scopeBase(state, d.scope);
+        info.amount = Component.rowsInScope(state, d.scope).reduce((a, r) => a + per[r._k], 0);
+        info.splitSum = info.amount;
+      }
+    }
+
+    const before = rows.reduce((a, r) => a + Component.rowBase(r), 0);
+    const beforeGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
+    const disc = rows.reduce((a, r) => a + per[r._k], 0);
+    const net = before - disc;
+    const vat = rows.reduce((a, r) => {
+      const rowNet = Component.rowBase(r) - per[r._k];
+      return a + Math.round(rowNet * Component.rowVat(r) / 100);
+    }, 0);
+    return { per: per, before: before, beforeGross: beforeGross, disc: disc, net: net, vat: vat, gross: net + vat, info: info };
+  }
+
+static grFmt(gr) { return Component.fmt(gr / 100); }
+
+static migrateRabat(st) {
+    if (!st || st.discount) return st;
+    const all = (st.uslugi || []).concat(st.towary || []);
+    const any = all.some((r) => r && r.rabat != null && Component.num(r.rabat) > 0);
+    if (!any) {
+      all.forEach((r) => { if (r) delete r.rabat; });
+      return st;
+    }
+    let sum = 0;
+    const conv = (list) => (list || []).map((r) => {
+      const pct = Component.num(r.rabat);
+      const manual = pct > 0 ? Math.round(Component.rowBase(r) * pct / 100) : 0;
+      sum += manual;
+      const out = Object.assign({}, r, { manual: manual });
+      delete out.rabat;
+      return out;
+    });
+    st.uslugi = conv(st.uslugi);
+    st.towary = conv(st.towary);
+    st.discount = { scope: 'all', mode: 'amt', unit: 'net', value: sum / 100, custom: true, origin: null };
+    return st;
+  }
+
+static gr(v) { return Math.round(Component.num(v) * 100); }
+
+static rowBase(r) {
+    return Component.baseFromU(r.qty, Component.uOf(r));
+  }
+
+static rowVat(r) { return Component.num(r.vat); }
+
+static rowGross(r) {
+    return Component.rowBase(r) + Math.round(Component.rowBase(r) * Component.rowVat(r) / 100);
+  }
+
+static reunit(state, draft, unit) {
+    if (!draft || draft.mode !== 'amt' || draft.unit === unit) return draft ? draft.value : '';
+    const net = Component.draftNet(state, draft);
+    if (net == null) return draft.value;
+    const bg = Component.scopeGross(state, draft.scope);
+    const bn = Component.scopeBase(state, draft.scope);
+    const out = unit === 'gross' ? (bn > 0 ? Math.round(net * bg / bn) : 0) : net;
+    return Component.grFmt(out);
+  }
+static draftNet(state, draft) {
+    const v = Component.num(draft.value);
+    if (!draft.value || String(draft.value).trim() === '' || v <= 0) return null;
+    if (draft.mode === 'pct') {
+      if (v > 100) return null;
+      return Math.round(Component.scopeBase(state, draft.scope) * v / 100);
+    }
+    const w = Component.gr(draft.value);
+    return draft.unit === 'gross' ? Component.grossToNetInScope(state, draft.scope, w) : w;
+  }
+
+
+  // zdarzenia idą do PostHoga rodzica — konfigurator siedzi w iframie bez własnego
+  discountTrack(name, props) {
+    try {
+      const ph = (window.parent && window.parent.posthog) || window.posthog;
+      if (ph && ph.capture) ph.capture(name, Object.assign({ platform: 'prototype' }, props));
+    } catch (e) {}
+  }
+
+  // walidacja pola kwoty w modalu — komunikat i blokada zapisu z jednej decyzji
+  discountValidate(draft) {
+    const st = this.state;
+    const base = Component.scopeBase(st, draft.scope);
+    const baseGross = Component.scopeGross(st, draft.scope);
+    const raw = String(draft.value == null ? '' : draft.value).trim();
+    if (raw === '') return { ok: false, silent: true, base: base };
+    if (!/^\d*[.,]?\d*$/.test(raw)) return { ok: false, msg: 'Wpisz liczbę — dozwolone są cyfry i przecinek.', base: base };
+    const v = Component.num(raw);
+    if (v <= 0) return { ok: false, msg: 'Rabat musi być większy od zera.', base: base };
+    if (draft.mode === 'pct') {
+      if (v > 100) return { ok: false, msg: 'Rabat nie może być większy niż 100%.', base: base };
+      return { ok: true, amount: Math.round(base * v / 100), base: base };
+    }
+    const want = Component.gr(raw);
+    const limit = draft.unit === 'gross' ? baseGross : base;
+    if (want > limit) {
+      return { ok: false, base: base,
+        msg: 'Rabat nie może być większy niż wartość zakresu (' + Component.grFmt(limit) + ' zł).' };
+    }
+    return { ok: true, amount: Component.draftNet(st, draft), base: base };
+  }
+
+  discountVals(calc) {
+    const st = this.state;
+    const d = st.discount;
+    const draft = st.discountDraft;
+    const isBrutto = st.valueMode === 'brutto';
+    const scopeLabel = { all: 'Wszystko', uslugi: 'Usługi', towary: 'Towary' };
+    const show = (netGr) => Component.grFmt(isBrutto
+      ? netGr + Math.round(netGr * 0)   // kwoty brutto liczymy wprost niżej
+      : netGr);
+
+    // ── podsumowanie ──
+    const beforeShown = isBrutto ? calc.beforeGross : calc.before;
+    const discShown = isBrutto ? (calc.beforeGross - calc.gross) : calc.disc;
+
+    // Etykieta rabatu kwotowego nie powtarza liczby: wpisane 100,00 zł brutto
+    // przy mieszanym VAT schodzi jako 100,01 i dwie kwoty obok siebie wyglądały
+    // jak błąd. Kwota jest jedna — ta policzona, obok chipa (§4.2).
+    const label = (() => {
+      if (!d) return '';
+      if (d.custom || d.mode === 'amt') return 'Rabat kwotowy · ' + scopeLabel[d.scope];
+      return 'Rabat ' + Component.fmt(Component.num(d.value)).replace(',00', '') + '%'
+        + ' · ' + scopeLabel[d.scope];
+    })();
+
+    const originLabel = d && d.origin
+      ? (d.origin.mode === 'pct'
+        ? Component.fmt(Component.num(d.origin.value)).replace(',00', '') + '%'
+        : Component.grFmt(Component.gr(d.origin.value)) + ' zł')
+      : '';
+
+    // ── modal ──
+    const res = draft ? this.discountValidate(draft) : { ok: false };
+    const preview = draft
+      ? Component.computeQuote(
+        Object.assign({}, st, { uslugi: (st.uslugi || []).map((r) => Object.assign({}, r, { manual: null })),
+          towary: (st.towary || []).map((r) => Object.assign({}, r, { manual: null })) }),
+        res.ok ? { scope: draft.scope, mode: draft.mode, value: draft.value, unit: draft.unit, custom: false } : null
+      )
+      : null;
+    const unitNet = !draft || draft.unit === 'net';
+
+    return {
+      on: !!d,
+      off: !d,
+      label: label,
+      beforeLabel: isBrutto ? 'Suma brutto przed rabatem:' : 'Suma netto przed rabatem:',
+      beforeDisplay: Component.grFmt(beforeShown),
+      amountDisplay: Component.grFmt(discShown),
+      clamped: !!(d && calc.info.clamped),
+      clampedText: 'Rabat przycięty do wartości zakresu (' + Component.grFmt(calc.info.base) + ' zł). Pozycje zmieniły się po nadaniu rabatu.',
+      isCustom: !!(d && d.custom && d.origin),
+      backLabel: 'Wróć do ' + originLabel,
+      restore: () => this.discountRestore(),
+      add: () => this.openDiscount(false),
+      edit: () => this.openDiscount(true),
+      remove: () => this.discountRemove(),
+
+      open: !!draft,
+      keys: (e) => {
+        if (!this.state.discountDraft) return;
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (this.discountValidate(this.state.discountDraft).ok) this.discountSave();
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();          // inaczej ESC zamyka cały konfigurator
+          this.setState({ discountDraft: null });
+        }
+      },
+      isEdit: !!(draft && draft.editing),
+      title: draft && draft.editing ? 'Edytuj rabat' : 'Rabat',
+      segNetto: unitNet ? 'true' : 'false',
+      segBrutto: unitNet ? 'false' : 'true',
+      pickNettoMode: () => this.switchValueMode('netto'),
+      pickBruttoMode: () => this.switchValueMode('brutto'),
+      scopes: ['all', 'uslugi', 'towary'].map((k) => {
+        const base = unitNet ? Component.scopeBase(st, k) : Component.scopeGross(st, k);
+        return {
+          key: k,
+          label: scopeLabel[k],
+          baseDisplay: Component.grFmt(base) + ' zł',
+          selected: !!draft && draft.scope === k,
+          disabled: Component.scopeBase(st, k) <= 0,
+          bg: draft && draft.scope === k ? 'var(--zilo-blue-5)' : 'var(--tk-surface)',
+          border: draft && draft.scope === k ? 'var(--zilo-blue-1)' : 'var(--grey-4)',
+          opacity: Component.scopeBase(st, k) <= 0 ? '0.45' : '1',
+          cursor: Component.scopeBase(st, k) <= 0 ? 'not-allowed' : 'pointer',
+          pick: () => {
+            if (Component.scopeBase(this.state, k) <= 0) return;
+            this.setState((x) => ({ discountDraft: Object.assign({}, x.discountDraft, { scope: k }) }));
+          },
+        };
+      }),
+      isPercent: !!draft && draft.mode === 'pct',
+      segPercent: draft && draft.mode === 'pct' ? 'true' : 'false',
+      segAmount: draft && draft.mode === 'amt' ? 'true' : 'false',
+      pickPercent: () => this.discountMode('pct'),
+      pickAmount: () => this.discountMode('amt'),
+      value: draft ? draft.value : '',
+      setValue: (e) => {
+        const v = e.target.value;
+        this.setState((x) => ({ discountDraft: Object.assign({}, x.discountDraft, { value: v }) }));
+      },
+      fieldLabel: draft && draft.mode === 'pct'
+        ? 'Rabat (%)'
+        : ('Rabat ' + (unitNet ? 'netto' : 'brutto') + ' (zł)'),
+      quick: (draft && draft.mode === 'pct' ? ['5', '10', '15', '20', '25', '30'] : ['50', '100', '200', '500'])
+        .map((v) => ({
+          label: draft && draft.mode === 'pct' ? v + '%' : v + ' zł',
+          selected: !!draft && String(draft.value) === v,
+          bg: draft && String(draft.value) === v ? 'var(--zilo-primary)' : 'var(--tk-surface)',
+          color: draft && String(draft.value) === v ? 'var(--tk-on-fill)' : 'var(--grey-2)',
+          border: draft && String(draft.value) === v ? 'var(--zilo-primary)' : 'var(--grey-4)',
+          pick: () => this.setState((x) => ({ discountDraft: Object.assign({}, x.discountDraft, { value: v }) })),
+        })),
+      hasError: !!(draft && !res.ok && !res.silent),
+      errorText: res.msg || '',
+      previewAmount: preview
+        ? Component.grFmt(unitNet ? preview.disc : (preview.beforeGross - preview.gross))
+        : '0,00',
+      previewTotalLabel: unitNet ? 'Suma netto po rabacie' : 'Suma brutto po rabacie',
+      previewTotal: preview ? Component.grFmt(unitNet ? preview.net : preview.gross) : '0,00',
+      canSave: !!res.ok,
+      saveOpacity: res.ok ? '1' : '0.5',
+      saveCursor: res.ok ? 'pointer' : 'not-allowed',
+      saveEvents: res.ok ? 'auto' : 'none',
+      saveLabel: draft && draft.editing ? 'Zapisz' : 'Dodaj rabat',
+      cancel: () => this.setState({ discountDraft: null }),
+      save: () => this.discountSave(),
+      removeFromModal: () => { this.setState({ discountDraft: null }); this.discountRemove('modal'); },
+
+      // toast po usunięciu
+      toastOpen: !!st.discountToast,
+      toastText: 'Rabat usunięty.',
+      undo: () => this.discountUndo(),
+    };
+  }
+
+  discountMode(mode) {
+    this.setState((st) => {
+      const dr = st.discountDraft;
+      if (!dr || dr.mode === mode) return {};
+      const net = Component.draftNet(st, dr);
+      let value = '';
+      if (net != null) {
+        if (mode === 'pct') {
+          const base = Component.scopeBase(st, dr.scope);
+          value = base > 0 ? String((net / base * 100).toFixed(2)).replace(/\.?0+$/, '').replace('.', ',') : '';
+        } else {
+          const bg = Component.scopeGross(st, dr.scope);
+          const bn = Component.scopeBase(st, dr.scope);
+          value = Component.grFmt(dr.unit === 'gross' && bn > 0 ? Math.round(net * bg / bn) : net);
+        }
+      }
+      return { discountDraft: Object.assign({}, dr, { mode: mode, value: value }) };
+    });
+  }
+
+  openDiscount(isEdit) {
+    const st = this.state;
+    this.focusDiscountAmount();
+    const unit = st.valueMode === 'brutto' ? 'gross' : 'net';
+    const base = (scope) => Component.scopeBase(st, scope);
+    if (!isEdit || !st.discount) {
+      let scope = st.discountScopeLast || 'all';
+      if (base(scope) <= 0) scope = ['all', 'uslugi', 'towary'].filter((k) => base(k) > 0)[0] || 'all';
+      this.setState({ discountDraft: { scope: scope, mode: 'pct', value: '', unit: unit, editing: false } });
+      return;
+    }
+    const d = st.discount;
+    if (d.custom) {
+      // rabat rozpisany kwotami — wracamy do niego w zł, z realną kwotą
+      const amount = Component.computeQuote(st).info.amount;
+      const bg = Component.scopeGross(st, d.scope);
+      const bn = Component.scopeBase(st, d.scope);
+      const shown = unit === 'gross' && bn > 0 ? Math.round(amount * bg / bn) : amount;
+      this.setState({ discountDraft: { scope: d.scope, mode: 'amt', unit: unit, value: Component.grFmt(shown), editing: true } });
+      return;
+    }
+    const draft = { scope: d.scope, mode: d.mode, unit: unit, value: String(d.value).replace('.', ','), editing: true };
+    if (d.mode === 'amt' && d.unit !== unit) draft.value = Component.reunit(st, { mode: 'amt', unit: d.unit, value: d.value, scope: d.scope }, unit);
+    this.setState({ discountDraft: draft });
+  }
+
+  discountSave() {
+    const st = this.state;
+    const dr = st.discountDraft;
+    if (!dr) return;
+    const res = this.discountValidate(dr);
+    if (!res.ok) return;
+    const next = { scope: dr.scope, mode: dr.mode, value: Component.num(dr.value), unit: dr.unit, custom: false, origin: null };
+    const prev = st.discount;
+    const changed = prev ? ['scope', 'mode', 'value', 'unit'].filter((k) => String(prev[k]) !== String(next[k])) : null;
+    this.discountTrack(dr.editing ? 'quote_discount_edited' : 'quote_discount_added', Object.assign({
+      scope: next.scope, type: next.mode === 'pct' ? 'percent' : 'amount', value: next.value,
+    }, dr.editing ? { changed: changed } : { base_net: res.base / 100, discount_net: res.amount / 100 }));
+    // zapis kasuje ręczne kwoty — rabat znów liczy się z intencji
+    this.setState((x) => ({
+      discount: next,
+      discountDraft: null,
+      discountScopeLast: next.scope,
+      uslugi: (x.uslugi || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towary: (x.towary || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+    }));
+  }
+
+  discountRemove(source) {
+    const st = this.state;
+    if (!st.discount) return;
+    this.discountTrack('quote_discount_removed', { scope: st.discount.scope, source: source || 'row_x' });
+    const snapshot = {
+      discount: st.discount,
+      manual: Component.allRows(st).map((r) => ({ k: r._k, m: r.manual == null ? null : r.manual, g: r.manualG == null ? null : r.manualG })),
+    };
+    // usunięcie kasuje też ręczne kwoty — inaczej kolumna znika, a rabat dalej się liczy
+    this.setState((x) => ({
+      discount: null,
+      discountDraft: null,
+      discountUndo: snapshot,
+      discountToast: true,
+      uslugi: (x.uslugi || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towary: (x.towary || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+    }));
+    if (this.__discToast) clearTimeout(this.__discToast);
+    this.__discToast = setTimeout(() => this.setState({ discountToast: false, discountUndo: null }), 7000);
+  }
+
+  discountUndo() {
+    const snap = this.state.discountUndo;
+    if (!snap) return;
+    const back = (list, coll) => (list || []).map((r) => {
+      const hit = snap.manual.filter((x) => x.k === Component.rowKey(coll, r))[0];
+      return Object.assign({}, r, { manual: hit ? hit.m : null, manualG: hit ? hit.g : null });
+    });
+    if (this.__discToast) clearTimeout(this.__discToast);
+    this.setState((x) => ({
+      discount: snap.discount,
+      discountUndo: null,
+      discountToast: false,
+      uslugi: back(x.uslugi, 'uslugi'),
+      towary: back(x.towary, 'towary'),
+    }));
+  }
+
+  discountRestore() {
+    const d = this.state.discount;
+    if (!d || !d.origin) return;
+    this.setState((x) => ({
+      discount: Object.assign({}, d.origin, { custom: false, origin: null }),
+      uslugi: (x.uslugi || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towary: (x.towary || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+    }));
+  }
+
+  // pierwsza ręczna zmiana przy pozycji „zamraża" rabat: z % robi się zestaw kwot
+  discountGoCustom(collection, rowId) {
+    const st = this.state;
+    const d = st.discount;
+    if (!d) return;
+    const calc = Component.computeQuote(st);
+    const key = Component.rowKey(collection, { id: rowId });
+    const outOfScope = Component.rowsInScope(st, d.scope).filter((r) => r._k === key).length === 0;
+    const scope = outOfScope ? 'all' : d.scope;
+    const freeze = (list, coll) => (list || []).map((r) => {
+      if (r.manual != null) return r;
+      const inNew = scope === 'all'
+        || (scope === 'uslugi' && coll === 'uslugi')
+        || (scope === 'towary' && coll === 'towary');
+      return Object.assign({}, r, { manual: inNew ? (calc.per[Component.rowKey(coll, r)] || 0) : null, manualG: null });
+    });
+    if (d.custom && !outOfScope) return;
+    this.setState((x) => ({
+      discount: Object.assign({}, d, {
+        custom: true,
+        scope: scope,
+        origin: d.origin || { mode: d.mode, value: d.value, unit: d.unit, scope: d.scope },
+      }),
+      uslugi: freeze(x.uslugi, 'uslugi'),
+      towary: freeze(x.towary, 'towary'),
+    }));
+  }
+
+  // wpis w polu rabatu przy pozycji: waliduje, przełącza rabat w tryb kwotowy,
+  // a edycja pozycji spoza zakresu rozszerza rabat na całą wycenę
+  setRowDiscount(collection, id, raw) {
+    const st = this.state;
+    const row = (st[collection] || []).filter((r) => r.id === id)[0];
+    if (!row || !st.discount) return;
+    const errs = Object.assign({}, st.rowErrors || {});
+    const key = Component.rowKey(collection, { id: id }) + ':disc';
+    const isBrutto = st.valueMode === 'brutto';
+    const txt = String(raw == null ? '' : raw).trim();
+
+    this.discountGoCustom(collection, id);
+
+    if (txt === '') {
+      delete errs[key];
+      this.setState({ rowErrors: errs });
+      this.patch(collection, id, { manual: 0, manualG: null, rabatEditing: '' });
+      return;
+    }
+    if (!/^\d*[.,]?\d*$/.test(txt)) {
+      errs[key] = 'Tylko cyfry i przecinek.';
+      this.setState({ rowErrors: errs });
+      return;
+    }
+    let net = Component.gr(txt);
+    if (isBrutto) net = Math.round(net * 100 / (100 + Component.rowVat(row)));
+    const base = Component.rowBase(row);
+    if (net > base) {
+      errs[key] = 'Maksymalnie ' + Component.grFmt(isBrutto ? Component.rowGross(row) : base) + ' zł.';
+      this.setState({ rowErrors: errs });
+      this.patch(collection, id, { rabatEditing: txt });
+      return;
+    }
+    delete errs[key];
+    this.setState({ rowErrors: errs });
+    // 5,00 zł brutto to 4,07 netto, a z powrotem 5,01 — pamiętamy, co wpisano,
+    // żeby pole nie „poprawiało" mechanikowi kwoty po przeliczeniu
+    this.patch(collection, id, { manual: net, manualG: isBrutto ? Component.gr(txt) : null, rabatEditing: txt });
+  }
+
+  focusDiscountAmount() {
+    let tries = 0;
+    const go = () => {
+      const el = typeof document !== 'undefined' && document.querySelector('[data-disc-amount]');
+      if (el) { el.focus(); try { el.select(); } catch (_) {} return; }
+      if (tries++ < 10) setTimeout(go, 30);
+    };
+    setTimeout(go, 0);
+  }
+
+  // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
+  switchValueMode(mode) {
+    this.setState({ valueMode: mode });
+    // modal idzie za wyceną w obie strony
+    if (this.state.discountDraft) {
+      this.setState((st) => ({
+        discountDraft: Object.assign({}, st.discountDraft, {
+          unit: mode === 'brutto' ? 'gross' : 'net',
+          value: Component.reunit(st, st.discountDraft, mode === 'brutto' ? 'gross' : 'net'),
+        }),
+      }));
+    }
+  }
+
+
   static mkRow(id, seed, withProducent) {
     const r = seed || {};
     const row = {
@@ -394,8 +1083,12 @@ class Component extends DCLogic {
       unit: r.unit || 'Sztuka',
       qty: r.qty || '1',
       cena: r.cena || '0,00',
+      cenaU: r.cenaU != null ? r.cenaU : Component.u(r.cena || '0,00'),
       vat: r.vat || '23',
-      rabat: r.rabat || '',
+      manual: r.manual != null ? r.manual : null,   // kwota rabatu pozycji w groszach
+      manualG: null,                                 // kwota wpisana w brutto (pamięć)
+      rabatEditing: null,
+      cenaEditing: null,
       bruttoEdit: null,
       nettoEdit: null,
     };
@@ -416,7 +1109,12 @@ class Component extends DCLogic {
     return Component.applyPick({
       cc: 'PL',
       valueMode: 'netto',
-      showRabat: false,
+      discount: null,
+      discountDraft: null,
+      discountUndo: null,
+      discountToast: false,
+      discountScopeLast: 'all',
+      rowErrors: {},
       phone: c.phone || '',
       cname: c.name || '',
       cmail: c.email || '',
@@ -436,51 +1134,101 @@ class Component extends DCLogic {
     });
   })();
 
-  calc(r) {
-    const base = Component.num(r.qty) * Component.num(r.cena);
-    // rabat obniża wartość pozycji, VAT liczy się dopiero po nim — tak samo jak w wycenach
-    const rb = this.state.showRabat ? Component.num(r.rabat) : 0;
-    const rabatAmt = base * (rb / 100);
-    const afterRabat = base - rabatAmt;
-    const net = r.nettoEdit !== null && r.nettoEdit !== undefined ? Component.num(r.nettoEdit) : afterRabat;
-    const gross = r.bruttoEdit !== null && r.bruttoEdit !== undefined
-      ? Component.num(r.bruttoEdit)
-      : net * (1 + Component.num(r.vat) / 100);
-    return { net: net, gross: gross, vat: gross - net, rabat: rabatAmt };
+  calc(r, discGr) {
+    const base = Component.rowBase(r);
+    const cut = Math.min(discGr || 0, base);
+    const net = base - cut;
+    const vat = Math.round(net * Component.rowVat(r) / 100);
+    return { net: net / 100, gross: (net + vat) / 100, vat: vat / 100, rabat: cut / 100, netGr: net, cutGr: cut };
+  }
+
+  // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd w modalu
+  quoteCalc() {
+    return Component.computeQuote(this.state);
   }
 
   patch(coll, id, p) {
-    this.setState((s) => ({ [coll]: s[coll].map((r) => (r.id === id ? Object.assign({}, r, p) : r)) }));
+    this.setState((s) => ({
+      [coll]: s[coll].map((r) => (r.id === id
+        ? (typeof p === 'function' ? p(r) : Object.assign({}, r, p))
+        : r)),
+    }));
   }
 
-  buildRows(coll, withProducent) {
+  buildRows(coll, withProducent, per) {
+    const isBrutto = this.state.valueMode === 'brutto';
     return this.state[coll].map((r) => {
-      const c = this.calc(r);
+      const discGr = (per || {})[Component.rowKey(coll, r)] || 0;
+      const c = this.calc(r, discGr);
+      const key = Component.rowKey(coll, r) + ':disc';
       const set = (field) => (e) => this.patch(coll, r.id, { [field]: e.target.value, bruttoEdit: null, nettoEdit: null });
-      const isBrutto = this.state.valueMode === 'brutto';
       const vRate = 1 + Component.num(r.vat) / 100;
+      const cenaU = Component.uOf(r);
+      // „Wartość" = ile ma wyjść ta pozycja; cena jednostkowa liczy się wstecz
+      const backCalc = (wNetGr) => this.patch(coll, r.id, (x) => {
+        const q = Component.num(x.qty) || 1;
+        const d = this.state.discount;
+        const inScope = d && Component.rowsInScope(this.state, d.scope).filter((y) => y._k === Component.rowKey(coll, x)).length > 0;
+        let newBase;
+        if (inScope && !d.custom && d.mode === 'pct') {
+          const pct = Component.num(d.value);
+          if (pct >= 100) return x;
+          newBase = Math.round(wNetGr / (1 - pct / 100));
+        } else {
+          newBase = wNetGr + discGr;
+        }
+        const units = Math.round(newBase * 100 / q);
+        return Object.assign({}, x, { cenaU: units, cena: Component.fmtU(units), cenaEditing: null, bruttoEdit: null, nettoEdit: null });
+      });
       const row = {
-        name: r.name, unit: r.unit, qty: r.qty, cena: r.cena, vat: r.vat, rabat: r.rabat,
+        name: r.name, unit: r.unit, qty: r.qty, cena: Component.fmtU(cenaU), vat: r.vat,
         netto: Component.fmt(c.net),
-        brutto: r.bruttoEdit !== null && r.bruttoEdit !== undefined ? r.bruttoEdit : Component.fmt(c.gross),
+        brutto: Component.fmt(c.gross),
         cenaLabel: isBrutto ? 'Cena brutto' : 'Cena netto',
-        cenaValue: isBrutto ? Component.fmt(Component.num(r.cena) * vRate) : r.cena,
-        setCenaValue: isBrutto
-          ? (e) => this.patch(coll, r.id, { cena: Component.fmt(Component.num(e.target.value) / vRate), bruttoEdit: null, nettoEdit: null })
-          : set('cena'),
+        // w trakcie pisania pokazujemy wpisany tekst — przeliczanie w locie zjadało cyfry
+        cenaValue: r.cenaEditing != null
+          ? r.cenaEditing
+          : (isBrutto ? Component.fmtU(Math.round(cenaU * vRate)) : Component.fmtU(cenaU)),
+        setCenaValue: (e) => {
+          const raw = e.target.value;
+          const typed = Component.u(raw);
+          const units = isBrutto ? Math.round(typed / vRate) : typed;
+          this.patch(coll, r.id, { cenaU: units, cena: Component.fmtU(units), cenaEditing: raw, bruttoEdit: null, nettoEdit: null });
+        },
+        commitCena: () => this.patch(coll, r.id, { cenaEditing: null }),
+        // rabat przy pozycji zawsze w złotówkach — mechanik negocjuje kwotami
+        rabatLabel: isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)',
+        rabatValue: r.rabatEditing != null
+          ? r.rabatEditing
+          : (discGr > 0
+            ? Component.grFmt(isBrutto
+              ? (r.manualG != null && r.manual === discGr ? r.manualG : Math.round(discGr * vRate))
+              : discGr)
+            : ''),
+        rabatError: (this.state.rowErrors || {})[key] || '',
+        hasRabatError: !!(this.state.rowErrors || {})[key],
+        setRowDiscount: (e) => this.setRowDiscount(coll, r.id, e.target.value),
+        commitRabat: () => this.patch(coll, r.id, { rabatEditing: null }),
         sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
         sumaValue: isBrutto
-          ? (r.bruttoEdit !== null && r.bruttoEdit !== undefined ? r.bruttoEdit : Component.fmt(c.gross))
-          : (r.nettoEdit !== null && r.nettoEdit !== undefined ? r.nettoEdit : Component.fmt(c.net)),
+          ? (r.bruttoEdit != null ? r.bruttoEdit : Component.fmt(c.gross))
+          : (r.nettoEdit != null ? r.nettoEdit : Component.fmt(c.net)),
         setSumaValue: isBrutto
           ? (e) => this.patch(coll, r.id, { bruttoEdit: e.target.value })
           : (e) => this.patch(coll, r.id, { nettoEdit: e.target.value, bruttoEdit: null }),
+        commitSuma: () => {
+          if (isBrutto) {
+            if (r.bruttoEdit == null) return;
+            backCalc(Math.round(Component.gr(r.bruttoEdit) * 100 / (100 + Component.rowVat(r))));
+          } else {
+            if (r.nettoEdit == null) return;
+            backCalc(Component.gr(r.nettoEdit));
+          }
+        },
         setName: (e) => this.patch(coll, r.id, { name: e.target.value }),
         setUnit: set('unit'),
         setQty: set('qty'),
-        setCena: set('cena'),
         setVat: set('vat'),
-        setRabat: set('rabat'),
         setBrutto: (e) => this.patch(coll, r.id, { bruttoEdit: e.target.value }),
         remove: () => this.setState((s) => {
           const next = s[coll].filter((x) => x.id !== r.id);
@@ -495,9 +1243,9 @@ class Component extends DCLogic {
     });
   }
 
-  sumOf(coll) {
+  sumOf(coll, per) {
     const t = this.state[coll].reduce((a, r) => {
-      const c = this.calc(r);
+      const c = this.calc(r, (per || {})[Component.rowKey(coll, r)] || 0);
       return { net: a.net + c.net, gross: a.gross + c.gross, rabat: a.rabat + c.rabat };
     }, { net: 0, gross: 0, rabat: 0 });
     const brutto = this.state.valueMode === 'brutto';
@@ -696,8 +1444,9 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
-    const sumU = this.sumOf('uslugi');
-    const sumT = this.sumOf('towary');
+    const q = this.quoteCalc();
+    const sumU = this.sumOf('uslugi', q.per);
+    const sumT = this.sumOf('towary', q.per);
     const net = sumU._n + sumT._n;
     const gross = sumU._g + sumT._g;
     const rabatAmt = sumU._r + sumT._r;
@@ -720,17 +1469,18 @@ class Component extends DCLogic {
       };
     } catch (e) {}
     return {
-      showRabat: s.showRabat,
-      rabatBg: s.showRabat ? 'var(--tk-brand-soft-2)' : 'transparent',
-      rabatIcon: s.showRabat ? '-webkit-mask-image:url(../assets/icons/i-close.svg);mask-image:url(../assets/icons/i-close.svg)' : '',
-      toggleRabat: () => this.setState((st) => ({ showRabat: !st.showRabat })),
-      posMinWidth: s.showRabat ? '1520px' : '1350px',
-      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.showRabat ? ' 154px' : '') + ' 154px 36px',
-      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + (s.showRabat ? ' 154px' : '') + ' 154px 36px',
+      showRabat: !!s.discount,
+      // pola kwotowe w modalu rabatu: zaznacz przy wejściu, Enter zatwierdza
+      selectOnFocus: (e) => e.target.select && e.target.select(),
+      commitOnEnter: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
+      discount: this.discountVals(q),
+      posMinWidth: s.discount ? '1520px' : '1350px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
       segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
       segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
-      pickNetto: () => this.setState({ valueMode: 'netto' }),
-      pickBrutto: () => this.setState({ valueMode: 'brutto' }),
+      pickNetto: () => this.switchValueMode('netto'),
+      pickBrutto: () => this.switchValueMode('brutto'),
       uslugaUnits: Component.USLUGA_UNITS,
       towarUnits: Component.TOWAR_UNITS,
       vats: Component.VATS,
@@ -742,8 +1492,8 @@ class Component extends DCLogic {
         chan('sms', 'SMS', 'Klient otrzyma powiadomienie o wycenie na numer telefonu przypisany do zlecenia', false),
         chan('mail', 'E-mail', 'Klient otrzyma wiadomość z odnośnikiem do wyceny na skrzynkę e-mail przypisaną do zlecenia', true),
       ],
-      uslugi: this.buildRows('uslugi', false),
-      towary: this.buildRows('towary', true),
+      uslugi: this.buildRows('uslugi', false, q.per),
+      towary: this.buildRows('towary', true, q.per),
       addUsluga: () => this.setState((st) => ({ uslugi: st.uslugi.concat([Component.mkRow(st.nextU, null, false)]), nextU: st.nextU + 1 })),
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null, docDayMap: null }),
