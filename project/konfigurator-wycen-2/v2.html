@@ -325,7 +325,7 @@ window.__resources = {
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onBlur="{{ row.commitCena }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
@@ -410,7 +410,7 @@ window.__resources = {
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.kosztLabel }}</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onBlur="{{ row.commitKoszt }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Jednostka select -->
@@ -448,7 +448,7 @@ window.__resources = {
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onBlur="{{ row.commitCena }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
@@ -525,13 +525,12 @@ window.__resources = {
       <!-- Summary card -->
       <div style="background: var(--grey-6); border-radius: 10px; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; justify-content: center; border-width: 1px; border-style: solid; border-color: var(--tk-border)">
         <sc-if value="{{ discount.off }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:flex-start;padding-bottom:10px;">
+          <div style="display:flex;justify-content:flex-start;">
             <button type="button" onClick="{{ discount.add }}" style="font-family: var(--font-sans); font-weight: 400; font-size: 15px; line-height: 22px; border: 0; background: transparent; color: var(--zilo-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px" style-hover="background:var(--zilo-primary-5);">
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
               Rabat
             </button>
           </div>
-          <div style="height:1px;background:var(--grey-4);margin-bottom:4px;"></div>
         </sc-if>
         <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
@@ -561,6 +560,7 @@ window.__resources = {
           </sc-if>
           </div>
         </sc-if>
+        <div style="height:1px;background:var(--grey-4);margin:-2px 0;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
           <span style="color:var(--grey-1);">Suma netto:</span>
           <span style="color:var(--grey-1);font-weight:400;">{{ totalNettoDisplay }} zł</span>
@@ -578,7 +578,7 @@ window.__resources = {
   </main>
 
   <sc-if value="{{ discount.open }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(10,11,41,0.45)">
+    <div data-disc-modal onKeyDown="{{ discount.keys }}" style="position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(10,11,41,0.45)">
       <div onClick="{{ discount.cancel }}" style="position:absolute;inset:0;"></div>
       <div style="position:relative;width:100%;max-width:620px;background:var(--tk-surface);border-radius:20px;box-shadow:0 24px 60px rgba(10,11,41,0.24);display:flex;flex-direction:column;overflow:hidden">
 
@@ -601,7 +601,7 @@ window.__resources = {
           </div>
 
           <div style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Na co · {{ discount.baseCaption }}</span>
+            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Na co</span>
             <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px">
               <sc-for list="{{ discount.scopes }}" as="sc" hint-placeholder-count="3">
                 <div onClick="{{ sc.pick }}" style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid {{ sc.border }};border-radius:10px;background:{{ sc.bg }};opacity:{{ sc.opacity }};cursor:{{ sc.cursor }};transition:border-color 150ms, background 150ms">
@@ -622,7 +622,7 @@ window.__resources = {
               <label class="z-input-cell" style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;overflow:hidden;cursor:text">
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                   <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ discount.fieldLabel }}</div>
-                  <input class="z-input" type="text" inputMode="decimal" value="{{ discount.value }}" onChange="{{ discount.setValue }}" onInput="{{ discount.setValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                  <input data-disc-amount class="z-input" type="text" inputMode="decimal" value="{{ discount.value }}" onChange="{{ discount.setValue }}" onInput="{{ discount.setValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
                 </div>
               </label>
             </div>
@@ -773,7 +773,7 @@ window.__resources = {
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
 class Component extends DCLogic {
   static mkRobocizna(id) {
-    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', manual: null, unit: 'Sztuka', vat: '23', bruttoEditing: null, rabatEditing: null, openField: null };
+    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', cenaU: 0, manual: null, manualG: null, unit: 'Sztuka', vat: '23', bruttoEditing: null, cenaEditing: null, rabatEditing: null, openField: null };
   }
   static rawGroups() {
     let list = null;
@@ -847,33 +847,66 @@ class Component extends DCLogic {
     return raw ? (Number(raw.pct) || 0) : 0;
   }
 
-  static priceFromCost(koszt, grupa) {
-    const base = Component.parseNum(koszt);
-    return Component.fmt(base * (1 + Component.groupPct(grupa) / 100));
+  // narzut warsztatu liczony na jednostkach, bez zaokrąglania do grosza po drodze
+  static priceUFromCostU(kosztU, grupa) {
+    return Math.round(kosztU * (100 + Component.groupPct(grupa)) / 100);
+  }
+
+  // jedna funkcja pisze cenę: kanoniczne jednostki + lustro tekstowe
+  static pricePatch(units) { return { cenaU: units, cena: Component.fmtU(units) }; }
+  static costPatch(units, vat) {
+    return {
+      kosztU: units,
+      koszt: Component.fmtU(units),
+      kosztBrutto: Component.fmtU(Math.round(units * (100 + Component.parseNum(vat || '23')) / 100)),
+    };
+  }
+
+  // wiersze z zewnątrz (zapisane wyceny, import, postMessage) mają tylko teksty
+  static withUnits(r) {
+    const out = Object.assign({}, r);
+    if (out.cenaU == null) out.cenaU = Component.u(out.cena);
+    if ('koszt' in out && out.kosztU == null) out.kosztU = Component.u(out.koszt);
+    return out;
   }
 
   static normalizeTowar(r) {
-    const out = Object.assign({}, r);
+    const out = Component.withUnits(r);
     const def = Component.defaultGroup();
     if (!out.grupa && def) out.grupa = def.value;
     const pct = Component.groupPct(out.grupa);
-    let kosztNet = Component.parseNum(out.koszt);
     // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży i narzutu grupy,
     // żeby „Cena zakupu brutto", grupa cenowa i cena netto były spójne.
-    if (!(kosztNet > 0)) {
-      kosztNet = Component.parseNum(out.cena) / (1 + pct / 100);
-      out.koszt = Component.fmt(kosztNet);
-    }
-    if (out.kosztBrutto == null || Component.parseNum(out.kosztBrutto) === 0) {
-      out.kosztBrutto = Component.fmt(kosztNet * (1 + Component.parseNum(out.vat || '23') / 100));
-    }
+    if (!(out.kosztU > 0)) out.kosztU = Math.round(out.cenaU * 100 / (100 + pct));
+    Object.assign(out, Component.costPatch(out.kosztU, out.vat));
     return out;
   }
 
   static mkTowar(id) {
     const def = Component.defaultGroup();
-    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', koszt: '0,00', kosztBrutto: '0,00', manual: null, priceTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, rabatEditing: null, openField: null };
+    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', cenaU: 0, koszt: '0,00', kosztU: 0, kosztBrutto: '0,00', manual: null, manualG: null, priceTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, cenaEditing: null, kosztEditing: null, rabatEditing: null, openField: null };
   }
+  // Kwoty (wartość pozycji, rabat, sumy) trzymamy w GROSZACH, a cenę jednostkową
+  // i cenę zakupu w JEDNOSTKACH 1/10000 zł — cztery miejsca po przecinku, bo cena
+  // wyliczana wstecz z wartości nie mieści się w groszu (104,07 / 12 = 8,6725).
+  // Pola tekstowe `cena`, `koszt`, `kosztBrutto` zostają w stanie wyłącznie jako
+  // lustro do wyświetlania i dla artboardów — liczenie ich nie czyta.
+  static U = 10000;
+
+  static u(v) { return Math.round(Component.parseNum(v) * Component.U); }
+  static uOf(r, field) {
+    const key = field === 'koszt' ? 'kosztU' : 'cenaU';
+    return r[key] != null ? r[key] : Component.u(r[field]);
+  }
+  static fmtU(units) {
+    // równe grosze pokazujemy z dwoma miejscami, ułamek grosza z czterema
+    return units % 100 === 0
+      ? Component.fmt(units / Component.U)
+      : String(units / Component.U).replace('.', ',');
+  }
+  // jednostki → grosze (wartość pozycji): mnożymy ilość na pełnej precyzji
+  static baseFromU(qty, units) { return Math.round(Component.parseNum(qty) * units / 100); }
+
   static parseNum(v) {
     if (v == null || v === '') return 0;
     const n = parseFloat(String(v).replace(/\s/g, '').replace(',', '.'));
@@ -986,13 +1019,13 @@ class Component extends DCLogic {
     const beforeShown = isBrutto ? calc.beforeGross : calc.before;
     const discShown = isBrutto ? (calc.beforeGross - calc.gross) : calc.disc;
 
+    // Etykieta rabatu kwotowego nie powtarza liczby: wpisane 100,00 zł brutto
+    // przy mieszanym VAT schodzi jako 100,01 i dwie kwoty obok siebie wyglądały
+    // jak błąd. Kwota jest jedna — ta policzona, obok chipa (§4.2).
     const label = (() => {
       if (!d) return '';
-      if (d.custom) return 'Rabat kwotowy · ' + scopeLabel[d.scope];
-      const v = Component.parseNum(d.value);
-      return 'Rabat ' + (d.mode === 'pct'
-        ? Component.fmt(v).replace(',00', '') + '%'
-        : Component.grFmt(Component.gr(d.value)) + ' zł' + (d.unit === 'gross' ? ' brutto' : ' netto'))
+      if (d.custom || d.mode === 'amt') return 'Rabat kwotowy · ' + scopeLabel[d.scope];
+      return 'Rabat ' + Component.fmt(Component.parseNum(d.value)).replace(',00', '') + '%'
         + ' · ' + scopeLabel[d.scope];
     })();
 
@@ -1030,6 +1063,19 @@ class Component extends DCLogic {
       remove: () => this.discountRemove(),
 
       open: !!draft,
+      keys: (e) => {
+        if (!this.state.discountDraft) return;
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (this.discountValidate(this.state.discountDraft).ok) this.discountSave();
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();          // inaczej ESC zamyka cały konfigurator
+          this.setState({ discountDraft: null });
+        }
+      },
       isEdit: !!(draft && draft.editing),
       title: draft && draft.editing ? 'Edytuj rabat' : 'Rabat',
       segNetto: unitNet ? 'true' : 'false',
@@ -1054,7 +1100,6 @@ class Component extends DCLogic {
           },
         };
       }),
-      baseCaption: unitNet ? 'kwoty netto' : 'kwoty brutto',
       isPercent: !!draft && draft.mode === 'pct',
       segPercent: draft && draft.mode === 'pct' ? 'true' : 'false',
       segAmount: draft && draft.mode === 'amt' ? 'true' : 'false',
@@ -1116,7 +1161,7 @@ class Component extends DCLogic {
     if (txt === '') {
       delete errs[key];
       this.setState({ rowErrors: errs });
-      this._patchRow(collection, id, { manual: 0, rabatEditing: '' });
+      this._patchRow(collection, id, { manual: 0, manualG: null, rabatEditing: '' });
       return;
     }
     if (!/^\d*[.,]?\d*$/.test(txt)) {
@@ -1135,7 +1180,9 @@ class Component extends DCLogic {
     }
     delete errs[key];
     this.setState({ rowErrors: errs });
-    this._patchRow(collection, id, { manual: net, rabatEditing: txt });
+    // 5,00 zł brutto to 4,07 netto, a z powrotem 5,01 — pamiętamy, co wpisano,
+    // żeby pole nie „poprawiało" mechanikowi kwoty po przeliczeniu
+    this._patchRow(collection, id, { manual: net, manualG: isBrutto ? Component.gr(txt) : null, rabatEditing: txt });
   }
 
   discountMode(mode) {
@@ -1158,8 +1205,19 @@ class Component extends DCLogic {
     });
   }
 
+  focusDiscountAmount() {
+    let tries = 0;
+    const go = () => {
+      const el = typeof document !== 'undefined' && document.querySelector('[data-disc-amount]');
+      if (el) { el.focus(); try { el.select(); } catch (_) {} return; }
+      if (tries++ < 10) setTimeout(go, 30);
+    };
+    setTimeout(go, 0);
+  }
+
   openDiscount(isEdit) {
     const st = this.state;
+    this.focusDiscountAmount();
     const unit = st.valueMode === 'brutto' ? 'gross' : 'net';
     const base = (scope) => Component.scopeBase(st, scope);
     if (!isEdit || !st.discount) {
@@ -1200,8 +1258,8 @@ class Component extends DCLogic {
       discount: next,
       discountDraft: null,
       discountScopeLast: next.scope,
-      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null })),
-      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null })),
+      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
     }));
   }
 
@@ -1211,7 +1269,7 @@ class Component extends DCLogic {
     this.discountTrack('quote_discount_removed', { scope: st.discount.scope, source: source || 'row_x' });
     const snapshot = {
       discount: st.discount,
-      manual: Component.allRows(st).map((r) => ({ k: r._k, m: r.manual == null ? null : r.manual })),
+      manual: Component.allRows(st).map((r) => ({ k: r._k, m: r.manual == null ? null : r.manual, g: r.manualG == null ? null : r.manualG })),
     };
     // usunięcie kasuje też ręczne kwoty — inaczej kolumna znika, a rabat dalej się liczy
     this.setState((x) => ({
@@ -1219,8 +1277,8 @@ class Component extends DCLogic {
       discountDraft: null,
       discountUndo: snapshot,
       discountToast: true,
-      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null })),
-      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null })),
+      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
     }));
     if (this.__discToast) clearTimeout(this.__discToast);
     this.__discToast = setTimeout(() => this.setState({ discountToast: false, discountUndo: null }), 7000);
@@ -1231,7 +1289,7 @@ class Component extends DCLogic {
     if (!snap) return;
     const back = (list, coll) => (list || []).map((r) => {
       const hit = snap.manual.filter((x) => x.k === Component.rowKey(coll, r))[0];
-      return Object.assign({}, r, { manual: hit ? hit.m : null });
+      return Object.assign({}, r, { manual: hit ? hit.m : null, manualG: hit ? hit.g : null });
     });
     if (this.__discToast) clearTimeout(this.__discToast);
     this.setState((x) => ({
@@ -1248,8 +1306,8 @@ class Component extends DCLogic {
     if (!d || !d.origin) return;
     this.setState((x) => ({
       discount: Object.assign({}, d.origin, { custom: false, origin: null }),
-      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null })),
-      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null })),
+      robociznas: (x.robociznas || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
+      towars: (x.towars || []).map((r) => Object.assign({}, r, { manual: null, manualG: null })),
     }));
   }
 
@@ -1267,7 +1325,7 @@ class Component extends DCLogic {
       const inNew = scope === 'all'
         || (scope === 'uslugi' && coll === 'robociznas')
         || (scope === 'towary' && coll === 'towars');
-      return Object.assign({}, r, { manual: inNew ? (calc.per[Component.rowKey(coll, r)] || 0) : null });
+      return Object.assign({}, r, { manual: inNew ? (calc.per[Component.rowKey(coll, r)] || 0) : null, manualG: null });
     });
     if (d.custom && !outOfScope) return;
     this.setState((x) => ({
@@ -1290,7 +1348,7 @@ class Component extends DCLogic {
   static gr(v) { return Math.round(Component.parseNum(v) * 100); }
 
   static rowBase(r) {
-    return Math.round(Component.parseNum(r.qty) * Component.gr(r.cena));
+    return Component.baseFromU(r.qty, Component.uOf(r, 'cena'));
   }
 
   static rowVat(r) { return Component.parseNum(r.vat); }
@@ -1474,7 +1532,7 @@ class Component extends DCLogic {
       // Zakładka Wyceny trzyma przypisanie w polu `person`, konfigurator czyta `osoba` —
       // normalizujemy w obie strony, żeby round-trip nie gubił osoby.
       const withOsoba = (r) => {
-        const out = withId(r);
+        const out = Component.withUnits(withId(r));
         const who = out.osoba || out.person || '';
         return Object.assign({}, out, { osoba: who, person: who });
       };
@@ -1571,6 +1629,8 @@ class Component extends DCLogic {
 
   _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat, discGr) {
     const rowKey = Component.rowKey(collection, r);
+    const cenaU = Component.uOf(r, 'cena');
+    const kosztU = Component.uOf(r, 'koszt');
     const openField = r.openField;
 
     const unitOpen  = openField === 'unit';
@@ -1606,11 +1666,12 @@ class Component extends DCLogic {
       } else {
         newBase = wNetGr + (discGr || 0);    // rabat kwotowy zostaje bez zmian
       }
-      return Object.assign({}, x, {
-        cena: Component.fmtPrice(newBase / 100 / q),
+      // jednostki 1/10000 zł: 104,07 zł przy 12 szt. to cena 8,6725, nie 8,67
+      return Object.assign({}, x, Component.pricePatch(Math.round(newBase * 100 / q)), {
         priceTouched: true,
         nettoEditing: null,
         bruttoEditing: null,
+        cenaEditing: null,
       });
     });
     const commitNetto = () => {
@@ -1631,10 +1692,10 @@ class Component extends DCLogic {
       indeks: r.indeks || '',
       producent: r.producent || '',
       czas: r.czas != null ? r.czas : '0',
-      koszt: r.koszt != null ? r.koszt : '0,00',
-      kosztBrutto: (r.kosztBrutto != null ? r.kosztBrutto : '0,00') + ' zł',
+      koszt: Component.fmtU(kosztU),
+      kosztBrutto: Component.fmtU(Math.round(kosztU * (100 + Component.rowVat(r)) / 100)) + ' zł',
       qty: r.qty,
-      cena: r.cena,
+      cena: Component.fmtU(cenaU),
       // rabat przy pozycji zawsze w złotówkach — mechanik negocjuje kwotami
       rabatLabel: isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)',
       // w trakcie pisania pokazujemy dokładnie to, co wpisano — inaczej po
@@ -1643,7 +1704,9 @@ class Component extends DCLogic {
         ? r.rabatEditing
         : ((discGr || 0) > 0
           ? Component.grFmt(isBrutto
-            ? Math.round((discGr || 0) * (100 + Component.rowVat(r)) / 100)
+            ? (r.manualG != null && r.manual === discGr
+              ? r.manualG                                   // kwota wpisana w brutto
+              : Math.round((discGr || 0) * (100 + Component.rowVat(r)) / 100))
             : (discGr || 0))
           : ''),
       rabatError: (this.state.rowErrors || {})[rowKey + ':disc'] || '',
@@ -1655,30 +1718,43 @@ class Component extends DCLogic {
       setIndeks: set('indeks'),
       setProducent: set('producent'),
       setCzas: set('czas'),
-      setKoszt: set('koszt'),
+
       setQty:    set('qty'),
-      setCena:   set('cena'),
+
       setBruttoInput: set('bruttoEditing'),
       commitBrutto,
 
       // Przełącznik Netto / Brutto — jedna komórka ceny, zakupu i wartości
       cenaLabel: isBrutto ? 'Cena brutto (zł)' : 'Cena netto (zł)',
-      cenaValue: isBrutto ? Component.fmt(Component.parseNum(r.cena) * vRate) : r.cena,
-      setCenaValue: isBrutto
-        ? (e) => this._patchRow(collection, r.id, { cena: Component.fmt(Component.parseNum(e.target.value) / vRate), priceTouched: true })
-        : (e) => this._patchRow(collection, r.id, { cena: e.target.value, priceTouched: true }),
+      // w trakcie pisania pokazujemy wpisany tekst — przeliczone brutto w locie
+      // zjadało cyfry (250 robiło się 2,00)
+      cenaValue: r.cenaEditing != null
+        ? r.cenaEditing
+        : (isBrutto ? Component.fmtU(Math.round(cenaU * vRate)) : Component.fmtU(cenaU)),
+      setCenaValue: (e) => {
+        const raw = e.target.value;
+        const typed = Component.u(raw);
+        const units = isBrutto ? Math.round(typed / vRate) : typed;
+        this._patchRow(collection, r.id, Object.assign(Component.pricePatch(units), {
+          priceTouched: true,
+          cenaEditing: raw,
+        }));
+      },
+      commitCena: () => this._patchRow(collection, r.id, { cenaEditing: null }),
       kosztLabel: isBrutto ? 'Zakup brutto (zł)' : 'Zakup netto (zł)',
-      kosztValue: isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00'),
+      kosztValue: r.kosztEditing != null
+        ? r.kosztEditing
+        : (isBrutto ? Component.fmtU(Math.round(kosztU * vRate)) : Component.fmtU(kosztU)),
       setKosztValue: (e) => {
-        const val = Component.parseNum(e.target.value);
-        const kosztNet = isBrutto ? val / vRate : val;
-        const patch = isBrutto
-          ? { kosztBrutto: e.target.value, koszt: Component.fmtPrice(kosztNet) }
-          : { koszt: e.target.value, kosztBrutto: Component.fmt(kosztNet * vRate) };
+        const raw = e.target.value;
+        const typed = Component.u(raw);
+        const units = isBrutto ? Math.round(typed / vRate) : typed;
+        const patch = Object.assign(Component.costPatch(units, r.vat), { kosztEditing: raw });
         // cena sprzedaży idzie za zakupem, dopóki mechanik jej nie nadpisał
-        if (!r.priceTouched) patch.cena = Component.priceFromCost(Component.fmt(kosztNet), r.grupa);
+        if (!r.priceTouched) Object.assign(patch, Component.pricePatch(Component.priceUFromCostU(units, r.grupa)));
         this._patchRow(collection, r.id, patch);
       },
+      commitKoszt: () => this._patchRow(collection, r.id, { kosztEditing: null }),
       sumaLabel: isBrutto ? 'Wartość brutto (zł)' : 'Wartość netto (zł)',
       setSumaInput: isBrutto ? set('bruttoEditing') : set('nettoEditing'),
       commitSuma: isBrutto ? commitBrutto : commitNetto,
@@ -2052,15 +2128,13 @@ class Component extends DCLogic {
             const def = Component.defaultGroup();
             const grupa = def ? def.value : '';
             const vat = it.vat || '23';
-            const kosztNet = Component.parseNum(it.cena);
-            return Object.assign(row, {
+            const kosztU = Component.u(it.cena);
+            return Object.assign(row, Component.costPatch(kosztU, vat),
+              Component.pricePatch(grupa ? Component.priceUFromCostU(kosztU, grupa) : kosztU), {
               name: it.name || '',
               indeks: it.indeks || '',
               producent: it.producent || '',
-              koszt: it.cena || '0,00',
-              kosztBrutto: Component.fmt(kosztNet * (1 + Component.parseNum(vat) / 100)),
               grupa: grupa,
-              cena: grupa ? Component.priceFromCost(it.cena, grupa) : (it.cena || '0,00'),
               vat: vat,
               msrp: it.msrp || '',
               doc: doc.nr,
@@ -2140,6 +2214,8 @@ class Component extends DCLogic {
   }, true);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
+    // otwarty modal rabatu zamyka się sam — ESC nie może iść dalej do kalendarza
+    if (document.querySelector('[data-disc-modal]')) return;
     var pk = document.querySelector('[data-doc-picker] [aria-label="Zamknij"]');
     if (pk) { pk.click(); return; }
     post('esc');

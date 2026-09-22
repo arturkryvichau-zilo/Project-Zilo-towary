@@ -7026,8 +7026,11 @@ class Component extends DCLogic {
   }
 
   qcalc(r) {
-    const q = this.qnum(r.qty), c = this.qnum(r.cena), v = this.qnum(r.vat);
-    const base = q * c;
+    const q = this.qnum(r.qty), v = this.qnum(r.vat);
+    // konfigurator trzyma cenę jednostkową jako int w 1/10000 zł (cenaU);
+    // tekst `cena` jest tylko lustrem, więc bierzemy liczbę, gdy jest
+    const c = r.cenaU != null ? r.cenaU / 10000 : this.qnum(r.cena);
+    const base = Math.round(q * c * 100) / 100;
     // konfigurator trzyma rabat pozycji jako kwotę netto w groszach (r.manual);
     // starsze wyceny miały procent w r.rabat — czytamy oba, żeby nic nie przepadło
     const cut = r.manual != null
