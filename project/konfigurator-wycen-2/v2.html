@@ -524,7 +524,7 @@ window.__resources = {
         </sc-if>
         <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;">
-            <span style="color:var(--grey-2);">Suma netto przed rabatem:</span>
+            <span style="color:var(--grey-2);">{{ discount.beforeLabel }}</span>
             <span style="color:var(--grey-2);font-weight:400;">{{ discount.beforeDisplay }} zł</span>
           </div>
         </sc-if>
@@ -916,6 +916,11 @@ class Component extends DCLogic {
     })();
     const allNet = (st.robociznas || []).concat(st.towars || []).reduce((a, r) => a + Component.rowNet(r), 0);
     const allGross = (st.robociznas || []).concat(st.towars || []).reduce((a, r) => a + Component.rowGross(r), 0);
+    // brutto po rabacie liczone z pól przy pozycjach, żeby zgadzało się z sumą u dołu
+    const grossAfter = (st.robociznas || []).concat(st.towars || []).reduce((a, r) => {
+      const net = Component.rowNet(r) * (1 - Component.parseNum(r.rabat) / 100);
+      return a + net * (1 + Component.parseNum(r.vat) / 100);
+    }, 0);
 
     return {
       // ── podsumowanie ──
@@ -924,8 +929,10 @@ class Component extends DCLogic {
       label: d ? ('Rabat ' + (d.type === 'percent'
         ? Component.fmt(Component.parseNum(d.value)).replace(',00', '') + '%'
         : Component.fmt(Component.parseNum(d.value)) + ' zł') + ' · ' + scopeLabel[d.scope]) : '',
-      amountDisplay: Component.fmt(amount),
-      beforeDisplay: Component.fmt(netBefore),
+      // podsumowanie mówi w tej walucie, w której stoi wycena
+      beforeLabel: isBrutto ? 'Suma brutto przed rabatem:' : 'Suma netto przed rabatem:',
+      beforeDisplay: Component.fmt(isBrutto ? allGross : netBefore),
+      amountDisplay: Component.fmt(isBrutto ? Component.round2(allGross - grossAfter) : amount),
       add: () => this.openDiscount(null),
       edit: () => this.openDiscount(this.state.discount),
       remove: () => {
