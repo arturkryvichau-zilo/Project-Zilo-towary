@@ -628,8 +628,8 @@ window.__resources = {
               <span style="font-weight:400">− {{ discount.previewAmount }} zł</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px;line-height:22px;color:var(--grey-1)">
-              <span>Suma brutto po rabacie</span>
-              <span style="font-weight:500">{{ discount.previewGross }} zł</span>
+              <span>{{ discount.previewTotalLabel }}</span>
+              <span style="font-weight:500">{{ discount.previewTotal }} zł</span>
             </div>
           </div>
         </div>
@@ -971,10 +971,14 @@ class Component extends DCLogic {
         : (isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)'),
       overflow: overflow,
       overflowText: 'Rabat nie może być większy niż wartość zakresu',
+      // podgląd mówi w tej samej walucie co reszta popupu
       previewAmount: Component.fmt(isBrutto
         ? Component.round2(allGross - (allNet - draftAmountNet + draftVat))
         : draftAmountNet),
-      previewGross: Component.fmt(Component.round2(allNet - draftAmountNet + draftVat)),
+      previewTotalLabel: isBrutto ? 'Suma brutto po rabacie' : 'Suma netto po rabacie',
+      previewTotal: Component.fmt(isBrutto
+        ? Component.round2(allNet - draftAmountNet + draftVat)
+        : Component.round2(allNet - draftAmountNet)),
       canSave: draftValue > 0,
       saveOpacity: draftValue > 0 ? '1' : '0.5',
       saveCursor: draftValue > 0 ? 'pointer' : 'not-allowed',
