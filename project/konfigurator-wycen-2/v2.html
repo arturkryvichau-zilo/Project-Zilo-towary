@@ -1562,16 +1562,19 @@ class Component extends DCLogic {
     // Robocizna: name | osoba | jednostka | ilość | przeprac.czas | cena | vat | (rabat)? | wNetto | wBrutto | trash
     // Usługa ma dwa pola mniej niż towar (cena zakupu, grupa cenowa), więc jej wiersz
     // kończy się wcześniej — kolumny obu list nie stoją w jednej linii i tak ma zostać.
-    const robGridStyle =
-      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px' +
-      (showRabat ? ' 154px' : '') +
-      ' 154px 30px;gap:8px;align-items:center;';
+    // Kolumny stałe kurczą się do 104 px, zanim wiersz zacznie się przewijać —
+    // inaczej towar z kolumną rabatu wychodził poza kartę, a usługa jeszcze nie.
+    const gridStyle = (fixed) => {
+      const min = 220 + fixed * 104 + 30 + (fixed + 1) * 8;
+      return 'display:grid;min-width:' + min + 'px;grid-template-columns:minmax(220px,1fr) ' +
+        new Array(fixed).fill('minmax(104px,154px)').join(' ') + ' 30px;gap:8px;align-items:center;';
+    };
     // Towar: name | indeks | producent | koszt | jednostka | ilość | cena | (rabat)? | wNetto | trash
     // Grupa cenowa jest jedna na całą wycenę i stoi w sekcji klienta, nie w wierszu.
-    const towGridStyle =
-      'display:grid;min-width:1500px;grid-template-columns:minmax(320px,1fr) 154px 154px 154px 154px 154px 154px' +
-      (showRabat ? ' 154px' : '') +
-      ' 154px 30px;gap:8px;align-items:center;';
+    // usługa: osoba, czas, jednostka, ilość, cena, (rabat)?, wartość
+    const robGridStyle = gridStyle(6 + (showRabat ? 1 : 0));
+    // towar: indeks, producent, zakup, jednostka, ilość, cena, (rabat)?, wartość
+    const towGridStyle = gridStyle(7 + (showRabat ? 1 : 0));
 
     const robociznas = this.state.robociznas.map((r) =>
       this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat)
