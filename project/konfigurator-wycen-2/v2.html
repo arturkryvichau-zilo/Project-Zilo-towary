@@ -330,7 +330,8 @@ window.__resources = {
             </label>
             <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
                   <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                     <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.rabatLabel }}</div>
                     <input class="z-input" type="text" inputMode="decimal" placeholder="—" value="{{ row.rabatValue }}" onChange="{{ row.setRowDiscount }}" onInput="{{ row.setRowDiscount }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
@@ -444,8 +445,7 @@ window.__resources = {
               </div>
             </label>
             <!-- Cena netto (edytowalne) -->
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
@@ -1051,6 +1051,7 @@ class Component extends DCLogic {
           },
         };
       }),
+      baseCaption: unitNet ? 'kwoty netto' : 'kwoty brutto',
       isPercent: !!draft && draft.mode === 'pct',
       segPercent: draft && draft.mode === 'pct' ? 'true' : 'false',
       segAmount: draft && draft.mode === 'amt' ? 'true' : 'false',
@@ -1103,11 +1104,11 @@ class Component extends DCLogic {
     const row = (st[collection] || []).filter((r) => r.id === id)[0];
     if (!row || !st.discount) return;
     const errs = Object.assign({}, st.rowErrors || {});
-    const key = id + ':disc';
+    const key = Component.rowKey(collection, { id: id }) + ':disc';
     const isBrutto = st.valueMode === 'brutto';
     const txt = String(raw == null ? '' : raw).trim();
 
-    this.discountGoCustom(id);
+    this.discountGoCustom(collection, id);
 
     if (txt === '') {
       delete errs[key];
@@ -1206,7 +1207,7 @@ class Component extends DCLogic {
     this.discountTrack('quote_discount_removed', { scope: st.discount.scope, source: source || 'row_x' });
     const snapshot = {
       discount: st.discount,
-      manual: Component.allRows(st).map((r) => ({ id: r.id, m: r.manual == null ? null : r.manual })),
+      manual: Component.allRows(st).map((r) => ({ k: r._k, m: r.manual == null ? null : r.manual })),
     };
     // usunięcie kasuje też ręczne kwoty — inaczej kolumna znika, a rabat dalej się liczy
     this.setState((x) => ({
@@ -1224,8 +1225,8 @@ class Component extends DCLogic {
   discountUndo() {
     const snap = this.state.discountUndo;
     if (!snap) return;
-    const back = (list) => (list || []).map((r) => {
-      const hit = snap.manual.filter((x) => x.id === r.id)[0];
+    const back = (list, coll) => (list || []).map((r) => {
+      const hit = snap.manual.filter((x) => x.k === Component.rowKey(coll, r))[0];
       return Object.assign({}, r, { manual: hit ? hit.m : null });
     });
     if (this.__discToast) clearTimeout(this.__discToast);
@@ -1233,8 +1234,8 @@ class Component extends DCLogic {
       discount: snap.discount,
       discountUndo: null,
       discountToast: false,
-      robociznas: back(x.robociznas),
-      towars: back(x.towars),
+      robociznas: back(x.robociznas, 'robociznas'),
+      towars: back(x.towars, 'towars'),
     }));
   }
 
@@ -1249,19 +1250,20 @@ class Component extends DCLogic {
   }
 
   // pierwsza ręczna zmiana przy pozycji „zamraża" rabat: z % robi się zestaw kwot
-  discountGoCustom(rowId) {
+  discountGoCustom(collection, rowId) {
     const st = this.state;
     const d = st.discount;
     if (!d) return;
     const calc = Component.computeQuote(st);
-    const outOfScope = Component.rowsInScope(st, d.scope).filter((r) => r.id === rowId).length === 0;
+    const key = Component.rowKey(collection, { id: rowId });
+    const outOfScope = Component.rowsInScope(st, d.scope).filter((r) => r._k === key).length === 0;
     const scope = outOfScope ? 'all' : d.scope;
-    const freeze = (list) => (list || []).map((r) => {
+    const freeze = (list, coll) => (list || []).map((r) => {
       if (r.manual != null) return r;
       const inNew = scope === 'all'
-        || (scope === 'uslugi' && (st.robociznas || []).indexOf(r) !== -1)
-        || (scope === 'towary' && (st.towars || []).indexOf(r) !== -1);
-      return Object.assign({}, r, { manual: inNew ? (calc.per[r.id] || 0) : null });
+        || (scope === 'uslugi' && coll === 'robociznas')
+        || (scope === 'towary' && coll === 'towars');
+      return Object.assign({}, r, { manual: inNew ? (calc.per[Component.rowKey(coll, r)] || 0) : null });
     });
     if (d.custom && !outOfScope) return;
     this.setState((x) => ({
@@ -1270,8 +1272,8 @@ class Component extends DCLogic {
         scope: scope,
         origin: d.origin || { mode: d.mode, value: d.value, unit: d.unit, scope: d.scope },
       }),
-      robociznas: freeze(x.robociznas),
-      towars: freeze(x.towars),
+      robociznas: freeze(x.robociznas, 'robociznas'),
+      towars: freeze(x.towars, 'towars'),
     }));
   }
 
@@ -1293,13 +1295,21 @@ class Component extends DCLogic {
     return Component.rowBase(r) + Math.round(Component.rowBase(r) * Component.rowVat(r) / 100);
   }
 
+  // Numeracja id jest osobna dla usług i towarów, więc usługa i towar potrafią
+  // mieć to samo id. Wszystko, co liczy rabat per pozycja, kluczuje po _k.
+  static rowKey(collection, r) { return (collection === 'towars' ? 't:' : 'u:') + r.id; }
+
+  static tagRows(list, collection) {
+    return (list || []).map((r) => Object.assign({}, r, { _k: Component.rowKey(collection, r) }));
+  }
+
   static allRows(state) {
-    return (state.robociznas || []).concat(state.towars || []);
+    return Component.tagRows(state.robociznas, 'robociznas').concat(Component.tagRows(state.towars, 'towars'));
   }
 
   static rowsInScope(state, scope) {
-    if (scope === 'uslugi') return (state.robociznas || []).slice();
-    if (scope === 'towary') return (state.towars || []).slice();
+    if (scope === 'uslugi') return Component.tagRows(state.robociznas, 'robociznas');
+    if (scope === 'towary') return Component.tagRows(state.towars, 'towars');
     return Component.allRows(state);
   }
 
@@ -1341,7 +1351,7 @@ class Component extends DCLogic {
   static distribute(R, rows) {
     const out = {};
     const base = rows.reduce((s, r) => s + Component.rowBase(r), 0);
-    rows.forEach((r) => { out[r.id] = 0; });
+    rows.forEach((r) => { out[r._k] = 0; });
     if (base <= 0 || R <= 0) return out;
 
     let rest = R;
@@ -1349,9 +1359,9 @@ class Component extends DCLogic {
     rows.forEach((r) => {
       const exact = R * Component.rowBase(r) / base;
       const fl = Math.floor(exact);
-      out[r.id] = fl;
+      out[r._k] = fl;
       rest -= fl;
-      parts.push({ id: r.id, frac: exact - fl, base: Component.rowBase(r) });
+      parts.push({ id: r._k, frac: exact - fl, base: Component.rowBase(r) });
     });
     parts.sort((a, b) => (b.frac - a.frac) || (b.base - a.base));
     for (let i = 0; i < rest; i += 1) out[parts[i % parts.length].id] += 1;
@@ -1365,7 +1375,7 @@ class Component extends DCLogic {
     const rows = Component.allRows(state);
     const per = {};
     rows.forEach((r) => {
-      per[r.id] = r.manual == null ? 0 : Math.min(r.manual, Component.rowBase(r));
+      per[r._k] = r.manual == null ? 0 : Math.min(r.manual, Component.rowBase(r));
     });
 
     const info = { amount: 0, clamped: false, base: 0, custom: !!(d && d.custom), splitSum: 0 };
@@ -1375,21 +1385,21 @@ class Component extends DCLogic {
         info.amount = calc.amount; info.clamped = calc.clamped; info.base = calc.base;
         const inScope = Component.rowsInScope(state, d.scope);
         const split = Component.distribute(calc.amount, inScope);
-        inScope.forEach((r) => { per[r.id] += split[r.id]; });
-        info.splitSum = inScope.reduce((a, r) => a + split[r.id], 0);
+        inScope.forEach((r) => { per[r._k] += split[r._k]; });
+        info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
       } else {
         info.base = Component.scopeBase(state, d.scope);
-        info.amount = Component.rowsInScope(state, d.scope).reduce((a, r) => a + per[r.id], 0);
+        info.amount = Component.rowsInScope(state, d.scope).reduce((a, r) => a + per[r._k], 0);
         info.splitSum = info.amount;
       }
     }
 
     const before = rows.reduce((a, r) => a + Component.rowBase(r), 0);
     const beforeGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
-    const disc = rows.reduce((a, r) => a + per[r.id], 0);
+    const disc = rows.reduce((a, r) => a + per[r._k], 0);
     const net = before - disc;
     const vat = rows.reduce((a, r) => {
-      const rowNet = Component.rowBase(r) - per[r.id];
+      const rowNet = Component.rowBase(r) - per[r._k];
       return a + Math.round(rowNet * Component.rowVat(r) / 100);
     }, 0);
     return { per: per, before: before, beforeGross: beforeGross, disc: disc, net: net, vat: vat, gross: net + vat, info: info };
@@ -1556,6 +1566,7 @@ class Component extends DCLogic {
   }
 
   _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat, discGr) {
+    const rowKey = Component.rowKey(collection, r);
     const openField = r.openField;
 
     const unitOpen  = openField === 'unit';
@@ -1627,9 +1638,9 @@ class Component extends DCLogic {
           ? Math.round((discGr || 0) * (100 + Component.rowVat(r)) / 100)
           : (discGr || 0))
         : '',
-      rabatError: (this.state.rowErrors || {})[r.id + ':disc'] || '',
-      hasRabatError: !!(this.state.rowErrors || {})[r.id + ':disc'],
-      rabatBorder: (this.state.rowErrors || {})[r.id + ':disc'] ? 'var(--red)' : 'var(--grey-3)',
+      rabatError: (this.state.rowErrors || {})[rowKey + ':disc'] || '',
+      hasRabatError: !!(this.state.rowErrors || {})[rowKey + ':disc'],
+      rabatBorder: (this.state.rowErrors || {})[rowKey + ':disc'] ? 'var(--red)' : 'var(--grey-3)',
       setRowDiscount: (e) => this.setRowDiscount(collection, r.id, e.target.value),
       setName:   set('name'),
       setIndeks: set('indeks'),
@@ -1917,10 +1928,10 @@ class Component extends DCLogic {
     // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd
     const calc = Component.computeQuote(this.state);
     const robociznas = this.state.robociznas.map((r) =>
-      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat, calc.per[r.id])
+      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat, calc.per[Component.rowKey('robociznas', r)])
     );
     const towars = this.state.towars.map((r) =>
-      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat, calc.per[r.id])
+      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat, calc.per[Component.rowKey('towars', r)])
     );
     // Totals per-list + global
     const sumBy = (list, key) => list.reduce((s, x) => s + x[key], 0);
