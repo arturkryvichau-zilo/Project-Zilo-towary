@@ -4467,11 +4467,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </button>
                     <sc-if value="{{ evd.wyc.historyOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
-                      <div style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
-                        <div>Wysłano</div><div>Status</div><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><div style="text-align:right">Razem</div><div></div>
+                      <div style="min-width:760px;display:grid;grid-template-columns:{{ evd.wyc.historyGrid }};gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
+                        <div>Wysłano</div><div>Status</div><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><sc-if value="{{ evd.wyc.hasHistoryRabat }}" hint-placeholder-val="{{ false }}"><div style="text-align:right">Rabat</div></sc-if><div style="text-align:right">Razem</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.history }}" as="h" hint-placeholder-count="1">
-                        <div data-flash="{{ h.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:minmax(150px,1.2fr) 150px 110px 110px 120px 130px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }};animation:{{ h.flashAnim }}">
+                        <div data-flash="{{ h.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:{{ evd.wyc.historyGrid }};gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }};animation:{{ h.flashAnim }}">
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text)">{{ h.date }}</span>
                           <span style="position:relative">
                             <button type="button" onClick="{{ h.toggleMenu }}" style="display:inline-flex;align-items:center;gap:8px;padding:4px 8px 4px 12px;border:0;border-radius:4px;cursor:pointer;font-family:inherit;font-size:14px;line-height:22px;background:{{ h.statusBg }};color:{{ h.statusColor }};transition:background 150ms">
@@ -4490,6 +4490,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.u }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.t }}</span>
+                          <sc-if value="{{ evd.wyc.hasHistoryRabat }}" hint-placeholder-val="{{ false }}">
+                            <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.rabat }}</span>
+                          </sc-if>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.amt }}</span>
                           <span style="display:flex;justify-content:flex-end;gap:4px">
                             <button type="button" onClick="{{ h.issueFv }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Wystaw fakturę" aria-label="Wystaw fakturę"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat"></span></button>
@@ -5352,6 +5355,7 @@ class Component extends DCLogic {
       const rows = this.quoteRows(st);
       const uB = rows.uslugi.reduce((a, x) => a + x.c.gross, 0);
       const tB = rows.towary.reduce((a, x) => a + x.c.gross, 0);
+      const rabatSent = rows.uslugi.concat(rows.towary).reduce((a, x) => a + (x.c.cut || 0), 0);
       this.setState((prev) => {
         const quotes = Object.assign({}, prev.quotes, { [id]: { state: st, items: d.items || [] } });
         let history = prev.offerHistory;
@@ -5364,6 +5368,8 @@ class Component extends DCLogic {
             u: this.moneyPl(uB),
             t: this.moneyPl(tB),
             amt: this.moneyPl(uB + tB),
+            rabat: rabatSent > 0 ? this.moneyPl(rabatSent) : '',
+            discount: (st && st.discount) || null,
           };
           history = Object.assign({}, prev.offerHistory, { [id]: (prev.offerHistory[id] || []).concat([entry]) });
         }
@@ -7089,6 +7095,11 @@ class Component extends DCLogic {
       historyOpen: s.historyOpen !== false,
       historyArrow: s.historyOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
       toggleHistory: () => this.setState((st) => ({ historyOpen: st.historyOpen === false })),
+      hasHistoryRabat: hist.some((h) => !!h.rabat),
+      // kolumna rabatu dochodzi dopiero, gdy któraś wysłana oferta go miała
+      historyGrid: hist.some((h) => !!h.rabat)
+        ? 'minmax(150px,1.2fr) 150px 110px 110px 110px 120px 130px'
+        : 'minmax(150px,1.2fr) 150px 110px 110px 120px 130px',
       history: hist.map((h, i) => {
         const tone = (label) => (label === 'Zaakceptowana'
           ? { bg: 'var(--tk-ok-soft)', color: 'var(--tk-ok-fg)' }
@@ -7098,11 +7109,12 @@ class Component extends DCLogic {
         return {
           date: h.date,
           status: h.status,
+          rabat: h.rabat || '—',
           statusColor: cur.color,
           statusBg: cur.bg,
           flashAnim: isFlash ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
           flashMark: isFlash ? '1' : '0',
-          issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary }),
+          issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary, discount: h.discount || null }),
           // przywrócenie wrzuca pozycje tej oferty z powrotem do wyceny wizyty
           restoreOffer: () => {
             this.setState((st) => {
@@ -7267,7 +7279,7 @@ class Component extends DCLogic {
         seller: this.garageSeller(),
         uslugi: uslugi,
         towary: towary,
-        discount: st.discount || null,
+        discount: (fromOffer ? ((opts && opts.discount) || null) : (st.discount || null)),
         uwagi: uwagi,
       };
       src += '#fv=' + encodeURIComponent(JSON.stringify(payload));
@@ -7453,6 +7465,8 @@ class Component extends DCLogic {
         u: t.uslugi || '0,00 zł',
         t: t.towary || '0,00 zł',
         amt: t.gross || '0,00 zł',
+        rabat: t.rabat || '',
+        discount: d.discount || st.discount || null,
         uslugi: keep(st.uslugi, false),
         towary: keep(st.towary, true),
       };
