@@ -322,21 +322,15 @@ window.__resources = {
               </div>
             </label>
             <!-- Cena netto (edytowalne) -->
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.cenaLabel }}</div>
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
-              <sc-if value="{{ row.showMarkup }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size:11px;line-height:16px;color:var(--grey-3);padding:0 2px">{{ row.markupLabel }}</span>
-              </sc-if>
-            </div>
             <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-                <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
+              <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
                   <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                     <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.rabatLabel }}</div>
                     <input class="z-input" type="text" inputMode="decimal" placeholder="—" value="{{ row.rabatValue }}" onChange="{{ row.setRowDiscount }}" onInput="{{ row.setRowDiscount }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
@@ -457,10 +451,6 @@ window.__resources = {
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
-              <sc-if value="{{ row.showMarkup }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size:11px;line-height:16px;color:var(--grey-3);padding:0 2px">{{ row.markupLabel }}</span>
-              </sc-if>
-            </div>
             <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
@@ -1657,9 +1647,6 @@ class Component extends DCLogic {
       setCenaValue: isBrutto
         ? (e) => this._patchRow(collection, r.id, { cena: Component.fmt(Component.parseNum(e.target.value) / vRate), priceTouched: true })
         : (e) => this._patchRow(collection, r.id, { cena: e.target.value, priceTouched: true }),
-      // narzut warsztatu wiąże zakup z ceną, dopóki ceny nikt nie wpisał ręcznie
-      showMarkup: includeIndeks && !r.priceTouched && Component.groupPct(r.grupa) > 0,
-      markupLabel: 'narzut +' + Component.groupPct(r.grupa) + '%',
       kosztLabel: isBrutto ? 'Zakup brutto (zł)' : 'Zakup netto (zł)',
       kosztValue: isBrutto ? (r.kosztBrutto != null ? r.kosztBrutto : '0,00') : (r.koszt != null ? r.koszt : '0,00'),
       setKosztValue: (e) => {
