@@ -7211,8 +7211,14 @@ class Component extends DCLogic {
       const client = CLIENTS.filter((c) => c.cars.some((car) => car.plate === ev.plate))[0] || null;
       const invoices = this.state.clientInvoice || {};
       const st = ((this.state.quotes || {})[visitId] || {}).state || {};
+      const keepManual = !!(st.discount && st.discount.custom);
       const trim = (list, withProducent) => (list || []).map((r) => {
+        // Cena jedzie z pełną precyzją, a kwoty rabatu przy pozycjach tylko wtedy,
+        // gdy rabat był rozpisany ręcznie. Przy rabacie „10% na wszystko" wystarczy
+        // sam obiekt rabatu — kwoty policzą się na miejscu i nie zdublują.
         const row = { name: r.name || '', unit: r.unit || 'Sztuka', qty: r.qty || '1', cena: r.cena || '0,00', vat: r.vat || '23' };
+        if (r.cenaU != null) row.cenaU = r.cenaU;
+        if (keepManual && r.manual != null) row.manual = r.manual;
         if (withProducent) row.producent = r.producent || '';
         return row;
       });
@@ -7261,6 +7267,7 @@ class Component extends DCLogic {
         seller: this.garageSeller(),
         uslugi: uslugi,
         towary: towary,
+        discount: st.discount || null,
         uwagi: uwagi,
       };
       src += '#fv=' + encodeURIComponent(JSON.stringify(payload));
@@ -7380,8 +7387,14 @@ class Component extends DCLogic {
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const client = CLIENTS.filter((c) => c.cars.some((car) => car.plate === ev.plate))[0] || null;
       const st = ((this.state.quotes || {})[visitId] || {}).state || {};
+      const keepManual = !!(st.discount && st.discount.custom);
       const trim = (list, withProducent) => (list || []).map((r) => {
+        // Cena jedzie z pełną precyzją, a kwoty rabatu przy pozycjach tylko wtedy,
+        // gdy rabat był rozpisany ręcznie. Przy rabacie „10% na wszystko" wystarczy
+        // sam obiekt rabatu — kwoty policzą się na miejscu i nie zdublują.
         const row = { name: r.name || '', unit: r.unit || 'Sztuka', qty: r.qty || '1', cena: r.cena || '0,00', vat: r.vat || '23' };
+        if (r.cenaU != null) row.cenaU = r.cenaU;
+        if (keepManual && r.manual != null) row.manual = r.manual;
         if (withProducent) row.producent = r.producent || '';
         return row;
       });
@@ -7399,6 +7412,7 @@ class Component extends DCLogic {
         client: { name: (client && client.name) || ev.client || '', phone: (client && client.phone) || ev.phone || '', email: (client && client.email) || '' },
         uslugi: uslugi,
         towary: towary,
+        discount: st.discount || null,
         notatka: st.notatka || '',
         komentarz: st.komentarz || '',
       };
@@ -7422,8 +7436,14 @@ class Component extends DCLogic {
       const now = new Date();
       const M = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
       const st = d.state || {};
+      const keepManual = !!(st.discount && st.discount.custom);
       const keep = (list, withProducent) => (list || []).map((r) => {
+        // Cena jedzie z pełną precyzją, a kwoty rabatu przy pozycjach tylko wtedy,
+        // gdy rabat był rozpisany ręcznie. Przy rabacie „10% na wszystko" wystarczy
+        // sam obiekt rabatu — kwoty policzą się na miejscu i nie zdublują.
         const row = { name: r.name || '', unit: r.unit || 'Sztuka', qty: r.qty || '1', cena: r.cena || '0,00', vat: r.vat || '23' };
+        if (r.cenaU != null) row.cenaU = r.cenaU;
+        if (keepManual && r.manual != null) row.manual = r.manual;
         if (withProducent) row.producent = r.producent || '';
         return row;
       });

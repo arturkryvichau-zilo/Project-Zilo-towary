@@ -1223,7 +1223,7 @@ static draftNet(state, draft) {
     return Component.applyPick({
       sellerOverride: null,
       valueMode: 'netto',
-      discount: null,
+      discount: p.discount || null,   // rabat przyniesiony z wyceny
       discountDraft: null,
       discountUndo: null,
       discountToast: false,
