@@ -592,7 +592,7 @@ window.__resources = {
           </div>
 
           <div style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--grey-2)">NA CO · {{ discount.baseCaption }}</span>
+            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Na co · {{ discount.baseCaption }}</span>
             <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px">
               <sc-for list="{{ discount.scopes }}" as="sc" hint-placeholder-count="3">
                 <div onClick="{{ sc.pick }}" style="display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid {{ sc.border }};border-radius:10px;background:{{ sc.bg }};opacity:{{ sc.opacity }};cursor:{{ sc.cursor }};transition:border-color 150ms, background 150ms">
@@ -604,7 +604,7 @@ window.__resources = {
           </div>
 
           <div style="display:flex;flex-direction:column;gap:8px">
-            <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--grey-2)">ILE</span>
+            <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--grey-1)">Ile</span>
             <div style="display:flex;align-items:stretch;gap:12px">
               <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Rodzaj rabatu" style="flex:none;--seg-h:56px">
                 <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segPercent }}" onClick="{{ discount.pickPercent }}">%</button>
