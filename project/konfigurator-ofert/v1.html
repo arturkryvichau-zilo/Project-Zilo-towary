@@ -196,8 +196,13 @@ window.__resources = {
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px">
           <button type="button" class="o-add" onClick="{{ addUsluga }}"><i></i>Nowa usługa</button>
-          <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">Suma netto: <b>{{ sumU.net }}</b></span><span class="o-sum">Suma VAT: <b>{{ sumU.vat }}</b></span><span class="o-sum">Suma brutto: <b>{{ sumU.gross }}</b></span>
+          <span style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;padding-right:46px">
+            <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
+              <span style="white-space:nowrap">Rabat: <span style="font-weight:500">{{ sumU.rabat }}</span></span>
+            </sc-if>
+            <span style="white-space:nowrap">Suma netto: <span style="font-weight:500">{{ sumU.net }}</span></span>
+            <span style="white-space:nowrap">Suma VAT: <span style="font-weight:500">{{ sumU.vat }}</span></span>
+            <span style="white-space:nowrap">Suma brutto: <span style="font-weight:500">{{ sumU.gross }}</span></span>
           </span>
         </div>
 
@@ -219,8 +224,13 @@ window.__resources = {
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:24px">
           <span style="display:flex;align-items:center;gap:8px"><button type="button" class="o-add" onClick="{{ addTowar }}"><i></i>Nowy towar</button><button type="button" class="o-add" onClick="{{ openDocPicker }}"><i></i>Towar z zamówienia</button></span>
-          <span style="display:flex;gap:24px;padding-right:46px">
-            <span class="o-sum">Suma netto: <b>{{ sumT.net }}</b></span><span class="o-sum">Suma VAT: <b>{{ sumT.vat }}</b></span><span class="o-sum">Suma brutto: <b>{{ sumT.gross }}</b></span>
+          <span style="display:flex;align-items:center;gap:32px;font-size:14px;line-height:20px;color:var(--grey-1);font-weight:400;padding-right:46px">
+            <sc-if value="{{ discount.on }}" hint-placeholder-val="{{ false }}">
+              <span style="white-space:nowrap">Rabat: <span style="font-weight:500">{{ sumT.rabat }}</span></span>
+            </sc-if>
+            <span style="white-space:nowrap">Suma netto: <span style="font-weight:500">{{ sumT.net }}</span></span>
+            <span style="white-space:nowrap">Suma VAT: <span style="font-weight:500">{{ sumT.vat }}</span></span>
+            <span style="white-space:nowrap">Suma brutto: <span style="font-weight:500">{{ sumT.gross }}</span></span>
           </span>
         </div>
 
@@ -1251,6 +1261,7 @@ static draftNet(state, draft) {
     const brutto = this.state.valueMode === 'brutto';
     return {
       net: Component.money(t.net), vat: Component.money(t.gross - t.net), gross: Component.money(t.gross),
+      rabat: Component.money(t.rabat),
       label: brutto ? 'Suma brutto' : 'Suma netto',
       value: brutto ? Component.money(t.gross) : Component.money(t.net),
       _n: t.net, _g: t.gross, _r: t.rabat,
