@@ -1,9 +1,10 @@
+# pliki robocze testów — nie należą do wdrożenia
 .DS_Store
+.claude/settings.local.json
 .vercel/
 node_modules/
-.claude/settings.local.json
-# pliki robocze testów — nie należą do wdrożenia
+project/*-dc.js
 project/*-test.js
-project/wyc-logic.js
 project/main-dc.js
 project/v2-dc.js
+project/wyc-logic.js
