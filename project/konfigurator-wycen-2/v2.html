@@ -576,10 +576,6 @@ window.__resources = {
         <div style="flex:none;display:flex;align-items:center;gap:16px;padding:24px 30px 16px;">
           <div style="flex:1;min-width:0;display:flex;align-items:center;gap:16px">
             <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">{{ discount.title }}</span>
-            <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości" style="flex:none">
-              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segNetto }}" onClick="{{ discount.pickNettoMode }}">Netto</button>
-              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segBrutto }}" onClick="{{ discount.pickBruttoMode }}">Brutto</button>
-            </div>
           </div>
           <button type="button" onClick="{{ discount.cancel }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
             <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M1 1l10 10M11 1L1 11"></path></svg>
@@ -587,6 +583,13 @@ window.__resources = {
         </div>
 
         <div style="flex:none;padding:0 30px 20px;display:flex;flex-direction:column;gap:20px">
+
+          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px">
+            <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości" style="flex:none">
+              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segNetto }}" onClick="{{ discount.pickNettoMode }}">Netto</button>
+              <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ discount.segBrutto }}" onClick="{{ discount.pickBruttoMode }}">Brutto</button>
+            </div>
+          </div>
 
           <div style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:11px;line-height:16px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--grey-2)">NA CO · {{ discount.baseCaption }}</span>
