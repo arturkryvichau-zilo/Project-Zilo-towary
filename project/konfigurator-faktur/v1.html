@@ -842,14 +842,28 @@ static computeQuote(state, override) {
       }
     }
 
+    // Sumy to suma kwot pozycji, każda domknięta osobno — tak jak sumRows na
+    // produkcji. Podatek jest resztą po obu stronach, więc netto + VAT = brutto
+    // trzyma się z definicji, także dla pozycji wpisanych w brutto.
     const before = rows.reduce((a, r) => a + Component.rowBase(r), 0);
     const beforeGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
     const disc = rows.reduce((a, r) => a + per[r._k], 0);
-    const net = before - disc;
-    const vat = rows.reduce((a, r) => {
-      const rowNet = Component.rowBase(r) - per[r._k];
-      return a + Math.round(rowNet * Component.rowVat(r) / 100);
-    }, 0);
+    const perRow = rows.map((r) => {
+      const t = Component.recalcRow(Component.priceRow(r));
+      const baseGr = Math.round(t.netTotal * 100);
+      const cut = Math.min(per[r._k] || 0, baseGr);
+      if (cut <= 0) return { net: baseGr, vat: Math.round(t.taxAmount * 100) };
+      const netA = Component.roundHalfUp((baseGr - cut) / 100, 2);
+      const grossCut = (info.perGross || {})[r._k] != null
+        ? info.perGross[r._k]
+        : (r.manualG != null && r.manual === cut ? r.manualG : null);
+      const grossA = grossCut != null
+        ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - grossCut) / 100, 2)
+        : Component.roundHalfUp(netA * (1 + Component.rowVat(r) / 100), 2);
+      return { net: Math.round(netA * 100), vat: Math.round(Component.roundHalfUp(grossA - netA, 2) * 100) };
+    });
+    const net = perRow.reduce((a, x) => a + x.net, 0);
+    const vat = perRow.reduce((a, x) => a + x.vat, 0);
     return { per: per, before: before, beforeGross: beforeGross, disc: disc, net: net, vat: vat, gross: net + vat, info: info };
   }
 
@@ -1778,11 +1792,14 @@ static draftNet(state, draft) {
       try { window.addEventListener('message', this.__sellerHook); } catch (err) {}
     }
     const q = this.quoteCalc();
-    const sumU = this.sumOf('uslugi', q.per, q.info.perGross);
-    const sumT = this.sumOf('towary', q.per, q.info.perGross);
-    const net = sumU._n + sumT._n;
-    const gross = sumU._g + sumT._g;
-    const rabatAmt = sumU._rg + sumT._rg;      // rabat brutto — tak pokazujemy go klientowi
+    // Sumy grup liczymy BEZ rabatu — obok stoi cena i ilość pozycji, więc
+    // ilość × cena musi zgadzać się z sumą grupy. Rabat schodzi wyłącznie
+    // w panelu podsumowania, tak samo jak w konfiguratorze wyceny.
+    const sumU = this.sumOf('uslugi');
+    const sumT = this.sumOf('towary');
+    const net = q.net / 100;                  // sumy dokumentu — już po rabacie
+    const gross = q.gross / 100;
+    const rabatAmt = (q.beforeGross - q.gross) / 100;   // rabat brutto
 
     // lista ogranicza się do firm przypisanych do tego klienta; firma zaciągnięta
     // z GUS dochodzi jako bieżący wybór, żeby jej nazwa miała gdzie się pokazać
