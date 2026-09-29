@@ -1792,18 +1792,6 @@ class Component extends DCLogic {
     const isBrutto = this.state.valueMode === 'brutto';
     const vRate = 1 + Component.parseNum(r.vat) / 100;
     // „Wartość" = ile ma wyjść ta pozycja; przeliczamy cenę jednostkową wstecz
-    // Edycja wartości pozycji: kotwica TOTAL, cena jednostkowa pochodna.
-    // Przy nadanym rabacie pole pokazuje kwotę po rabacie, więc wpisana wartość
-    // jest najpierw cofana o rabat tej pozycji — inaczej rabat naliczyłby się dwa razy.
-    const rabatOffset = (raw) => {
-      const typed = Component.parseNum(raw);
-      if (!(discGr > 0)) return typed;
-      const cut = shown === 'gross'
-        ? Component.roundHalfUp((discGr / 100) * (1 + Component.rowVat(r) / 100), 2)
-        : discGr / 100;
-      return Component.roundHalfUp(typed + cut, 2);
-    };
-
     const row = {
       id: r.id,
 
@@ -1895,7 +1883,7 @@ class Component extends DCLogic {
         const raw = e.target.value;
         this._patchRow(collection, r.id, (x) => {
           const next = Object.assign({}, x, {
-            priceSide: shown, totalPrice: Component.pl(rabatOffset(raw)), anchor: 'total', priceTouched: true,
+            priceSide: shown, totalPrice: raw, anchor: 'total', priceTouched: true,
           });
           next.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(next)));
           return next;
@@ -1917,9 +1905,10 @@ class Component extends DCLogic {
       bruttoValue:   Component.fmt(cmp.brutto),
       // bez rabatu pole pokazuje liczbę użytkownika (albo kwotę pochodną drugiej strony),
       // z rabatem — wartość po rabacie
-      sumaValue: (discGr > 0)
-        ? Component.fmt(isBrutto ? cmp.brutto : cmp.netto)
-        : Component.pl(Component.shownTotalPrice(pr, shown)),
+      // Wartość pozycji jest kwotą PRZED rabatem — to liczba, którą mechanik wpisuje
+      // i kontroluje. Rabat schodzący z tej pozycji stoi w kolumnie obok, a kwoty po
+      // rabacie są w sumach pod listą.
+      sumaValue: Component.pl(Component.shownTotalPrice(pr, shown)),
       netto:  cmp.netto,
       brutto: cmp.brutto,
       vatAmt: cmp.vatAmt,
