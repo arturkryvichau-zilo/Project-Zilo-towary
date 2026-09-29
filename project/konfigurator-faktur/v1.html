@@ -1438,16 +1438,6 @@ static draftNet(state, draft) {
       const withTotal = (x) => Object.assign({}, x, {
         totalPrice: Component.pl(Component.deriveTotalPrice(Component.priceRow(x))),
       });
-      // pole wartości pokazuje kwotę po rabacie, więc wpisaną liczbę cofamy o rabat
-      // tej pozycji — inaczej rabat naliczyłby się drugi raz
-      const rabatOffset = (raw) => {
-        const typed = Component.num(raw);
-        if (!(discGr > 0)) return typed;
-        const cut = shown === 'gross'
-          ? Component.roundHalfUp((discGr / 100) * vRate, 2)
-          : discGr / 100;
-        return Component.roundHalfUp(typed + cut, 2);
-      };
       const row = {
         name: r.name, unit: r.unit, qty: r.qty, cena: Component.pl(Component.shownUnitPrice(pr, shown)), vat: r.vat,
         netto: Component.fmt(c.net),
@@ -1488,17 +1478,15 @@ static draftNet(state, draft) {
         setRowDiscount: (e) => this.setRowDiscount(coll, r.id, e.target.value),
         commitRabat: () => this.patch(coll, r.id, { rabatEditing: null }),
         sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
-        // bez rabatu pole pokazuje liczbę użytkownika (albo kwotę pochodną), z rabatem
-        // — wartość po rabacie
-        sumaValue: discGr > 0
-          ? Component.fmt(isBrutto ? c.gross : c.net)
-          : Component.pl(Component.shownTotalPrice(pr, shown)),
+        // Wartość pozycji to kwota PRZED rabatem — rabat ma własną kolumnę,
+        // a kwoty po rabacie są w sumach pod listą.
+        sumaValue: Component.pl(Component.shownTotalPrice(pr, shown)),
         // Edycja wartości pozycji: kotwica TOTAL, cena jednostkowa staje się pochodną.
         setSumaValue: (e) => {
           const raw = e.target.value;
           this.patch(coll, r.id, (x) => {
             const next = Object.assign({}, x, {
-              priceSide: shown, totalPrice: Component.pl(rabatOffset(raw)), anchor: 'total',
+              priceSide: shown, totalPrice: raw, anchor: 'total',
             });
             next.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(next)));
             return next;
