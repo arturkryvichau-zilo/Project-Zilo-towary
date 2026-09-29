@@ -1009,7 +1009,7 @@ class Component extends DCLogic {
   }
   // kwota rabatu pozycji przychodzi z computeQuote (grosze) — wiersz sam
   // niczego nie liczy, żeby podgląd i wycena szły jedną drogą
-  static computeRow(r, discGr) {
+  static computeRow(r, discGr, discGrossGr) {
     const t = Component.recalcRow(Component.priceRow(r));
     const baseGr = Math.round(t.netTotal * 100);
     const rabatGr = Math.min(discGr || 0, baseGr);
@@ -1022,11 +1022,16 @@ class Component extends DCLogic {
       };
     }
     const netto = Component.roundHalfUp((baseGr - rabatGr) / 100, 2);
-    const brutto = Component.roundHalfUp(netto * (1 + Component.rowVat(r) / 100), 2);
+    // rabat wpisany w brutto: z brutto pozycji schodzi dokładnie jego część,
+    // bez ponownego zaokrąglania przez netto
+    const brutto = discGrossGr != null
+      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - discGrossGr) / 100, 2)
+      : Component.roundHalfUp(netto * (1 + Component.rowVat(r) / 100), 2);
     return {
       netto: netto,
       brutto: brutto,
       rabatAmt: rabatGr / 100,
+      rabatGrossAmt: (discGrossGr != null ? discGrossGr : Math.round((Math.round(t.grossTotal * 100) - Math.round(brutto * 100)))) / 100,
       vatAmt: Component.roundHalfUp(brutto - netto, 2),
       nettoGr: Math.round(netto * 100),
       rabatGr: rabatGr,
@@ -1507,19 +1512,25 @@ class Component extends DCLogic {
 
   // rozdział kwoty R na pozycje: proporcjonalnie + reszta groszowa
   static distribute(R, rows) {
+    return Component.distributeBy(R, rows, Component.rowBase);
+  }
+
+  // rozdział kwoty R proporcjonalnie do wagi pozycji, z resztą groszową
+  // (largest remainder): suma części równa się R co do grosza
+  static distributeBy(R, rows, weightOf) {
     const out = {};
-    const base = rows.reduce((s, r) => s + Component.rowBase(r), 0);
+    const base = rows.reduce((s, r) => s + weightOf(r), 0);
     rows.forEach((r) => { out[r._k] = 0; });
     if (base <= 0 || R <= 0) return out;
 
     let rest = R;
     const parts = [];
     rows.forEach((r) => {
-      const exact = R * Component.rowBase(r) / base;
+      const exact = R * weightOf(r) / base;
       const fl = Math.floor(exact);
       out[r._k] = fl;
       rest -= fl;
-      parts.push({ id: r._k, frac: exact - fl, base: Component.rowBase(r) });
+      parts.push({ id: r._k, frac: exact - fl, base: weightOf(r) });
     });
     parts.sort((a, b) => (b.frac - a.frac) || (b.base - a.base));
     for (let i = 0; i < rest; i += 1) out[parts[i % parts.length].id] += 1;
@@ -1542,9 +1553,35 @@ class Component extends DCLogic {
         const calc = Component.discountAmount(state, d);
         info.amount = calc.amount; info.clamped = calc.clamped; info.base = calc.base;
         const inScope = Component.rowsInScope(state, d.scope);
-        const split = Component.distribute(calc.amount, inScope);
-        inScope.forEach((r) => { per[r._k] += split[r._k]; });
-        info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
+        if (d.mode === 'amt' && d.unit === 'gross') {
+          // Kwota wpisana w brutto schodzi z sumy brutto co do grosza: rozdzielamy ją
+          // po stronie brutto, a każdą część przeliczamy na netto stawką tej pozycji.
+          // Wcześniej szła przez proporcję netto/brutto całego zakresu — przy mieszanych
+          // stawkach wpisane 120,00 wracało jako 119,99 albo 120,01.
+          const bg = Component.scopeGross(state, d.scope);
+          const wantGross = Math.min(Component.gr(d.value), bg);
+          const splitG = Component.distributeBy(wantGross, inScope, Component.rowGross);
+          const perGross = {};
+          let net = 0;
+          inScope.forEach((r) => {
+            const cutGross = splitG[r._k];
+            const cutNet = Math.min(
+              Math.round(cutGross * 100 / (100 + Component.rowVat(r))),
+              Component.rowBase(r)
+            );
+            perGross[r._k] = cutGross;
+            per[r._k] += cutNet;
+            net += cutNet;
+          });
+          info.amount = net;
+          info.amountGross = wantGross;
+          info.perGross = perGross;
+          info.splitSum = net;
+        } else {
+          const split = Component.distribute(calc.amount, inScope);
+          inScope.forEach((r) => { per[r._k] += split[r._k]; });
+          info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
+        }
       } else {
         info.base = Component.scopeBase(state, d.scope);
         info.amount = Component.rowsInScope(state, d.scope).reduce((a, r) => a + per[r._k], 0);
@@ -1557,7 +1594,7 @@ class Component extends DCLogic {
     const before = rows.reduce((a, r) => a + Component.rowBase(r), 0);
     const beforeGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
     const disc = rows.reduce((a, r) => a + per[r._k], 0);
-    const perRow = rows.map((r) => Component.computeRow(r, per[r._k]));
+    const perRow = rows.map((r) => Component.computeRow(r, per[r._k], (info.perGross || {})[r._k]));
     const net = perRow.reduce((a, x) => a + x.nettoGr, 0);
     const vat = perRow.reduce((a, x) => a + Math.round(x.vatAmt * 100), 0);
     return { per: per, before: before, beforeGross: beforeGross, disc: disc, net: net, vat: vat, gross: net + vat, info: info };
@@ -1723,7 +1760,7 @@ class Component extends DCLogic {
     }));
   }
 
-  _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat, discGr) {
+  _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat, discGr, discGrossGr) {
     const rowKey = Component.rowKey(collection, r);
     // strona odsłonięta przełącznikiem; wiersz trzyma własną stronę wpisania
     const shown = this.state.valueMode === 'brutto' ? 'gross' : 'net';
@@ -1751,7 +1788,7 @@ class Component extends DCLogic {
     const set = (field) => (e) => this._patchRow(collection, r.id, { [field]: e.target.value });
 
     // Compute & brutto commit (back-calc cena from brutto)
-    const cmp = Component.computeRow(r, discGr || 0);
+    const cmp = Component.computeRow(r, discGr || 0, discGrossGr);
     const isBrutto = this.state.valueMode === 'brutto';
     const vRate = 1 + Component.parseNum(r.vat) / 100;
     // „Wartość" = ile ma wyjść ta pozycja; przeliczamy cenę jednostkową wstecz
@@ -1787,9 +1824,11 @@ class Component extends DCLogic {
         ? r.rabatEditing
         : ((discGr || 0) > 0
           ? Component.grFmt(isBrutto
-            ? (r.manualG != null && r.manual === discGr
-              ? r.manualG                                   // kwota wpisana w brutto
-              : Math.round((discGr || 0) * (100 + Component.rowVat(r)) / 100))
+            ? (discGrossGr != null
+              ? discGrossGr                                 // część rabatu wpisanego w brutto
+              : (r.manualG != null && r.manual === discGr
+                ? r.manualG                                 // kwota wpisana ręcznie w brutto
+                : Math.round((discGr || 0) * (100 + Component.rowVat(r)) / 100)))
             : (discGr || 0))
           : ''),
       rabatError: (this.state.rowErrors || {})[rowKey + ':disc'] || '',
@@ -2128,10 +2167,10 @@ class Component extends DCLogic {
     // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd
     const calc = Component.computeQuote(this.state);
     const robociznas = this.state.robociznas.map((r) =>
-      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat, calc.per[Component.rowKey('robociznas', r)])
+      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat, calc.per[Component.rowKey('robociznas', r)], (calc.info.perGross || {})[Component.rowKey('robociznas', r)])
     );
     const towars = this.state.towars.map((r) =>
-      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat, calc.per[Component.rowKey('towars', r)])
+      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat, calc.per[Component.rowKey('towars', r)], (calc.info.perGross || {})[Component.rowKey('towars', r)])
     );
     // Totals per-list + global
     const sumBy = (list, key) => list.reduce((s, x) => s + x[key], 0);
