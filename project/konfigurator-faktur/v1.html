@@ -772,19 +772,25 @@ static discountAmount(state, d) {
   }
 
 static distribute(R, rows) {
+    return Component.distributeBy(R, rows, Component.rowBase);
+  }
+
+  // rozdział kwoty R proporcjonalnie do wagi pozycji, z resztą groszową
+  // (largest remainder): suma części równa się R co do grosza
+  static distributeBy(R, rows, weightOf) {
     const out = {};
-    const base = rows.reduce((s, r) => s + Component.rowBase(r), 0);
+    const base = rows.reduce((s, r) => s + weightOf(r), 0);
     rows.forEach((r) => { out[r._k] = 0; });
     if (base <= 0 || R <= 0) return out;
 
     let rest = R;
     const parts = [];
     rows.forEach((r) => {
-      const exact = R * Component.rowBase(r) / base;
+      const exact = R * weightOf(r) / base;
       const fl = Math.floor(exact);
       out[r._k] = fl;
       rest -= fl;
-      parts.push({ id: r._k, frac: exact - fl, base: Component.rowBase(r) });
+      parts.push({ id: r._k, frac: exact - fl, base: weightOf(r) });
     });
     parts.sort((a, b) => (b.frac - a.frac) || (b.base - a.base));
     for (let i = 0; i < rest; i += 1) out[parts[i % parts.length].id] += 1;
@@ -805,9 +811,35 @@ static computeQuote(state, override) {
         const calc = Component.discountAmount(state, d);
         info.amount = calc.amount; info.clamped = calc.clamped; info.base = calc.base;
         const inScope = Component.rowsInScope(state, d.scope);
-        const split = Component.distribute(calc.amount, inScope);
-        inScope.forEach((r) => { per[r._k] += split[r._k]; });
-        info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
+        if (d.mode === 'amt' && d.unit === 'gross') {
+          // Kwota wpisana w brutto schodzi z sumy brutto co do grosza: rozdzielamy ją
+          // po stronie brutto, a każdą część przeliczamy na netto stawką tej pozycji.
+          // Wcześniej szła przez proporcję netto/brutto całego zakresu — przy mieszanych
+          // stawkach wpisane 120,00 wracało jako 119,99 albo 120,01.
+          const bg = Component.scopeGross(state, d.scope);
+          const wantGross = Math.min(Component.gr(d.value), bg);
+          const splitG = Component.distributeBy(wantGross, inScope, Component.rowGross);
+          const perGross = {};
+          let net = 0;
+          inScope.forEach((r) => {
+            const cutGross = splitG[r._k];
+            const cutNet = Math.min(
+              Math.round(cutGross * 100 / (100 + Component.rowVat(r))),
+              Component.rowBase(r)
+            );
+            perGross[r._k] = cutGross;
+            per[r._k] += cutNet;
+            net += cutNet;
+          });
+          info.amount = net;
+          info.amountGross = wantGross;
+          info.perGross = perGross;
+          info.splitSum = net;
+        } else {
+          const split = Component.distribute(calc.amount, inScope);
+          inScope.forEach((r) => { per[r._k] += split[r._k]; });
+          info.splitSum = inScope.reduce((a, r) => a + split[r._k], 0);
+        }
       } else {
         info.base = Component.scopeBase(state, d.scope);
         info.amount = Component.rowsInScope(state, d.scope).reduce((a, r) => a + per[r._k], 0);
@@ -1362,7 +1394,7 @@ static draftNet(state, draft) {
     });
   })();
 
-  calc(r, discGr) {
+  calc(r, discGr, discGrossGr) {
     const t = Component.recalcRow(Component.priceRow(r));
     const base = Math.round(t.netTotal * 100);
     const cut = Math.min(discGr || 0, base);
@@ -1371,8 +1403,11 @@ static draftNet(state, draft) {
       return { net: t.netTotal, gross: t.grossTotal, vat: t.taxAmount, rabat: 0, netGr: base, cutGr: 0 };
     }
     const net = Component.roundHalfUp((base - cut) / 100, 2);
-    const gross = Component.roundHalfUp(net * (1 + Component.rowVat(r) / 100), 2);
-    return { net: net, gross: gross, vat: Component.roundHalfUp(gross - net, 2), rabat: cut / 100, netGr: Math.round(net * 100), cutGr: cut };
+    // rabat wpisany w brutto schodzi z brutto pozycji co do grosza
+    const gross = discGrossGr != null
+      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - discGrossGr) / 100, 2)
+      : Component.roundHalfUp(net * (1 + Component.rowVat(r) / 100), 2);
+    return { net: net, gross: gross, vat: Component.roundHalfUp(gross - net, 2), rabat: cut / 100, netGr: Math.round(net * 100), cutGr: cut, cutGrossGr: discGrossGr != null ? discGrossGr : Math.round(t.grossTotal * 100) - Math.round(gross * 100) };
   }
 
   // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd w modalu
@@ -1388,11 +1423,12 @@ static draftNet(state, draft) {
     }));
   }
 
-  buildRows(coll, withProducent, per) {
+  buildRows(coll, withProducent, per, perGross) {
     const isBrutto = this.state.valueMode === 'brutto';
     return this.state[coll].map((r) => {
       const discGr = (per || {})[Component.rowKey(coll, r)] || 0;
-      const c = this.calc(r, discGr);
+      const discGrossGr = (perGross || {})[Component.rowKey(coll, r)];
+      const c = this.calc(r, discGr, discGrossGr);
       const key = Component.rowKey(coll, r) + ':disc';
       const set = (field) => (e) => this.patch(coll, r.id, { [field]: e.target.value });
       const vRate = 1 + Component.num(r.vat) / 100;
@@ -1442,7 +1478,9 @@ static draftNet(state, draft) {
           ? r.rabatEditing
           : (discGr > 0
             ? Component.grFmt(isBrutto
-              ? (r.manualG != null && r.manual === discGr ? r.manualG : Math.round(discGr * vRate))
+              ? (discGrossGr != null
+                ? discGrossGr
+                : (r.manualG != null && r.manual === discGr ? r.manualG : Math.round(discGr * vRate)))
               : discGr)
             : ''),
         rabatError: (this.state.rowErrors || {})[key] || '',
@@ -1491,9 +1529,9 @@ static draftNet(state, draft) {
     });
   }
 
-  sumOf(coll, per) {
+  sumOf(coll, per, perGross) {
     const t = this.state[coll].reduce((a, r) => {
-      const c = this.calc(r, (per || {})[Component.rowKey(coll, r)] || 0);
+      const c = this.calc(r, (per || {})[Component.rowKey(coll, r)] || 0, (perGross || {})[Component.rowKey(coll, r)]);
       return { net: a.net + c.net, gross: a.gross + c.gross, rabat: a.rabat + c.rabat };
     }, { net: 0, gross: 0, rabat: 0 });
     const brutto = this.state.valueMode === 'brutto';
@@ -1708,8 +1746,8 @@ static draftNet(state, draft) {
       try { window.addEventListener('message', this.__sellerHook); } catch (err) {}
     }
     const q = this.quoteCalc();
-    const sumU = this.sumOf('uslugi', q.per);
-    const sumT = this.sumOf('towary', q.per);
+    const sumU = this.sumOf('uslugi', q.per, q.info.perGross);
+    const sumT = this.sumOf('towary', q.per, q.info.perGross);
     const net = sumU._n + sumT._n;
     const gross = sumU._g + sumT._g;
     const rabatAmt = sumU._r + sumT._r;
@@ -1838,8 +1876,8 @@ static draftNet(state, draft) {
       uslugaUnits: Component.USLUGA_UNITS,
       towarUnits: Component.TOWAR_UNITS,
       vats: Component.VATS,
-      uslugi: this.buildRows('uslugi', false, q.per),
-      towary: this.buildRows('towary', true, q.per),
+      uslugi: this.buildRows('uslugi', false, q.per, q.info.perGross),
+      towary: this.buildRows('towary', true, q.per, q.info.perGross),
       addUsluga: () => this.setState((st) => ({ uslugi: st.uslugi.concat([Component.mkRow(st.nextU, null, false)]), nextU: st.nextU + 1 })),
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null, docDayMap: null }),
