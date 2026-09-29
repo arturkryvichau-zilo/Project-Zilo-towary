@@ -769,7 +769,7 @@ window.__resources = {
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
 class Component extends DCLogic {
   static mkRobocizna(id) {
-    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', manual: null, manualG: null, unit: 'Sztuka', vat: '23', rabatEditing: null, openField: null };
+    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', sumaEditing: null, manual: null, manualG: null, unit: 'Sztuka', vat: '23', rabatEditing: null, openField: null };
   }
   static rawGroups() {
     let list = null;
@@ -1022,21 +1022,64 @@ class Component extends DCLogic {
       };
     }
     const netto = Component.roundHalfUp((baseGr - rabatGr) / 100, 2);
-    // rabat wpisany w brutto: z brutto pozycji schodzi dokładnie jego część,
-    // bez ponownego zaokrąglania przez netto
-    const brutto = discGrossGr != null
-      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - discGrossGr) / 100, 2)
+    // Rabat wpisany w brutto — czy to kwota na całą wycenę, czy ręcznie przy pozycji
+    // (r.manualG) — schodzi z brutto pozycji co do grosza, bez ponownego zaokrąglania
+    // przez netto. Inaczej wpisane 25,00 zabierało 24,99.
+    const grossCut = discGrossGr != null
+      ? discGrossGr
+      : (r.manualG != null && r.manual === rabatGr ? r.manualG : null);
+    const brutto = grossCut != null
+      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - grossCut) / 100, 2)
       : Component.roundHalfUp(netto * (1 + Component.rowVat(r) / 100), 2);
     return {
       netto: netto,
       brutto: brutto,
       rabatAmt: rabatGr / 100,
-      rabatGrossAmt: (discGrossGr != null ? discGrossGr : Math.round((Math.round(t.grossTotal * 100) - Math.round(brutto * 100)))) / 100,
+      rabatGrossAmt: (grossCut != null ? grossCut : Math.round(t.grossTotal * 100) - Math.round(brutto * 100)) / 100,
       vatAmt: Component.roundHalfUp(brutto - netto, 2),
       nettoGr: Math.round(netto * 100),
       rabatGr: rabatGr,
     };
   }
+  // Ile rabatu zeszłoby z tej pozycji, gdyby jej wartość pozycji wynosiła `total`
+  // (po stronie `side`). Liczy to pełne przeliczenie wyceny, więc uwzględnia zakres,
+  // tryb rabatu i rozdział na pozostałe pozycje.
+  cutForTotal(collection, id, side, total) {
+    const st = this.state;
+    const swap = (list) => (list || []).map((x) => (x.id === id
+      ? Object.assign({}, x, { priceSide: side, anchor: 'total', totalPrice: String(total) })
+      : x));
+    const probe = Object.assign({}, st, {
+      robociznas: collection === 'robociznas' ? swap(st.robociznas) : st.robociznas,
+      towars: collection === 'towars' ? swap(st.towars) : st.towars,
+    });
+    const calc = Component.computeQuote(probe);
+    const key = Component.rowKey(collection, { id: id });
+    const net = calc.per[key] || 0;
+    if (side !== 'gross') return net / 100;
+    const gross = (calc.info.perGross || {})[key];
+    if (gross != null) return gross / 100;
+    const row = (collection === 'towars' ? probe.towars : probe.robociznas).filter((x) => x.id === id)[0];
+    const cmp = Component.computeRow(row, net, null);
+    return Component.roundHalfUp(cmp.rabatGrossAmt, 2);
+  }
+
+  // Wartość pozycji pokazuje kwotę PO rabacie, więc wpisana liczba jest celem po
+  // rabacie — wartość pozycji odtwarzamy z niej iteracyjnie, bo część rabatu zależy
+  // od wartości pozycji (rabat kwotowy rozdziela się proporcjonalnie).
+  baseForTarget(collection, id, side, targetRaw) {
+    const target = Component.parseNum(targetRaw);
+    if (!this.state.discount) return target;
+    let base = target;
+    for (let i = 0; i < 6; i += 1) {
+      const cut = this.cutForTotal(collection, id, side, base);
+      const next = Component.roundHalfUp(target + cut, 2);
+      if (Math.abs(next - base) < 0.005) { base = next; break; }
+      base = next;
+    }
+    return base;
+  }
+
   // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
   switchValueMode(mode) {
     this.setState({ valueMode: mode });
@@ -1882,6 +1925,9 @@ class Component extends DCLogic {
       setSumaInput: (e) => {
         const raw = e.target.value;
         this._patchRow(collection, r.id, (x) => {
+          // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
+          // pokazywać wpisywany tekst, inaczej pierwsza cyfra znika w przeliczeniu
+          if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
           const next = Object.assign({}, x, {
             priceSide: shown, totalPrice: raw, anchor: 'total', priceTouched: true,
           });
@@ -1892,6 +1938,16 @@ class Component extends DCLogic {
       // Domknięcie: cena jednostkowa zaokrągla się do 2 miejsc (tyle przyjmuje API),
       // a wartość przelicza się z tej ceny — pole pokazuje kwotę, która zostanie zapisana.
       commitSuma: () => this._patchRow(collection, r.id, (x) => {
+        if (x.sumaEditing != null) {
+          const base = this.baseForTarget(collection, r.id, shown, x.sumaEditing);
+          const norm = Object.assign({}, x, {
+            priceSide: shown, anchor: 'total', priceTouched: true, sumaEditing: null,
+            totalPrice: Component.pl(base.toFixed(2)),
+          });
+          norm.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(norm)));
+          norm.anchor = 'unit';
+          return withTotal(norm);
+        }
         if (x.priceSide !== shown || x.anchor !== 'total') return x;
         const norm = Object.assign({}, x, { totalPrice: Component.pl(Component.normalizeAmount(x.totalPrice)) });
         norm.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(norm)));
@@ -1905,10 +1961,13 @@ class Component extends DCLogic {
       bruttoValue:   Component.fmt(cmp.brutto),
       // bez rabatu pole pokazuje liczbę użytkownika (albo kwotę pochodną drugiej strony),
       // z rabatem — wartość po rabacie
-      // Wartość pozycji jest kwotą PRZED rabatem — to liczba, którą mechanik wpisuje
-      // i kontroluje. Rabat schodzący z tej pozycji stoi w kolumnie obok, a kwoty po
-      // rabacie są w sumach pod listą.
-      sumaValue: Component.pl(Component.shownTotalPrice(pr, shown)),
+      // Wartość pozycji to kwota PO rabacie — tyle ta pozycja wnosi do sumy.
+      // W trakcie pisania pokazujemy wpisywany tekst.
+      sumaValue: r.sumaEditing != null
+        ? r.sumaEditing
+        : ((discGr > 0)
+          ? Component.fmt(isBrutto ? cmp.brutto : cmp.netto)
+          : Component.pl(Component.shownTotalPrice(pr, shown))),
       netto:  cmp.netto,
       brutto: cmp.brutto,
       vatAmt: cmp.vatAmt,

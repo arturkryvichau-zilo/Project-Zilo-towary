@@ -627,6 +627,7 @@ class Component extends DCLogic {
       taxRate: r.vat,
       priceSide: r.priceSide === 'gross' ? 'gross' : 'net',
       anchor: r.anchor === 'total' ? 'total' : 'unit',
+      sumaEditing: null,
     };
   }
 
@@ -1225,6 +1226,7 @@ static draftNet(state, draft) {
       cena: r.cena || '0,00',
       totalPrice: r.totalPrice != null ? r.totalPrice : '',
       anchor: r.anchor === 'total' ? 'total' : 'unit',
+      sumaEditing: null,
       priceSide: r.priceSide === 'gross' ? 'gross' : 'net',
       vat: r.vat || '23',
       manual: r.manual != null ? r.manual : null,   // kwota rabatu pozycji w groszach
@@ -1282,11 +1284,15 @@ static draftNet(state, draft) {
       return { net: t.netTotal, gross: t.grossTotal, vat: t.taxAmount, rabat: 0, netGr: base, cutGr: 0 };
     }
     const net = Component.roundHalfUp((base - cut) / 100, 2);
-    // rabat wpisany w brutto schodzi z brutto pozycji co do grosza
-    const gross = discGrossGr != null
-      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - discGrossGr) / 100, 2)
+    // Rabat wpisany w brutto — na całą wycenę albo ręcznie przy pozycji (r.manualG) —
+    // schodzi z brutto pozycji co do grosza.
+    const grossCut = discGrossGr != null
+      ? discGrossGr
+      : (r.manualG != null && r.manual === cut ? r.manualG : null);
+    const gross = grossCut != null
+      ? Component.roundHalfUp((Math.round(t.grossTotal * 100) - grossCut) / 100, 2)
       : Component.roundHalfUp(net * (1 + Component.rowVat(r) / 100), 2);
-    return { net: net, gross: gross, vat: Component.roundHalfUp(gross - net, 2), rabat: cut / 100, netGr: Math.round(net * 100), cutGr: cut, cutGrossGr: discGrossGr != null ? discGrossGr : Math.round(t.grossTotal * 100) - Math.round(gross * 100) };
+    return { net: net, gross: gross, vat: Component.roundHalfUp(gross - net, 2), rabat: cut / 100, netGr: Math.round(net * 100), cutGr: cut, cutGrossGr: grossCut != null ? grossCut : Math.round(t.grossTotal * 100) - Math.round(gross * 100) };
   }
 
   // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd w modalu
@@ -1300,6 +1306,42 @@ static draftNet(state, draft) {
         ? (typeof p === 'function' ? p(r) : Object.assign({}, r, p))
         : r)),
     }));
+  }
+
+  // Ile rabatu zeszłoby z tej pozycji, gdyby jej wartość wynosiła `total` (po stronie
+  // `side`). Liczy to pełne przeliczenie dokumentu, więc uwzględnia zakres i rozdział.
+  cutForTotal(coll, id, side, total) {
+    const st = this.state;
+    const swap = (list) => (list || []).map((x) => (x.id === id
+      ? Object.assign({}, x, { priceSide: side, anchor: 'total', totalPrice: String(total) })
+      : x));
+    const probe = Object.assign({}, st, {
+      uslugi: coll === 'uslugi' ? swap(st.uslugi) : st.uslugi,
+      towary: coll === 'towary' ? swap(st.towary) : st.towary,
+    });
+    const calc = Component.computeQuote(probe);
+    const key = Component.rowKey(coll, { id: id });
+    const net = calc.per[key] || 0;
+    if (side !== 'gross') return net / 100;
+    const gross = (calc.info.perGross || {})[key];
+    if (gross != null) return gross / 100;
+    const row = (coll === 'towary' ? probe.towary : probe.uslugi).filter((x) => x.id === id)[0];
+    return this.calc(row, net, null).cutGrossGr / 100;
+  }
+
+  // Wpisana wartość pozycji jest celem PO rabacie — wartość odtwarzamy iteracyjnie,
+  // bo część rabatu zależy od wartości pozycji.
+  baseForTarget(coll, id, side, targetRaw) {
+    const target = Component.num(targetRaw);
+    if (!this.state.discount) return target;
+    let base = target;
+    for (let i = 0; i < 6; i += 1) {
+      const cut = this.cutForTotal(coll, id, side, base);
+      const next = Component.roundHalfUp(target + cut, 2);
+      if (Math.abs(next - base) < 0.005) { base = next; break; }
+      base = next;
+    }
+    return base;
   }
 
   buildRows(coll, withProducent, per, perGross) {
@@ -1357,13 +1399,20 @@ static draftNet(state, draft) {
         setRowDiscount: (e) => this.setRowDiscount(coll, r.id, e.target.value),
         commitRabat: () => this.patch(coll, r.id, { rabatEditing: null }),
         sumaLabel: isBrutto ? 'Wartość brutto' : 'Wartość netto',
-        // Wartość pozycji to kwota PRZED rabatem — rabat ma własną kolumnę,
-        // a kwoty po rabacie są w sumach pod listą.
-        sumaValue: Component.pl(Component.shownTotalPrice(pr, shown)),
+        // Wartość pozycji to kwota PO rabacie — tyle ta pozycja wnosi do sumy.
+        // W trakcie pisania pokazujemy wpisywany tekst.
+        sumaValue: r.sumaEditing != null
+          ? r.sumaEditing
+          : (discGr > 0
+            ? Component.fmt(isBrutto ? c.gross : c.net)
+            : Component.pl(Component.shownTotalPrice(pr, shown))),
         // Edycja wartości pozycji: kotwica TOTAL, cena jednostkowa staje się pochodną.
         setSumaValue: (e) => {
           const raw = e.target.value;
           this.patch(coll, r.id, (x) => {
+            // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
+            // pokazywać wpisywany tekst
+            if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
             const next = Object.assign({}, x, {
               priceSide: shown, totalPrice: raw, anchor: 'total',
             });
@@ -1374,6 +1423,16 @@ static draftNet(state, draft) {
         // Domknięcie: cena jednostkowa do 2 miejsc (tyle przyjmuje API), wartość
         // przeliczona z tej ceny — pole pokazuje kwotę, która zostanie zapisana.
         commitSuma: () => this.patch(coll, r.id, (x) => {
+          if (x.sumaEditing != null) {
+            const base = this.baseForTarget(coll, r.id, shown, x.sumaEditing);
+            const norm = Object.assign({}, x, {
+              priceSide: shown, anchor: 'total', sumaEditing: null,
+              totalPrice: Component.pl(base.toFixed(2)),
+            });
+            norm.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(norm)));
+            norm.anchor = 'unit';
+            return withTotal(norm);
+          }
           if (x.priceSide !== shown || x.anchor !== 'total') return x;
           const norm = Object.assign({}, x, { totalPrice: Component.pl(Component.normalizeAmount(x.totalPrice)) });
           norm.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(norm)));
