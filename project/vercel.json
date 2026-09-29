@@ -17,6 +17,10 @@
       "destination": "/konfigurator-wycen-2/v2.html"
     },
     {
+      "source": "/wycena-rabat-v1",
+      "destination": "/konfigurator-wycen-2/rabat-v1.html"
+    },
+    {
       "source": "/faktura",
       "destination": "/konfigurator-faktur/v1.html"
     }
