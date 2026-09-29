@@ -185,7 +185,6 @@ window.__resources = {
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ uslugaUnits }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.qty }}" onInput="{{ r.setQty }}" onBlur="{{ r.commitQty }}"></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}" onBlur="{{ r.commitCena }}"></label>
-            <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
             </sc-if>
@@ -210,7 +209,6 @@ window.__resources = {
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ towarUnits }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.qty }}" onInput="{{ r.setQty }}" onBlur="{{ r.commitQty }}"></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}" onBlur="{{ r.commitCena }}"></label>
-            <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">VAT (%)</span><select class="o-input" value="{{ r.vat }}" onChange="{{ r.setVat }}"><sc-for list="{{ vats }}" as="v" hint-placeholder-count="2"><option value="{{ v }}">{{ v }}</option></sc-for></select><span class="o-chev"></span></label>
             <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
               <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
             </sc-if>
@@ -1228,7 +1226,7 @@ static draftNet(state, draft) {
       anchor: r.anchor === 'total' ? 'total' : 'unit',
       sumaEditing: null,
       priceSide: r.priceSide === 'gross' ? 'gross' : 'net',
-      vat: r.vat || '23',
+      vat: r.vat || String(Component.DEFAULT_TAX_RATE),
       manual: r.manual != null ? r.manual : null,   // kwota rabatu pozycji w groszach
       manualG: null,                                 // kwota wpisana w brutto (pamięć)
       rabatEditing: null,
@@ -1441,7 +1439,6 @@ static draftNet(state, draft) {
         }),
         setName: (e) => this.patch(coll, r.id, { name: e.target.value }),
         setUnit: set('unit'),
-        setVat: set('vat'),
         remove: () => this.setState((s) => {
           const next = s[coll].filter((x) => x.id !== r.id);
           return { [coll]: next.length ? next : [Component.mkRow(1, null, withProducent)] };
@@ -1690,16 +1687,17 @@ static draftNet(state, draft) {
       selectOnFocus: (e) => e.target.select && e.target.select(),
       commitOnEnter: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
       discount: this.discountVals(q),
-      posMinWidth: s.discount ? '1520px' : '1350px',
-      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
-      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
+      // Oferta dla klienta nie ma pola VAT — stawka jest atrybutem warsztatu (23%),
+      // a pozycje przyniesione z wyceny zachowują swoją. Tak samo na produkcji.
+      posMinWidth: s.discount ? '1370px' : '1200px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
       segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
       segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
       pickNetto: () => this.switchValueMode('netto'),
       pickBrutto: () => this.switchValueMode('brutto'),
       uslugaUnits: Component.USLUGA_UNITS,
       towarUnits: Component.TOWAR_UNITS,
-      vats: Component.VATS,
       cc: s.cc, phone: s.phone, cname: s.cname, cmail: s.cmail,
       setPhone: (e) => this.setState({ phone: e.target.value }),
       setCname: (e) => this.setState({ cname: e.target.value }),
