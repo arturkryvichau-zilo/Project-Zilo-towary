@@ -4415,7 +4415,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div>Pracownik</div>
                         <div>Czas pracy</div>
                         <div style="text-align:right">Wartość netto</div>
-                        <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}"><div style="text-align:right">Rabat brutto</div></sc-if>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
@@ -4443,9 +4442,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span onClick="{{ r.openTime }}" style="font-size:15px;line-height:22px;color:{{ r.timeColor }};white-space:nowrap;border-radius:6px;cursor:pointer;padding:2px 6px;margin:-2px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.time }}</span>
                           
                           <span onClick="{{ r.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.net }}</span>
-                          <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
-                            <span style="font-size:15px;line-height:22px;color:{{ r.rabatColor }};text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.rabat }}</span>
-                          </sc-if>
                           <span onClick="{{ r.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ r.gross }}</span>
                           <span style="display:flex;justify-content:flex-end"><button type="button" onClick="{{ r.remove }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-border-2);color:var(--tk-danger)" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
                             <span style="width:18px;height:18px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat;mask:url(assets/icons/i-trash.svg) center / 18px 18px no-repeat"></span>
@@ -4460,9 +4456,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <span></span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesNet }}</span>
-                        <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
-                          <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesRabat }}</span>
-                        </sc-if>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.servicesGross }}</span>
                         <span></span>
                       </div>
@@ -4473,7 +4466,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div>Towary</div>
                         <div>Numer dokumentu</div>
                         <div style="text-align:right">Wartość netto</div>
-                        <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}"><div style="text-align:right">Rabat brutto</div></sc-if>
                         <div style="text-align:right">Wartość brutto</div>
                         <div></div>
                       </div>
@@ -4482,9 +4474,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span onClick="{{ g.openName }}" style="font-size:15px;line-height:22px;color:{{ g.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.name }}</span>
                           <span style="font-size:15px;line-height:22px;color:{{ g.docColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums">{{ g.doc }}</span>
                           <span onClick="{{ g.openNet }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.net }}</span>
-                          <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
-                            <span style="font-size:15px;line-height:22px;color:{{ g.rabatColor }};text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ g.rabat }}</span>
-                          </sc-if>
                           <span onClick="{{ g.openGross }}" style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;border-radius:6px;cursor:pointer;padding:4px 6px;margin:-4px -6px;transition:background 150ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-surface-3)">{{ g.gross }}</span>
                           <span style="display:flex;justify-content:flex-end">
                             <button type="button" onClick="{{ g.remove }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft);color:var(--tk-brand-fg)" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
@@ -4500,9 +4489,6 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </button>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsNet }}</span>
-                        <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
-                          <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsRabat }}</span>
-                        </sc-if>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsGross }}</span>
                         <span></span>
                       </div>
@@ -4510,10 +4496,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
                     <div style="display:flex;align-items:center;gap:16px;padding:0 4px">
                       <span style="margin-left:auto;display:flex;gap:24px;font-size:15px;line-height:22px;color:var(--tk-text-2);font-variant-numeric:tabular-nums">
-                        <span style="color: var(--black)">Suma netto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.sumNet }}</b></span>
                         <sc-if value="{{ evd.wyc.hasRabat }}" hint-placeholder-val="{{ false }}">
-                          <span style="color: var(--black)">Rabat brutto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.rabat }}</b></span>
+                          <span style="color: var(--black)">Naliczony rabat: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.rabat }}</b></span>
                         </sc-if>
+                        <span style="color: var(--black)">Suma netto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.sumNet }}</b></span>
                         <span style="color: var(--black)">Suma brutto: <b style="font-weight:500;color:var(--tk-text)">{{ evd.wyc.sumGross }}</b></span>
                       </span>
                     </div>
@@ -7256,8 +7242,6 @@ class Component extends DCLogic {
         time: czas > 0 ? String(r.czas).replace('.', ',') + ' h' : '—',
         timeColor: czas > 0 ? 'var(--tk-text)' : 'var(--tk-text-3)',
         openTime: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: ri, field: 'czas' }); },
-        rabat: r.c.cut > 0 ? '− ' + this.moneyPl(r.c.cutGross) : '—',
-        rabatColor: r.c.cut > 0 ? 'var(--tk-text)' : 'var(--tk-text-3)',
         net: this.moneyPl(r.c.net),
         gross: this.moneyPl(r.c.gross),
         remove: () => this.removeQuoteRow(id, 'usluga', ri),
@@ -7271,8 +7255,6 @@ class Component extends DCLogic {
         openGross: (e) => { e.stopPropagation(); this.openWycConfig(id, { index: gi, field: 'brutto' }); },
         name: g.name && String(g.name).trim() ? g.name : '—',
         nameColor: 'var(--tk-text)',
-        rabat: g.c.cut > 0 ? '− ' + this.moneyPl(g.c.cutGross) : '—',
-        rabatColor: g.c.cut > 0 ? 'var(--tk-text)' : 'var(--tk-text-3)',
         net: this.moneyPl(g.c.net),
         gross: this.moneyPl(g.c.gross),
         remove: () => (gi < towaryCount
@@ -7288,14 +7270,12 @@ class Component extends DCLogic {
       hasRabat: rabat > 0,
       rabat: this.moneyPl(rabat),
       // przy nadanym rabacie obie tabele dostają kolumnę „Rabat" przed wartościami
-      servicesGrid: 'minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px)'
-        + (rabat > 0 ? ' minmax(100px,120px)' : '') + ' minmax(110px,140px) 30px',
-      servicesMin: rabat > 0 ? '880px' : '760px',
-      goodsGrid: 'minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px)'
-        + (rabat > 0 ? ' minmax(100px,120px)' : '') + ' minmax(110px,140px) 30px',
-      goodsMin: rabat > 0 ? '760px' : '640px',
-      servicesRabat: this.moneyPl(sum(rows.uslugi, 'cutGross')),
-      goodsRabat: this.moneyPl(sum(goods, 'cutGross')),
+      // Rabat nie ma własnej kolumny — wartości w wierszach są już po rabacie,
+      // a naliczona kwota stoi w podsumowaniu pod tabelami.
+      servicesGrid: 'minmax(180px,1fr) minmax(150px,190px) minmax(110px,130px) minmax(110px,140px) minmax(110px,140px) 30px',
+      servicesMin: '760px',
+      goodsGrid: 'minmax(180px,1fr) minmax(150px,190px) minmax(110px,140px) minmax(110px,140px) 30px',
+      goodsMin: '640px',
       sumNet: this.moneyPl(uN + tN),
       sumGross: this.moneyPl(uB + tB),
       openConfig: () => this.openWycConfig(id),
