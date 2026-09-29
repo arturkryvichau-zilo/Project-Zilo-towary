@@ -1290,6 +1290,23 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
       </div>
     </sc-if>
 
+      <sc-if value="{{ evd.wyc.restoreAsk }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;inset:0;z-index:12;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
+          <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong)">Przywrócić tę ofertę do wyceny?</span>
+              <button type="button" onClick="{{ evd.wyc.cancelRestore }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:var(--tk-surface-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center">
+                <span style="width:16px;height:16px;display:block;background-color:var(--tk-text);-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+              </button>
+            </div>
+            <div style="margin-top:14px;font-size:15px;line-height:22px;color:var(--tk-text-3);text-wrap:pretty">{{ evd.wyc.restoreAskText }}</div>
+            <div style="margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <button type="button" onClick="{{ evd.wyc.cancelRestore }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-surface-2);color:var(--tk-brand-fg);font-family:inherit;font-size:16px;line-height:24px;font-weight:500;cursor:pointer">Anuluj</button>
+              <button type="button" onClick="{{ evd.wyc.confirmRestore }}" style="height:48px;border:0;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-family:inherit;font-size:16px;line-height:24px;font-weight:500;cursor:pointer">Przywróć do wyceny</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
       <sc-if value="{{ billing.disconnectAsk }}" hint-placeholder-val="{{ false }}">
         <div style="position:fixed;inset:0;z-index:12;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
           <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
@@ -4497,8 +4514,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.amt }}</span>
                           <span style="display:flex;justify-content:flex-end;gap:4px">
                             <button type="button" onClick="{{ h.issueFv }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Wystaw fakturę" aria-label="Wystaw fakturę"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat"></span></button>
-                            <button type="button" onClick="{{ evd.wyc.previewOffer }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Podgląd" aria-label="Podgląd"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-eye-open.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-eye-open.svg) center / 20px 20px no-repeat"></span></button>
-                            <button type="button" onClick="{{ h.restoreOffer }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Przywróć ofertę" aria-label="Przywróć ofertę"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-restore.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-restore.svg) center / 20px 20px no-repeat"></span></button>
+                            <button type="button" onClick="{{ h.preview }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Podgląd" aria-label="Podgląd"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-eye-open.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-eye-open.svg) center / 20px 20px no-repeat"></span></button>
+                            <button type="button" onClick="{{ h.restoreAsk }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Przywróć ofertę" aria-label="Przywróć ofertę"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-restore.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-restore.svg) center / 20px 20px no-repeat"></span></button>
                           </span>
                         </div>
                       </sc-for>
@@ -7082,6 +7099,29 @@ class Component extends DCLogic {
     return kind + scope;
   }
 
+  // Przywrócenie oferty do wyceny — pozycje tej oferty (z jej rabatem) zastępują
+  // bieżącą wycenę zlecenia. Na produkcji robi to POST /quotes/{id}/draft po
+  // potwierdzeniu w dialogu; tu potwierdzenie jest to samo, zapis lokalny.
+  restoreOfferToQuote(visitId, idx) {
+    const entry = ((this.state.offerHistory || {})[visitId] || [])[idx];
+    if (!entry) { this.setState({ offerRestoreAsk: null }); return; }
+    this.setState((st) => {
+      const q = (st.quotes || {})[visitId] || {};
+      const prev = q.state || {};
+      const next = Object.assign({}, prev, {
+        groups: null,
+        robociznas: (entry.uslugi || []).map((r) => Object.assign({}, r)),
+        towars: (entry.towary || []).map((r) => Object.assign({}, r)),
+        discount: entry.discount || null,
+      });
+      return {
+        quotes: Object.assign({}, st.quotes, { [visitId]: Object.assign({}, q, { state: next }) }),
+        offerRestoreAsk: null,
+      };
+    });
+    this.ziloToast('Oferta przywrócona do wyceny');
+  }
+
   wycVals(ev) {
     const s = this.state;
     const id = ev && ev.id;
@@ -7173,7 +7213,6 @@ class Component extends DCLogic {
       sendOffer: () => this.openOfferConfig(id),
       downloadPdf: () => this.ziloToast('Kosztorys pobrany jako PDF'),
       issueFv: () => this.openInvoiceConfig(id),
-      previewOffer: () => this.openWycConfig(id, null, { preview: true }),
       hasFvHistory: fvHist.length > 0,
       fvHistoryCount: String(fvHist.length),
       fvHistoryOpen: s.fvHistoryOpen !== false,
@@ -7206,6 +7245,17 @@ class Component extends DCLogic {
       historyOpen: s.historyOpen !== false,
       historyArrow: s.historyOpen === false ? 'rotate(0deg)' : 'rotate(180deg)',
       toggleHistory: () => this.setState((st) => ({ historyOpen: st.historyOpen === false })),
+      // Przywrócenie oferty pyta o zgodę — treść zależy od tego, czy wycena już
+      // istnieje, tak samo jak dialog na produkcji.
+      restoreAsk: !!(s.offerRestoreAsk && String(s.offerRestoreAsk).indexOf(id + ':') === 0),
+      restoreAskText: hasQuote
+        ? 'Obecna wycena zostanie zastąpiona pozycjami z tej oferty. Tego nie da się cofnąć.'
+        : 'Pozycje z tej oferty trafią do wyceny zlecenia.',
+      cancelRestore: () => this.setState({ offerRestoreAsk: null }),
+      confirmRestore: () => {
+        const key = String(this.state.offerRestoreAsk || '');
+        this.restoreOfferToQuote(id, Number(key.split(':')[1]));
+      },
       hasHistoryRabat: hist.some((h) => !!h.rabat),
       // kolumna rabatu dochodzi dopiero, gdy któraś wysłana oferta go miała
       historyGrid: hist.some((h) => !!h.rabat)
@@ -7226,20 +7276,14 @@ class Component extends DCLogic {
           flashAnim: isFlash ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
           flashMark: isFlash ? '1' : '0',
           issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary, discount: h.discount || null }),
+          // Podgląd pokazuje pozycje TEJ oferty, nie bieżącą wycenę — na produkcji
+          // ten przycisk otwiera PDF konkretnej oferty (getDownloadQuotePdf).
+          preview: () => this.openWycConfig(id, null, {
+            preview: true,
+            state: { robociznas: h.uslugi || [], towars: h.towary || [], discount: h.discount || null },
+          }),
           // przywrócenie wrzuca pozycje tej oferty z powrotem do wyceny wizyty
-          restoreOffer: () => {
-            this.setState((st) => {
-              const q = (st.quotes || {})[id] || {};
-              const prev = q.state || {};
-              const next = Object.assign({}, prev, {
-                groups: null,
-                robociznas: (h.uslugi || []).map((r) => Object.assign({}, r)),
-                towars: (h.towary || []).map((r) => Object.assign({}, r)),
-              });
-              return { quotes: Object.assign({}, st.quotes, { [id]: Object.assign({}, q, { state: next }) }) };
-            });
-            this.ziloToast('Oferta z ' + h.date + ' przywrócona do wyceny');
-          },
+          restoreAsk: () => this.setState({ offerRestoreAsk: id + ':' + i }),
           menuOpen: s.historyMenu === id + ':' + i,
           toggleMenu: (e) => {
             e.stopPropagation();
@@ -7612,8 +7656,11 @@ class Component extends DCLogic {
     try {
       // Towary przypisane z zakładki „Towary" żyją poza stanem wyceny — bez tego
       // konfigurator otwierał się pusty, mimo że w szczegółach wizyty były widoczne.
-      const parts = (this.state.visitParts || {})[visitId] || [];
-      let st = saved && saved.state ? JSON.parse(JSON.stringify(saved.state)) : null;
+      const fromOffer = opts && opts.state;
+      const parts = fromOffer ? [] : ((this.state.visitParts || {})[visitId] || []);
+      let st = fromOffer
+        ? JSON.parse(JSON.stringify(opts.state))
+        : (saved && saved.state ? JSON.parse(JSON.stringify(saved.state)) : null);
       if (parts.length) {
         if (!st) {
           st = {
