@@ -318,7 +318,7 @@ window.__resources = {
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Ilość</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onBlur="{{ row.commitQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Cena netto (edytowalne) -->
@@ -438,7 +438,7 @@ window.__resources = {
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
                 <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Ilość</div>
-                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.qty }}" onChange="{{ row.setQty }}" onBlur="{{ row.commitQty }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
             <!-- Cena netto (edytowalne) -->
@@ -769,7 +769,7 @@ window.__resources = {
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1200}}">
 class Component extends DCLogic {
   static mkRobocizna(id) {
-    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', cenaU: 0, manual: null, manualG: null, unit: 'Sztuka', vat: '23', bruttoEditing: null, cenaEditing: null, rabatEditing: null, openField: null };
+    return { id, osoba: null, name: '', qty: '1', czas: '0', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', manual: null, manualG: null, unit: 'Sztuka', vat: '23', rabatEditing: null, openField: null };
   }
   static rawGroups() {
     let list = null;
@@ -843,65 +843,156 @@ class Component extends DCLogic {
     return raw ? (Number(raw.pct) || 0) : 0;
   }
 
-  // narzut warsztatu liczony na jednostkach, bez zaokrąglania do grosza po drodze
-  static priceUFromCostU(kosztU, grupa) {
-    return Math.round(kosztU * (100 + Component.groupPct(grupa)) / 100);
-  }
-
-  // jedna funkcja pisze cenę: kanoniczne jednostki + lustro tekstowe
-  static pricePatch(units) { return { cenaU: units, cena: Component.fmtU(units) }; }
-  static costPatch(units, vat) {
-    return {
-      kosztU: units,
-      koszt: Component.fmtU(units),
-      kosztBrutto: Component.fmtU(Math.round(units * (100 + Component.parseNum(vat || '23')) / 100)),
-    };
-  }
-
-  // wiersze z zewnątrz (zapisane wyceny, import, postMessage) mają tylko teksty
-  static withUnits(r) {
-    const out = Object.assign({}, r);
-    if (out.cenaU == null) out.cenaU = Component.u(out.cena);
-    if ('koszt' in out && out.kosztU == null) out.kosztU = Component.u(out.koszt);
-    return out;
+  // Narzut warsztatu na części: cena sprzedaży netto z ceny zakupu netto.
+  static priceFromCost(kosztNet, grupa) {
+    return Component.roundHalfUp(Component.parseNum(kosztNet) * (100 + Component.groupPct(grupa)) / 100, 2);
   }
 
   static normalizeTowar(r) {
-    const out = Component.withUnits(r);
+    const out = Component.withPricing(r);
     const def = Component.defaultGroup();
     if (!out.grupa && def) out.grupa = def.value;
     const pct = Component.groupPct(out.grupa);
-    // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży i narzutu grupy,
-    // żeby „Cena zakupu brutto", grupa cenowa i cena netto były spójne.
-    if (!(out.kosztU > 0)) out.kosztU = Math.round(out.cenaU * 100 / (100 + pct));
-    Object.assign(out, Component.costPatch(out.kosztU, out.vat));
+    // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży netto i narzutu grupy.
+    if (!(Component.parseNum(out.koszt) > 0)) {
+      const netUnit = Component.recalcRow(Component.priceRow(out)).unitNet;
+      out.koszt = Component.pl(Component.roundHalfUp(netUnit * 100 / (100 + pct), 2).toFixed(2));
+      out.purchaseSide = 'net';
+    }
     return out;
   }
 
   static mkTowar(id) {
     const def = Component.defaultGroup();
-    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', cenaU: 0, koszt: '0,00', kosztU: 0, kosztBrutto: '0,00', manual: null, manualG: null, priceTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', bruttoEditing: null, cenaEditing: null, kosztEditing: null, rabatEditing: null, openField: null };
+    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', koszt: '', purchaseSide: 'net', manual: null, manualG: null, priceTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', rabatEditing: null, openField: null };
   }
-  // Kwoty (wartość pozycji, rabat, sumy) trzymamy w GROSZACH, a cenę jednostkową
-  // i cenę zakupu w JEDNOSTKACH 1/10000 zł — cztery miejsca po przecinku, bo cena
-  // wyliczana wstecz z wartości nie mieści się w groszu (104,07 / 12 = 8,6725).
-  // Pola tekstowe `cena`, `koszt`, `kosztBrutto` zostają w stanie wyłącznie jako
-  // lustro do wyświetlania i dla artboardów — liczenie ich nie czyta.
-  static U = 10000;
+  // ── Kwoty pozycji — model przeniesiony z produkcji (src/helpers/quote-pricing.ts) ──
+  // Kierunek liczenia wyznacza strona, po której wpisano kwotę; zaokrąglenie następuje
+  // dokładnie raz, przy przejściu na drugą stronę. Podatek jest resztą. Liczba wpisana
+  // przez użytkownika nie zmienia się w żadnym scenariuszu.
+  static DEFAULT_TAX_RATE = 23;
 
-  static u(v) { return Math.round(Component.parseNum(v) * Component.U); }
-  static uOf(r, field) {
-    const key = field === 'koszt' ? 'kosztU' : 'cenaU';
-    return r[key] != null ? r[key] : Component.u(r[field]);
+  // HALF_UP (połowa w górę, od zera); toPrecision(15) domyka błąd reprezentacji binarnej
+  // — bez tego 1.005 * 100 === 100.49999999999999 i zaokrągliłoby się w dół.
+  static roundHalfUp(value, scale) {
+    const s = scale == null ? 2 : scale;
+    if (!isFinite(value)) return 0;
+    const factor = Math.pow(10, s);
+    const shifted = Number((value * factor).toPrecision(15));
+    const magnitude = Math.round(Math.abs(shifted));
+    return (shifted < 0 ? -magnitude : magnitude) / factor;
   }
-  static fmtU(units) {
-    // równe grosze pokazujemy z dwoma miejscami, ułamek grosza z czterema
-    return units % 100 === 0
-      ? Component.fmt(units / Component.U)
-      : String(units / Component.U).replace('.', ',');
+
+  // Jedyna funkcja przeliczająca wiersz. Kierunek bierze ze stanu wiersza (priceSide),
+  // nie z tego, co pokazuje przełącznik — tryb wyświetlania nie ma prawa zmienić wyniku.
+  static recalcRow(row) {
+    const quantity = Component.parseNum(row.quantity) || 0;
+    const taxRate = Component.parseNum(row.taxRate) || 0;
+    // wartość autorytatywna po stronie wpisania, jeszcze BEZ zaokrąglenia
+    const authoritativeTotal = row.anchor === 'total'
+      ? (Component.parseNum(row.totalPrice) || 0)
+      : (Component.parseNum(row.unitPrice) || 0) * quantity;
+    const factor = 1 + taxRate / 100;
+    const netTotal = row.priceSide === 'gross'
+      ? Component.roundHalfUp(authoritativeTotal / factor, 2)
+      : Component.roundHalfUp(authoritativeTotal, 2);
+    const grossTotal = row.priceSide === 'gross'
+      ? Component.roundHalfUp(authoritativeTotal, 2)
+      : Component.roundHalfUp(authoritativeTotal * factor, 2);
+    // podatek jest resztą — niezmiennik netto + VAT = brutto trzyma się z definicji
+    const taxAmount = Component.roundHalfUp(grossTotal - netTotal, 2);
+    const unitNet = quantity > 0 ? Component.roundHalfUp(netTotal / quantity, 4) : 0;
+    const unitGross = quantity > 0 ? Component.roundHalfUp(grossTotal / quantity, 4) : 0;
+    return { netTotal: netTotal, taxAmount: taxAmount, grossTotal: grossTotal, unitNet: unitNet, unitGross: unitGross };
   }
-  // jednostki → grosze (wartość pozycji): mnożymy ilość na pełnej precyzji
-  static baseFromU(qty, units) { return Math.round(Component.parseNum(qty) * units / 100); }
+
+  // Sumowanie bez ponownego przeliczania przez stawkę — każda pozycja domyka się osobno.
+  static sumRows(rows) {
+    return (rows || []).reduce((acc, row) => {
+      const t = Component.recalcRow(row);
+      return {
+        netTotal: Component.roundHalfUp(acc.netTotal + t.netTotal, 2),
+        taxAmount: Component.roundHalfUp(acc.taxAmount + t.taxAmount, 2),
+        grossTotal: Component.roundHalfUp(acc.grossTotal + t.grossTotal, 2),
+      };
+    }, { netTotal: 0, taxAmount: 0, grossTotal: 0 });
+  }
+
+  // Minimum 2 miejsca, maksimum 4, bez końcowych zer — 466,67 dla 1400/3 zapraszałoby
+  // do sprawdzenia mnożenia, które się nie zgadza.
+  static formatUnitPrice(value) {
+    return Component.roundHalfUp(value, 4).toFixed(4).replace(/(\.\d{2}\d*?)0+$/, '$1');
+  }
+
+  static unitPriceOn(row, side, scale) {
+    const t = Component.recalcRow(row);
+    return Component.roundHalfUp(side === 'gross' ? t.unitGross : t.unitNet, scale == null ? 2 : scale);
+  }
+
+  static totalPriceOn(row, side) {
+    const t = Component.recalcRow(row);
+    return side === 'gross' ? t.grossTotal : t.netTotal;
+  }
+
+  // Cena jednostkowa pochodna z wartości pozycji — skala 2, bo tyle przyjmuje API.
+  static deriveUnitPrice(row) { return Component.unitPriceOn(row, row.priceSide).toFixed(2); }
+  static deriveTotalPrice(row) { return Component.totalPriceOn(row, row.priceSide).toFixed(2); }
+
+  // Co pokazać, gdy przełącznik odsłania stronę `shown`: po stronie wpisania dokładnie
+  // liczbę użytkownika, po drugiej — kwotę pochodną (cena jednostkowa w skali 4).
+  static shownUnitPrice(row, shown) {
+    return row.priceSide === shown ? row.unitPrice : Component.formatUnitPrice(Component.unitPriceOn(row, shown, 4));
+  }
+  static shownTotalPrice(row, shown) {
+    return row.priceSide === shown ? row.totalPrice : Component.totalPriceOn(row, shown).toFixed(2);
+  }
+
+  // Ilość ma skalę 3 — 4,5 litra oleju czy 0,125 kg; zaokrągla się dopiero wartość pozycji.
+  static normalizeQuantity(raw) { return String(Component.roundHalfUp(Component.parseNum(raw) || 0, 3)); }
+  // Jedyne miejsce, które dotyka liczby wpisanej przez użytkownika.
+  static normalizeAmount(raw) { return Component.roundHalfUp(Component.parseNum(raw) || 0, 2).toFixed(2); }
+
+  // Kwota spoza modelu pozycji (cena zakupu towaru): ma tylko stronę wpisania.
+  static convertAmount(amount, from, to, taxRate) {
+    const value = Component.parseNum(amount) || 0;
+    if (from === to) return Component.roundHalfUp(value, 2);
+    const factor = 1 + (Component.parseNum(taxRate) || 0) / 100;
+    return Component.roundHalfUp(to === 'gross' ? value * factor : value / factor, 2);
+  }
+  static shownSidedAmount(row, shown) {
+    if (row.amount === '' || row.amount == null) return '';
+    if (row.side === shown) return row.amount;
+    return Component.convertAmount(Component.parseNum(row.amount) || 0, row.side, shown, row.taxRate).toFixed(2);
+  }
+
+
+  static pl(v) { return String(v).replace('.', ','); }
+
+  // Wiersz z zewnątrz (zapisana wycena, import, #state=) ma tylko cenę jednostkową —
+  // dopisujemy stronę wpisania, kotwicę i wartość pozycji, żeby rdzeń miał komplet.
+  static withPricing(r) {
+    const out = Object.assign({}, r);
+    if (out.priceSide !== 'gross') out.priceSide = 'net';
+    if (out.anchor !== 'total') out.anchor = 'unit';
+    if (out.purchaseSide !== 'gross') out.purchaseSide = 'net';
+    if (out.totalPrice == null || out.totalPrice === '') {
+      out.totalPrice = Component.pl(Component.deriveTotalPrice(Component.priceRow(out)));
+    }
+    return out;
+  }
+
+  // Wiersz wyceny w kształcie, który czyta rdzeń: nasze pola mają polskie nazwy,
+  // model liczenia zostaje taki sam jak na produkcji.
+  static priceRow(r) {
+    return {
+      quantity: r.qty,
+      unitPrice: r.cena != null ? r.cena : '',
+      totalPrice: r.totalPrice != null ? r.totalPrice : '',
+      taxRate: r.vat,
+      priceSide: r.priceSide === 'gross' ? 'gross' : 'net',
+      anchor: r.anchor === 'total' ? 'total' : 'unit',
+    };
+  }
 
   static parseNum(v) {
     if (v == null || v === '') return 0;
@@ -919,17 +1010,26 @@ class Component extends DCLogic {
   // kwota rabatu pozycji przychodzi z computeQuote (grosze) — wiersz sam
   // niczego nie liczy, żeby podgląd i wycena szły jedną drogą
   static computeRow(r, discGr) {
-    const base = Component.rowBase(r);
-    const rabatAmt = Math.min(discGr || 0, base);
-    const netto = base - rabatAmt;
-    const vatAmt = Math.round(netto * Component.rowVat(r) / 100);
+    const t = Component.recalcRow(Component.priceRow(r));
+    const baseGr = Math.round(t.netTotal * 100);
+    const rabatGr = Math.min(discGr || 0, baseGr);
+    // bez rabatu oddajemy dokładnie kwoty z rdzenia — również brutto wpisane przez
+    // użytkownika (600,00 brutto zostaje 600,00, nie 599,99)
+    if (rabatGr <= 0) {
+      return {
+        netto: t.netTotal, brutto: t.grossTotal, rabatAmt: 0, vatAmt: t.taxAmount,
+        nettoGr: baseGr, rabatGr: 0,
+      };
+    }
+    const netto = Component.roundHalfUp((baseGr - rabatGr) / 100, 2);
+    const brutto = Component.roundHalfUp(netto * (1 + Component.rowVat(r) / 100), 2);
     return {
-      netto: netto / 100,
-      brutto: (netto + vatAmt) / 100,
-      rabatAmt: rabatAmt / 100,
-      vatAmt: vatAmt / 100,
-      nettoGr: netto,
-      rabatGr: rabatAmt,
+      netto: netto,
+      brutto: brutto,
+      rabatAmt: rabatGr / 100,
+      vatAmt: Component.roundHalfUp(brutto - netto, 2),
+      nettoGr: Math.round(netto * 100),
+      rabatGr: rabatGr,
     };
   }
   // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
@@ -1344,13 +1444,13 @@ class Component extends DCLogic {
   static gr(v) { return Math.round(Component.parseNum(v) * 100); }
 
   static rowBase(r) {
-    return Component.baseFromU(r.qty, Component.uOf(r, 'cena'));
+    return Math.round(Component.recalcRow(Component.priceRow(r)).netTotal * 100);
   }
 
   static rowVat(r) { return Component.parseNum(r.vat); }
 
   static rowGross(r) {
-    return Component.rowBase(r) + Math.round(Component.rowBase(r) * Component.rowVat(r) / 100);
+    return Math.round(Component.recalcRow(Component.priceRow(r)).grossTotal * 100);
   }
 
   // Numeracja id jest osobna dla usług i towarów, więc usługa i towar potrafią
@@ -1452,14 +1552,14 @@ class Component extends DCLogic {
       }
     }
 
+    // Sumy to suma kwot pozycji, każda domknięta osobno — tak jak sumRows na produkcji.
+    // Podatek jest resztą po obu stronach, więc netto + VAT = brutto trzyma się z definicji.
     const before = rows.reduce((a, r) => a + Component.rowBase(r), 0);
     const beforeGross = rows.reduce((a, r) => a + Component.rowGross(r), 0);
     const disc = rows.reduce((a, r) => a + per[r._k], 0);
-    const net = before - disc;
-    const vat = rows.reduce((a, r) => {
-      const rowNet = Component.rowBase(r) - per[r._k];
-      return a + Math.round(rowNet * Component.rowVat(r) / 100);
-    }, 0);
+    const perRow = rows.map((r) => Component.computeRow(r, per[r._k]));
+    const net = perRow.reduce((a, x) => a + x.nettoGr, 0);
+    const vat = perRow.reduce((a, x) => a + Math.round(x.vatAmt * 100), 0);
     return { per: per, before: before, beforeGross: beforeGross, disc: disc, net: net, vat: vat, gross: net + vat, info: info };
   }
 
@@ -1528,7 +1628,7 @@ class Component extends DCLogic {
       // Zakładka Wyceny trzyma przypisanie w polu `person`, konfigurator czyta `osoba` —
       // normalizujemy w obie strony, żeby round-trip nie gubił osoby.
       const withOsoba = (r) => {
-        const out = Component.withUnits(withId(r));
+        const out = Component.withPricing(withId(r));
         const who = out.osoba || out.person || '';
         return Object.assign({}, out, { osoba: who, person: who });
       };
@@ -1625,8 +1725,13 @@ class Component extends DCLogic {
 
   _buildRow(collection, r, unitList, includeOsoba, includeIndeks, showRabat, discGr) {
     const rowKey = Component.rowKey(collection, r);
-    const cenaU = Component.uOf(r, 'cena');
-    const kosztU = Component.uOf(r, 'koszt');
+    // strona odsłonięta przełącznikiem; wiersz trzyma własną stronę wpisania
+    const shown = this.state.valueMode === 'brutto' ? 'gross' : 'net';
+    const pr = Component.priceRow(r);
+    // wpisanie kwoty po odsłoniętej stronie czyni ją stroną wpisania wiersza
+    const withTotal = (x) => Object.assign({}, x, {
+      totalPrice: Component.pl(Component.deriveTotalPrice(Component.priceRow(x))),
+    });
     const openField = r.openField;
 
     const unitOpen  = openField === 'unit';
@@ -1650,34 +1755,16 @@ class Component extends DCLogic {
     const isBrutto = this.state.valueMode === 'brutto';
     const vRate = 1 + Component.parseNum(r.vat) / 100;
     // „Wartość" = ile ma wyjść ta pozycja; przeliczamy cenę jednostkową wstecz
-    const backCalc = (wNetGr) => this._patchRow(collection, r.id, (x) => {
-      const q = Component.parseNum(x.qty) || 1;
-      const d = this.state.discount;
-      const inScope = d && Component.rowsInScope(this.state, d.scope).filter((y) => y.id === x.id).length > 0;
-      let newBase;
-      if (inScope && !d.custom && d.mode === 'pct') {
-        const pct = Component.parseNum(d.value);
-        if (pct >= 100) return x;            // przy 100% wartość to zawsze 0
-        newBase = Math.round(wNetGr / (1 - pct / 100));
-      } else {
-        newBase = wNetGr + (discGr || 0);    // rabat kwotowy zostaje bez zmian
-      }
-      // jednostki 1/10000 zł: 104,07 zł przy 12 szt. to cena 8,6725, nie 8,67
-      return Object.assign({}, x, Component.pricePatch(Math.round(newBase * 100 / q)), {
-        priceTouched: true,
-        nettoEditing: null,
-        bruttoEditing: null,
-        cenaEditing: null,
-      });
-    });
-    const commitNetto = () => {
-      if (r.nettoEditing == null) return;
-      backCalc(Component.gr(r.nettoEditing));
-    };
-    const commitBrutto = () => {
-      if (r.bruttoEditing == null) return;
-      const b = Component.gr(r.bruttoEditing);
-      backCalc(Math.round(b * 100 / (100 + Component.rowVat(r))));
+    // Edycja wartości pozycji: kotwica TOTAL, cena jednostkowa pochodna.
+    // Przy nadanym rabacie pole pokazuje kwotę po rabacie, więc wpisana wartość
+    // jest najpierw cofana o rabat tej pozycji — inaczej rabat naliczyłby się dwa razy.
+    const rabatOffset = (raw) => {
+      const typed = Component.parseNum(raw);
+      if (!(discGr > 0)) return typed;
+      const cut = shown === 'gross'
+        ? Component.roundHalfUp((discGr / 100) * (1 + Component.rowVat(r) / 100), 2)
+        : discGr / 100;
+      return Component.roundHalfUp(typed + cut, 2);
     };
 
     const row = {
@@ -1688,10 +1775,10 @@ class Component extends DCLogic {
       indeks: r.indeks || '',
       producent: r.producent || '',
       czas: r.czas != null ? r.czas : '0',
-      koszt: Component.fmtU(kosztU),
-      kosztBrutto: Component.fmtU(Math.round(kosztU * (100 + Component.rowVat(r)) / 100)) + ' zł',
+      koszt: Component.pl(Component.shownSidedAmount({ amount: r.koszt, side: r.purchaseSide === 'gross' ? 'gross' : 'net', taxRate: r.vat }, 'net')),
+      kosztBrutto: Component.pl(Component.shownSidedAmount({ amount: r.koszt, side: r.purchaseSide === 'gross' ? 'gross' : 'net', taxRate: r.vat }, 'gross')) + ' zł',
       qty: r.qty,
-      cena: Component.fmtU(cenaU),
+      cena: Component.pl(Component.shownUnitPrice(pr, shown)),
       // rabat przy pozycji zawsze w złotówkach — mechanik negocjuje kwotami
       rabatLabel: isBrutto ? 'Rabat brutto (zł)' : 'Rabat netto (zł)',
       // w trakcie pisania pokazujemy dokładnie to, co wpisano — inaczej po
@@ -1715,53 +1802,85 @@ class Component extends DCLogic {
       setProducent: set('producent'),
       setCzas: set('czas'),
 
-      setQty:    set('qty'),
-
-      setBruttoInput: set('bruttoEditing'),
-      commitBrutto,
+      // zmiana ilości zawsze wraca do kotwicy UNIT — inaczej „5 sztuk" nie zmieniłoby
+      // kwoty, tylko po cichu przeliczyło cenę sztuki
+      setQty: (e) => this._patchRow(collection, r.id, (x) => withTotal(Object.assign({}, x, {
+        qty: e.target.value, anchor: 'unit',
+      }))),
+      commitQty: () => this._patchRow(collection, r.id, (x) => withTotal(Object.assign({}, x, {
+        qty: Component.pl(Component.normalizeQuantity(x.qty)),
+      }))),
 
       // Przełącznik Netto / Brutto — jedna komórka ceny, zakupu i wartości
       cenaLabel: isBrutto ? 'Cena brutto (zł)' : 'Cena netto (zł)',
-      // w trakcie pisania pokazujemy wpisany tekst — przeliczone brutto w locie
-      // zjadało cyfry (250 robiło się 2,00)
-      cenaValue: r.cenaEditing != null
-        ? r.cenaEditing
-        : (isBrutto ? Component.fmtU(Math.round(cenaU * vRate)) : Component.fmtU(cenaU)),
+      // Przełącznik tylko odsłania: po stronie wpisania widać liczbę użytkownika,
+      // po drugiej kwotę pochodną (skala 4, żeby ilość × cena zgadzała się z wartością).
+      cenaValue: Component.pl(Component.shownUnitPrice(pr, shown)),
       setCenaValue: (e) => {
         const raw = e.target.value;
-        const typed = Component.u(raw);
-        const units = isBrutto ? Math.round(typed / vRate) : typed;
-        this._patchRow(collection, r.id, Object.assign(Component.pricePatch(units), {
-          priceTouched: true,
-          cenaEditing: raw,
-        }));
+        this._patchRow(collection, r.id, (x) => withTotal(Object.assign({}, x, {
+          priceSide: shown, cena: raw, anchor: 'unit', priceTouched: true,
+        })));
       },
-      commitCena: () => this._patchRow(collection, r.id, { cenaEditing: null }),
+      // normalizujemy tylko liczbę wpisaną — pole z kwotą pochodną nie ma czego domykać
+      commitCena: () => this._patchRow(collection, r.id, (x) => (
+        x.priceSide !== shown || x.anchor !== 'unit'
+          ? x
+          : withTotal(Object.assign({}, x, { cena: Component.pl(Component.normalizeAmount(x.cena)) })))),
+
       kosztLabel: isBrutto ? 'Zakup brutto (zł)' : 'Zakup netto (zł)',
-      kosztValue: r.kosztEditing != null
-        ? r.kosztEditing
-        : (isBrutto ? Component.fmtU(Math.round(kosztU * vRate)) : Component.fmtU(kosztU)),
+      // cena zakupu ma tylko stronę wpisania — nie mnoży się przez ilość i nie wchodzi do sum
+      kosztValue: Component.pl(Component.shownSidedAmount({ amount: r.koszt, side: r.purchaseSide === 'gross' ? 'gross' : 'net', taxRate: r.vat }, shown)),
       setKosztValue: (e) => {
         const raw = e.target.value;
-        const typed = Component.u(raw);
-        const units = isBrutto ? Math.round(typed / vRate) : typed;
-        const patch = Object.assign(Component.costPatch(units, r.vat), { kosztEditing: raw });
-        // cena sprzedaży idzie za zakupem, dopóki mechanik jej nie nadpisał
-        if (!r.priceTouched) Object.assign(patch, Component.pricePatch(Component.priceUFromCostU(units, r.grupa)));
-        this._patchRow(collection, r.id, patch);
+        this._patchRow(collection, r.id, (x) => {
+          const next = Object.assign({}, x, { koszt: raw, purchaseSide: shown });
+          // cena sprzedaży idzie za zakupem, dopóki mechanik jej nie nadpisał
+          if (!x.priceTouched) {
+            const netCost = Component.convertAmount(Component.parseNum(raw), shown, 'net', x.vat);
+            next.cena = Component.pl(Component.priceFromCost(netCost, x.grupa).toFixed(2));
+            next.priceSide = 'net';
+            next.anchor = 'unit';
+          }
+          return withTotal(next);
+        });
       },
-      commitKoszt: () => this._patchRow(collection, r.id, { kosztEditing: null }),
+      commitKoszt: () => this._patchRow(collection, r.id, (x) => (
+        x.purchaseSide !== shown || String(x.koszt || '').trim() === ''
+          ? x
+          : Object.assign({}, x, { koszt: Component.pl(Component.normalizeAmount(x.koszt)) }))),
+
       sumaLabel: isBrutto ? 'Wartość brutto (zł)' : 'Wartość netto (zł)',
-      setSumaInput: isBrutto ? set('bruttoEditing') : set('nettoEditing'),
-      commitSuma: isBrutto ? commitBrutto : commitNetto,
+      // Edycja wartości pozycji: kotwica TOTAL, cena jednostkowa staje się pochodną.
+      setSumaInput: (e) => {
+        const raw = e.target.value;
+        this._patchRow(collection, r.id, (x) => {
+          const next = Object.assign({}, x, {
+            priceSide: shown, totalPrice: Component.pl(rabatOffset(raw)), anchor: 'total', priceTouched: true,
+          });
+          next.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(next)));
+          return next;
+        });
+      },
+      // Domknięcie: cena jednostkowa zaokrągla się do 2 miejsc (tyle przyjmuje API),
+      // a wartość przelicza się z tej ceny — pole pokazuje kwotę, która zostanie zapisana.
+      commitSuma: () => this._patchRow(collection, r.id, (x) => {
+        if (x.priceSide !== shown || x.anchor !== 'total') return x;
+        const norm = Object.assign({}, x, { totalPrice: Component.pl(Component.normalizeAmount(x.totalPrice)) });
+        norm.cena = Component.pl(Component.deriveUnitPrice(Component.priceRow(norm)));
+        norm.anchor = 'unit';
+        return withTotal(norm);
+      }),
 
       // Wyliczone
       nettoDisplay:  Component.fmt(cmp.netto),
       bruttoDisplay: Component.fmt(cmp.brutto),
-      bruttoValue:   r.bruttoEditing != null ? r.bruttoEditing : Component.fmt(cmp.brutto),
-      sumaValue: isBrutto
-        ? (r.bruttoEditing != null ? r.bruttoEditing : Component.fmt(cmp.brutto))
-        : (r.nettoEditing != null ? r.nettoEditing : Component.fmt(cmp.netto)),
+      bruttoValue:   Component.fmt(cmp.brutto),
+      // bez rabatu pole pokazuje liczbę użytkownika (albo kwotę pochodną drugiej strony),
+      // z rabatem — wartość po rabacie
+      sumaValue: (discGr > 0)
+        ? Component.fmt(isBrutto ? cmp.brutto : cmp.netto)
+        : Component.pl(Component.shownTotalPrice(pr, shown)),
       netto:  cmp.netto,
       brutto: cmp.brutto,
       vatAmt: cmp.vatAmt,
@@ -2122,9 +2241,15 @@ class Component extends DCLogic {
             const def = Component.defaultGroup();
             const grupa = def ? def.value : '';
             const vat = it.vat || '23';
-            const kosztU = Component.u(it.cena);
-            return Object.assign(row, Component.costPatch(kosztU, vat),
-              Component.pricePatch(grupa ? Component.priceUFromCostU(kosztU, grupa) : kosztU), {
+            const kosztNet = Component.roundHalfUp(Component.parseNum(it.cena), 2);
+            const cenaNet = grupa ? Component.priceFromCost(kosztNet, grupa) : kosztNet;
+            return Object.assign(row, {
+              koszt: Component.pl(kosztNet.toFixed(2)),
+              purchaseSide: 'net',
+              cena: Component.pl(cenaNet.toFixed(2)),
+              priceSide: 'net',
+              anchor: 'unit',
+              totalPrice: Component.pl(Component.roundHalfUp(cenaNet * (Component.parseNum(row.qty) || 1), 2).toFixed(2)),
               name: it.name || '',
               indeks: it.indeks || '',
               producent: it.producent || '',
