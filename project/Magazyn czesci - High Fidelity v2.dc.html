@@ -1307,6 +1307,64 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           </div>
         </div>
       </sc-if>
+      <sc-if value="{{ offerPreview.open }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;inset:0;z-index:14;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:flex-start;padding:40px;overflow-y:auto">
+          <div style="position:relative;background:#FFFFFF;border-radius:8px;width:100%;max-width:720px;padding:40px 44px;display:flex;flex-direction:column;gap:24px;box-shadow:0 24px 60px rgba(10,11,41,0.24)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+              <span style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:22px;line-height:30px;font-weight:600;color:#1B1D21">{{ offerPreview.title }}</span>
+                <span style="font-size:14px;line-height:20px;color:#6B707D">{{ offerPreview.sentAt }} · {{ offerPreview.status }}</span>
+              </span>
+              <button type="button" onClick="{{ offerPreview.close }}" aria-label="Zamknij podgląd" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:50%;background:#F0F1F5;cursor:pointer;display:inline-flex;align-items:center;justify-content:center">
+                <span style="width:16px;height:16px;display:block;background-color:#1B1D21;-webkit-mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat;mask:url(assets/icons/i-close.svg) center / 16px 16px no-repeat"></span>
+              </button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:14px;line-height:20px;color:#1B1D21">
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="color:#6B707D">Warsztat</span>
+                <span style="font-weight:500">{{ offerPreview.seller }}</span>
+                <span style="color:#6B707D">{{ offerPreview.sellerAddress }}</span>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="color:#6B707D">Klient i pojazd</span>
+                <span style="font-weight:500">{{ offerPreview.client }}</span>
+                <span style="color:#6B707D">{{ offerPreview.car }}</span>
+              </span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;border-top:1px solid #E9ECF1">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 150px 120px 120px;gap:12px;padding:12px 0;font-size:12px;line-height:16px;color:#6B707D;border-bottom:1px solid #E9ECF1">
+                <div>Pozycja</div><div>Ilość × cena</div><div style="text-align:right">Netto</div><div style="text-align:right">Brutto</div>
+              </div>
+              <sc-for list="{{ offerPreview.rows }}" as="p" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) 150px 120px 120px;gap:12px;padding:12px 0;font-size:15px;line-height:22px;color:#1B1D21;border-bottom:1px solid #F0F1F5;font-variant-numeric:tabular-nums">
+                  <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span>
+                    <span style="font-size:12px;line-height:16px;color:#6B707D">{{ p.group }}</span>
+                  </span>
+                  <span style="color:#6B707D;white-space:nowrap">{{ p.qty }}</span>
+                  <span style="text-align:right;white-space:nowrap">{{ p.net }}</span>
+                  <span style="text-align:right;white-space:nowrap">{{ p.gross }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;font-size:15px;line-height:22px;color:#1B1D21;font-variant-numeric:tabular-nums">
+              <sc-if value="{{ offerPreview.hasRabat }}" hint-placeholder-val="{{ false }}">
+                <span>{{ offerPreview.rabatLabel }}: <b style="font-weight:500">{{ offerPreview.rabat }}</b></span>
+              </sc-if>
+              <span>Suma netto: <b style="font-weight:500">{{ offerPreview.sumNet }}</b></span>
+              <span style="font-size:18px;line-height:26px">Suma brutto: <b style="font-weight:600">{{ offerPreview.sumGross }}</b></span>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:12px;border-top:1px solid #E9ECF1;padding-top:20px">
+              <button type="button" onClick="{{ offerPreview.close }}" style="height:44px;padding:0 20px;border:0;border-radius:8px;background:#F0F1F5;color:#222693;font-family:inherit;font-size:15px;line-height:22px;font-weight:500;cursor:pointer">Zamknij</button>
+              <button type="button" onClick="{{ offerPreview.downloadPdf }}" style="height:44px;padding:0 20px;border:0;border-radius:8px;background:#222693;color:#FFFFFF;font-family:inherit;font-size:15px;line-height:22px;font-weight:500;cursor:pointer">Pobierz PDF</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
       <sc-if value="{{ billing.disconnectAsk }}" hint-placeholder-val="{{ false }}">
         <div style="position:fixed;inset:0;z-index:12;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;padding:40px">
           <div style="position:relative;background:var(--tk-surface);border-radius:16px;width:100%;max-width:520px;padding:28px;display:flex;flex-direction:column">
@@ -7248,6 +7306,56 @@ class Component extends DCLogic {
     this.ziloToast('Oferta przywrócona do wyceny');
   }
 
+  // Podgląd wysłanej oferty — dokument, nie edycja. Na produkcji ten przycisk
+  // otwiera PDF oferty (getDownloadQuotePdf), więc tutaj pokazujemy tę samą treść
+  // w układzie dokumentu: pozycje, rabat i sumy, bez żadnego pola do wpisania.
+  offerPreviewVals() {
+    const key = String(this.state.offerPreview || '');
+    if (!key) return { open: false, rows: [], hasRabat: false };
+    const visitId = key.split(':')[0];
+    const idx = Number(key.split(':')[1]);
+    const entry = ((this.state.offerHistory || {})[visitId] || [])[idx];
+    if (!entry) return { open: false, rows: [], hasRabat: false };
+    const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
+    const seller = this.garageSeller();
+    const split = this.qsplit({ robociznas: entry.uslugi || [], towars: entry.towary || [], discount: entry.discount || null });
+    const line = (r, k, group) => {
+      const c = this.qcalc(r, split[k]);
+      return {
+        name: r.name && String(r.name).trim() ? r.name : '—',
+        group: group,
+        qty: String(r.qty || '1') + ' × ' + this.moneyPl(this.qnum(r.cena)),
+        net: this.moneyPl(c.net),
+        gross: this.moneyPl(c.gross),
+        cut: c.cut || 0,
+        cutGross: c.cutGross || 0,
+      };
+    };
+    const rows = (entry.uslugi || []).map((r, i) => line(r, 'u:' + i, 'Usługa'))
+      .concat((entry.towary || []).map((r, i) => line(r, 't:' + i, 'Towar')));
+    const net = rows.reduce((a, r) => a + this.qnum(r.net), 0);
+    const gross = rows.reduce((a, r) => a + this.qnum(r.gross), 0);
+    const rabat = rows.reduce((a, r) => a + r.cutGross, 0);
+    return {
+      open: true,
+      title: 'Oferta dla klienta',
+      sentAt: 'Wysłana ' + (entry.date || ''),
+      status: entry.status || 'Wysłana',
+      seller: seller.company || 'Warsztat',
+      sellerAddress: [seller.street, [seller.zip, seller.city].filter(Boolean).join(' ')].filter(Boolean).join(', '),
+      client: ev.client || '—',
+      car: [ev.brand, ev.model].filter(Boolean).join(' ') + (ev.plate ? ' · ' + ev.plate : ''),
+      rows: rows,
+      hasRabat: rabat > 0,
+      rabatLabel: this.rabatLabel({ discount: entry.discount || null }),
+      rabat: this.moneyPl(rabat),
+      sumNet: this.moneyPl(net),
+      sumGross: this.moneyPl(gross),
+      close: () => this.setState({ offerPreview: null }),
+      downloadPdf: () => this.ziloToast('Oferta pobrana jako PDF'),
+    };
+  }
+
   wycVals(ev) {
     const s = this.state;
     const id = ev && ev.id;
@@ -7402,12 +7510,9 @@ class Component extends DCLogic {
           flashAnim: isFlash ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',
           flashMark: isFlash ? '1' : '0',
           issueFv: () => this.openInvoiceConfig(id, { uslugi: h.uslugi, towary: h.towary, discount: h.discount || null }),
-          // Podgląd pokazuje pozycje TEJ oferty, nie bieżącą wycenę — na produkcji
-          // ten przycisk otwiera PDF konkretnej oferty (getDownloadQuotePdf).
-          preview: () => this.openWycConfig(id, null, {
-            preview: true,
-            state: { robociznas: h.uslugi || [], towars: h.towary || [], discount: h.discount || null },
-          }),
+          // Podgląd otwiera dokument tej oferty — na produkcji jest to PDF,
+          // więc tutaj też nie wchodzimy w edycję.
+          preview: () => this.setState({ offerPreview: id + ':' + i }),
           // przywrócenie wrzuca pozycje tej oferty z powrotem do wyceny wizyty
           restoreAsk: () => this.setState({ offerRestoreAsk: id + ':' + i }),
           menuOpen: s.historyMenu === id + ':' + i,
@@ -8592,6 +8697,7 @@ class Component extends DCLogic {
       isBillingPick: s.screen === 'billingPick',
       isBillingForm: s.screen === 'billingForm',
       billing: this.billingVals(),
+      offerPreview: this.offerPreviewVals(),
       isGoods: s.screen === 'goods',
       isReports: s.screen === 'reports',
       reports: this.reportsVals(),
