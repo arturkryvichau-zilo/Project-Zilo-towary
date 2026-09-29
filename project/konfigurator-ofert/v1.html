@@ -185,9 +185,6 @@ window.__resources = {
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ uslugaUnits }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.qty }}" onInput="{{ r.setQty }}" onBlur="{{ r.commitQty }}"></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}" onBlur="{{ r.commitCena }}"></label>
-            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
-            </sc-if>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}" onBlur="{{ r.commitSuma }}"></label>
             <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
           </div>
@@ -209,9 +206,6 @@ window.__resources = {
             <label class="o-cell" style="position:relative;cursor:pointer"><span class="o-label">Jednostka</span><select class="o-input" value="{{ r.unit }}" onChange="{{ r.setUnit }}"><sc-for list="{{ towarUnits }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select><span class="o-chev"></span></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">Ilość</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.qty }}" onInput="{{ r.setQty }}" onBlur="{{ r.commitQty }}"></label>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.cenaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.cenaValue }}" onInput="{{ r.setCenaValue }}" onBlur="{{ r.commitCena }}"></label>
-            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
-              <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.rabatLabel }}</span><input class="o-input" type="text" inputMode="decimal" placeholder="—" value="{{ r.rabatValue }}" onInput="{{ r.setRowDiscount }}" onBlur="{{ r.commitRabat }}"></label>
-            </sc-if>
             <label class="o-cell" style="cursor:text"><span class="o-label">{{ r.sumaLabel }}</span><input class="o-input" type="text" inputMode="decimal" value="{{ r.sumaValue }}" onInput="{{ r.setSumaValue }}" onBlur="{{ r.commitSuma }}"></label>
             <button type="button" class="o-trash" onClick="{{ r.remove }}" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left"><span></span></button>
           </div>
@@ -915,7 +909,7 @@ static draftNet(state, draft) {
       amountDisplay: Component.grFmt(discShown),
       clamped: !!(d && calc.info.clamped),
       clampedText: 'Rabat przycięty do wartości zakresu (' + Component.grFmt(calc.info.base) + ' zł). Pozycje zmieniły się po nadaniu rabatu.',
-      isCustom: !!(d && d.custom && d.origin),
+      isCustom: false,
       backLabel: 'Wróć do ' + originLabel,
       restore: () => this.discountRestore(),
       add: () => this.openDiscount(false),
@@ -1329,17 +1323,10 @@ static draftNet(state, draft) {
 
   // Wpisana wartość pozycji jest celem PO rabacie — wartość odtwarzamy iteracyjnie,
   // bo część rabatu zależy od wartości pozycji.
+  // Wiersz pokazuje własną kwotę (rabat schodzi dopiero z sum), więc wpisana
+  // wartość jest wartością pozycji wprost.
   baseForTarget(coll, id, side, targetRaw) {
-    const target = Component.num(targetRaw);
-    if (!this.state.discount) return target;
-    let base = target;
-    for (let i = 0; i < 6; i += 1) {
-      const cut = this.cutForTotal(coll, id, side, base);
-      const next = Component.roundHalfUp(target + cut, 2);
-      if (Math.abs(next - base) < 0.005) { base = next; break; }
-      base = next;
-    }
-    return base;
+    return Component.num(targetRaw);
   }
 
   buildRows(coll, withProducent, per, perGross) {
@@ -1408,9 +1395,6 @@ static draftNet(state, draft) {
         setSumaValue: (e) => {
           const raw = e.target.value;
           this.patch(coll, r.id, (x) => {
-            // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
-            // pokazywać wpisywany tekst
-            if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
             const next = Object.assign({}, x, {
               priceSide: shown, totalPrice: raw, anchor: 'total',
             });
@@ -1689,9 +1673,9 @@ static draftNet(state, draft) {
       discount: this.discountVals(q),
       // Oferta dla klienta nie ma pola VAT — stawka jest atrybutem warsztatu (23%),
       // a pozycje przyniesione z wyceny zachowują swoją. Tak samo na produkcji.
-      posMinWidth: s.discount ? '1370px' : '1200px',
-      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
-      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
+      posMinWidth: '1200px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px' + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + ' 154px 36px',
       segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
       segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
       pickNetto: () => this.switchValueMode('netto'),
@@ -1706,8 +1690,8 @@ static draftNet(state, draft) {
         chan('sms', 'SMS', 'Klient otrzyma powiadomienie o wycenie na numer telefonu przypisany do zlecenia', false),
         chan('mail', 'E-mail', 'Klient otrzyma wiadomość z odnośnikiem do wyceny na skrzynkę e-mail przypisaną do zlecenia', true),
       ],
-      uslugi: this.buildRows('uslugi', false, q.per, q.info.perGross),
-      towary: this.buildRows('towary', true, q.per, q.info.perGross),
+      uslugi: this.buildRows('uslugi', false, null, null),
+      towary: this.buildRows('towary', true, null, null),
       addUsluga: () => this.setState((st) => ({ uslugi: st.uslugi.concat([Component.mkRow(st.nextU, null, false)]), nextU: st.nextU + 1 })),
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null, docDayMap: null }),

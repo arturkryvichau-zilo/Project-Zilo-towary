@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wycena zlecenia — wariant z kolumną rabatu</title>
 <link rel="stylesheet" href="../css/theme.css">
 <script>
 /* Motyw ustawiamy przed pierwszym malowaniem, żeby nie mignęło jasnym tłem.
@@ -328,6 +329,20 @@ window.__resources = {
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onBlur="{{ row.commitCena }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
+            <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                    <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.rabatLabel }}</div>
+                    <input class="z-input" type="text" inputMode="decimal" placeholder="—" value="{{ row.rabatValue }}" onChange="{{ row.setRowDiscount }}" onInput="{{ row.setRowDiscount }}" onBlur="{{ row.commitRabat }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                  </div>
+                </label>
+                <sc-if value="{{ row.hasRabatError }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11px;line-height:16px;color:var(--red);padding:0 2px">{{ row.rabatError }}</span>
+                </sc-if>
+              </div>
+            </sc-if>
             <!-- Wartość pozycji — netto albo brutto, zależnie od przełącznika -->
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
@@ -434,6 +449,20 @@ window.__resources = {
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.cenaValue }}" onChange="{{ row.setCenaValue }}" onBlur="{{ row.commitCena }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
+            <!-- Rabat przy pozycji — zawsze w złotówkach, tylko przy nadanym rabacie -->
+            <sc-if value="{{ showRabat }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ row.rabatBorder }};border-radius:10px;cursor:text;">
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                    <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">{{ row.rabatLabel }}</div>
+                    <input class="z-input" type="text" inputMode="decimal" placeholder="—" value="{{ row.rabatValue }}" onChange="{{ row.setRowDiscount }}" onInput="{{ row.setRowDiscount }}" onBlur="{{ row.commitRabat }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+                  </div>
+                </label>
+                <sc-if value="{{ row.hasRabatError }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11px;line-height:16px;color:var(--red);padding:0 2px">{{ row.rabatError }}</span>
+                </sc-if>
+              </div>
+            </sc-if>
             <!-- Wartość pozycji — netto albo brutto, zależnie od przełącznika -->
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
@@ -938,11 +967,6 @@ class Component extends DCLogic {
   }
 
 
-  // ── WERSJA V1 — uproszczone rabatowanie ──────────────────────────────
-  // Rabat żyje wyłącznie w podsumowaniu dokumentu: nie ma pola rabatu przy
-  // pozycjach, wiersze pokazują własne kwoty, a rabat schodzi dopiero z sum.
-  // Wewnątrz i tak rozdziela się na pozycje — inaczej VAT po rabacie nie
-  // policzyłby się poprawnie przy mieszanych stawkach.
   static pl(v) { return String(v).replace('.', ','); }
 
   // Wiersz z zewnątrz (zapisana wycena, import, #state=) ma tylko cenę jednostkową —
@@ -1044,10 +1068,17 @@ class Component extends DCLogic {
   // Wartość pozycji pokazuje kwotę PO rabacie, więc wpisana liczba jest celem po
   // rabacie — wartość pozycji odtwarzamy z niej iteracyjnie, bo część rabatu zależy
   // od wartości pozycji (rabat kwotowy rozdziela się proporcjonalnie).
-  // W v1 wiersz pokazuje własną kwotę (rabat schodzi dopiero z sum), więc wpisana
-  // wartość jest wartością pozycji wprost.
   baseForTarget(collection, id, side, targetRaw) {
-    return Component.parseNum(targetRaw);
+    const target = Component.parseNum(targetRaw);
+    if (!this.state.discount) return target;
+    let base = target;
+    for (let i = 0; i < 6; i += 1) {
+      const cut = this.cutForTotal(collection, id, side, base);
+      const next = Component.roundHalfUp(target + cut, 2);
+      if (Math.abs(next - base) < 0.005) { base = next; break; }
+      base = next;
+    }
+    return base;
   }
 
   // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
@@ -1169,7 +1200,7 @@ class Component extends DCLogic {
       amountDisplay: Component.grFmt(discShown),
       clamped: !!(d && calc.info.clamped),
       clampedText: 'Rabat przycięty do wartości zakresu (' + Component.grFmt(calc.info.base) + ' zł). Pozycje zmieniły się po nadaniu rabatu.',
-      isCustom: false,
+      isCustom: !!(d && d.custom && d.origin),
       backLabel: 'Wróć do ' + originLabel,
       restore: () => this.discountRestore(),
       add: () => this.openDiscount(false),
@@ -1895,6 +1926,9 @@ class Component extends DCLogic {
       setSumaInput: (e) => {
         const raw = e.target.value;
         this._patchRow(collection, r.id, (x) => {
+          // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
+          // pokazywać wpisywany tekst, inaczej pierwsza cyfra znika w przeliczeniu
+          if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
           const next = Object.assign({}, x, {
             priceSide: shown, totalPrice: raw, anchor: 'total', priceTouched: true,
           });
@@ -2175,17 +2209,17 @@ class Component extends DCLogic {
     // Towar: name | indeks | producent | koszt | jednostka | ilość | cena | (rabat)? | wNetto | trash
     // Grupa cenowa jest jedna na całą wycenę i stoi w sekcji klienta, nie w wierszu.
     // usługa: osoba, czas, jednostka, ilość, cena, (rabat)?, wartość
-    const robGridStyle = gridStyle(6);
+    const robGridStyle = gridStyle(6 + (showRabat ? 1 : 0));
     // towar: indeks, producent, zakup, jednostka, ilość, cena, (rabat)?, wartość
-    const towGridStyle = gridStyle(7);
+    const towGridStyle = gridStyle(7 + (showRabat ? 1 : 0));
 
     // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd
     const calc = Component.computeQuote(this.state);
     const robociznas = this.state.robociznas.map((r) =>
-      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, false, 0, null)
+      this._buildRow('robociznas', r, Component.ROBOCIZNA_UNITS, true, false, showRabat, calc.per[Component.rowKey('robociznas', r)], (calc.info.perGross || {})[Component.rowKey('robociznas', r)])
     );
     const towars = this.state.towars.map((r) =>
-      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, false, 0, null)
+      this._buildRow('towars', r, Component.TOWAR_UNITS, false, true, showRabat, calc.per[Component.rowKey('towars', r)], (calc.info.perGross || {})[Component.rowKey('towars', r)])
     );
     // Totals per-list + global
     const sumBy = (list, key) => list.reduce((s, x) => s + x[key], 0);
