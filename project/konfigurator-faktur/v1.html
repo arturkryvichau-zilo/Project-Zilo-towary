@@ -1579,15 +1579,16 @@ static draftNet(state, draft) {
   sumOf(coll, per, perGross) {
     const t = this.state[coll].reduce((a, r) => {
       const c = this.calc(r, (per || {})[Component.rowKey(coll, r)] || 0, (perGross || {})[Component.rowKey(coll, r)]);
-      return { net: a.net + c.net, gross: a.gross + c.gross, rabat: a.rabat + c.rabat };
-    }, { net: 0, gross: 0, rabat: 0 });
+      return { net: a.net + c.net, gross: a.gross + c.gross, rabat: a.rabat + c.rabat, rabatGross: a.rabatGross + (c.cutGrossGr || 0) / 100 };
+    }, { net: 0, gross: 0, rabat: 0, rabatGross: 0 });
     const brutto = this.state.valueMode === 'brutto';
     return {
       net: Component.money(t.net), vat: Component.money(t.gross - t.net), gross: Component.money(t.gross),
-      rabat: Component.money(t.rabat),
+      // rabat pokazujemy po stronie brutto — tak go zwykle ustala się dla klienta
+      rabat: Component.money(t.rabatGross),
       label: brutto ? 'Suma brutto' : 'Suma netto',
       value: brutto ? Component.money(t.gross) : Component.money(t.net),
-      _n: t.net, _g: t.gross, _r: t.rabat,
+      _n: t.net, _g: t.gross, _r: t.rabat, _rg: t.rabatGross,
     };
   }
 
@@ -1797,7 +1798,7 @@ static draftNet(state, draft) {
     const sumT = this.sumOf('towary', q.per, q.info.perGross);
     const net = sumU._n + sumT._n;
     const gross = sumU._g + sumT._g;
-    const rabatAmt = sumU._r + sumT._r;
+    const rabatAmt = sumU._rg + sumT._rg;      // rabat brutto — tak pokazujemy go klientowi
 
     // lista ogranicza się do firm przypisanych do tego klienta; firma zaciągnięta
     // z GUS dochodzi jako bieżący wybór, żeby jej nazwa miała gdzie się pokazać
