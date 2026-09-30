@@ -1680,10 +1680,14 @@ static draftNet(state, draft) {
   renderVals() {
     const s = this.state;
     const q = this.quoteCalc();
-    // Sumy grup liczymy tak jak wiersze: po rabacie, bo w tej wersji rabat jest
-    // rozpisany przy pozycjach i widać go w kolumnie obok wartości.
-    const sumU = this.sumOf('uslugi', q.per, q.info.perGross);
-    const sumT = this.sumOf('towary', q.per, q.info.perGross);
+    // W przepływie v1 rabat nie dotyka pozycji — wiersze i sumy grup pokazują
+    // własne kwoty, a rabat schodzi dopiero w panelu, tak samo jak w wycenie.
+    // W przepływie v2 rabat jest rozpisany przy pozycjach, więc wiersze i sumy
+    // grup są po rabacie.
+    const perRow = Component.rabatFlowV1() ? null : q.per;
+    const perRowGross = Component.rabatFlowV1() ? null : q.info.perGross;
+    const sumU = this.sumOf('uslugi', perRow, perRowGross);
+    const sumT = this.sumOf('towary', perRow, perRowGross);
     const net = q.net / 100;                  // sumy dokumentu — już po rabacie
     const gross = q.gross / 100;
     const rabatAmt = (q.beforeGross - q.gross) / 100;   // rabat brutto
@@ -1733,8 +1737,8 @@ static draftNet(state, draft) {
         chan('sms', 'SMS', 'Klient otrzyma powiadomienie o wycenie na numer telefonu przypisany do zlecenia', false),
         chan('mail', 'E-mail', 'Klient otrzyma wiadomość z odnośnikiem do wyceny na skrzynkę e-mail przypisaną do zlecenia', true),
       ],
-      uslugi: this.buildRows('uslugi', false, q.per, q.info.perGross),
-      towary: this.buildRows('towary', true, q.per, q.info.perGross),
+      uslugi: this.buildRows('uslugi', false, perRow, perRowGross),
+      towary: this.buildRows('towary', true, perRow, perRowGross),
       addUsluga: () => this.setState((st) => ({ uslugi: st.uslugi.concat([Component.mkRow(st.nextU, null, false)]), nextU: st.nextU + 1 })),
       addTowar: () => this.setState((st) => ({ towary: st.towary.concat([Component.mkRow(st.nextT, null, true)]), nextT: st.nextT + 1 })),
       openDocPicker: () => this.setState({ docPickerOpen: true, docQuery: '', docPicked: [], docOpenMap: null, docDayMap: null }),
