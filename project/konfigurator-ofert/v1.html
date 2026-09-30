@@ -616,6 +616,15 @@ class Component extends DCLogic {
 
   static pl(v) { return String(v).replace('.', ','); }
 
+  // Przepływ rabatu wybiera prototyp adresem: `rabat=v1` chowa kolumnę rabatu
+  // przy pozycjach — rabat zostaje wtedy wyłącznie w podsumowaniu dokumentu.
+  static rabatFlowV1() {
+    try {
+      const q = String(location.search || '') + String(location.hash || '');
+      return /[?&#]rabat=v1\b/.test(q);
+    } catch (e) { return false; }
+  }
+
   // Wiersz w kształcie, który czyta rdzeń — nasze pola mają polskie nazwy.
   static priceRow(r) {
     return {
@@ -1698,16 +1707,17 @@ static draftNet(state, draft) {
       };
     } catch (e) {}
     return {
-      showRabat: !!s.discount,
+      // w przepływie v1 rabat żyje tylko w podsumowaniu — kolumny przy pozycjach nie ma
+      showRabat: !!s.discount && !Component.rabatFlowV1(),
       // pola kwotowe w modalu rabatu: zaznacz przy wejściu, Enter zatwierdza
       selectOnFocus: (e) => e.target.select && e.target.select(),
       commitOnEnter: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
       discount: this.discountVals(q),
       // Oferta dla klienta nie ma pola VAT — stawka jest atrybutem warsztatu (23%),
       // a pozycje przyniesione z wyceny zachowują swoją. Tak samo na produkcji.
-      posMinWidth: s.discount ? '1370px' : '1200px',
-      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
-      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + (s.discount ? ' 154px' : '') + ' 154px 36px',
+      posMinWidth: (s.discount && !Component.rabatFlowV1()) ? '1370px' : '1200px',
+      uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px' + ((s.discount && !Component.rabatFlowV1()) ? ' 154px' : '') + ' 154px 36px',
+      towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + ((s.discount && !Component.rabatFlowV1()) ? ' 154px' : '') + ' 154px 36px',
       segNetto: s.valueMode !== 'brutto' ? 'true' : 'false',
       segBrutto: s.valueMode === 'brutto' ? 'true' : 'false',
       pickNetto: () => this.switchValueMode('netto'),

@@ -5,6 +5,10 @@
       "destination": "/Magazyn%20czesci%20-%20High%20Fidelity%20v2.dc.html"
     },
     {
+      "source": "/flow-v1",
+      "destination": "/Magazyn%20czesci%20-%20High%20Fidelity%20v2.dc.html?rabat=v1"
+    },
+    {
       "source": "/v1",
       "destination": "/Magazyn%20czesci%20-%20High%20Fidelity.dc.html"
     },

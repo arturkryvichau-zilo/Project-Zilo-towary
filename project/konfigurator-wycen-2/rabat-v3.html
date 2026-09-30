@@ -537,10 +537,6 @@ window.__resources = {
           </div>
         </sc-if>
         <sc-if value="{{ discount.hasAmount }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;margin-bottom:14px;">
-            <span style="color:var(--grey-2);">{{ discount.beforeLabel }}</span>
-            <span style="color:var(--grey-2);font-weight:400;">{{ discount.beforeDisplay }} zł</span>
-          </div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;margin-bottom:16px;">
             <span style="color:var(--grey-1);">Rabat:</span>
             <span style="color:var(--grey-1);font-weight:400;white-space:nowrap">− {{ discount.amountDisplay }} zł</span>
@@ -1611,8 +1607,6 @@ class Component extends DCLogic {
           robociznas: (st.robociznas || []).map((r) => Object.assign({}, r, { rabatPct: '' })),
           towars: (st.towars || []).map((r) => Object.assign({}, r, { rabatPct: '' })),
         })),
-        beforeLabel: this.state.valueMode === 'brutto' ? 'Suma brutto przed rabatem:' : 'Suma netto przed rabatem:',
-        beforeDisplay: Component.grFmt(this.state.valueMode === 'brutto' ? calc.beforeGross : calc.before),
         hasAmount: discShownGr > 0,
         amountDisplay: Component.grFmt(discShownGr),
       },

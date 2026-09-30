@@ -699,6 +699,15 @@ class Component extends DCLogic {
 
   static pl(v) { return String(v).replace('.', ','); }
 
+  // Przepływ rabatu wybiera prototyp adresem: `rabat=v1` chowa kolumnę rabatu
+  // przy pozycjach — rabat zostaje wtedy wyłącznie w podsumowaniu dokumentu.
+  static rabatFlowV1() {
+    try {
+      const q = String(location.search || '') + String(location.hash || '');
+      return /[?&#]rabat=v1\b/.test(q);
+    } catch (e) { return false; }
+  }
+
   // Wiersz w kształcie, który czyta rdzeń — nasze pola mają polskie nazwy.
   static priceRow(r) {
     return {
@@ -1808,7 +1817,7 @@ static draftNet(state, draft) {
       try { window.addEventListener('message', this.__sellerHook); } catch (err) {}
     }
     const q = this.quoteCalc();
-    const rabatCol = s.discount ? ' 154px' : '';
+    const rabatCol = (s.discount && !Component.rabatFlowV1()) ? ' 154px' : '';
     // Sumy grup liczymy tak jak wiersze: po rabacie, bo w tej wersji rabat jest
     // rozpisany przy pozycjach i widać go w kolumnie obok wartości.
     const sumU = this.sumOf('uslugi', q.per, q.info.perGross);
@@ -1923,7 +1932,8 @@ static draftNet(state, draft) {
       cname: s.cname, setCname: bind('cname'),
       cmail: s.cmail, setCmail: bind('cmail'),
 
-      showRabat: !!s.discount,
+      // w przepływie v1 rabat żyje tylko w podsumowaniu — kolumny przy pozycjach nie ma
+      showRabat: !!s.discount && !Component.rabatFlowV1(),
       // pola kwotowe w modalu rabatu: zaznacz przy wejściu, Enter zatwierdza
       selectOnFocus: (e) => e.target.select && e.target.select(),
       commitOnEnter: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
@@ -1934,7 +1944,7 @@ static draftNet(state, draft) {
       pickNetto: () => this.switchValueMode('netto'),
       pickBrutto: () => this.switchValueMode('brutto'),
 
-      posMinWidth: s.discount ? '1520px' : '1350px',
+      posMinWidth: (s.discount && !Component.rabatFlowV1()) ? '1520px' : '1350px',
       uslugiGrid: 'minmax(320px,1fr) 154px 154px 154px 154px' + rabatCol + ' 154px 36px',
       towaryGrid: 'minmax(320px,1fr) 154px 154px 154px 154px 154px' + rabatCol + ' 154px 36px',
       uslugaUnits: Component.USLUGA_UNITS,
