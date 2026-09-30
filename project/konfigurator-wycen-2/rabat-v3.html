@@ -1273,7 +1273,7 @@ class Component extends DCLogic {
         this._patchRow(collection, r.id, (x) => {
           // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
           // pokazywać wpisywany tekst, inaczej pierwsza cyfra znika w przeliczeniu
-          if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
+          if (Component.parseNum(x.rabatPct) > 0) return Object.assign({}, x, { sumaEditing: raw });
           const next = Object.assign({}, x, {
             priceSide: shown, totalPrice: raw, anchor: 'total', priceTouched: true,
           });
@@ -1285,7 +1285,11 @@ class Component extends DCLogic {
       // a wartość przelicza się z tej ceny — pole pokazuje kwotę, która zostanie zapisana.
       commitSuma: () => this._patchRow(collection, r.id, (x) => {
         if (x.sumaEditing != null) {
-          const base = this.baseForTarget(collection, r.id, shown, x.sumaEditing);
+          // wpisana kwota jest wartością PO rabacie tej pozycji, a rabat jest
+          // procentem tylko jej — wartość pozycji odtwarzamy wprost
+          const target = Component.parseNum(x.sumaEditing);
+          const pct = Math.min(Component.parseNum(x.rabatPct), 100);
+          const base = pct >= 100 ? target : Component.roundHalfUp(target / (1 - pct / 100), 2);
           const norm = Object.assign({}, x, {
             priceSide: shown, anchor: 'total', priceTouched: true, sumaEditing: null,
             totalPrice: Component.pl(base.toFixed(2)),
