@@ -72,6 +72,8 @@ window.__resources = {
     /* Ikona „i" w polu „Czas pracy" + tooltip (hover tylko na ikonę) */
     .z-czas-info { position:absolute; right:11px; top:50%; transform:translateY(-50%); width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--grey-3); cursor:help; z-index:5; }
     .z-czas-info:hover { color:var(--zilo-blue-1); }
+    .z-rabat-info { width:18px; height:18px; flex:none; display:inline-flex; align-items:center; justify-content:center; color:var(--grey-3); cursor:help; }
+    .z-rabat-info:hover { color:var(--zilo-blue-1); }
     /* ─── Segmented Control (design system) ─── */
     .o-add { display:inline-flex; align-items:center; gap:6px; height:32px; padding:4px 8px; border:0; border-radius:4px; background:transparent; color:var(--zilo-blue-1, #222693); font-family:var(--font-sans); font-size:16px; line-height:22px; cursor:pointer; }
     .o-add:hover { background:var(--tk-brand-soft-2); }
@@ -538,7 +540,7 @@ window.__resources = {
         </sc-if>
         <sc-if value="{{ discount.hasAmount }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;line-height:22px;margin-bottom:16px;">
-            <span style="color:var(--grey-1);">Rabat:</span>
+            <span style="display:flex;align-items:center;gap:6px;color:var(--grey-1);">Rabat: <span class="z-rabat-info" aria-label="Informacja" data-tt="Rabat nie wpływa na prowizję pracowników" data-tt-pos="top"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.4" stroke="currentColor" stroke-width="1.4"></circle><rect x="9.1" y="8.7" width="1.8" height="5.2" rx="0.9" fill="currentColor"></rect><circle cx="10" cy="6.3" r="1.05" fill="currentColor"></circle></svg></span></span>
             <span style="color:var(--grey-1);font-weight:400;white-space:nowrap">− {{ discount.amountDisplay }} zł</span>
           </div>
         </sc-if>
