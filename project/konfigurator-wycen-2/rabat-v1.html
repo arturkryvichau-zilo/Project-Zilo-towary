@@ -1572,13 +1572,15 @@ class Component extends DCLogic {
         const calc = Component.discountAmount(state, d);
         info.amount = calc.amount; info.clamped = calc.clamped; info.base = calc.base;
         const inScope = Component.rowsInScope(state, d.scope);
-        if (d.mode === 'amt' && d.unit === 'gross') {
-          // Kwota wpisana w brutto schodzi z sumy brutto co do grosza: rozdzielamy ją
-          // po stronie brutto, a każdą część przeliczamy na netto stawką tej pozycji.
-          // Wcześniej szła przez proporcję netto/brutto całego zakresu — przy mieszanych
-          // stawkach wpisane 120,00 wracało jako 119,99 albo 120,01.
+        if (d.unit === 'gross') {
+          // Rabat nadany w brutto schodzi z sumy brutto co do grosza: liczymy go
+          // i rozdzielamy po stronie brutto, a każdą część przeliczamy na netto
+          // stawką tej pozycji. Liczony po stronie netto potrafił dać 40,01 zł
+          // przy 10% od 400,00 zł, bo grosze gubiły się przy powrocie do brutto.
           const bg = Component.scopeGross(state, d.scope);
-          const wantGross = Math.min(Component.gr(d.value), bg);
+          const wantGross = d.mode === 'pct'
+            ? Math.round(bg * Component.parseNum(d.value) / 100)
+            : Math.min(Component.gr(d.value), bg);
           const splitG = Component.distributeBy(wantGross, inScope, Component.rowGross);
           const perGross = {};
           let net = 0;
