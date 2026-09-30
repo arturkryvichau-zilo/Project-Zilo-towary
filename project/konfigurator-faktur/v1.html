@@ -1478,7 +1478,10 @@ static draftNet(state, draft) {
   // bo część rabatu zależy od wartości pozycji.
   baseForTarget(coll, id, side, targetRaw) {
     const target = Component.num(targetRaw);
-    if (!this.state.discount) return target;
+    // W przepływie v1 wiersz pokazuje własną kwotę, więc wpisana liczba jest
+    // wartością pozycji wprost — odtwarzanie „celu po rabacie" wychodziło wtedy
+    // bokiem: wpisane 220 lądowało jako 244,44.
+    if (Component.rabatFlowV1() || !this.state.discount) return target;
     let base = target;
     for (let i = 0; i < 6; i += 1) {
       const cut = this.cutForTotal(coll, id, side, base);
@@ -1555,9 +1558,8 @@ static draftNet(state, draft) {
         setSumaValue: (e) => {
           const raw = e.target.value;
           this.patch(coll, r.id, (x) => {
-            // przy rabacie pole pokazuje kwotę po rabacie — w trakcie pisania musi
-            // pokazywać wpisywany tekst
-            if (this.state.discount) return Object.assign({}, x, { sumaEditing: raw });
+            // bufor tylko tam, gdzie pole pokazuje kwotę po rabacie (przepływ v2)
+            if (this.state.discount && !Component.rabatFlowV1()) return Object.assign({}, x, { sumaEditing: raw });
             const next = Object.assign({}, x, {
               priceSide: shown, totalPrice: raw, anchor: 'total',
             });
