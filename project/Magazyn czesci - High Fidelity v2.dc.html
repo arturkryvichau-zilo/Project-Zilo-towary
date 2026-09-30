@@ -7603,7 +7603,7 @@ class Component extends DCLogic {
     }
     // ten sam wzorzec co oferta: znacznik czasu lamie cache iframe'a
     const seq = Date.now() + '-' + (this.__fvSeq = (this.__fvSeq || 0) + 1);
-    let src = 'konfigurator-faktur/v1.html?n=' + seq + (this.rabatFlowV1() ? '&rabat=v1' : '');
+    let src = 'konfigurator-faktur/v1.html?n=' + seq + (this.rabatFlowV1() ? '' : '&rabat=v2');
     try {
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const client = CLIENTS.filter((c) => c.cars.some((car) => car.plate === ev.plate))[0] || null;
@@ -7783,7 +7783,7 @@ class Component extends DCLogic {
     // licznik startuje od 1 przy każdym przeładowaniu strony, więc sam w sobie
     // nie łamie cache przeglądarki — stąd znacznik czasu
     const seq = Date.now() + '-' + (this.__ofrSeq = (this.__ofrSeq || 0) + 1);
-    let src = 'konfigurator-ofert/v1.html?n=' + seq + (this.rabatFlowV1() ? '&rabat=v1' : '');
+    let src = 'konfigurator-ofert/v1.html?n=' + seq + (this.rabatFlowV1() ? '' : '&rabat=v2');
     try {
       const ev = EVENTS.filter((x) => x.id === visitId)[0] || {};
       const client = CLIENTS.filter((c) => c.cars.some((car) => car.plate === ev.plate))[0] || null;
@@ -7878,22 +7878,23 @@ class Component extends DCLogic {
     this.flashScroll('offerFlash');
   }
 
-  // Prototyp obsługuje dwa przepływy rabatu. Domyślnie v2 (rabat z modala,
-  // rozpisany przy pozycjach); adres z `rabat=v1` przełącza cały przepływ na
-  // wariant v1 — wycena bez pola rabatu przy pozycjach, a oferta i faktura
-  // chowają swoją kolumnę rabatu.
+  // Prototyp jedzie na przepływie rabatu v1: rabat nadaje się raz, na cały
+  // dokument, i widać go tylko w podsumowaniu — ani wycena, ani oferta, ani
+  // faktura nie mają pola rabatu przy pozycjach. Wariant v2 (rabat rozpisany
+  // przy pozycjach) zostaje do porównania pod adresem z `rabat=v2`.
   rabatFlowV1() {
     try {
       const q = String(location.search || '') + String(location.hash || '');
-      return /[?&#]rabat=v1\b/.test(q);
-    } catch (e) { return false; }
+      return !/[?&#]rabat=v2\b/.test(q);
+    } catch (e) { return true; }
   }
 
   openWycConfig(visitId, focus, opts) {
     // licznik startuje od 1 przy każdym przeładowaniu strony, więc sam w sobie
     // nie łamie cache przeglądarki — stąd znacznik czasu
     const seq = Date.now() + '-' + (this.__wycSeq = (this.__wycSeq || 0) + 1);
-    let src = (this.rabatFlowV1() ? 'konfigurator-wycen-2/rabat-v1.html?n=' : 'konfigurator-wycen-2/v2.html?n=') + seq;
+    let src = (this.rabatFlowV1() ? 'konfigurator-wycen-2/rabat-v1.html?n=' : 'konfigurator-wycen-2/v2.html?n=') + seq
+      + (this.rabatFlowV1() ? '' : '&rabat=v2');
     const saved = (this.state.quotes || {})[visitId];
     try {
       // Towary przypisane z zakładki „Towary" żyją poza stanem wyceny — bez tego

@@ -699,13 +699,14 @@ class Component extends DCLogic {
 
   static pl(v) { return String(v).replace('.', ','); }
 
-  // Przepływ rabatu wybiera prototyp adresem: `rabat=v1` chowa kolumnę rabatu
-  // przy pozycjach — rabat zostaje wtedy wyłącznie w podsumowaniu dokumentu.
+  // Przepływ rabatu: domyślnie v1 — rabat żyje wyłącznie w podsumowaniu
+  // dokumentu, bez kolumny przy pozycjach. Adres z `rabat=v2` wraca do wariantu
+  // z rabatem rozpisanym przy pozycjach.
   static rabatFlowV1() {
     try {
       const q = String(location.search || '') + String(location.hash || '');
-      return /[?&#]rabat=v1\b/.test(q);
-    } catch (e) { return false; }
+      return !/[?&#]rabat=v2\b/.test(q);
+    } catch (e) { return true; }
   }
 
   // Wiersz w kształcie, który czyta rdzeń — nasze pola mają polskie nazwy.
