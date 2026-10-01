@@ -869,6 +869,22 @@ class Component extends DCLogic {
   // Nie ma rabatu na całą wycenę: „+ Rabat" odsłania kolumnę przy pozycjach,
   // w której wpisuje się procent. Podsumowanie pokazuje tylko, ile z tego
   // wyszło w złotówkach, ze znakiem minus.
+  // Netto/brutto to wybór użytkownika, nie dokumentu — trzymamy go w przeglądarce,
+  // żeby wycena, oferta i faktura otwierały się w tym samym trybie.
+  static MODE_KEY = 'zilo-value-mode';
+
+  static savedValueMode(fallback) {
+    try {
+      const v = localStorage.getItem(Component.MODE_KEY);
+      if (v === 'brutto' || v === 'netto') return v;
+    } catch (e) {}
+    return fallback === 'brutto' ? 'brutto' : 'netto';
+  }
+
+  static rememberValueMode(mode) {
+    try { localStorage.setItem(Component.MODE_KEY, mode === 'brutto' ? 'brutto' : 'netto'); } catch (e) {}
+  }
+
   static pl(v) { return String(v).replace('.', ','); }
 
   // kwota rabatu pozycji w groszach — procent liczony od wartości pozycji
@@ -955,6 +971,7 @@ class Component extends DCLogic {
   // rabat jest procentowy, więc przełącznik netto/brutto go nie dotyka
   switchValueMode(mode) {
     this.setState({ valueMode: mode });
+    Component.rememberValueMode(mode);
   }
 
   // ── Rabat wyceny — rdzeń liczenia ───────────────────────────────────────
@@ -1019,6 +1036,9 @@ class Component extends DCLogic {
       // w cokolwiek, co ich dotyka, wywalał się na undefined — stąd scalanie.
       if (m) { var s = JSON.parse(decodeURIComponent(m[1])); if (s && typeof s === 'object') base = Object.assign({}, def, s); }
       base.mode = /(?:^|[#&])preview=1(?:&|$)/.test(h) ? 'preview' : 'normal';
+      // tryb netto/brutto jest wyborem użytkownika, nie zapisanej wyceny — wspólny
+      // dla wyceny, oferty i faktury, więc wygrywa z tym, co przyszło w stanie
+      base.valueMode = Component.savedValueMode(base.valueMode);
       var pk = h.match(/[#&]pick=([^&]*)/);
       if (pk) {
         base.docPickerOpen = true;
@@ -1068,7 +1088,7 @@ class Component extends DCLogic {
     nextRobociznaId: 2,
     nextTowarId: 2,
     extraFields: [],
-    valueMode: 'netto',
+    valueMode: Component.savedValueMode(),
     // rabat żyje tylko przy pozycjach (procent w wierszu); ta flaga mówi,
     // czy kolumna rabatu jest odsłonięta
     rowRabat: false,

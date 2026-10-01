@@ -697,6 +697,22 @@ class Component extends DCLogic {
   }
 
 
+  // Netto/brutto to wybór użytkownika, nie dokumentu — trzymamy go w przeglądarce,
+  // żeby wycena, oferta i faktura otwierały się w tym samym trybie.
+  static MODE_KEY = 'zilo-value-mode';
+
+  static savedValueMode(fallback) {
+    try {
+      const v = localStorage.getItem(Component.MODE_KEY);
+      if (v === 'brutto' || v === 'netto') return v;
+    } catch (e) {}
+    return fallback === 'brutto' ? 'brutto' : 'netto';
+  }
+
+  static rememberValueMode(mode) {
+    try { localStorage.setItem(Component.MODE_KEY, mode === 'brutto' ? 'brutto' : 'netto'); } catch (e) {}
+  }
+
   static pl(v) { return String(v).replace('.', ','); }
 
   // Przepływ rabatu: domyślnie v1 — rabat żyje wyłącznie w podsumowaniu
@@ -1311,6 +1327,7 @@ static draftNet(state, draft) {
   // rabat kwotowy jest w netto, więc przełącznik netto/brutto go nie dotyka
   switchValueMode(mode) {
     this.setState({ valueMode: mode });
+    Component.rememberValueMode(mode);
     // modal idzie za wyceną w obie strony
     if (this.state.discountDraft) {
       this.setState((st) => ({
@@ -1379,7 +1396,7 @@ static draftNet(state, draft) {
     const towary = Component.seedRows(p.towary, true, 1);
     return Component.applyPick({
       sellerOverride: null,
-      valueMode: 'netto',
+      valueMode: Component.savedValueMode(),
       discount: p.discount || null,   // rabat przyniesiony z wyceny
       discountDraft: null,
       discountUndo: null,
