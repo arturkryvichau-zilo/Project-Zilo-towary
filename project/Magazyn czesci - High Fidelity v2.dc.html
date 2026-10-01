@@ -4592,7 +4592,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     <sc-if value="{{ evd.wyc.historyOpen }}" hint-placeholder-val="{{ true }}">
                     <div style="border:1px solid var(--tk-border-2);border-radius:10px;background:var(--tk-surface);display:flex;flex-direction:column;overflow-x:auto">
                       <div style="min-width:760px;display:grid;grid-template-columns:{{ evd.wyc.historyGrid }};gap:12px;padding:12px 16px;font-size:13px;line-height:18px;color:var(--tk-text-2);border-bottom:1px solid var(--tk-border-2)">
-                        <div>Wysłano</div><div>Status</div><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><sc-if value="{{ evd.wyc.hasHistoryRabat }}" hint-placeholder-val="{{ false }}"><div style="text-align:right">Rabat</div></sc-if><div style="text-align:right">Razem</div><div></div>
+                        <div>Wysłano</div><div>Status</div><sc-if value="{{ evd.wyc.hasHistoryRabat }}" hint-placeholder-val="{{ false }}"><div style="text-align:right">Rabat</div></sc-if><div style="text-align:right">Usługi</div><div style="text-align:right">Towary</div><div style="text-align:right">Razem</div><div></div>
                       </div>
                       <sc-for list="{{ evd.wyc.history }}" as="h" hint-placeholder-count="1">
                         <div data-flash="{{ h.flashMark }}" style="min-width:760px;display:grid;grid-template-columns:{{ evd.wyc.historyGrid }};gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid {{ h.border }};animation:{{ h.flashAnim }}">
@@ -4612,11 +4612,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                               </span>
                             </sc-if>
                           </span>
-                          <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.u }}</span>
-                          <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.t }}</span>
                           <sc-if value="{{ evd.wyc.hasHistoryRabat }}" hint-placeholder-val="{{ false }}">
                             <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.rabat }}</span>
                           </sc-if>
+                          <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.u }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.t }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--tk-text);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ h.amt }}</span>
                           <span style="display:flex;justify-content:flex-end;gap:4px">
                             <button type="button" onClick="{{ h.issueFv }}" style="position:relative;width:30px;height:30px;padding:4px;border:0;border-radius:4px;background:transparent;color:var(--tk-brand-fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background-color 200ms cubic-bezier(.2,0,0,1)" style-hover="background:var(--tk-brand-soft)" data-tt="Wystaw fakturę" aria-label="Wystaw fakturę"><span style="width:20px;height:20px;display:block;background-color:currentColor;-webkit-mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-invoice.svg) center / 20px 20px no-repeat"></span></button>
@@ -7348,7 +7348,7 @@ class Component extends DCLogic {
       rows: rows,
       hasRabat: rabat > 0,
       rabatLabel: this.rabatLabel({ discount: entry.discount || null }),
-      rabat: this.moneyPl(rabat),
+      rabat: '− ' + this.moneyPl(rabat),
       sumNet: this.moneyPl(net),
       sumGross: this.moneyPl(gross),
       close: () => this.setState({ offerPreview: null }),
@@ -7431,7 +7431,7 @@ class Component extends DCLogic {
       // rabat pokazujemy w podsumowaniu wyceny tak samo jak sumy — tylko gdy jest
       hasRabat: rabat > 0,
       rabatLabel: this.rabatLabel(saved && saved.state),
-      rabat: this.moneyPl(rabat),
+      rabat: '− ' + this.moneyPl(rabat),
       // przy nadanym rabacie obie tabele dostają kolumnę „Rabat" przed wartościami
       // Rabat nie ma własnej kolumny — wartości w wierszach są już po rabacie,
       // a naliczona kwota stoi w podsumowaniu pod tabelami.
@@ -7504,7 +7504,7 @@ class Component extends DCLogic {
         return {
           date: h.date,
           status: h.status,
-          rabat: h.rabat || '—',
+          rabat: h.rabat ? '− ' + h.rabat : '—',
           statusColor: cur.color,
           statusBg: cur.bg,
           flashAnim: isFlash ? 'zFlash 2.4s cubic-bezier(.2,0,0,1)' : 'none',

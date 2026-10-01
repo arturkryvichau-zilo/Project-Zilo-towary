@@ -1692,6 +1692,11 @@ static draftNet(state, draft) {
     const perRowGross = Component.rabatFlowV1() ? null : q.info.perGross;
     const sumU = this.sumOf('uslugi', perRow, perRowGross);
     const sumT = this.sumOf('towary', perRow, perRowGross);
+    // Do wysyłki (historia ofert) idą kwoty grup PO rabacie — niezależnie od tego,
+    // jak je pokazujemy w koszyku. Inaczej w historii usługi i towary nie sumowały
+    // się do kwoty „Razem".
+    const sumUSent = this.sumOf('uslugi', q.per, q.info.perGross);
+    const sumTSent = this.sumOf('towary', q.per, q.info.perGross);
     const net = q.net / 100;                  // sumy dokumentu — już po rabacie
     const gross = q.gross / 100;
     const rabatAmt = (q.beforeGross - q.gross) / 100;   // rabat brutto
@@ -1710,7 +1715,7 @@ static draftNet(state, draft) {
         channels: { sms: s.sms, mail: s.mail },
         uslugi: s.uslugi, towary: s.towary,
         notatka: s.notatka, komentarz: s.komentarz,
-        totals: { uslugi: sumU.gross, towary: sumT.gross, net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross),
+        totals: { uslugi: sumUSent.gross, towary: sumTSent.gross, net: Component.money(net), vat: Component.money(gross - net), gross: Component.money(gross),
           rabat: rabatAmt > 0 ? Component.money(rabatAmt) : '' },
         discount: s.discount || null,
       };
