@@ -935,22 +935,27 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </button>
                   </div>
                 </sc-for>
-                <button type="button" onClick="{{ addDocFile }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:36px;padding:4px 8px;border:0;border-radius:6px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-surface-4)">
-                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                  Dodaj kolejny plik
-                </button>
+                <sc-if value="{{ docUpload.canAddMore }}" hint-placeholder-val="{{ true }}">
+                  <button type="button" onClick="{{ addDocFile }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:36px;padding:4px 8px;border:0;border-radius:6px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-surface-4)">
+                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                    Dodaj kolejny plik
+                  </button>
+                </sc-if>
               </div>
             </sc-if>
 
             <sc-if value="{{ docUpload.busy }}" hint-placeholder-val="{{ false }}">
               <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:24px 28px;display:flex;flex-direction:column;gap:20px">
                 <div style="display:flex;align-items:center;gap:16px">
-                  <span style="width:44px;height:44px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:12px;line-height:16px;font-weight:600;color:var(--tk-text-2)">PDF</span>
+                  <span style="width:44px;height:44px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:12px;line-height:16px;font-weight:600;color:var(--tk-text-2)">{{ docUpload.kind }}</span>
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
                     <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ docUpload.file }}</span>
                     <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">{{ docUpload.stage }}</span>
                   </span>
                   <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-brand-fg);flex:none">{{ docUpload.percent }}</span>
+                  <button type="button" onClick="{{ docUpload.cancel }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-4)" data-tt="Przerwij" aria-label="Przerwij" data-tt-pos="left">
+                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
+                  </button>
                 </div>
                 <div style="height:6px;border-radius:999px;background:var(--tk-border-2);overflow:hidden">
                   <div style="height:100%;width:{{ docUpload.percent }};background:var(--tk-brand);border-radius:999px;transition:width 200ms cubic-bezier(.2,0,0,1)"></div>
@@ -7832,6 +7837,8 @@ class Component extends DCLogic {
       navKey: 'goods',
       screen: 'docUpload',
       docUploadPct: 0,
+      docPhase: null,
+      docPending: null,
       docRows: null,
       docDraft: null,
       docFiles: [],
@@ -8231,19 +8238,38 @@ class Component extends DCLogic {
     this.setState({ docSupplier: name });
   }
 
+  // Dwa osobne etapy: najpierw wgranie pliku, dopiero po „Odczytaj dokument"
+  // analiza. Każdy ma swój pasek postępu i swój podpis.
   addDocFile() {
-    this.setState((st) => {
-      const files = st.docFiles || [];
-      return { docFiles: files.concat([DOC_FILE_POOL[files.length % DOC_FILE_POOL.length]]) };
+    if (this.state.docUploadPct) return;
+    const files = this.state.docFiles || [];
+    this.setState({ docPending: DOC_FILE_POOL[files.length % DOC_FILE_POOL.length] });
+    this.runDocProgress('upload');
+  }
+
+  cancelDocProgress() {
+    if (this.__uploadTimer) clearInterval(this.__uploadTimer);
+    this.__uploadTimer = null;
+    this.setState({ docUploadPct: 0, docPhase: null, docPending: null });
+  }
+
+  finishDocUpload() {
+    const pending = this.state.docPending;
+    this.setState({
+      docUploadPct: 0,
+      docPhase: null,
+      docPending: null,
+      docFiles: (this.state.docFiles || []).concat(pending ? [pending] : []),
     });
   }
 
-  runDocUpload() {
+  runDocProgress(phase) {
     if (this.__uploadTimer) clearInterval(this.__uploadTimer);
     let pct = 8;
-    this.setState({ docUploadPct: pct });
+    this.setState({ docUploadPct: pct, docPhase: phase });
     this.__uploadTimer = setInterval(() => {
-      if (this.state.screen !== 'docUpload') {
+      // przerwanie krzyżykiem albo wyjście z ekranu zatrzymuje pasek
+      if (this.state.screen !== 'docUpload' || this.state.docPhase !== phase) {
         clearInterval(this.__uploadTimer);
         this.__uploadTimer = null;
         return;
@@ -8254,43 +8280,26 @@ class Component extends DCLogic {
       clearInterval(this.__uploadTimer);
       this.__uploadTimer = null;
       setTimeout(() => {
-        if (this.state.screen !== 'docUpload') return;
-        const picked = this.state.docSupplier || Component.lastHurtownia();
-        const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
-        if (picked && picked !== 'Inne') draft.supplier = picked;
-        this.setState({ screen: 'docReview', docUploadPct: 0, docDraft: draft, docSnack: true, docSnackRun: false });
-        setTimeout(() => {
-          if (this.state.docSnack) this.setState({ docSnackRun: true });
-        }, 60);
-        setTimeout(() => {
-          if (this.state.screen === 'docReview') this.setState({ docSnack: false });
-        }, 10000);
+        if (this.state.screen !== 'docUpload' || this.state.docPhase !== phase) return;
+        if (phase === 'upload') this.finishDocUpload();
+        else this.finishDocRead();
       }, 400);
     }, 180);
   }
 
-  runDocUploadLegacy() {
-    const tick = () => {
-      const pct = this.state.docUploadPct;
-      if (this.state.screen !== 'docUpload' || !pct) return;
-      if (pct >= 100) {
-        setTimeout(() => {
-          if (this.state.screen !== 'docUpload') return;
-          this.setState({ screen: 'docReview', docUploadPct: 0, docSnack: true, docSnackRun: false });
-          setTimeout(() => {
-            if (this.state.docSnack) this.setState({ docSnackRun: true });
-          }, 60);
-          setTimeout(() => {
-            if (this.state.screen === 'docReview') this.setState({ docSnack: false });
-          }, 10000);
-        }, 400);
-        return;
-      }
-      this.setState({ docUploadPct: Math.min(100, pct + 12) });
-      setTimeout(tick, 180);
-    };
-    setTimeout(tick, 220);
+  finishDocRead() {
+    const picked = this.state.docSupplier || Component.lastHurtownia();
+    const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
+    if (picked && picked !== 'Inne') draft.supplier = picked;
+    this.setState({ screen: 'docReview', docUploadPct: 0, docPhase: null, docDraft: draft, docSnack: true, docSnackRun: false });
+    setTimeout(() => {
+      if (this.state.docSnack) this.setState({ docSnackRun: true });
+    }, 60);
+    setTimeout(() => {
+      if (this.state.screen === 'docReview') this.setState({ docSnack: false });
+    }, 10000);
   }
+
 
   dsFieldState(value) {
     const filled = String(value == null ? '' : value).length > 0;
@@ -8821,7 +8830,7 @@ class Component extends DCLogic {
           placeholder: q ? '' : 'Szukaj dokumentu',
         };
       })(),
-      addDoc: () => this.setState({ screen: 'docUpload', docUploadPct: 0, docRows: null, docFiles: [] }),
+      addDoc: () => this.setState({ screen: 'docUpload', docUploadPct: 0, docPhase: null, docPending: null, docRows: null, docFiles: [] }),
       isDocDetail: s.screen === 'docDetail',
       bulkBar: s.screen === 'docDetail' && (s.docSel || []).length > 0,
       bulkLabel: 'Wybrano: ' + (s.docSel || []).length,
@@ -9066,12 +9075,12 @@ class Component extends DCLogic {
       },
       closeDocSnack: () => this.setState({ docSnack: false }),
       closeDocFlow: () => (s.docEditing
-        ? this.setState({ screen: 'docDetail', docEditing: null, docDraft: null, docRows: null, docUploadPct: 0, docFiles: [] })
-        : this.setState({ screen: 'docs', docUploadPct: 0, docFiles: [] })),
+        ? this.setState({ screen: 'docDetail', docEditing: null, docDraft: null, docRows: null, docUploadPct: 0, docPhase: null, docPending: null, docFiles: [] })
+        : this.setState({ screen: 'docs', docUploadPct: 0, docPhase: null, docPending: null, docFiles: [] })),
       startDocUpload: () => this.addDocFile(),
       addDocFile: () => this.addDocFile(),
       // analizę odpala dopiero „Odczytaj dokument", nie samo wgranie pliku
-      readDocument: () => { if ((s.docFiles || []).length) this.runDocUpload(); },
+      readDocument: () => { if ((s.docFiles || []).length && !s.docUploadPct) this.runDocProgress('read'); },
       docUpload: (() => {
         const files = s.docFiles || [];
         const cur = s.docSupplier || Component.lastHurtownia();
@@ -9082,10 +9091,16 @@ class Component extends DCLogic {
           ring: cur === name ? 'var(--tk-brand)' : 'var(--tk-border-strong)',
           dot: cur === name ? 'var(--tk-brand)' : 'transparent',
         });
+        const reading = !!s.docUploadPct && s.docPhase === 'read';
+        const shown = reading ? (files[0] || { name: '', kind: 'PDF' }) : (s.docPending || files[0] || { name: '', kind: 'PDF' });
         return {
           idle: !s.docUploadPct && !files.length,
-          picked: !s.docUploadPct && !!files.length,
+          // lista plików znika tylko na czas analizy; przy wgrywaniu kolejnego zostaje
+          picked: !!files.length && !reading,
           busy: !!s.docUploadPct,
+          canAddMore: !s.docUploadPct,
+          cancel: () => this.cancelDocProgress(),
+          kind: shown.kind || 'PDF',
           readBg: files.length ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
           readColor: files.length ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
           readCursor: files.length ? 'pointer' : 'default',
@@ -9096,9 +9111,9 @@ class Component extends DCLogic {
             sep: i === 0 ? 'transparent' : 'var(--tk-border-2)',
             remove: () => this.setState((st) => ({ docFiles: (st.docFiles || []).filter((x, k) => k !== i) })),
           })),
-          file: files.length ? files[0].name : 'FV-88213-08-2026.pdf',
+          file: shown.name,
           percent: (s.docUploadPct || 0) + '%',
-          stage: (s.docUploadPct || 0) < 70 ? 'Wgrywanie pliku…' : 'Analizujemy dokument…',
+          stage: reading ? 'Analizujemy dokument…' : 'Wgrywanie pliku…',
         };
       })(),
       docReview: (() => {
