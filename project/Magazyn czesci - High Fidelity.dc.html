@@ -5095,10 +5095,18 @@ const DOC_STATUSES = ['W trakcie', 'Dostarczony', 'Anulowany'];
 const DOCS_STORE_KEY = 'zilo-towary-docs-v2';
 const isSeedDoc = (d) => DOC_SEED.some((x) => x.nr === (d && d.nr));
 // trzymamy wyłącznie dokumenty dodane przez testera; reszta zawsze z danych startowych
+// każdy dokument ma własne id — numer dokumentu nie jest kluczem
+const docUid = () => 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const loadDocs = () => {
   try {
     const mine = JSON.parse(localStorage.getItem(DOCS_STORE_KEY) || 'null');
-    const own = Array.isArray(mine) ? mine.filter((d) => d && d.nr && !isSeedDoc(d)) : [];
+    const seen = {};
+    const own = (Array.isArray(mine) ? mine : [])
+      .filter((d) => d && d.nr && !isSeedDoc(d))
+      // wcześniejsze wersje prototypu zapisywały każdy dokument pod tym samym
+      // numerem — takie bliźniaki zwijamy do jednego przy wczytaniu
+      .filter((d) => { const k = d.id || d.nr; if (seen[k]) return false; seen[k] = 1; return true; })
+      .map((d) => (d.id ? d : Object.assign({}, d, { id: docUid() })));
     return own.length ? own.concat(DOC_SEED) : null;
   } catch (e) { return null; }
 };
@@ -5123,6 +5131,8 @@ const docRowNet = (r) => (DOC_SET(r.netEdit) ? DOC_NUM(r.netEdit) : DOC_NUM(r.qt
 const docRowGross = (r) => (DOC_SET(r.grossEdit)
   ? DOC_NUM(r.grossEdit)
   : docRowNet(r) * (1 + (parseFloat(r.vat) || 0) / 100));
+
+const withRowIds = (rows) => (rows || []).map((r, i) => (r.rid ? r : Object.assign({}, r, { rid: 'r' + i + '-' + docUid() })));
 
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0218', ext: 'FV 88213/08/2026',
   date: TODAY.slice(8, 10) + '.' + TODAY.slice(5, 7) + '.' + TODAY.slice(0, 4) };
@@ -7752,20 +7762,27 @@ class Component extends DCLogic {
   }
 
   docsPayload() {
-    return this.docList().slice(0, 12).map((d) => ({
-      nr: d.nr,
-      supplier: d.supplier,
-      date: d.date,
-      // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
-      // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
-      items: (d.rows || []).map((r) => {
-        const q = DOC_NUM(r.qty) || 1;
-        return {
-          name: r.name, indeks: r.code, producent: r.producer || '', qty: r.qty || '1',
-          cena: (docRowNet(r) / q).toFixed(2).replace('.', ','), vat: r.vat || '23', msrp: r.msrp || '',
-        };
-      }),
-    }));
+    return this.docList().slice(0, 12).map((d) => {
+      const docKey = d.id || d.nr;
+      return {
+        id: docKey,
+        nr: d.nr,
+        supplier: d.supplier,
+        date: d.date,
+        // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
+        // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
+        items: (d.rows || []).map((r, i) => {
+          const q = DOC_NUM(r.qty) || 1;
+          return {
+            // własne id pozycji — zaznaczenie w popupie idzie po nim,
+            // nie po numerze dokumentu ani indeksie towaru
+            id: docKey + '#' + (r.rid || i),
+            name: r.name, indeks: r.code, producent: r.producer || '', qty: r.qty || '1',
+            cena: (docRowNet(r) / q).toFixed(2).replace('.', ','), vat: r.vat || '23', msrp: r.msrp || '',
+          };
+        }),
+      };
+    });
   }
 
   openOfferConfig(visitId, opts) {
@@ -8109,6 +8126,26 @@ class Component extends DCLogic {
     return this.state.docsList || DOC_SEED;
   }
 
+  // kolejny wolny numer — nie stały z DOC_DRAFT, bo ten powtarzał się
+  // przy każdym wgraniu
+  nextDocNr() {
+    let max = 0;
+    this.docList().forEach((d) => {
+      const m = /^ZM\/(\d{4})\/(\d+)$/.exec(String(d.nr || ''));
+      if (m) max = Math.max(max, parseInt(m[2], 10));
+    });
+    return 'ZM/' + TODAY.slice(0, 4) + '/' + String(max + 1).padStart(4, '0');
+  }
+
+  nextDocExt() {
+    let max = 88212;
+    this.docList().forEach((d) => {
+      const m = /^FV (\d+)\//.exec(String(d.ext || ''));
+      if (m) max = Math.max(max, parseInt(m[1], 10));
+    });
+    return 'FV ' + (max + 1) + '/' + TODAY.slice(5, 7) + '/' + TODAY.slice(0, 4);
+  }
+
   docNum(x) {
     return parseFloat(String(x).replace(/\s/g, '').replace(',', '.')) || 0;
   }
@@ -8238,6 +8275,10 @@ class Component extends DCLogic {
     const picked = this.state.docSupplier || this.defaultHurtownia();
     const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
     if (picked && picked !== 'Inne') draft.supplier = picked;
+    if (!this.state.docEditing) {
+      draft.nr = this.nextDocNr();
+      draft.ext = this.nextDocExt();
+    }
     this.setState({ screen: 'docReview', docUploadPct: 0, docPhase: null, docDraft: draft, docSnack: true, docSnackRun: false });
     setTimeout(() => {
       if (this.state.docSnack) this.setState({ docSnackRun: true });
@@ -9144,7 +9185,7 @@ class Component extends DCLogic {
             docDraft: null,
             docRows: null,
             docsList: saveDocs(this.docList().map((x) => (x.nr === editing
-              ? Object.assign({}, x, { nr: d.nr, ext: d.ext, supplier: d.supplier, date: d.date, rows: rows })
+              ? Object.assign({}, x, { nr: d.nr, ext: d.ext, supplier: d.supplier, date: d.date, rows: withRowIds(rows) })
               : x))),
           });
           return;
@@ -9161,7 +9202,7 @@ class Component extends DCLogic {
             navKey: back.navKey,
             screen: back.screen,
             eventId: back.eventId,
-            docsList: saveDocs([{ nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: rows }].concat(this.docList())),
+            docsList: saveDocs([{ id: docUid(), nr: nr, ext: d.ext, supplier: d.supplier, date: d.date, status: 'Dostarczony', rows: withRowIds(rows) }].concat(this.docList())),
           }, () => {
             if (back.from === 'offer') this.openOfferConfig(back.visit, { pick: nr });
             else if (back.from === 'invoice') this.openInvoiceConfig(back.visit, { force: true, pick: nr });
@@ -9178,8 +9219,8 @@ class Component extends DCLogic {
           docRows: null,
           docSel: [],
           docsList: saveDocs([{
-            nr: nr, ext: d.ext, supplier: d.supplier, date: d.date,
-            status: 'Dostarczony', rows: rows,
+            id: docUid(), nr: nr, ext: d.ext, supplier: d.supplier, date: d.date,
+            status: 'Dostarczony', rows: withRowIds(rows),
           }].concat(this.docList())),
         });
       },

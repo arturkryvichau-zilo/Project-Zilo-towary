@@ -1722,8 +1722,8 @@ class Component extends DCLogic {
           var doc = Component.docSource().filter(function (d) { return d.nr === nr; })[0];
           if (doc) {
             // świeżo wgrany dokument wchodzi z zaznaczonymi pozycjami i rozwinięty
-            base.docPicked = (doc.items || []).map(function (_, i) { return nr + '#' + i; });
-            base.docOpenMap = Component.docSource().reduce(function (m, d) { m[d.nr] = d.nr === nr; return m; }, {});
+            base.docPicked = (doc.items || []).map(function (it, i) { return it.id || (nr + '#' + i); });
+            base.docOpenMap = Component.docSource().reduce(function (m, d) { m[d.id || d.nr] = d.nr === nr; return m; }, {});
           }
         }
       }
@@ -2122,7 +2122,7 @@ class Component extends DCLogic {
     const docs = [];
     source.forEach((d) => {
       if (keepDays.indexOf(d.date) === -1) return;
-      const items = (d.items || []).map((it, i) => ({ it: it, key: d.nr + '#' + i }))
+      const items = (d.items || []).map((it, i) => ({ it: it, key: it.id || (d.nr + '#' + i) }))
         .filter(({ it }) => !q
           || (it.name || '').toLowerCase().indexOf(q) !== -1
           || (it.indeks || '').toLowerCase().indexOf(q) !== -1
@@ -2130,7 +2130,8 @@ class Component extends DCLogic {
           || (d.nr || '').toLowerCase().indexOf(q) !== -1);
       if (!items.length) return;
       // domyślnie rozwinięte są dokumenty z dzisiaj; szukanie rozwija wszystko
-      const isOpen = q ? true : (openMap && openMap[d.nr] !== undefined ? !!openMap[d.nr] : d.date === today);
+      const dk = d.id || d.nr;
+      const isOpen = q ? true : (openMap && openMap[dk] !== undefined ? !!openMap[dk] : d.date === today);
       const keys = items.map((x) => x.key);
       const onCount = keys.filter((k) => picked.indexOf(k) !== -1).length;
       const allOn = onCount > 0 && onCount === keys.length;
@@ -2155,8 +2156,8 @@ class Component extends DCLogic {
         chevron: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
         toggle: () => this.setState((st) => {
           const cur = st.docOpenMap || {};
-          const now = cur[d.nr] !== undefined ? cur[d.nr] : d.date === today;
-          return { docOpenMap: Object.assign({}, cur, { [d.nr]: !now }) };
+          const now = cur[dk] !== undefined ? cur[dk] : d.date === today;
+          return { docOpenMap: Object.assign({}, cur, { [dk]: !now }) };
         }),
         day: d.date,
         items: items.map(({ it, key }) => {
@@ -2351,7 +2352,7 @@ class Component extends DCLogic {
         const picked = this.state.docPicked || [];
         if (!picked.length) return;
         const flat = [];
-        Component.docSource().forEach((d) => (d.items || []).forEach((it, i) => flat.push({ key: d.nr + '#' + i, doc: d, it: it })));
+        Component.docSource().forEach((d) => (d.items || []).forEach((it, i) => flat.push({ key: it.id || (d.nr + '#' + i), doc: d, it: it })));
         const rows = picked.map((key) => flat.filter((x) => x.key === key)[0]).filter(Boolean);
         this.setState((s) => {
           let nextId = s.nextTowarId;
