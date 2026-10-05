@@ -893,22 +893,34 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
 
             <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
               <div style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wybierz hurtownię</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
-                <sc-for list="{{ docUpload.suppliers }}" as="sp" hint-placeholder-count="7">
-                  <div onClick="{{ sp.pick }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 8px;border-radius:6px;cursor:pointer;color:{{ sp.color }}" style-hover="background:var(--tk-surface-2)">
-                    <span style="width:18px;height:18px;flex:none;border-radius:50%;border:1px solid {{ sp.ring }};display:grid;place-items:center">
-                      <span style="width:8px;height:8px;border-radius:50%;background:{{ sp.dot }}"></span>
-                    </span>
-                    <span style="font-size:16px;line-height:22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sp.name }}</span>
+              <div style="position:relative">
+                <sc-if value="{{ hurtSel.isOpen }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ hurtSel.close }}" style="position:fixed;inset:0;z-index:29"></div>
+                </sc-if>
+                <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                    <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
+                    <input value="{{ hurtSel.text }}" onChange="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                  </span>
+                  <span onClick="{{ hurtSel.toggle }}" style="display:flex;align-items:center;justify-content:center;width:44px;flex:none;cursor:pointer;transform:{{ hurtSel.chevron }}">
+                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                  </span>
+                </label>
+                <sc-if value="{{ hurtSel.isOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
+                    <sc-for list="{{ hurtSel.options }}" as="o" hint-placeholder-count="8">
+                      <div onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid {{ o.sep }};font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
+                        <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ hurtSel.empty }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne".</div>
+                    </sc-if>
                   </div>
-                </sc-for>
-              </div>
-              <div style="height:1px;background:var(--tk-border-2)"></div>
-              <div onClick="{{ docUpload.other.pick }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 8px;border-radius:6px;cursor:pointer;color:{{ docUpload.other.color }}" style-hover="background:var(--tk-surface-2)">
-                <span style="width:18px;height:18px;flex:none;border-radius:50%;border:1px solid {{ docUpload.other.ring }};display:grid;place-items:center">
-                  <span style="width:8px;height:8px;border-radius:50%;background:{{ docUpload.other.dot }}"></span>
-                </span>
-                <span style="font-size:16px;line-height:22px">{{ docUpload.other.name }}</span>
+                </sc-if>
               </div>
             </div>
 
@@ -985,17 +997,37 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <div style="display:flex;flex-direction:column;gap:16px">
               <div style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text)">Dane dokumentu</div>
               <div style="display:flex;gap:12px;flex-wrap:wrap">
-                <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
-                <span style="position:relative;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
-                  <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
-                  <select value="{{ docReview.supplier }}" onChange="{{ setDocSupplier }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
-                    <sc-for list="{{ hurtowniaOptions }}" as="o" hint-placeholder-count="8">
-                      <option value="{{ o }}">{{ o }}</option>
+                <div style="flex:1;min-width:0">
+              <div style="position:relative">
+                <sc-if value="{{ hurtDocSel.isOpen }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ hurtDocSel.close }}" style="position:fixed;inset:0;z-index:29"></div>
+                </sc-if>
+                <label onClick="{{ hurtDocSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtDocSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                    <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
+                    <input value="{{ hurtDocSel.text }}" onChange="{{ hurtDocSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                  </span>
+                  <span onClick="{{ hurtDocSel.toggle }}" style="display:flex;align-items:center;justify-content:center;width:44px;flex:none;cursor:pointer;transform:{{ hurtDocSel.chevron }}">
+                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                  </span>
+                </label>
+                <sc-if value="{{ hurtDocSel.isOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
+                    <sc-for list="{{ hurtDocSel.options }}" as="o" hint-placeholder-count="8">
+                      <div onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid {{ o.sep }};font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
+                        <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
+                          <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                        </sc-if>
+                      </div>
                     </sc-for>
-                  </select>
-                  <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
-                </span>
-              </label>
+                    <sc-if value="{{ hurtDocSel.empty }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne".</div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+                </div>
                 <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                 <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ docReview.f.nr.pad }};box-sizing:border-box">
                   <span style="font-size:{{ docReview.f.nr.labelSize }};line-height:{{ docReview.f.nr.labelLine }};color:var(--tk-text-3)">Numer dokumentu</span>
@@ -8228,14 +8260,55 @@ class Component extends DCLogic {
     this.setState({ docRows: rows.map((r, k) => (k === i ? Object.assign({}, r, patch) : r)) });
   }
 
-  // ostatnio wybrana hurtownia wraca przy kolejnym wgraniu dokumentu
-  static lastHurtownia() {
-    try { return localStorage.getItem('zilo-hurtownia') || HURTOWNIE[0]; } catch (e) { return HURTOWNIE[0]; }
+  // 1) ostatnio wybrana hurtownia tego warsztatu, 2) hurtownia z aktywnej
+  // integracji, 3) Inter Cars
+  defaultHurtownia() {
+    try {
+      const last = localStorage.getItem('zilo-hurtownia');
+      if (last) return last;
+    } catch (e) {}
+    const first = (this.state.connectedSuppliers || DEFAULT_SUPPLIERS)[0];
+    if (first && HURTOWNIE.indexOf(first.name) !== -1) return first.name;
+    return HURTOWNIE[0];
   }
 
   pickHurtownia(name) {
     try { localStorage.setItem('zilo-hurtownia', name); } catch (e) {}
+    this.logHurtownia(name);
     this.setState({ docSupplier: name });
+  }
+
+  // wybór hurtowni to jedyne miejsce, gdzie zobaczymy, z czego warsztaty
+  // realnie korzystają — w prototypie tylko ślad w konsoli i w localStorage
+  logHurtownia(name) {
+    try { console.info('[zilo] hurtownia.selected', name); } catch (e) {}
+    try {
+      const log = JSON.parse(localStorage.getItem('zilo-hurtownia-log') || '[]');
+      log.push({ name: name, at: new Date().toISOString() });
+      localStorage.setItem('zilo-hurtownia-log', JSON.stringify(log.slice(-100)));
+    } catch (e) {}
+  }
+
+  // wspólny datalist: lista płaska, „Inne" zawsze na końcu za kreską
+  hurtPickerVals(cur, open, query, onPick) {
+    const q = String(query == null ? '' : query).toLowerCase().trim();
+    const base = HURTOWNIE.concat(['Inne']);
+    const all = (cur && base.indexOf(cur) === -1) ? [cur].concat(base) : base;
+    const list = q ? all.filter((n) => n.toLowerCase().indexOf(q) !== -1) : all;
+    return {
+      text: query == null ? (cur || '') : query,
+      isOpen: !!open,
+      empty: list.length === 0,
+      border: open ? 'var(--tk-brand-bd)' : 'var(--tk-border-strong)',
+      chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
+      options: list.map((n) => ({
+        value: n,
+        sep: (n === 'Inne' && list.length > 1 && list[0] !== n) ? 'var(--tk-border-2)' : 'transparent',
+        selected: n === cur,
+        bg: n === cur ? 'var(--tk-surface-3)' : 'transparent',
+        pick: () => onPick(n),
+      })),
+    };
   }
 
   // Dwa osobne etapy: najpierw wgranie pliku, dopiero po „Odczytaj dokument"
@@ -8288,7 +8361,7 @@ class Component extends DCLogic {
   }
 
   finishDocRead() {
-    const picked = this.state.docSupplier || Component.lastHurtownia();
+    const picked = this.state.docSupplier || this.defaultHurtownia();
     const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
     if (picked && picked !== 'Inne') draft.supplier = picked;
     this.setState({ screen: 'docReview', docUploadPct: 0, docPhase: null, docDraft: draft, docSnack: true, docSnackRun: false });
@@ -9083,14 +9156,6 @@ class Component extends DCLogic {
       readDocument: () => { if ((s.docFiles || []).length && !s.docUploadPct) this.runDocProgress('read'); },
       docUpload: (() => {
         const files = s.docFiles || [];
-        const cur = s.docSupplier || Component.lastHurtownia();
-        const mk = (name) => ({
-          name: name,
-          pick: () => this.pickHurtownia(name),
-          color: cur === name ? 'var(--tk-text)' : 'var(--tk-text-2)',
-          ring: cur === name ? 'var(--tk-brand)' : 'var(--tk-border-strong)',
-          dot: cur === name ? 'var(--tk-brand)' : 'transparent',
-        });
         const reading = !!s.docUploadPct && s.docPhase === 'read';
         const shown = reading ? (files[0] || { name: '', kind: 'PDF' }) : (s.docPending || files[0] || { name: '', kind: 'PDF' });
         return {
@@ -9107,8 +9172,6 @@ class Component extends DCLogic {
           readBg: (files.length && !s.docUploadPct) ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
           readColor: (files.length && !s.docUploadPct) ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
           readCursor: (files.length && !s.docUploadPct) ? 'pointer' : 'default',
-          suppliers: HURTOWNIE.map(mk),
-          other: mk('Inne'),
           files: files.map((f, i) => ({
             name: f.name, size: f.size, kind: f.kind,
             sep: i === 0 ? 'transparent' : 'var(--tk-border-2)',
@@ -9168,11 +9231,24 @@ class Component extends DCLogic {
         };
       })(),
       unitOptions: ['Sztuka', 'Opakowanie', 'Zestaw', 'Litr', 'Komplet'],
-      hurtowniaOptions: (() => {
-        const cur = (s.docDraft || DOC_DRAFT).supplier;
-        const list = HURTOWNIE.concat(['Inne']);
-        return cur && list.indexOf(cur) === -1 ? [cur].concat(list) : list;
-      })(),
+      hurtSel: Object.assign(this.hurtPickerVals(
+        s.docSupplier || this.defaultHurtownia(), s.hurtOpen, s.hurtQuery,
+        (n) => { this.pickHurtownia(n); this.setState({ hurtOpen: false, hurtQuery: null }); }
+      ), {
+        open: () => this.setState({ hurtOpen: true }),
+        toggle: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ hurtOpen: !s.hurtOpen, hurtQuery: null }); },
+        close: () => this.setState({ hurtOpen: false, hurtQuery: null }),
+        type: (e) => this.setState({ hurtOpen: true, hurtQuery: e.target.value }),
+      }),
+      hurtDocSel: Object.assign(this.hurtPickerVals(
+        (s.docDraft || DOC_DRAFT).supplier, s.hurtDocOpen, s.hurtDocQuery,
+        (n) => { this.patchDocDraft({ supplier: n }); this.setState({ hurtDocOpen: false, hurtDocQuery: null }); }
+      ), {
+        open: () => this.setState({ hurtDocOpen: true }),
+        toggle: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ hurtDocOpen: !s.hurtDocOpen, hurtDocQuery: null }); },
+        close: () => this.setState({ hurtDocOpen: false, hurtDocQuery: null }),
+        type: (e) => this.setState({ hurtDocOpen: true, hurtDocQuery: e.target.value }),
+      }),
       vatOptions: ['23', '8', '5', '0'],
       setDocSupplier: (e) => this.patchDocDraft({ supplier: e.target.value }),
       setDocNr: (e) => this.patchDocDraft({ nr: e.target.value }),
