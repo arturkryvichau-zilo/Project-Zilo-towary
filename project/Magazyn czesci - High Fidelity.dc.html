@@ -5234,17 +5234,11 @@ const HURT_FALLBACK = {
 };
 const HURT_OTHER = 'Inne';
 const HURT_REPORT = 'Zgłoś brakującą hurtownię';
-// Kontakt do zgłoszenia braku — ten sam, co w belce prototypu
-const HURT_KONTAKT = { tel: '(61) 250 41 81', mail: 'kontakt@zilo.co' };
 // Prototyp: z wgranego dokumentu „odczytujemy" wystawcę spoza listy,
 // żeby było widać dopisanie hurtowni do wyboru.
 const HURT_Z_DOKUMENTU = 'Auto-Zatoka';
 // Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
 // reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
-const HURT_HINT = {
-  'Inter Cars': 'Gdzie znaleźć plik w Inter Cars — Panel IC Katalog → Zamówienia → otwórz zamówienie → Pobierz PDF lub CSV.',
-};
-
 // jedno miejsce, w którym z JSON-a robi się to, czego potrzebuje pole wyboru
 const hurtIndex = (data) => {
   const src = (data && data.hurtownie) || [];
@@ -5255,7 +5249,9 @@ const hurtIndex = (data) => {
   // aliasy z JSON-a prowadzą ją do dzisiejszego wpisu
   const alias = {};
   sorted.forEach((h) => {
-    byName[h.nazwa] = { logo: h.logo ? dir + h.logo : '', aliasy: h.aliasy || [] };
+    // podpowiedź „Gdzie znaleźć plik w…" jest treścią, nie kodem — siedzi w JSON-ie.
+    // Brak pola to poprawny stan: wtedy badge się nie pokazuje.
+    byName[h.nazwa] = { logo: h.logo ? dir + h.logo : '', aliasy: h.aliasy || [], podpowiedz: h.podpowiedz || '' };
     alias[h.nazwa.toLowerCase()] = h.nazwa;
     (h.aliasy || []).forEach((a) => { alias[String(a).toLowerCase()] = h.nazwa; });
   });
@@ -5299,6 +5295,7 @@ const DOC_FILE_POOL = [
   { name: 'FV-88213-08-2026.pdf', size: '248 KB', kind: 'PDF' },
   { name: 'WZ-10234-08-2026.pdf', size: '132 KB', kind: 'PDF' },
   { name: 'pozycje-08-2026.csv', size: '18 KB', kind: 'CSV' },
+  { name: 'faktura-88213.xml', size: '64 KB', kind: 'XML' },
   { name: 'skan-dokumentu.jpg', size: '1,2 MB', kind: 'JPG' },
 ];
 // Ręcznie wpisana Wartość netto / Wartość brutto wygrywa w swoim wierszu:
@@ -8446,10 +8443,19 @@ class Component extends DCLogic {
   }
 
   hurtLogo(name) {
+    const i = this.hurtInfo(name);
+    return (i && i.logo) || '';
+  }
+
+  hurtPodpowiedz(name) {
+    const i = this.hurtInfo(name);
+    return (i && i.podpowiedz) || '';
+  }
+
+  hurtInfo(name) {
     const h = this.hurt();
     const kanon = h.alias[String(name == null ? '' : name).toLowerCase()] || name;
-    const i = h.info[kanon];
-    return (i && i.logo) || '';
+    return h.info[kanon];
   }
 
   // wspólny datalist: Popularne / Pozostałe, a na końcu za kreską „Inne" —
@@ -9356,12 +9362,7 @@ class Component extends DCLogic {
         const hurt = s.docSupplier || this.defaultHurtownia();
         const hh = this.hurt();
         const special = hurt === hh.koniec || hurt === hh.zglos;
-        const wspolne = 'Wgraj plik ze swojej hurtowni, nawet jeśli nie ma jej na liście. '
-          + 'Odczytamy z dokumentu, kto go wystawił, i dopiszemy ją do wyboru.';
-        const hint = hurt === hh.zglos
-          ? wspolne + ' Chcesz, żeby została na stałe? Napisz: ' + HURT_KONTAKT.mail
-            + ' albo zadzwoń ' + HURT_KONTAKT.tel + '.'
-          : (hurt === hh.koniec ? wspolne : (HURT_HINT[hurt] || ''));
+        const hint = this.hurtPodpowiedz(hurt);
         const busy = files.some((f) => f.pct > 0);
         const ready = Component.docFilesReady(files);
         return {
@@ -9372,7 +9373,9 @@ class Component extends DCLogic {
           hasHint: !!hint,
           hint: hint,
           // przy „Innych" i przy zgłoszeniu nie zawężamy formatów — bierzemy, co przyjdzie
-          formats: special ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
+          // XML, bo Inter-Team, Gordon Motor, Autos, Martex i Mekonomen wystawiają
+          // faktury albo WZ wyłącznie w tym formacie
+          formats: special ? 'Dowolny plik — PDF, CSV, XML, XLS, JPG lub PNG' : 'PDF, CSV, XML, JPG lub PNG',
           // trzy stany: brak gotowego pliku → nieaktywny, plik wgrany → aktywny,
           // wgrywanie → nieaktywny. Wygląd disabled z design systemu:
           // .button--primary:disabled { background:#D5D7F8; cursor:not-allowed }
