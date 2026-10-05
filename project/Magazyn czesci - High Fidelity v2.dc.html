@@ -900,7 +900,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                     <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
-                    <input value="{{ hurtSel.text }}" onChange="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                    <input value="{{ hurtSel.text }}" onInput="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
                   </span>
                   <span onClick="{{ hurtSel.toggle }}" style="display:flex;align-items:center;justify-content:center;width:44px;flex:none;cursor:pointer;transform:{{ hurtSel.chevron }}">
                     <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
@@ -1010,7 +1010,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <label onClick="{{ hurtDocSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtDocSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                     <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
-                    <input value="{{ hurtDocSel.text }}" onChange="{{ hurtDocSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                    <input value="{{ hurtDocSel.text }}" onInput="{{ hurtDocSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
                   </span>
                   <span onClick="{{ hurtDocSel.toggle }}" style="display:flex;align-items:center;justify-content:center;width:44px;flex:none;cursor:pointer;transform:{{ hurtDocSel.chevron }}">
                     <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
