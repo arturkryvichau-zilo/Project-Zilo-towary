@@ -882,7 +882,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
           </div>
           <div></div>
-          <div style="display:flex;justify-content:flex-end;padding-right:20px"><button type="button" onClick="{{ readDocument }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:{{ docUpload.readBg }};color:{{ docUpload.readColor }};font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:{{ docUpload.readCursor }};transition:background-color 200ms cubic-bezier(.2,0,0,1)">Odczytaj dokument</button></div>
+          <div style="display:flex;justify-content:flex-end;padding-right:20px"><button type="button" onClick="{{ readDocument }}" disabled="{{ docUpload.readOff }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:{{ docUpload.readBg }};color:var(--tk-on-fill);font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:{{ docUpload.readCursor }};transition:background-color 200ms cubic-bezier(.2,0,0,1)">Odczytaj dokument</button></div>
         </div>
         <div style="flex:1;min-height:0;overflow-y:auto;padding:48px 28px 64px">
           <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
@@ -9101,11 +9101,12 @@ class Component extends DCLogic {
           cancel: () => this.cancelDocProgress(),
           kind: shown.kind || 'PDF',
           // trzy stany: brak pliku → nieaktywny, plik wgrany → aktywny,
-          // przetwarzanie → nieaktywny, żeby nie dało się odpalić odczytu dwa razy
+          // przetwarzanie → nieaktywny, żeby nie dało się odpalić odczytu dwa razy.
+          // Wygląd stanu disabled z design systemu: .button--primary:disabled
           readOn: !!files.length && !s.docUploadPct,
-          readBg: (files.length && !s.docUploadPct) ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
-          readColor: (files.length && !s.docUploadPct) ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
-          readCursor: (files.length && !s.docUploadPct) ? 'pointer' : 'default',
+          readOff: !(files.length && !s.docUploadPct),
+          readBg: (files.length && !s.docUploadPct) ? 'var(--tk-brand)' : 'var(--tk-brand-bd-soft)',
+          readCursor: (files.length && !s.docUploadPct) ? 'pointer' : 'not-allowed',
           files: files.map((f, i) => ({
             name: f.name, size: f.size, kind: f.kind,
             sep: i === 0 ? 'transparent' : 'var(--tk-border-2)',
