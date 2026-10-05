@@ -8254,7 +8254,12 @@ class Component extends DCLogic {
     const out = [];
     (rows || []).forEach((r) => {
       const q = parseInt(r.qty, 10) || 1;
-      for (let k = 0; k < q; k += 1) out.push(Object.assign({}, r, { qty: '1', grossEdit: null }));
+      // cena jednostkowa z wartości wiersza, żeby ręczne nadpisanie netto
+      // jechało dalej — do wizyty i do grup cenowych
+      const unit = (docRowNet(r) / q).toFixed(2).replace('.', ',');
+      for (let k = 0; k < q; k += 1) {
+        out.push(Object.assign({}, r, { qty: '1', price: unit, netEdit: null, grossEdit: null }));
+      }
     });
     return out;
   }
