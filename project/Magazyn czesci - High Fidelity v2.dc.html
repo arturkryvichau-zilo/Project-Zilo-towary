@@ -897,9 +897,11 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-if value="{{ hurtSel.isOpen }}" hint-placeholder-val="{{ false }}">
                   <div onClick="{{ hurtSel.close }}" style="position:fixed;inset:0;z-index:29"></div>
                 </sc-if>
-                <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
-                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
-                    <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
+                <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:center;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                  <sc-if value="{{ hurtSel.hasMark }}" hint-placeholder-val="{{ true }}">
+                    <span style="width:34px;height:34px;flex:none;margin-left:10px;border-radius:8px;background:var(--tk-brand-soft);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;color:var(--tk-brand-fg)">{{ hurtSel.mark }}</span>
+                  </sc-if>
+                  <span style="flex:1;min-width:0;display:flex;align-items:center;padding:0 13px;box-sizing:border-box">
                     <input value="{{ hurtSel.text }}" onInput="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
                   </span>
                   <span onClick="{{ hurtSel.toggle }}" style="display:flex;align-items:center;justify-content:center;width:44px;flex:none;cursor:pointer;transform:{{ hurtSel.chevron }}">
@@ -924,61 +926,58 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </div>
             </div>
 
-            <sc-if value="{{ docUpload.idle }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex;flex-direction:column;gap:12px">
-              <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:56px 32px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
-                <img src="assets/icons/i-upload-doc.svg" alt="" style="width:48px;height:48px;flex:none;display:block">
-                <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wgraj plik</span>
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Formaty: PDF, CSV, JPG lub PNG. Faktura lub WZ.</span>
-                <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:8px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
-              </div>
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+              <div style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wgraj plik</div>
+
+              <sc-if value="{{ docUpload.idle }}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
+                  <img src="assets/icons/i-upload-doc.svg" alt="" style="width:40px;height:40px;flex:none;display:block;margin-bottom:6px">
+                  <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Przeciągnij plik albo wybierz z dysku</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">PDF, CSV, JPG lub PNG</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Faktura, WZ-ka, zdjęcie albo zrzut ekranu</span>
+                  <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:10px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ docUpload.hasFiles }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+                  <sc-for list="{{ docUpload.files }}" as="fl" hint-placeholder-count="1">
+                    <div style="width:100%;box-sizing:border-box;display:flex;align-items:center;gap:14px;min-height:62px;padding:10px 12px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:10px">
+                      <span style="width:40px;height:40px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;color:var(--tk-text-2)">{{ fl.kind }}</span>
+                      <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                        <sc-if value="{{ fl.uploading }}" hint-placeholder-val="{{ true }}">
+                          <span style="display:flex;align-items:baseline;gap:12px;min-width:0">
+                            <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
+                            <span style="font-size:14px;line-height:20px;color:var(--tk-text-3);white-space:nowrap;flex:none">Wgrywanie pliku…</span>
+                          </span>
+                          <span style="display:block;height:6px;border-radius:999px;background:var(--tk-border-2);overflow:hidden">
+                            <span style="display:block;height:100%;width:{{ fl.percent }};background:var(--tk-brand);border-radius:999px;transition:width 200ms cubic-bezier(.2,0,0,1)"></span>
+                          </span>
+                        </sc-if>
+                        <sc-if value="{{ fl.done }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
+                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">{{ fl.size }}</span>
+                        </sc-if>
+                      </span>
+                      <sc-if value="{{ fl.uploading }}" hint-placeholder-val="{{ true }}">
+                        <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-brand-fg);flex:none">{{ fl.percent }}</span>
+                      </sc-if>
+                      <button type="button" onClick="{{ fl.remove }}" style="position:relative;width:36px;height:36px;flex:none;border:1px solid var(--tk-border);border-radius:8px;background:var(--tk-surface);cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-2)" data-tt="{{ fl.removeTip }}" aria-label="{{ fl.removeTip }}" data-tt-pos="left">
+                        <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/{{ fl.removeIcon }}) center / 20px 20px no-repeat;mask:url(assets/icons/{{ fl.removeIcon }}) center / 20px 20px no-repeat"></span>
+                      </button>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ docUpload.canAddMore }}" hint-placeholder-val="{{ true }}">
+                    <button type="button" onClick="{{ addDocFile }}" style="display:inline-flex;align-items:center;height:32px;padding:4px 6px;border:0;border-radius:6px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-surface-2)">+ Dodaj kolejny plik</button>
+                  </sc-if>
+                </div>
+              </sc-if>
+
               <sc-if value="{{ docUpload.hasHint }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">{{ docUpload.hint }}</span></div>
               </sc-if>
-              </div>
-            </sc-if>
+            </div>
 
-            <sc-if value="{{ docUpload.picked }}" hint-placeholder-val="{{ false }}">
-              <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;gap:4px">
-                <sc-for list="{{ docUpload.files }}" as="fl" hint-placeholder-count="1">
-                  <div style="display:flex;align-items:center;gap:14px;min-height:56px;border-top:1px solid {{ fl.sep }}">
-                    <span style="width:40px;height:40px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;color:var(--tk-text-2)">{{ fl.kind }}</span>
-                    <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
-                      <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
-                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">{{ fl.size }}</span>
-                    </span>
-                    <button type="button" onClick="{{ fl.remove }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-4)" data-tt="Usuń plik" aria-label="Usuń plik" data-tt-pos="left">
-                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
-                    </button>
-                  </div>
-                </sc-for>
-                <sc-if value="{{ docUpload.canAddMore }}" hint-placeholder-val="{{ true }}">
-                  <button type="button" onClick="{{ addDocFile }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:36px;padding:4px 8px;border:0;border-radius:6px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-surface-4)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                    Dodaj kolejny plik
-                  </button>
-                </sc-if>
-              </div>
-            </sc-if>
-
-            <sc-if value="{{ docUpload.busy }}" hint-placeholder-val="{{ false }}">
-              <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:24px 28px;display:flex;flex-direction:column;gap:20px">
-                <div style="display:flex;align-items:center;gap:16px">
-                  <span style="width:44px;height:44px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:12px;line-height:16px;font-weight:600;color:var(--tk-text-2)">{{ docUpload.kind }}</span>
-                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
-                    <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ docUpload.file }}</span>
-                    <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">{{ docUpload.stage }}</span>
-                  </span>
-                  <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-brand-fg);flex:none">{{ docUpload.percent }}</span>
-                  <button type="button" onClick="{{ docUpload.cancel }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-4)" data-tt="Przerwij" aria-label="Przerwij" data-tt-pos="left">
-                    <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-close.svg) center / 20px 20px no-repeat"></span>
-                  </button>
-                </div>
-                <div style="height:6px;border-radius:999px;background:var(--tk-border-2);overflow:hidden">
-                  <div style="height:100%;width:{{ docUpload.percent }};background:var(--tk-brand);border-radius:999px;transition:width 200ms cubic-bezier(.2,0,0,1)"></div>
-                </div>
-              </div>
-            </sc-if>
           </div>
         </div>
       </div>
@@ -5171,6 +5170,11 @@ const saveDocs = (list) => {
 const HURTOWNIE = ['Inter Cars', 'Auto Partner', 'Big-Autohandel', 'ELIT (Mekomens)', 'Auto Land', 'Interteam', 'Gordon'];
 // Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
 // reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
+const HURT_MARK = {
+  'Inter Cars': 'IC', 'Auto Partner': 'AP', 'Big-Autohandel': 'BA',
+  'ELIT (Mekomens)': 'ELIT', 'Auto Land': 'AL', 'Interteam': 'IT', 'Gordon': 'GOR',
+};
+
 const HURT_HINT = {
   'Inter Cars': 'Gdzie znaleźć plik w Inter Cars — Panel IC Katalog → Zamówienia → otwórz zamówienie → Pobierz PDF lub CSV.',
 };
@@ -8315,6 +8319,12 @@ class Component extends DCLogic {
 
   // 1) ostatnio wybrana hurtownia tego warsztatu, 2) hurtownia z aktywnej
   // integracji, 3) Inter Cars
+  // „Odczytaj dokument" ma sens dopiero, gdy jest plik i nic się nie wgrywa
+  static docFilesReady(files) {
+    const list = files || [];
+    return list.length > 0 && !list.some((f) => f.pct > 0);
+  }
+
   defaultHurtownia() {
     try {
       const last = localStorage.getItem('zilo-hurtownia');
@@ -8350,6 +8360,8 @@ class Component extends DCLogic {
     const list = q ? all.filter((n) => n.toLowerCase().indexOf(q) !== -1) : all;
     return {
       text: query == null ? (cur || '') : query,
+      mark: HURT_MARK[cur] || '',
+      hasMark: !!HURT_MARK[cur],
       isOpen: !!open,
       empty: list.length === 0,
       border: open ? 'var(--tk-brand-bd)' : 'var(--tk-border-strong)',
@@ -8364,52 +8376,45 @@ class Component extends DCLogic {
     };
   }
 
-  // Dwa osobne etapy: najpierw wgranie pliku, dopiero po „Odczytaj dokument"
-  // analiza. Każdy ma swój pasek postępu i swój podpis.
+  // Pasek postępu siedzi w wierszu pliku, nie w osobnej karcie — plik pojawia
+  // się na liście od razu i dojeżdża do 100%. Odczyt dokumentu nie ma już
+  // własnego etapu: po kliknięciu wchodzimy prosto w „Sprawdź dane dokumentu".
   addDocFile() {
-    if (this.state.docUploadPct) return;
     const files = this.state.docFiles || [];
-    this.setState({ docPending: DOC_FILE_POOL[files.length % DOC_FILE_POOL.length] });
-    this.runDocProgress('upload');
+    const next = Object.assign({}, DOC_FILE_POOL[files.length % DOC_FILE_POOL.length], { uid: docUid(), pct: 8 });
+    this.setState({ docFiles: files.concat([next]) }, () => this.runFileUpload(next.uid));
   }
 
-  cancelDocProgress() {
-    if (this.__uploadTimer) clearInterval(this.__uploadTimer);
-    this.__uploadTimer = null;
-    this.setState({ docUploadPct: 0, docPhase: null, docPending: null });
+  patchDocFile(uid, patch) {
+    this.setState((st) => ({
+      docFiles: (st.docFiles || []).map((f) => (f.uid === uid ? Object.assign({}, f, patch) : f)),
+    }));
   }
 
-  finishDocUpload() {
-    const pending = this.state.docPending;
-    this.setState({
-      docUploadPct: 0,
-      docPhase: null,
-      docPending: null,
-      docFiles: (this.state.docFiles || []).concat(pending ? [pending] : []),
-    });
+  removeDocFile(uid) {
+    const t = (this.__fileTimers || {})[uid];
+    if (t) { clearInterval(t); delete this.__fileTimers[uid]; }
+    this.setState((st) => ({ docFiles: (st.docFiles || []).filter((f) => f.uid !== uid) }));
   }
 
-  runDocProgress(phase) {
-    if (this.__uploadTimer) clearInterval(this.__uploadTimer);
+  runFileUpload(uid) {
+    this.__fileTimers = this.__fileTimers || {};
+    if (this.__fileTimers[uid]) clearInterval(this.__fileTimers[uid]);
     let pct = 8;
-    this.setState({ docUploadPct: pct, docPhase: phase });
-    this.__uploadTimer = setInterval(() => {
-      // przerwanie krzyżykiem albo wyjście z ekranu zatrzymuje pasek
-      if (this.state.screen !== 'docUpload' || this.state.docPhase !== phase) {
-        clearInterval(this.__uploadTimer);
-        this.__uploadTimer = null;
+    this.__fileTimers[uid] = setInterval(() => {
+      const row = (this.state.docFiles || []).filter((f) => f.uid === uid)[0];
+      // krzyżyk albo wyjście z ekranu zatrzymuje pasek
+      if (!row || this.state.screen !== 'docUpload') {
+        clearInterval(this.__fileTimers[uid]);
+        delete this.__fileTimers[uid];
         return;
       }
       pct = Math.min(100, pct + 12);
-      this.setState({ docUploadPct: pct });
+      this.patchDocFile(uid, { pct: pct });
       if (pct < 100) return;
-      clearInterval(this.__uploadTimer);
-      this.__uploadTimer = null;
-      setTimeout(() => {
-        if (this.state.screen !== 'docUpload' || this.state.docPhase !== phase) return;
-        if (phase === 'upload') this.finishDocUpload();
-        else this.finishDocRead();
-      }, 400);
+      clearInterval(this.__fileTimers[uid]);
+      delete this.__fileTimers[uid];
+      setTimeout(() => this.patchDocFile(uid, { pct: 0 }), 300);
     }, 180);
   }
 
@@ -8421,7 +8426,7 @@ class Component extends DCLogic {
       draft.nr = this.nextDocNr();
       draft.ext = this.nextDocExt();
     }
-    this.setState({ screen: 'docReview', docUploadPct: 0, docPhase: null, docDraft: draft, docSnack: true, docSnackRun: false });
+    this.setState({ screen: 'docReview', docDraft: draft, docSnack: true, docSnackRun: false });
     setTimeout(() => {
       if (this.state.docSnack) this.setState({ docSnackRun: true });
     }, 60);
@@ -9210,37 +9215,36 @@ class Component extends DCLogic {
       startDocUpload: () => this.addDocFile(),
       addDocFile: () => this.addDocFile(),
       // analizę odpala dopiero „Odczytaj dokument", nie samo wgranie pliku
-      readDocument: () => { if ((s.docFiles || []).length && !s.docUploadPct) this.runDocProgress('read'); },
+      // bez etapu „Analizujemy dokument…" — od razu ekran weryfikacji
+      readDocument: () => { if (Component.docFilesReady(s.docFiles)) this.finishDocRead(); },
       docUpload: (() => {
         const files = s.docFiles || [];
         const hurt = s.docSupplier || this.defaultHurtownia();
-        const reading = !!s.docUploadPct && s.docPhase === 'read';
-        const shown = reading ? (files[0] || { name: '', kind: 'PDF' }) : (s.docPending || files[0] || { name: '', kind: 'PDF' });
+        const busy = files.some((f) => f.pct > 0);
+        const ready = Component.docFilesReady(files);
         return {
-          idle: !s.docUploadPct && !files.length,
-          // lista plików znika tylko na czas analizy; przy wgrywaniu kolejnego zostaje
-          picked: !!files.length && !reading,
-          busy: !!s.docUploadPct,
-          canAddMore: !s.docUploadPct,
+          idle: !files.length,
+          hasFiles: !!files.length,
+          busy: busy,
+          canAddMore: !busy,
           hasHint: !!HURT_HINT[hurt],
           hint: HURT_HINT[hurt] || '',
-          cancel: () => this.cancelDocProgress(),
-          kind: shown.kind || 'PDF',
-          // trzy stany: brak pliku → nieaktywny, plik wgrany → aktywny,
-          // przetwarzanie → nieaktywny, żeby nie dało się odpalić odczytu dwa razy.
-          // Wygląd stanu disabled z design systemu: .button--primary:disabled
-          readOn: !!files.length && !s.docUploadPct,
-          readOff: !(files.length && !s.docUploadPct),
-          readBg: (files.length && !s.docUploadPct) ? 'var(--tk-brand)' : 'var(--tk-brand-bd-soft)',
-          readCursor: (files.length && !s.docUploadPct) ? 'pointer' : 'not-allowed',
-          files: files.map((f, i) => ({
+          // trzy stany: brak gotowego pliku → nieaktywny, plik wgrany → aktywny,
+          // wgrywanie → nieaktywny. Wygląd disabled z design systemu:
+          // .button--primary:disabled { background:#D5D7F8; cursor:not-allowed }
+          readOn: ready,
+          readOff: !ready,
+          readBg: ready ? 'var(--tk-brand)' : 'var(--tk-brand-bd-soft)',
+          readCursor: ready ? 'pointer' : 'not-allowed',
+          files: files.map((f) => ({
             name: f.name, size: f.size, kind: f.kind,
-            sep: i === 0 ? 'transparent' : 'var(--tk-border-2)',
-            remove: () => this.setState((st) => ({ docFiles: (st.docFiles || []).filter((x, k) => k !== i) })),
+            uploading: f.pct > 0,
+            done: !(f.pct > 0),
+            percent: (f.pct || 0) + '%',
+            removeTip: f.pct > 0 ? 'Przerwij' : 'Usuń plik',
+            removeIcon: f.pct > 0 ? 'i-close.svg' : 'i-trash.svg',
+            remove: () => this.removeDocFile(f.uid),
           })),
-          file: shown.name,
-          percent: (s.docUploadPct || 0) + '%',
-          stage: reading ? 'Analizujemy dokument…' : 'Wgrywanie pliku…',
         };
       })(),
       docReview: (() => {
