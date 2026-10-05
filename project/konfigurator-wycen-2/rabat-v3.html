@@ -416,10 +416,7 @@ window.__resources = {
             <!-- Narzut procentowy — domyślnie z grupy cenowej klienta, do nadpisania w wierszu -->
             <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
               <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
-                <div style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">
-                  Narzut (%)
-                  <span class="z-tip" data-tt="{{ row.narzutTip }}" data-tt-pos="top" style="width:14px;height:14px;flex:none;display:inline-grid;place-items:center;border-radius:50%;border:1px solid var(--grey-3);font-size:10px;line-height:1;cursor:help;">i</span>
-                </div>
+                <div style="font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">Narzut (%)</div>
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.narzutValue }}" onChange="{{ row.setNarzut }}" onBlur="{{ row.commitNarzut }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
@@ -1306,11 +1303,6 @@ class Component extends DCLogic {
 
       // Narzut procentowy — zmiana przelicza cenę sprzedaży z ceny zakupu
       narzutValue: r.narzutTouched ? (r.narzut == null ? '' : String(r.narzut)) : Component.pctText(Component.shownPct(r)),
-      narzutTip: r.narzutTouched
-        ? 'Narzut wpisany ręcznie w tej pozycji.'
-        : (r.priceTouched
-          ? 'Narzut wyliczony z ceny zakupu i ręcznie wpisanej ceny sprzedaży.'
-          : 'Narzut z grupy cenowej klienta. Wpisz własny, żeby zmienić tylko tę pozycję.'),
       setNarzut: (e) => {
         const raw = e.target.value;
         this._patchRow(collection, r.id, (x) => {
@@ -1654,10 +1646,10 @@ class Component extends DCLogic {
     // Kolejność: nazwa | indeks | producent | zakup | narzut | jednostka | ilość | cena | (rabat)? | wartość | kosz
     const towCols = (withRabat) => {
       const w = 'minmax(112px,168px)';
-      const cols = ['minmax(200px,1fr)', w, w, w, '108px', w, 'minmax(104px,140px)', w]
+      const cols = ['minmax(200px,1fr)', w, w, w, '92px', w, 'minmax(104px,140px)', w]
         .concat(withRabat ? ['92px'] : [])
         .concat([w, '30px']);
-      const min = 200 + 112 * 6 + 108 + 104 + 30 + (withRabat ? 92 : 0) + (cols.length - 1) * 8;
+      const min = 200 + 112 * 6 + 92 + 104 + 30 + (withRabat ? 92 : 0) + (cols.length - 1) * 8;
       return 'display:grid;min-width:' + min + 'px;grid-template-columns:' + cols.join(' ') + ';gap:8px;align-items:center;';
     };
     const towGridStyle = towCols(showRabat);
