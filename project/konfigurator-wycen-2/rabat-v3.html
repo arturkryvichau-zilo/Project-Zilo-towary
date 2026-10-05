@@ -413,6 +413,16 @@ window.__resources = {
                 <input class="z-input" type="text" inputMode="decimal" value="{{ row.kosztValue }}" onChange="{{ row.setKosztValue }}" onBlur="{{ row.commitKoszt }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
               </div>
             </label>
+            <!-- Narzut procentowy — domyślnie z grupy cenowej klienta, do nadpisania w wierszu -->
+            <label class="z-input-cell" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:text;">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box;">
+                <div style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:400;line-height:16px;color:var(--grey-3);">
+                  Narzut (%)
+                  <span class="z-tip" data-tt="{{ row.narzutTip }}" data-tt-pos="top" style="width:14px;height:14px;flex:none;display:inline-grid;place-items:center;border-radius:50%;border:1px solid var(--grey-3);font-size:10px;line-height:1;cursor:help;">i</span>
+                </div>
+                <input class="z-input" type="text" inputMode="decimal" value="{{ row.narzutValue }}" onChange="{{ row.setNarzut }}" onBlur="{{ row.commitNarzut }}" onFocus="{{ selectOnFocus }}" onKeyDown="{{ commitOnEnter }}">
+              </div>
+            </label>
             <!-- Jednostka select -->
             <div style="position:relative;">
               <div onClick="{{ row.toggleUnit }}" style="display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--grey-3);border-radius:10px;cursor:pointer;{{ row.unitOpenStyle }}">
@@ -748,15 +758,43 @@ class Component extends DCLogic {
 
   // Narzut warsztatu na części: cena sprzedaży netto z ceny zakupu netto.
   static priceFromCost(kosztNet, grupa) {
-    return Component.roundHalfUp(Component.parseNum(kosztNet) * (100 + Component.groupPct(grupa)) / 100, 2);
+    return Component.priceFromPct(kosztNet, Component.groupPct(grupa));
+  }
+
+  static priceFromPct(kosztNet, pct) {
+    return Component.roundHalfUp(Component.parseNum(kosztNet) * (100 + (Number(pct) || 0)) / 100, 2);
+  }
+
+  // Narzut, którym liczymy cenę: wpisany w wierszu wygrywa, inaczej bierzemy
+  // ten z grupy cenowej klienta (albo z grupy domyślnej).
+  static rowPct(r) {
+    return r && r.narzutTouched ? Component.parseNum(r.narzut) : Component.groupPct(r && r.grupa);
+  }
+
+  // Narzut, który pokazujemy. Gdy mechanik nadpisał cenę ręcznie, pole mówi
+  // prawdę o tym, co faktycznie wyszło, a nie o narzucie grupy.
+  static shownPct(r) {
+    if (r && r.narzutTouched) return Component.parseNum(r.narzut);
+    const kosztNet = Component.convertAmount(
+      Component.parseNum(r.koszt), r.purchaseSide === 'gross' ? 'gross' : 'net', 'net', r.vat);
+    if (r && r.priceTouched && kosztNet > 0) {
+      const cenaNet = Component.recalcRow(Component.priceRow(r)).unitNet;
+      return Component.roundHalfUp((cenaNet / kosztNet - 1) * 100, 1);
+    }
+    return Component.groupPct(r && r.grupa);
+  }
+
+  static pctText(v) {
+    const n = Number(v) || 0;
+    return Component.pl(String(Math.round(n * 10) / 10));
   }
 
   static normalizeTowar(r) {
     const out = Component.withPricing(r);
     const def = Component.defaultGroup();
     if (!out.grupa && def) out.grupa = def.value;
-    const pct = Component.groupPct(out.grupa);
-    // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży netto i narzutu grupy.
+    const pct = Component.rowPct(out);
+    // Brak ceny zakupu → licz ją wstecz z ceny sprzedaży netto i narzutu wiersza.
     if (!(Component.parseNum(out.koszt) > 0)) {
       const netUnit = Component.recalcRow(Component.priceRow(out)).unitNet;
       out.koszt = Component.pl(Component.roundHalfUp(netUnit * 100 / (100 + pct), 2).toFixed(2));
@@ -767,7 +805,7 @@ class Component extends DCLogic {
 
   static mkTowar(id) {
     const def = Component.defaultGroup();
-    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', koszt: '', purchaseSide: 'net', rabatPct: '', priceTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', rabatEditing: null, openField: null };
+    return { id, name: '', indeks: '', producent: '', qty: '1', cena: '0,00', totalPrice: '0,00', anchor: 'unit', priceSide: 'net', koszt: '', purchaseSide: 'net', rabatPct: '', priceTouched: false, narzut: '', narzutTouched: false, unit: 'Sztuka', vat: '23', grupa: def ? def.value : '', rabatEditing: null, openField: null };
   }
   // ── Kwoty pozycji — model przeniesiony z produkcji (src/helpers/quote-pricing.ts) ──
   // Kierunek liczenia wyznacza strona, po której wpisano kwotę; zaokrąglenie następuje
@@ -1266,6 +1304,31 @@ class Component extends DCLogic {
           ? x
           : withTotal(Object.assign({}, x, { cena: Component.pl(Component.normalizeAmount(x.cena)) })))),
 
+      // Narzut procentowy — zmiana przelicza cenę sprzedaży z ceny zakupu
+      narzutValue: r.narzutTouched ? (r.narzut == null ? '' : String(r.narzut)) : Component.pctText(Component.shownPct(r)),
+      narzutTip: r.narzutTouched
+        ? 'Narzut wpisany ręcznie w tej pozycji.'
+        : (r.priceTouched
+          ? 'Narzut wyliczony z ceny zakupu i ręcznie wpisanej ceny sprzedaży.'
+          : 'Narzut z grupy cenowej klienta. Wpisz własny, żeby zmienić tylko tę pozycję.'),
+      setNarzut: (e) => {
+        const raw = e.target.value;
+        this._patchRow(collection, r.id, (x) => {
+          // własny narzut przejmuje wiersz: cena znów wynika z zakupu
+          const next = Object.assign({}, x, { narzut: raw, narzutTouched: true, priceTouched: false });
+          const netCost = Component.convertAmount(
+            Component.parseNum(x.koszt), x.purchaseSide === 'gross' ? 'gross' : 'net', 'net', x.vat);
+          next.cena = Component.pl(Component.priceFromPct(netCost, Component.parseNum(raw)).toFixed(2));
+          next.priceSide = 'net';
+          next.anchor = 'unit';
+          return withTotal(next);
+        });
+      },
+      commitNarzut: () => this._patchRow(collection, r.id, (x) => (
+        !x.narzutTouched || String(x.narzut || '').trim() === ''
+          ? Object.assign({}, x, { narzut: '', narzutTouched: false })
+          : Object.assign({}, x, { narzut: Component.pctText(Component.parseNum(x.narzut)) }))),
+
       kosztLabel: isBrutto ? 'Zakup brutto (zł)' : 'Zakup netto (zł)',
       // cena zakupu ma tylko stronę wpisania — nie mnoży się przez ilość i nie wchodzi do sum
       kosztValue: Component.pl(Component.shownSidedAmount({ amount: r.koszt, side: r.purchaseSide === 'gross' ? 'gross' : 'net', taxRate: r.vat }, shown)),
@@ -1276,7 +1339,7 @@ class Component extends DCLogic {
           // cena sprzedaży idzie za zakupem, dopóki mechanik jej nie nadpisał
           if (!x.priceTouched) {
             const netCost = Component.convertAmount(Component.parseNum(raw), shown, 'net', x.vat);
-            next.cena = Component.pl(Component.priceFromCost(netCost, x.grupa).toFixed(2));
+            next.cena = Component.pl(Component.priceFromPct(netCost, Component.rowPct(x)).toFixed(2));
             next.priceSide = 'net';
             next.anchor = 'unit';
           }
@@ -1584,7 +1647,20 @@ class Component extends DCLogic {
     // usługa: osoba, czas, jednostka, ilość, cena, (rabat)?, wartość
     const robGridStyle = gridStyle(6 + (showRabat ? 1 : 0));
     // towar: indeks, producent, zakup, jednostka, ilość, cena, (rabat)?, wartość
-    const towGridStyle = gridStyle(7 + (showRabat ? 1 : 0));
+    // Towar ma o kolumnę więcej niż usługa, więc gdyby wszystkie tory były równe,
+    // „Wartość netto (zł)" zawijałaby się na dwie linie i rozpychała wiersz.
+    // Narzut mieści „45" i nie potrzebuje szerokiego toru, ilość też nie —
+    // oddany stąd margines wystarcza pozostałym etykietom na jedną linię.
+    // Kolejność: nazwa | indeks | producent | zakup | narzut | jednostka | ilość | cena | (rabat)? | wartość | kosz
+    const towCols = (withRabat) => {
+      const w = 'minmax(112px,168px)';
+      const cols = ['minmax(200px,1fr)', w, w, w, '108px', w, 'minmax(104px,140px)', w]
+        .concat(withRabat ? ['92px'] : [])
+        .concat([w, '30px']);
+      const min = 200 + 112 * 6 + 108 + 104 + 30 + (withRabat ? 92 : 0) + (cols.length - 1) * 8;
+      return 'display:grid;min-width:' + min + 'px;grid-template-columns:' + cols.join(' ') + ';gap:8px;align-items:center;';
+    };
+    const towGridStyle = towCols(showRabat);
 
     // jedno przeliczenie na render — z niego biorą i wiersze, i sumy, i podgląd
     const calc = Component.computeQuote(this.state);
