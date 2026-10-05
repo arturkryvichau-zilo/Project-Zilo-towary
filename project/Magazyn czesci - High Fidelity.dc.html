@@ -927,8 +927,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div onClick="{{ hurtSel.close }}" style="position:fixed;inset:0;z-index:29"></div>
                 </sc-if>
                 <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:center;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
-                  <sc-if value="{{ hurtSel.hasMark }}" hint-placeholder-val="{{ true }}">
-                    <span style="width:34px;height:34px;flex:none;margin-left:10px;border-radius:8px;background:var(--tk-brand-soft);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;color:var(--tk-brand-fg)">{{ hurtSel.mark }}</span>
+                  <sc-if value="{{ hurtSel.hasLogo }}" hint-placeholder-val="{{ true }}">
+                    <img src="{{ hurtSel.logo }}" alt="" style="width:34px;height:34px;flex:none;margin-left:10px;display:block;border-radius:8px">
                   </sc-if>
                   <span style="flex:1;min-width:0;display:flex;align-items:center;padding:0 13px;box-sizing:border-box">
                     <input value="{{ hurtSel.text }}" onInput="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
@@ -938,18 +938,32 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </span>
                 </label>
                 <sc-if value="{{ hurtSel.isOpen }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
-                    <sc-for list="{{ hurtSel.options }}" as="o" hint-placeholder-count="8">
-                      <div onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid {{ o.sep }};font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
-                        <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
-                          <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
-                        </sc-if>
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
+                    <sc-for list="{{ hurtSel.groups }}" as="g" hint-placeholder-count="2">
+                      <div>
+                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
+                        <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
+                          <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
+                            <img src="{{ o.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
+                            <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
+                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                            </sc-if>
+                          </div>
+                        </sc-for>
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne".</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inna hurtownia".</div>
                     </sc-if>
+                    <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
+                    <div onClick="{{ hurtSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
+                      <img src="{{ hurtSel.other.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                      <span style="flex:1;min-width:0">{{ hurtSel.other.label }}</span>
+                      <sc-if value="{{ hurtSel.other.selected }}" hint-placeholder-val="{{ false }}">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                      </sc-if>
+                    </div>
                   </div>
                 </sc-if>
               </div>
@@ -962,7 +976,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                   <img src="assets/icons/i-upload-doc.svg" alt="" style="width:40px;height:40px;flex:none;display:block;margin-bottom:6px">
                   <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Przeciągnij plik albo wybierz z dysku</span>
-                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">PDF, CSV, JPG lub PNG</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">{{ docUpload.formats }}</span>
                   <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Faktura, WZ-ka, zdjęcie albo zrzut ekranu</span>
                   <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:10px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
                 </div>
@@ -1036,6 +1050,9 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div onClick="{{ hurtDocSel.close }}" style="position:fixed;inset:0;z-index:29"></div>
                 </sc-if>
                 <label onClick="{{ hurtDocSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtDocSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
+                  <sc-if value="{{ hurtDocSel.hasLogo }}" hint-placeholder-val="{{ true }}">
+                    <img src="{{ hurtDocSel.logo }}" alt="" style="width:30px;height:30px;flex:none;align-self:center;margin-left:10px;display:block;border-radius:7px">
+                  </sc-if>
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                     <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
                     <input value="{{ hurtDocSel.text }}" onInput="{{ hurtDocSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
@@ -1045,18 +1062,32 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   </span>
                 </label>
                 <sc-if value="{{ hurtDocSel.isOpen }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:300px;overflow-y:auto">
-                    <sc-for list="{{ hurtDocSel.options }}" as="o" hint-placeholder-count="8">
-                      <div onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid {{ o.sep }};font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
-                        <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
-                          <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
-                        </sc-if>
+                  <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
+                    <sc-for list="{{ hurtDocSel.groups }}" as="g" hint-placeholder-count="2">
+                      <div>
+                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
+                        <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
+                          <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
+                            <img src="{{ o.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
+                            <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
+                              <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                            </sc-if>
+                          </div>
+                        </sc-for>
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtDocSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne".</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inna hurtownia".</div>
                     </sc-if>
+                    <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
+                    <div onClick="{{ hurtDocSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtDocSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
+                      <img src="{{ hurtDocSel.other.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                      <span style="flex:1;min-width:0">{{ hurtDocSel.other.label }}</span>
+                      <sc-if value="{{ hurtDocSel.other.selected }}" hint-placeholder-val="{{ false }}">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                      </sc-if>
+                    </div>
                   </div>
                 </sc-if>
               </div>
@@ -5167,13 +5198,23 @@ const saveDocs = (list) => {
 };
 
 const HURTOWNIE = ['Inter Cars', 'Auto Partner', 'Big-Autohandel', 'ELIT (Mekomens)', 'Auto Land', 'Interteam', 'Gordon'];
+// trzy najpopularniejsze idą na górę listy, reszta pod „Pozostałe"
+const HURT_POPULAR = ['Inter Cars', 'Auto Partner', 'Big-Autohandel'];
+const HURT_OTHER = 'Inna hurtownia';
+// Logotypy: na razie zastępniki na palecie Zilo, nie barwy marek.
+// Podmiana to wgranie prawdziwego pliku pod tę samą nazwę.
+const HURT_LOGO = {
+  'Inter Cars': 'assets/logos/hurtownie/inter-cars.svg',
+  'Auto Partner': 'assets/logos/hurtownie/auto-partner.svg',
+  'Big-Autohandel': 'assets/logos/hurtownie/big-autohandel.svg',
+  'ELIT (Mekomens)': 'assets/logos/hurtownie/elit.svg',
+  'Auto Land': 'assets/logos/hurtownie/auto-land.svg',
+  'Interteam': 'assets/logos/hurtownie/interteam.svg',
+  'Gordon': 'assets/logos/hurtownie/gordon.svg',
+  'Inna hurtownia': 'assets/logos/hurtownie/inna.svg',
+};
 // Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
 // reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
-const HURT_MARK = {
-  'Inter Cars': 'IC', 'Auto Partner': 'AP', 'Big-Autohandel': 'BA',
-  'ELIT (Mekomens)': 'ELIT', 'Auto Land': 'AL', 'Interteam': 'IT', 'Gordon': 'GOR',
-};
-
 const HURT_HINT = {
   'Inter Cars': 'Gdzie znaleźć plik w Inter Cars — Panel IC Katalog → Zamówienia → otwórz zamówienie → Pobierz PDF lub CSV.',
 };
@@ -8300,27 +8341,36 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
-  // wspólny datalist: lista płaska, „Inne" zawsze na końcu za kreską
+  // wspólny datalist: Popularne / Pozostałe, a na końcu za kreską
+  // „Inna hurtownia" — wtedy przyjmujemy dowolny plik
   hurtPickerVals(cur, open, query, onPick) {
     const q = String(query == null ? '' : query).toLowerCase().trim();
-    const base = HURTOWNIE.concat(['Inne']);
-    const all = (cur && base.indexOf(cur) === -1) ? [cur].concat(base) : base;
-    const list = q ? all.filter((n) => n.toLowerCase().indexOf(q) !== -1) : all;
+    const hit = (n) => !q || n.toLowerCase().indexOf(q) !== -1;
+    const known = HURTOWNIE.slice();
+    // nazwa spoza listy (np. rozpoznana z dokumentu) ląduje wśród pozostałych
+    if (cur && cur !== HURT_OTHER && known.indexOf(cur) === -1) known.push(cur);
+    const opt = (n) => ({
+      value: n,
+      logo: HURT_LOGO[n] || '',
+      hasLogo: !!HURT_LOGO[n],
+      selected: n === cur,
+      bg: n === cur ? 'var(--tk-surface-3)' : 'transparent',
+      pick: () => onPick(n),
+    });
+    const groups = [
+      { key: 'popularne', label: 'Popularne', items: HURT_POPULAR.filter(hit) },
+      { key: 'pozostale', label: 'Pozostałe', items: known.filter((n) => HURT_POPULAR.indexOf(n) === -1).filter(hit) },
+    ].filter((g) => g.items.length > 0).map((g) => ({ key: g.key, label: g.label, options: g.items.map(opt) }));
     return {
       text: query == null ? (cur || '') : query,
-      mark: HURT_MARK[cur] || '',
-      hasMark: !!HURT_MARK[cur],
+      logo: HURT_LOGO[cur] || '',
+      hasLogo: !!HURT_LOGO[cur],
       isOpen: !!open,
-      empty: list.length === 0,
+      empty: groups.length === 0,
       border: open ? 'var(--tk-brand-bd)' : 'var(--tk-border-strong)',
       chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
-      options: list.map((n) => ({
-        value: n,
-        sep: (n === 'Inne' && list.length > 1 && list[0] !== n) ? 'var(--tk-border-2)' : 'transparent',
-        selected: n === cur,
-        bg: n === cur ? 'var(--tk-surface-3)' : 'transparent',
-        pick: () => onPick(n),
-      })),
+      groups: groups,
+      other: Object.assign(opt(HURT_OTHER), { label: HURT_OTHER }),
     };
   }
 
@@ -8369,7 +8419,7 @@ class Component extends DCLogic {
   finishDocRead() {
     const picked = this.state.docSupplier || this.defaultHurtownia();
     const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
-    if (picked && picked !== 'Inne') draft.supplier = picked;
+    if (picked && picked !== HURT_OTHER && picked !== 'Inne') draft.supplier = picked;
     if (!this.state.docEditing) {
       draft.nr = this.nextDocNr();
       draft.ext = this.nextDocExt();
@@ -9177,6 +9227,8 @@ class Component extends DCLogic {
           canAddMore: !busy,
           hasHint: !!HURT_HINT[hurt],
           hint: HURT_HINT[hurt] || '',
+          // przy „Innej hurtowni" nie zawężamy formatów — bierzemy, co przyjdzie
+          formats: hurt === HURT_OTHER ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
           // trzy stany: brak gotowego pliku → nieaktywny, plik wgrany → aktywny,
           // wgrywanie → nieaktywny. Wygląd disabled z design systemu:
           // .button--primary:disabled { background:#D5D7F8; cursor:not-allowed }
