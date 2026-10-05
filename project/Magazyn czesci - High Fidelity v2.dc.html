@@ -9101,9 +9101,12 @@ class Component extends DCLogic {
           canAddMore: !s.docUploadPct,
           cancel: () => this.cancelDocProgress(),
           kind: shown.kind || 'PDF',
-          readBg: files.length ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
-          readColor: files.length ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
-          readCursor: files.length ? 'pointer' : 'default',
+          // trzy stany: brak pliku → nieaktywny, plik wgrany → aktywny,
+          // przetwarzanie → nieaktywny, żeby nie dało się odpalić odczytu dwa razy
+          readOn: !!files.length && !s.docUploadPct,
+          readBg: (files.length && !s.docUploadPct) ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
+          readColor: (files.length && !s.docUploadPct) ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
+          readCursor: (files.length && !s.docUploadPct) ? 'pointer' : 'default',
           suppliers: HURTOWNIE.map(mk),
           other: mk('Inne'),
           files: files.map((f, i) => ({
