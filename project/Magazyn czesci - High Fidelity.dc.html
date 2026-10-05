@@ -925,11 +925,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </div>
 
             <sc-if value="{{ docUpload.idle }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
               <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:56px 32px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                 <img src="assets/icons/i-upload-doc.svg" alt="" style="width:48px;height:48px;flex:none;display:block">
                 <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wgraj plik</span>
                 <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Formaty: PDF, CSV, JPG lub PNG. Faktura lub WZ.</span>
                 <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:8px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
+              </div>
+              <sc-if value="{{ docUpload.hasHint }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;background:var(--tk-note-bg);color:var(--tk-note-fg)"><span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-note-icon);-webkit-mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-info.svg) center / 20px 20px no-repeat"></span><span style="font-size:14px;line-height:20px">{{ docUpload.hint }}</span></div>
+              </sc-if>
               </div>
             </sc-if>
 
@@ -5116,6 +5121,12 @@ const saveDocs = (list) => {
 };
 
 const HURTOWNIE = ['Inter Cars', 'Auto Partner', 'Big-Autohandel', 'ELIT (Mekomens)', 'Auto Land', 'Interteam', 'Gordon'];
+// Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
+// reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
+const HURT_HINT = {
+  'Inter Cars': 'Gdzie znaleźć plik w Inter Cars — Panel IC Katalog → Zamówienia → otwórz zamówienie → Pobierz PDF lub CSV.',
+};
+
 const DOC_FILE_POOL = [
   { name: 'FV-88213-08-2026.pdf', size: '248 KB', kind: 'PDF' },
   { name: 'WZ-10234-08-2026.pdf', size: '132 KB', kind: 'PDF' },
@@ -9071,6 +9082,7 @@ class Component extends DCLogic {
       readDocument: () => { if ((s.docFiles || []).length && !s.docUploadPct) this.runDocProgress('read'); },
       docUpload: (() => {
         const files = s.docFiles || [];
+        const hurt = s.docSupplier || this.defaultHurtownia();
         const reading = !!s.docUploadPct && s.docPhase === 'read';
         const shown = reading ? (files[0] || { name: '', kind: 'PDF' }) : (s.docPending || files[0] || { name: '', kind: 'PDF' });
         return {
@@ -9079,6 +9091,8 @@ class Component extends DCLogic {
           picked: !!files.length && !reading,
           busy: !!s.docUploadPct,
           canAddMore: !s.docUploadPct,
+          hasHint: !!HURT_HINT[hurt],
+          hint: HURT_HINT[hurt] || '',
           cancel: () => this.cancelDocProgress(),
           kind: shown.kind || 'PDF',
           // trzy stany: brak pliku → nieaktywny, plik wgrany → aktywny,
