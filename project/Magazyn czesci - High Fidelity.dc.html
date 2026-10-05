@@ -70,6 +70,35 @@ window.__resources = {
 @font-face { font-family:'Rubik'; font-style:normal; font-weight:400; font-display:swap; src:url('fonts/Rubik-Regular.ttf') format('truetype'); }
 @font-face { font-family:'Rubik'; font-style:normal; font-weight:500; font-display:swap; src:url('fonts/Rubik-Medium.ttf') format('truetype'); }
 @font-face { font-family:'Rubik'; font-style:normal; font-weight:600; font-display:swap; src:url('fonts/Rubik-SemiBold.ttf') format('truetype'); }
+/* Segmented control netto/brutto — ten sam co w konfiguratorze wycen */
+.ds-seg {
+  --seg-h: 46px; --seg-radius: 10px; --seg-gap: 4px;
+  --seg-bg: var(--tk-surface-3); --seg-fg-off: var(--tk-text-2); --seg-fg-on: var(--tk-text-strong);
+  --seg-pill-bg: var(--tk-surface);
+  --seg-shadow: 0 1px 2px rgba(20,24,35,0.06), 0 2px 8px rgba(20,24,35,0.08);
+  display:inline-flex; padding:var(--seg-gap); background:var(--seg-bg);
+  border-radius:var(--seg-radius); height:var(--seg-h); box-sizing:border-box;
+  font-family:inherit; user-select:none; position:relative;
+}
+.ds-seg[data-size="mobile"] { --seg-radius:12px; --seg-gap:3px; }
+.ds-seg__item {
+  flex:1 1 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:0 18px; border:0; background:transparent; border-radius:8px;
+  color:var(--seg-fg-off); font-family:inherit; font-size:15px; font-weight:400; line-height:1;
+  cursor:pointer; white-space:nowrap;
+  transition: background 160ms cubic-bezier(.2,0,0,1), color 160ms cubic-bezier(.2,0,0,1), box-shadow 160ms cubic-bezier(.2,0,0,1);
+  -webkit-tap-highlight-color:transparent;
+}
+.ds-seg[data-size="mobile"] .ds-seg__item { font-size:14px; padding:0 24px; gap:6px; }
+.ds-seg .ds-seg__item:not([aria-checked="true"]):hover { color:var(--tk-text-strong); }
+.ds-seg__item[aria-checked="true"] { background:var(--seg-pill-bg); color:var(--seg-fg-on); box-shadow:var(--seg-shadow); }
+.ds-seg__item:focus { outline:none; }
+
+/* Komórka pola w wierszu pozycji — ta sama co .z-input-cell w konfiguratorze */
+.z-cell { transition: box-shadow 200ms cubic-bezier(.2,0,0,1), border-color 200ms cubic-bezier(.2,0,0,1); }
+.z-cell:focus-within { box-shadow: inset 0 0 0 1px var(--tk-brand-bd); border-color: var(--tk-brand-bd); }
+.z-cell:hover { border-color: var(--tk-border-focus); }
+
 #zilo-theme-toggle .zilo-ic-moon { display:none; }
 :root[data-theme="dark"] #zilo-theme-toggle .zilo-ic-sun { display:none; }
 :root[data-theme="dark"] #zilo-theme-toggle .zilo-ic-moon { display:block; }
@@ -1068,76 +1097,94 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               </div>
             </div>
 
-            <div style="background:var(--tk-surface-3);border-radius:12px;padding:24px;overflow-x:auto">
-              <div style="min-width:1440px;display:flex;flex-direction:column;gap:8px">
-                <sc-for list="{{ docReview.rows }}" as="r" hint-placeholder-count="5">
-                  <div style="display:flex;flex-direction:column;gap:6px">
-                    <div style="display:grid;grid-template-columns:minmax(200px,1.5fr) minmax(170px,1.1fr) minmax(140px,0.8fr) 140px 90px 130px 110px 140px 140px 40px;gap:10px;align-items:center">
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nazwa</span>
-                        <input value="{{ r.name }}" onChange="{{ r.setName }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px">
+                <div class="ds-seg" data-size="mobile" role="radiogroup" aria-label="Wartości">
+                  <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ docReview.segNetto }}" onClick="{{ pickDocNetto }}">Netto</button>
+                  <button type="button" class="ds-seg__item" role="radio" aria-checked="{{ docReview.segBrutto }}" onClick="{{ pickDocBrutto }}">Brutto</button>
+                </div>
+              </div>
+              <div style="background:var(--tk-surface-3);border:1px solid var(--tk-border);border-radius:12px;padding:24px;overflow-x:auto;box-sizing:border-box">
+                <div style="{{ docReview.gridMin }}display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ docReview.rows }}" as="r" hint-placeholder-count="5">
+                    <div style="{{ docReview.grid }}">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nazwa</span>
+                          <input value="{{ r.name }}" onChange="{{ r.setName }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Indeks</span>
-                        <input value="{{ r.code }}" onChange="{{ r.setCode }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Indeks</span>
+                          <input value="{{ r.code }}" onChange="{{ r.setCode }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Producent</span>
-                        <input value="{{ r.producer }}" onChange="{{ r.setProducer }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Producent</span>
+                          <input value="{{ r.producer }}" onChange="{{ r.setProducer }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:pointer" style-hover="border-color:var(--tk-border-strong)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Jednostka</span>
-                        <select value="{{ r.unit }}" onChange="{{ r.setUnit }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
-                          <sc-for list="{{ unitOptions }}" as="o" hint-placeholder-count="3">
-                            <option value="{{ o }}">{{ o }}</option>
-                          </sc-for>
-                        </select>
-                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:pointer">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Jednostka</span>
+                          <select value="{{ r.unit }}" onChange="{{ r.setUnit }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
+                            <sc-for list="{{ unitOptions }}" as="o" hint-placeholder-count="3">
+                              <option value="{{ o }}">{{ o }}</option>
+                            </sc-for>
+                          </select>
+                        </span>
+                        <span style="display:flex;align-items:center;justify-content:center;width:36px;flex:none;pointer-events:none">
+                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ilość</span>
-                        <input value="{{ r.qty }}" onChange="{{ r.setQty }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ilość</span>
+                          <input value="{{ r.qty }}" onChange="{{ r.setQty }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <div style="display: none; flex-direction: column; justify-content: center; height: 62px; box-sizing: border-box; padding: 9px 13px; background: var(--tk-surface-2); border: 1px solid var(--tk-border-2); border-radius: 8px">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cena detaliczna</span>
-                        <span style="font-size:16px;line-height:24px;color:var(--tk-text-3);white-space:nowrap">{{ r.msrpPlain }}</span>
-                      </div>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cena netto</span>
-                        <input value="{{ r.price }}" onChange="{{ r.setPrice }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ docReview.cenaLabel }}</span>
+                          <input value="{{ r.priceValue }}" onChange="{{ r.setPriceValue }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:pointer" style-hover="border-color:var(--tk-border-strong)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">VAT (%)</span>
-                        <select value="{{ r.vat }}" onChange="{{ r.setVat }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
-                          <sc-for list="{{ vatOptions }}" as="o" hint-placeholder-count="3">
-                            <option value="{{ o }}">{{ o }}</option>
-                          </sc-for>
-                        </select>
-                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:pointer">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">VAT (%)</span>
+                          <select value="{{ r.vat }}" onChange="{{ r.setVat }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
+                            <sc-for list="{{ vatOptions }}" as="o" hint-placeholder-count="3">
+                              <option value="{{ o }}">{{ o }}</option>
+                            </sc-for>
+                          </select>
+                        </span>
+                        <span style="display:flex;align-items:center;justify-content:center;width:36px;flex:none;pointer-events:none">
+                          <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat"></span>
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Wartość netto</span>
-                        <input value="{{ r.netPlain }}" onChange="{{ r.setNet }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      <label class="z-cell" style="position:relative;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;cursor:text">
+                        <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                          <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ docReview.wartoscLabel }}</span>
+                          <input value="{{ r.value }}" onChange="{{ r.setValue }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
+                        </span>
                       </label>
-                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
-                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Wartość brutto</span>
-                        <input value="{{ r.grossPlain }}" onChange="{{ r.setGross }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
-                      </label>
-                      <button type="button" onClick="{{ r.remove }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center;justify-self:end" style-hover="background:var(--tk-surface-4)" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
+                      <button type="button" onClick="{{ r.remove }}" style="position:relative;width:30px;height:30px;flex:none;border:0;border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;justify-self:end" style-hover="background:var(--tk-surface-4)" data-tt="Usuń pozycję" aria-label="Usuń pozycję" data-tt-pos="left">
                         <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
                       </button>
                     </div>
-                  </div>
-                </sc-for>
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:4px">
-                  <button type="button" onClick="{{ addDocRow }}" style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 4px 8px; border: 0; border-radius: 4px; background: transparent; color: var(--tk-brand-fg); font-family: inherit; font-size: 14px; line-height: 22px; cursor: pointer" style-hover="background:var(--tk-surface-4)">
-                    <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
-                    Dodaj pozycję
-                  </button>
-                  <div style="display:flex;gap:24px;font-size:15px;line-height:22px;color:var(--tk-text-2);white-space:nowrap;padding-right:50px">
-                    <span style="color: var(--black)">Suma netto: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalNet }}</span></span>
-                    <span style="color: var(--black)">Suma VAT: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalVat }}</span></span>
-                    <span style="color: var(--black)">Suma brutto: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalGross }}</span></span>
+                  </sc-for>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:4px">
+                    <button type="button" onClick="{{ addDocRow }}" style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 4px 8px; border: 0; border-radius: 4px; background: transparent; color: var(--tk-brand-fg); font-family: inherit; font-size: 14px; line-height: 22px; cursor: pointer" style-hover="background:var(--tk-surface-4)">
+                      <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                      Dodaj pozycję
+                    </button>
+                    <div style="display:flex;gap:24px;font-size:15px;line-height:22px;color:var(--tk-text-2);white-space:nowrap;padding-right:38px">
+                      <span style="color:var(--tk-text-2)">Suma netto: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalNet }}</span></span>
+                      <span style="color:var(--tk-text-2)">Suma VAT: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalVat }}</span></span>
+                      <span style="color:var(--tk-text-2)">Suma brutto: <span style="font-weight:500;color:var(--tk-text)">{{ docReview.totalGross }}</span></span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5142,10 +5189,19 @@ const DOC_FILE_POOL = [
 // strona nadal wynika z drugiej, żeby wiersz nie pokazywał dwóch niezgodnych kwot.
 const DOC_NUM = (x) => parseFloat(String(x == null ? '' : x).replace(/\s/g, '').replace(',', '.')) || 0;
 const DOC_SET = (v) => v !== undefined && v !== null && String(v).trim() !== '';
-const docRowNet = (r) => (DOC_SET(r.netEdit) ? DOC_NUM(r.netEdit) : DOC_NUM(r.qty) * DOC_NUM(r.price));
-const docRowGross = (r) => (DOC_SET(r.grossEdit)
-  ? DOC_NUM(r.grossEdit)
-  : docRowNet(r) * (1 + (parseFloat(r.vat) || 0) / 100));
+const DOC_RATE = (r) => 1 + (parseFloat(r.vat) || 0) / 100;
+// cena jednostkowa: wiążąca jest ta strona, po której użytkownik pisał
+const docPriceGross = (r) => r.priceSide === 'gross' && DOC_SET(r.priceG);
+const docUnitNet = (r) => (docPriceGross(r) ? DOC_NUM(r.priceG) / DOC_RATE(r) : DOC_NUM(r.price));
+const docUnitGross = (r) => (docPriceGross(r) ? DOC_NUM(r.priceG) : DOC_NUM(r.price) * DOC_RATE(r));
+// wartość pozycji: ostatnio wpisana strona wygrywa (rows bez valueSide to
+// starsze dane — tam brutto było jedyną ręczną kwotą)
+const docGrossWins = (r) => DOC_SET(r.grossEdit) && r.valueSide !== 'net';
+const docRowNet = (r) => (docGrossWins(r)
+  ? DOC_NUM(r.grossEdit) / DOC_RATE(r)
+  : (DOC_SET(r.netEdit) ? DOC_NUM(r.netEdit) : DOC_NUM(r.qty) * docUnitNet(r)));
+const docRowGross = (r) => (docGrossWins(r) ? DOC_NUM(r.grossEdit) : docRowNet(r) * DOC_RATE(r));
+const docPl = (n) => n.toFixed(2).replace('.', ',');
 
 const withRowIds = (rows) => (rows || []).map((r, i) => (r.rid ? r : Object.assign({}, r, { rid: 'r' + i + '-' + docUid() })));
 
@@ -8193,6 +8249,24 @@ class Component extends DCLogic {
 
   // 1) ostatnio wybrana hurtownia tego warsztatu, 2) hurtownia z aktywnej
   // integracji, 3) Inter Cars
+  // Ten sam klucz co w konfiguratorach — netto/brutto wybrane w wycenie
+  // otwiera dokument w tym samym trybie.
+  static MODE_KEY = 'zilo-value-mode';
+
+  static savedValueMode() {
+    try {
+      const v = localStorage.getItem(Component.MODE_KEY);
+      if (v === 'brutto' || v === 'netto') return v;
+    } catch (e) {}
+    return 'netto';
+  }
+
+  setValueMode(mode) {
+    const m = mode === 'brutto' ? 'brutto' : 'netto';
+    try { localStorage.setItem(Component.MODE_KEY, m); } catch (e) {}
+    this.setState({ valueMode: m });
+  }
+
   // „Odczytaj dokument" ma sens dopiero, gdy jest plik i nic się nie wgrywa
   static docFilesReady(files) {
     const list = files || [];
@@ -9130,7 +9204,20 @@ class Component extends DCLogic {
         const net = rows.reduce((a, r) => a + docRowNet(r), 0);
         const grossAll = rows.reduce((a, r) => a + docRowGross(r), 0);
         const vatSum = grossAll - net;
+        const isBrutto = (s.valueMode || Component.savedValueMode()) === 'brutto';
+        // ta sama formuła siatki co w konfiguratorze wycen:
+        // nazwa 1fr + 7 kolumn stałych + kosz 30 px
+        const fixed = 7;
+        const gridMin = 220 + fixed * 104 + 30 + (fixed + 1) * 8;
         return {
+          segNetto: isBrutto ? 'false' : 'true',
+          segBrutto: isBrutto ? 'true' : 'false',
+          cenaLabel: isBrutto ? 'Cena brutto (zł)' : 'Cena netto (zł)',
+          wartoscLabel: isBrutto ? 'Wartość brutto (zł)' : 'Wartość netto (zł)',
+          gridMin: 'min-width:' + gridMin + 'px;',
+          grid: 'display:grid;grid-template-columns:minmax(220px,1fr) '
+            + new Array(fixed).fill('minmax(104px,154px)').join(' ')
+            + ' 30px;gap:8px;align-items:center;',
           file: 'FV-88213-08-2026.pdf',
           supplier: d.supplier, nr: d.nr, ext: d.ext, date: d.date,
           f: {
@@ -9146,9 +9233,16 @@ class Component extends DCLogic {
           rows: rows.map((r, i) => ({
             name: r.name, code: r.code, producer: r.producer || '', qty: r.qty, price: r.price,
             unit: r.unit || 'Sztuka', vat: r.vat || '23', msrp: r.msrp || '',
-            netPlain: DOC_SET(r.netEdit) ? r.netEdit : docRowNet(r).toFixed(2).replace('.', ','),
-            grossPlain: DOC_SET(r.grossEdit) ? r.grossEdit : docRowGross(r).toFixed(2).replace('.', ','),
-            msrpPlain: r.msrp ? r.msrp : '—',
+            netPlain: docPl(docRowNet(r)),
+            grossPlain: docPl(docRowGross(r)),
+            // cena i wartość pokazują stronę wybraną przełącznikiem; jeśli to ta
+            // strona, po której pisano, oddajemy znak w znak to, co wpisano
+            priceValue: isBrutto
+              ? (docPriceGross(r) ? r.priceG : docPl(docUnitGross(r)))
+              : (docPriceGross(r) ? docPl(docUnitNet(r)) : (r.price == null ? '' : r.price)),
+            value: isBrutto
+              ? (docGrossWins(r) ? r.grossEdit : docPl(docRowGross(r)))
+              : (!docGrossWins(r) && DOC_SET(r.netEdit) ? r.netEdit : docPl(docRowNet(r))),
             unitLabel: r.unit || 'Sztuka',
             net: this.moneyPl(docRowNet(r)),
             vatValue: this.moneyPl(docRowGross(r) - docRowNet(r)),
@@ -9162,13 +9256,22 @@ class Component extends DCLogic {
             // ilość, cena i VAT nie czyszczą już ręcznych kwot — nadpisanie wygrywa
             setVat: (e) => this.patchDocRow(i, { vat: e.target.value }),
             setQty: (e) => this.patchDocRow(i, { qty: e.target.value }),
-            setPrice: (e) => this.patchDocRow(i, { price: e.target.value }),
-            setNet: (e) => this.patchDocRow(i, { netEdit: e.target.value }),
-            setGross: (e) => this.patchDocRow(i, { grossEdit: e.target.value }),
+            setPrice: (e) => this.patchDocRow(i, { price: e.target.value, priceSide: 'net' }),
+            setNet: (e) => this.patchDocRow(i, { netEdit: e.target.value, valueSide: 'net' }),
+            setGross: (e) => this.patchDocRow(i, { grossEdit: e.target.value, valueSide: 'gross' }),
+            // pola z przełącznikiem — piszą po tej stronie, którą widać
+            setPriceValue: (e) => this.patchDocRow(i, isBrutto
+              ? { priceG: e.target.value, priceSide: 'gross' }
+              : { price: e.target.value, priceSide: 'net' }),
+            setValue: (e) => this.patchDocRow(i, isBrutto
+              ? { grossEdit: e.target.value, valueSide: 'gross' }
+              : { netEdit: e.target.value, valueSide: 'net' }),
             remove: () => this.setState((st) => ({ docRows: (st.docRows || DOC_DRAFT_ROWS).filter((x, k) => k !== i) })),
           })),
         };
       })(),
+      pickDocNetto: () => this.setValueMode('netto'),
+      pickDocBrutto: () => this.setValueMode('brutto'),
       unitOptions: ['Sztuka', 'Opakowanie', 'Zestaw', 'Litr', 'Komplet'],
       hurtSel: Object.assign(this.hurtPickerVals(
         s.docSupplier || this.defaultHurtownia(), s.hurtOpen, s.hurtQuery,
