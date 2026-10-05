@@ -928,7 +928,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </sc-if>
                 <label onClick="{{ hurtSel.open }}" style="position:relative;z-index:30;display:flex;align-items:center;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                   <sc-if value="{{ hurtSel.hasLogo }}" hint-placeholder-val="{{ true }}">
-                    <img src="{{ hurtSel.logo }}" alt="" style="width:34px;height:34px;flex:none;margin-left:10px;display:block;border-radius:8px">
+                    <img src="{{ hurtSel.logo }}" alt="" style="width:84px;height:30px;flex:none;margin-left:12px;display:block;object-fit:contain;object-position:left center">
                   </sc-if>
                   <span style="flex:1;min-width:0;display:flex;align-items:center;padding:0 13px;box-sizing:border-box">
                     <input value="{{ hurtSel.text }}" onInput="{{ hurtSel.type }}" placeholder="Szukaj hurtowni" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
@@ -944,7 +944,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                            <img src="{{ o.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                            <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
                             <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
                             <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
                               <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -958,7 +958,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
-                      <img src="{{ hurtSel.other.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                      <img src="{{ hurtSel.other.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
                       <span style="flex:1;min-width:0">{{ hurtSel.other.label }}</span>
                       <sc-if value="{{ hurtSel.other.selected }}" hint-placeholder-val="{{ false }}">
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -1051,7 +1051,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 </sc-if>
                 <label onClick="{{ hurtDocSel.open }}" style="position:relative;z-index:30;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid {{ hurtDocSel.border }};border-radius:10px;cursor:text" style-hover="border-color:var(--tk-border-focus)">
                   <sc-if value="{{ hurtDocSel.hasLogo }}" hint-placeholder-val="{{ true }}">
-                    <img src="{{ hurtDocSel.logo }}" alt="" style="width:30px;height:30px;flex:none;align-self:center;margin-left:10px;display:block;border-radius:7px">
+                    <img src="{{ hurtDocSel.logo }}" alt="" style="width:64px;height:26px;flex:none;align-self:center;margin-left:12px;display:block;object-fit:contain;object-position:left center">
                   </sc-if>
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
                     <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
@@ -1068,7 +1068,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                            <img src="{{ o.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                            <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
                             <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
                             <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
                               <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -1082,7 +1082,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtDocSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtDocSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
-                      <img src="{{ hurtDocSel.other.logo }}" alt="" style="width:32px;height:32px;flex:none;display:block;border-radius:7px">
+                      <img src="{{ hurtDocSel.other.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
                       <span style="flex:1;min-width:0">{{ hurtDocSel.other.label }}</span>
                       <sc-if value="{{ hurtDocSel.other.selected }}" hint-placeholder-val="{{ false }}">
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -5245,26 +5245,38 @@ const saveDocs = (list) => {
   return list;
 };
 
-const HURTOWNIE = ['Inter Cars', 'Auto Partner', 'Big-Autohandel', 'ELIT (Mekomens)', 'Auto Land', 'Interteam', 'Gordon'];
-// trzy najpopularniejsze idą na górę listy, reszta pod „Pozostałe"
-const HURT_POPULAR = ['Inter Cars', 'Auto Partner', 'Big-Autohandel'];
-const HURT_OTHER = 'Inna hurtownia';
-// Logotypy: na razie zastępniki na palecie Zilo, nie barwy marek.
-// Podmiana to wgranie prawdziwego pliku pod tę samą nazwę.
-const HURT_LOGO = {
-  'Inter Cars': 'assets/logos/hurtownie/inter-cars.svg',
-  'Auto Partner': 'assets/logos/hurtownie/auto-partner.svg',
-  'Big-Autohandel': 'assets/logos/hurtownie/big-autohandel.svg',
-  'ELIT (Mekomens)': 'assets/logos/hurtownie/elit.svg',
-  'Auto Land': 'assets/logos/hurtownie/auto-land.svg',
-  'Interteam': 'assets/logos/hurtownie/interteam.svg',
-  'Gordon': 'assets/logos/hurtownie/gordon.svg',
-  'Inna hurtownia': 'assets/logos/hurtownie/inna.svg',
+// Lista hurtowni mieszka w hurtownie.json i stamtąd jest wczytywana w locie —
+// kolejność bierze się z pól grupa + kolejnosc, nie z porządku w pliku.
+// Tutaj zostaje tylko tyle, żeby pole miało co pokazać, zanim plik dojedzie.
+const HURT_FALLBACK = {
+  logoKatalog: 'assets/logos/hurtownie/',
+  hurtownie: [
+    { id: 'inter-cars', nazwa: 'Inter Cars', grupa: 'top', kolejnosc: 1, logo: 'inter-cars.ico' },
+    { id: 'auto-partner', nazwa: 'Auto Partner', grupa: 'top', kolejnosc: 2, logo: 'auto-partner.svg' },
+    { id: 'moto-profil', nazwa: 'Moto-Profil (ProfiAuto)', grupa: 'top', kolejnosc: 3, logo: 'moto-profil.svg' },
+    { id: 'inne', nazwa: 'Inne', grupa: 'koniec', kolejnosc: 99, logo: 'inne.svg' },
+  ],
 };
+const HURT_OTHER = 'Inne';
 // Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
 // reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
 const HURT_HINT = {
   'Inter Cars': 'Gdzie znaleźć plik w Inter Cars — Panel IC Katalog → Zamówienia → otwórz zamówienie → Pobierz PDF lub CSV.',
+};
+
+// jedno miejsce, w którym z JSON-a robi się to, czego potrzebuje pole wyboru
+const hurtIndex = (data) => {
+  const src = (data && data.hurtownie) || [];
+  const dir = (data && data.logoKatalog) || 'assets/logos/hurtownie/';
+  const sorted = src.slice().sort((a, b) => (a.kolejnosc || 0) - (b.kolejnosc || 0));
+  const byName = {};
+  sorted.forEach((h) => { byName[h.nazwa] = { logo: h.logo ? dir + h.logo : '', aliasy: h.aliasy || [] }; });
+  return {
+    top: sorted.filter((h) => h.grupa === 'top').map((h) => h.nazwa),
+    reszta: sorted.filter((h) => h.grupa === 'alfa').map((h) => h.nazwa),
+    koniec: (sorted.filter((h) => h.grupa === 'koniec')[0] || { nazwa: HURT_OTHER }).nazwa,
+    info: byName,
+  };
 };
 
 const DOC_FILE_POOL = [
@@ -5759,6 +5771,11 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    // hurtownie.json jest źródłem listy; zanim dojedzie, pole korzysta z HURT_FALLBACK
+    fetch('hurtownie.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && Array.isArray(d.hurtownie) && d.hurtownie.length) this.setState({ hurtownie: d }); })
+      .catch(() => {});
     this.__onWycMessage = (e) => this.onWycMessage(e);
     window.addEventListener('message', this.__onWycMessage);
     this.__onWycKey = (e) => { if (e.key === 'Escape') this.closeWycConfig(); };
@@ -8445,9 +8462,11 @@ class Component extends DCLogic {
       const last = localStorage.getItem('zilo-hurtownia');
       if (last) return last;
     } catch (e) {}
+    const h = this.hurt();
+    const znane = h.top.concat(h.reszta);
     const first = (this.state.connectedSuppliers || DEFAULT_SUPPLIERS)[0];
-    if (first && HURTOWNIE.indexOf(first.name) !== -1) return first.name;
-    return HURTOWNIE[0];
+    if (first && znane.indexOf(first.name) !== -1) return first.name;
+    return znane[0];
   }
 
   pickHurtownia(name) {
@@ -8467,36 +8486,51 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
-  // wspólny datalist: Popularne / Pozostałe, a na końcu za kreską
-  // „Inna hurtownia" — wtedy przyjmujemy dowolny plik
+  hurt() {
+    return hurtIndex(this.state.hurtownie || HURT_FALLBACK);
+  }
+
+  hurtLogo(name) {
+    const i = this.hurt().info[name];
+    return (i && i.logo) || '';
+  }
+
+  // wspólny datalist: Popularne / Pozostałe, a na końcu za kreską „Inne" —
+  // wtedy przyjmujemy dowolny plik
   hurtPickerVals(cur, open, query, onPick) {
+    const h = this.hurt();
     const q = String(query == null ? '' : query).toLowerCase().trim();
-    const hit = (n) => !q || n.toLowerCase().indexOf(q) !== -1;
-    const known = HURTOWNIE.slice();
+    // szukanie łapie też dawne nazwy — „ELIT" znajduje Mekonomen
+    const hit = (n) => {
+      if (!q) return true;
+      const info = h.info[n] || {};
+      return [n].concat(info.aliasy || []).some((t) => String(t).toLowerCase().indexOf(q) !== -1);
+    };
+    const reszta = h.reszta.slice();
     // nazwa spoza listy (np. rozpoznana z dokumentu) ląduje wśród pozostałych
-    if (cur && cur !== HURT_OTHER && known.indexOf(cur) === -1) known.push(cur);
+    if (cur && cur !== h.koniec && h.top.indexOf(cur) === -1 && reszta.indexOf(cur) === -1) reszta.push(cur);
     const opt = (n) => ({
       value: n,
-      logo: HURT_LOGO[n] || '',
-      hasLogo: !!HURT_LOGO[n],
+      logo: this.hurtLogo(n),
+      hasLogo: !!this.hurtLogo(n),
       selected: n === cur,
       bg: n === cur ? 'var(--tk-surface-3)' : 'transparent',
       pick: () => onPick(n),
     });
     const groups = [
-      { key: 'popularne', label: 'Popularne', items: HURT_POPULAR.filter(hit) },
-      { key: 'pozostale', label: 'Pozostałe', items: known.filter((n) => HURT_POPULAR.indexOf(n) === -1).filter(hit) },
+      { key: 'popularne', label: 'Popularne', items: h.top.filter(hit) },
+      { key: 'pozostale', label: 'Pozostałe', items: reszta.filter(hit) },
     ].filter((g) => g.items.length > 0).map((g) => ({ key: g.key, label: g.label, options: g.items.map(opt) }));
     return {
       text: query == null ? (cur || '') : query,
-      logo: HURT_LOGO[cur] || '',
-      hasLogo: !!HURT_LOGO[cur],
+      logo: this.hurtLogo(cur),
+      hasLogo: !!this.hurtLogo(cur),
       isOpen: !!open,
       empty: groups.length === 0,
       border: open ? 'var(--tk-brand-bd)' : 'var(--tk-border-strong)',
       chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
       groups: groups,
-      other: Object.assign(opt(HURT_OTHER), { label: HURT_OTHER }),
+      other: Object.assign(opt(h.koniec), { label: h.koniec }),
     };
   }
 
@@ -8545,7 +8579,7 @@ class Component extends DCLogic {
   finishDocRead() {
     const picked = this.state.docSupplier || this.defaultHurtownia();
     const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
-    if (picked && picked !== HURT_OTHER && picked !== 'Inne') draft.supplier = picked;
+    if (picked && picked !== this.hurt().koniec && picked !== 'Inna hurtownia') draft.supplier = picked;
     if (!this.state.docEditing) {
       draft.nr = this.nextDocNr();
       draft.ext = this.nextDocExt();
@@ -9354,7 +9388,7 @@ class Component extends DCLogic {
           hasHint: !!HURT_HINT[hurt],
           hint: HURT_HINT[hurt] || '',
           // przy „Innej hurtowni" nie zawężamy formatów — bierzemy, co przyjdzie
-          formats: hurt === HURT_OTHER ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
+          formats: hurt === this.hurt().koniec ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
           // trzy stany: brak gotowego pliku → nieaktywny, plik wgrany → aktywny,
           // wgrywanie → nieaktywny. Wygląd disabled z design systemu:
           // .button--primary:disabled { background:#D5D7F8; cursor:not-allowed }

@@ -1,0 +1,33 @@
+{
+  "opis": "Lista hurtowni części samochodowych do pola wyboru w Towarach. Jedyne źródło listy — artboardy wczytują ten plik w locie. Kolejność bierze się z pól grupa + kolejnosc, nie z porządku w tablicy.",
+  "zaktualizowano": "2026-10-05",
+  "logoKatalog": "assets/logos/hurtownie/",
+  "hurtownie": [
+    { "id": "inter-cars",     "nazwa": "Inter Cars",              "grupa": "top",   "kolejnosc": 1,  "domena": "intercars.pl",       "logo": "inter-cars.ico",       "logoZrodlo": "favicon intercars.pl — strona blokuje pobieranie, do podmiany na pełny znak" },
+    { "id": "auto-partner",   "nazwa": "Auto Partner",            "grupa": "top",   "kolejnosc": 2,  "domena": "autopartner.com",    "logo": "auto-partner.svg" },
+    { "id": "moto-profil",    "nazwa": "Moto-Profil (ProfiAuto)", "grupa": "top",   "kolejnosc": 3,  "domena": "moto-profil.pl",     "logo": "moto-profil.svg",      "aliasy": ["ProfiAuto", "Motoprofil"] },
+
+    { "id": "auto-land",      "nazwa": "Auto-Land Polska",        "grupa": "alfa",  "kolejnosc": 10, "domena": "auto-land.pl",       "logo": "auto-land.png",        "aliasy": ["Autoland"] },
+    { "id": "autos",          "nazwa": "Autos",                   "grupa": "alfa",  "kolejnosc": 11, "domena": "autos.com.pl",       "logo": "autos.svg" },
+    { "id": "big-autohandel", "nazwa": "Big-Autohandel",          "grupa": "alfa",  "kolejnosc": 12, "domena": null,                 "logo": "big-autohandel.svg",   "aliasy": ["Big Autohandel"], "uwaga": "bigautohandel.pl to domyślna strona hostingu OVH, nie ich serwis — domena do ustalenia, logo zastępcze" },
+    { "id": "gordon-motor",   "nazwa": "Gordon Motor",            "grupa": "alfa",  "kolejnosc": 13, "domena": "gordonmotor.pl",     "logo": "gordon-motor.png",     "aliasy": ["Gordon"], "uwaga": "stary Gordon upadł 03.2025; marka wróciła jako Gordon Motor sp. z o.o." },
+    { "id": "group-auto",     "nazwa": "Group Auto Polska",       "grupa": "alfa",  "kolejnosc": 14, "domena": "groupautopolska.pl", "logo": "group-auto.svg",       "uwaga": "grupa zakupowa zrzeszająca 11 dystrybutorów, nie pojedyncza hurtownia — do decyzji, czy zostaje" },
+    { "id": "handlopex",      "nazwa": "Handlopex",               "grupa": "alfa",  "kolejnosc": 15, "domena": "handlopex.pl",       "logo": "handlopex.svg" },
+    { "id": "hart",           "nazwa": "Hart",                    "grupa": "alfa",  "kolejnosc": 16, "domena": null,                 "logo": "hart.svg",             "uwaga": "hart.com.pl to Hart Electronics, inna firma — domena do ustalenia, logo zastępcze" },
+    { "id": "inter-parts",    "nazwa": "Inter Parts",             "grupa": "alfa",  "kolejnosc": 17, "domena": "interparts.pl",      "logo": "inter-parts.svg" },
+    { "id": "inter-team",     "nazwa": "Inter-Team",              "grupa": "alfa",  "kolejnosc": 18, "domena": "inter-team.com.pl",  "logo": "inter-team.svg",       "aliasy": ["Interteam"], "uwaga": "strona nie wystawia logo w HTML — logo zastępcze" },
+    { "id": "martex",         "nazwa": "Martex",                  "grupa": "alfa",  "kolejnosc": 19, "domena": "martextruck.pl",     "logo": "martex.svg",           "uwaga": "specjalizacja: pojazdy ciężarowe; na stronie są tylko znaki marek partnerskich — logo zastępcze" },
+    { "id": "mekonomen",      "nazwa": "Mekonomen",               "grupa": "alfa",  "kolejnosc": 20, "domena": "mekonomen.pl",       "logo": "mekonomen.png",        "aliasy": ["ELIT", "Elit Polska"], "uwaga": "dawniej ELIT Polska, rebranding 06.2025; na starszych fakturach wciąż ELIT" },
+    { "id": "motorol",        "nazwa": "Motorol",                 "grupa": "alfa",  "kolejnosc": 21, "domena": "motorol.pl",         "logo": "motorol.png",          "uwaga": "domena poprawiona z motorol.com.pl — ta nie odpowiada" },
+    { "id": "opoltrans",      "nazwa": "Opoltrans",               "grupa": "alfa",  "kolejnosc": 22, "domena": "opoltrans.com.pl",   "logo": "opoltrans.png" },
+    { "id": "polcar",         "nazwa": "Polcar",                  "grupa": "alfa",  "kolejnosc": 23, "domena": "polcar.com",         "logo": "polcar.png",           "uwaga": "specjalizacja: części nadwoziowe" },
+    { "id": "suder",          "nazwa": "Suder & Suder",           "grupa": "alfa",  "kolejnosc": 24, "domena": "suder.pl",           "logo": "suder.png",            "aliasy": ["Suder"], "uwaga": "logo to sam znak graficzny ze strony, bez sygnatury słownej" },
+    { "id": "tip-topol",      "nazwa": "Tip-Topol",               "grupa": "alfa",  "kolejnosc": 25, "domena": "tiptopol.pl",        "logo": "tip-topol.jpg",        "uwaga": "materiały do wulkanizacji — istotne przy przechowalni opon" },
+
+    { "id": "inne",           "nazwa": "Inne",                    "grupa": "koniec","kolejnosc": 99, "domena": null,                 "logo": "inne.svg" }
+  ],
+  "dlugi_ogon": [
+    "Auto Euro", "Auto-Zatoka", "Carex", "Darma", "M-Mot", "Mytnik",
+    "Parker Poland", "Rodon", "Sko-Pol", "Stachmot", "VanKing Celkar Group"
+  ]
+}
