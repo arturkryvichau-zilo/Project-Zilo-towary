@@ -881,22 +881,64 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </button>
             <span style="padding-left:20px;font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kontakt: <a href="tel:+48612504181">(61) 250 41 81</a> lub <a href="mailto:kontakt@zilo.co">kontakt@zilo.co</a></span>
           </div>
-          <div style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text-strong);white-space:nowrap">Dodaj dokument</div>
-          <div style="display:flex;justify-content:flex-end;padding-right:20px"></div>
+          <div></div>
+          <div style="display:flex;justify-content:flex-end;padding-right:20px"><button type="button" onClick="{{ readDocument }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:{{ docUpload.readBg }};color:{{ docUpload.readColor }};font-family:inherit;font-size:16px;font-weight:400;line-height:22px;white-space:nowrap;cursor:{{ docUpload.readCursor }};transition:background-color 200ms cubic-bezier(.2,0,0,1)">Odczytaj dokument</button></div>
         </div>
         <div style="flex:1;min-height:0;overflow-y:auto;padding:48px 28px 64px">
           <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
             <div style="display:flex;flex-direction:column;gap:4px;text-align:center">
-              <div style="font-size:24px;line-height:32px;font-weight:600;color:var(--tk-text-strong)">Dodaj dokument od dostawcy</div>
-              <div style="font-size:16px;line-height:24px;color:var(--tk-text-3);text-wrap:pretty">Rozpoznamy dostawcę, dane dokumentu i pozycje — dostawcy nie musisz wybierać ręcznie.</div>
+              <div style="font-size:24px;line-height:32px;font-weight:600;color:var(--tk-text-strong)">Dodaj dokument od hurtowni</div>
+              <div style="font-size:16px;line-height:24px;color:var(--tk-text-3);text-wrap:pretty">Odczytamy pozycje, indeksy i ceny — nie musisz nic przepisywać.</div>
+            </div>
+
+            <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+              <div style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wybierz hurtownię</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
+                <sc-for list="{{ docUpload.suppliers }}" as="sp" hint-placeholder-count="7">
+                  <div onClick="{{ sp.pick }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 8px;border-radius:6px;cursor:pointer;color:{{ sp.color }}" style-hover="background:var(--tk-surface-2)">
+                    <span style="width:18px;height:18px;flex:none;border-radius:50%;border:1px solid {{ sp.ring }};display:grid;place-items:center">
+                      <span style="width:8px;height:8px;border-radius:50%;background:{{ sp.dot }}"></span>
+                    </span>
+                    <span style="font-size:16px;line-height:22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sp.name }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="height:1px;background:var(--tk-border-2)"></div>
+              <div onClick="{{ docUpload.other.pick }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 8px;border-radius:6px;cursor:pointer;color:{{ docUpload.other.color }}" style-hover="background:var(--tk-surface-2)">
+                <span style="width:18px;height:18px;flex:none;border-radius:50%;border:1px solid {{ docUpload.other.ring }};display:grid;place-items:center">
+                  <span style="width:8px;height:8px;border-radius:50%;background:{{ docUpload.other.dot }}"></span>
+                </span>
+                <span style="font-size:16px;line-height:22px">{{ docUpload.other.name }}</span>
+              </div>
             </div>
 
             <sc-if value="{{ docUpload.idle }}" hint-placeholder-val="{{ true }}">
-              <div onClick="{{ startDocUpload }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:56px 32px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
+              <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:56px 32px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                 <img src="assets/icons/i-upload-doc.svg" alt="" style="width:48px;height:48px;flex:none;display:block">
-                <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Prześlij plik lub wybierz z dysku</span>
-                <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Formaty: PDF, JPG lub PNG. Faktura lub WZ.</span>
+                <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Wgraj plik</span>
+                <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Formaty: PDF, CSV, JPG lub PNG. Faktura lub WZ.</span>
                 <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:8px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ docUpload.picked }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;gap:4px">
+                <sc-for list="{{ docUpload.files }}" as="fl" hint-placeholder-count="1">
+                  <div style="display:flex;align-items:center;gap:14px;min-height:56px;border-top:1px solid {{ fl.sep }}">
+                    <span style="width:40px;height:40px;flex:none;border-radius:8px;background:var(--tk-surface-2);display:grid;place-items:center;font-size:11px;line-height:14px;font-weight:600;color:var(--tk-text-2)">{{ fl.kind }}</span>
+                    <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
+                      <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">{{ fl.size }}</span>
+                    </span>
+                    <button type="button" onClick="{{ fl.remove }}" style="position:relative;width:40px;height:40px;flex:none;border:0;border-radius:8px;background:transparent;cursor:pointer;display:grid;place-items:center" style-hover="background:var(--tk-surface-4)" data-tt="Usuń plik" aria-label="Usuń plik" data-tt-pos="left">
+                      <span style="width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-trash.svg) center / 20px 20px no-repeat"></span>
+                    </button>
+                  </div>
+                </sc-for>
+                <button type="button" onClick="{{ addDocFile }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:36px;padding:4px 8px;border:0;border-radius:6px;background:transparent;color:var(--tk-brand-fg);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer" style-hover="background:var(--tk-surface-4)">
+                  <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-add.svg) center / 20px 20px no-repeat"></span>
+                  Dodaj kolejny plik
+                </button>
               </div>
             </sc-if>
 
@@ -939,14 +981,14 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
               <div style="font-size:20px;line-height:28px;font-weight:600;color:var(--tk-text)">Dane dokumentu</div>
               <div style="display:flex;gap:12px;flex-wrap:wrap">
                 <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
-                <span style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:{{ docReview.f.supplier.pad }};box-sizing:border-box">
-                  <span style="font-size:{{ docReview.f.supplier.labelSize }};line-height:{{ docReview.f.supplier.labelLine }};color:var(--tk-text-3)">Dostawca</span>
-                  <sc-if value="{{ docReview.f.supplier.filled }}" hint-placeholder-val="{{ false }}">
-                    <input value="{{ docReview.supplier }}" onChange="{{ setDocSupplier }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text)">
-                  </sc-if>
-                  <sc-if value="{{ docReview.f.supplier.empty }}" hint-placeholder-val="{{ true }}">
-                    <input value="{{ docReview.supplier }}" onChange="{{ setDocSupplier }}" style="width:100%;height:0;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:0;color:var(--tk-text)">
-                  </sc-if>
+                <span style="position:relative;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:9px 13px;box-sizing:border-box">
+                  <span style="font-size:12px;line-height:16px;color:var(--tk-text-3)">Hurtownia</span>
+                  <select value="{{ docReview.supplier }}" onChange="{{ setDocSupplier }}" style="width:100%;border:0;outline:0;padding:0;margin:0;background:transparent;font-family:inherit;font-size:16px;line-height:20px;color:var(--tk-text);cursor:pointer;appearance:none;-webkit-appearance:none">
+                    <sc-for list="{{ hurtowniaOptions }}" as="o" hint-placeholder-count="8">
+                      <option value="{{ o }}">{{ o }}</option>
+                    </sc-for>
+                  </select>
+                  <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
                 </span>
               </label>
                 <label style="flex:1;min-width:0;display:flex;align-items:stretch;height:56px;box-sizing:border-box;background:var(--tk-surface);border:1px solid var(--tk-border-strong);border-radius:10px;overflow:hidden;cursor:text" style-hover="border-color:var(--tk-border-focus)">
@@ -986,10 +1028,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             </div>
 
             <div style="background:var(--tk-surface-3);border-radius:12px;padding:24px;overflow-x:auto">
-              <div style="min-width:1350px;display:flex;flex-direction:column;gap:8px">
+              <div style="min-width:1440px;display:flex;flex-direction:column;gap:8px">
                 <sc-for list="{{ docReview.rows }}" as="r" hint-placeholder-count="5">
                   <div style="display:flex;flex-direction:column;gap:6px">
-                    <div style="display:grid;grid-template-columns:minmax(200px,1.5fr) minmax(170px,1.1fr) minmax(140px,0.8fr) 140px 130px 110px 140px 140px 40px;gap:10px;align-items:center">
+                    <div style="display:grid;grid-template-columns:minmax(200px,1.5fr) minmax(170px,1.1fr) minmax(140px,0.8fr) 140px 90px 130px 110px 140px 140px 40px;gap:10px;align-items:center">
                       <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
                         <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nazwa</span>
                         <input value="{{ r.name }}" onChange="{{ r.setName }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
@@ -1010,6 +1052,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                           </sc-for>
                         </select>
                         <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
+                      </label>
+                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
+                        <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ilość</span>
+                        <input value="{{ r.qty }}" onChange="{{ r.setQty }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
                       </label>
                       <div style="display: none; flex-direction: column; justify-content: center; height: 62px; box-sizing: border-box; padding: 9px 13px; background: var(--tk-surface-2); border: 1px solid var(--tk-border-2); border-radius: 8px">
                         <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cena detaliczna</span>
@@ -4510,10 +4556,16 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </div>
                       </sc-for>
                       <div style="min-width:{{ evd.wyc.goodsMin }};display:grid;grid-template-columns:{{ evd.wyc.goodsGrid }};gap:12px;align-items:center;padding:12px 16px">
-                        <button type="button" onClick="{{ evd.wyc.addTowar }}" style="justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
-                          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-                          Nowy towar
-                        </button>
+                        <span style="justify-self:start;display:inline-flex;align-items:center;gap:8px">
+                          <button type="button" onClick="{{ evd.wyc.addTowar }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                            Nowy towar
+                          </button>
+                          <button type="button" onClick="{{ evd.wyc.addFromDocument }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 30px; padding: 4px 10px; border: 0; border-radius: 4px; color: var(--tk-brand-fg); font-family: inherit; font-weight: 400; font-size: 14px; line-height: 22px; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(.2,0,0,1); background-color: #F3F3FF00">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex:none"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                            Towar z zamówienia
+                          </button>
+                        </span>
                         <span></span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsNet }}</span>
                         <span style="font-size:15px;line-height:22px;color:var(--tk-text-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ evd.wyc.goodsGross }}</span>
@@ -5018,6 +5070,13 @@ const saveDocs = (list) => {
   return list;
 };
 
+const HURTOWNIE = ['Inter Cars', 'Auto Partner', 'Big-Autohandel', 'ELIT (Mekomens)', 'Auto Land', 'Interteam', 'Gordon'];
+const DOC_FILE_POOL = [
+  { name: 'FV-88213-08-2026.pdf', size: '248 KB', kind: 'PDF' },
+  { name: 'WZ-10234-08-2026.pdf', size: '132 KB', kind: 'PDF' },
+  { name: 'pozycje-08-2026.csv', size: '18 KB', kind: 'CSV' },
+  { name: 'skan-dokumentu.jpg', size: '1,2 MB', kind: 'JPG' },
+];
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0218', ext: 'FV 88213/08/2026',
   date: TODAY.slice(8, 10) + '.' + TODAY.slice(5, 7) + '.' + TODAY.slice(0, 4) };
 
@@ -7318,6 +7377,8 @@ class Component extends DCLogic {
       openConfig: () => this.openWycConfig(id),
       addUsluga: () => this.openWycConfig(id, { field: 'name' }),
       addTowar: () => this.openWycConfig(id, { field: 'towar' }),
+      // D2 · wariant A: wchodzimy w edycję wyceny i od razu otwieramy wybór pozycji
+      addFromDocument: () => this.openWycConfig(id, null, { pick: true }),
       sendOffer: () => this.openOfferConfig(id),
       downloadPdf: () => this.ziloToast('Kosztorys pobrany jako PDF'),
       issueFv: () => this.openInvoiceConfig(id),
@@ -7637,6 +7698,7 @@ class Component extends DCLogic {
       docUploadPct: 0,
       docRows: null,
       docDraft: null,
+      docFiles: [],
     }));
   }
 
@@ -7648,7 +7710,7 @@ class Component extends DCLogic {
       // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
       // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
       items: (d.rows || []).map((r) => ({
-        name: r.name, indeks: r.code, producent: r.producer || '', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
+        name: r.name, indeks: r.code, producent: r.producer || '', qty: r.qty || '1', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
       })),
     }));
   }
@@ -8019,6 +8081,23 @@ class Component extends DCLogic {
     this.setState({ docRows: rows.map((r, k) => (k === i ? Object.assign({}, r, patch) : r)) });
   }
 
+  // ostatnio wybrana hurtownia wraca przy kolejnym wgraniu dokumentu
+  static lastHurtownia() {
+    try { return localStorage.getItem('zilo-hurtownia') || HURTOWNIE[0]; } catch (e) { return HURTOWNIE[0]; }
+  }
+
+  pickHurtownia(name) {
+    try { localStorage.setItem('zilo-hurtownia', name); } catch (e) {}
+    this.setState({ docSupplier: name });
+  }
+
+  addDocFile() {
+    this.setState((st) => {
+      const files = st.docFiles || [];
+      return { docFiles: files.concat([DOC_FILE_POOL[files.length % DOC_FILE_POOL.length]]) };
+    });
+  }
+
   runDocUpload() {
     if (this.__uploadTimer) clearInterval(this.__uploadTimer);
     let pct = 8;
@@ -8036,7 +8115,10 @@ class Component extends DCLogic {
       this.__uploadTimer = null;
       setTimeout(() => {
         if (this.state.screen !== 'docUpload') return;
-        this.setState({ screen: 'docReview', docUploadPct: 0, docSnack: true, docSnackRun: false });
+        const picked = this.state.docSupplier || Component.lastHurtownia();
+        const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
+        if (picked && picked !== 'Inne') draft.supplier = picked;
+        this.setState({ screen: 'docReview', docUploadPct: 0, docDraft: draft, docSnack: true, docSnackRun: false });
         setTimeout(() => {
           if (this.state.docSnack) this.setState({ docSnackRun: true });
         }, 60);
@@ -8599,7 +8681,7 @@ class Component extends DCLogic {
           placeholder: q ? '' : 'Szukaj dokumentu',
         };
       })(),
-      addDoc: () => this.setState({ screen: 'docUpload', docUploadPct: 0, docRows: null }),
+      addDoc: () => this.setState({ screen: 'docUpload', docUploadPct: 0, docRows: null, docFiles: [] }),
       isDocDetail: s.screen === 'docDetail',
       bulkBar: s.screen === 'docDetail' && (s.docSel || []).length > 0,
       bulkLabel: 'Wybrano: ' + (s.docSel || []).length,
@@ -8840,16 +8922,41 @@ class Component extends DCLogic {
       },
       closeDocSnack: () => this.setState({ docSnack: false }),
       closeDocFlow: () => (s.docEditing
-        ? this.setState({ screen: 'docDetail', docEditing: null, docDraft: null, docRows: null, docUploadPct: 0 })
-        : this.setState({ screen: 'docs', docUploadPct: 0 })),
-      startDocUpload: () => this.runDocUpload(),
-      docUpload: {
-        idle: !s.docUploadPct,
-        busy: !!s.docUploadPct,
-        file: 'FV-88213-08-2026.pdf',
-        percent: (s.docUploadPct || 0) + '%',
-        stage: (s.docUploadPct || 0) < 70 ? 'Wgrywanie pliku…' : 'Analizujemy dokument…',
-      },
+        ? this.setState({ screen: 'docDetail', docEditing: null, docDraft: null, docRows: null, docUploadPct: 0, docFiles: [] })
+        : this.setState({ screen: 'docs', docUploadPct: 0, docFiles: [] })),
+      startDocUpload: () => this.addDocFile(),
+      addDocFile: () => this.addDocFile(),
+      // analizę odpala dopiero „Odczytaj dokument", nie samo wgranie pliku
+      readDocument: () => { if ((s.docFiles || []).length) this.runDocUpload(); },
+      docUpload: (() => {
+        const files = s.docFiles || [];
+        const cur = s.docSupplier || Component.lastHurtownia();
+        const mk = (name) => ({
+          name: name,
+          pick: () => this.pickHurtownia(name),
+          color: cur === name ? 'var(--tk-text)' : 'var(--tk-text-2)',
+          ring: cur === name ? 'var(--tk-brand)' : 'var(--tk-border-strong)',
+          dot: cur === name ? 'var(--tk-brand)' : 'transparent',
+        });
+        return {
+          idle: !s.docUploadPct && !files.length,
+          picked: !s.docUploadPct && !!files.length,
+          busy: !!s.docUploadPct,
+          readBg: files.length ? 'var(--tk-brand)' : 'var(--tk-surface-4)',
+          readColor: files.length ? 'var(--tk-on-fill)' : 'var(--tk-text-3)',
+          readCursor: files.length ? 'pointer' : 'default',
+          suppliers: HURTOWNIE.map(mk),
+          other: mk('Inne'),
+          files: files.map((f, i) => ({
+            name: f.name, size: f.size, kind: f.kind,
+            sep: i === 0 ? 'transparent' : 'var(--tk-border-2)',
+            remove: () => this.setState((st) => ({ docFiles: (st.docFiles || []).filter((x, k) => k !== i) })),
+          })),
+          file: files.length ? files[0].name : 'FV-88213-08-2026.pdf',
+          percent: (s.docUploadPct || 0) + '%',
+          stage: (s.docUploadPct || 0) < 70 ? 'Wgrywanie pliku…' : 'Analizujemy dokument…',
+        };
+      })(),
       docReview: (() => {
         const d = s.docDraft || DOC_DRAFT;
         const rows = s.docRows || DOC_DRAFT_ROWS;
@@ -8894,7 +9001,7 @@ class Component extends DCLogic {
             setGross: (e) => {
               const raw = e.target.value;
               const g = parseFloat(String(raw).replace(/\s/g, '').replace(',', '.'));
-              const qty = 1;
+              const qty = num(r.qty) || 1;
               const rate = 1 + vatOf(r);
               if (isNaN(g)) {
                 this.patchDocRow(i, { grossEdit: raw });
@@ -8910,6 +9017,11 @@ class Component extends DCLogic {
         };
       })(),
       unitOptions: ['Sztuka', 'Opakowanie', 'Zestaw', 'Litr', 'Komplet'],
+      hurtowniaOptions: (() => {
+        const cur = (s.docDraft || DOC_DRAFT).supplier;
+        const list = HURTOWNIE.concat(['Inne']);
+        return cur && list.indexOf(cur) === -1 ? [cur].concat(list) : list;
+      })(),
       vatOptions: ['23', '8', '5', '0'],
       setDocSupplier: (e) => this.patchDocDraft({ supplier: e.target.value }),
       setDocNr: (e) => this.patchDocDraft({ nr: e.target.value }),

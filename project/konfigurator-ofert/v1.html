@@ -300,7 +300,10 @@ window.__resources = {
       <div style="position:relative;width:100%;max-width:1000px;height:100%;max-height:760px;background:var(--tk-surface);border-radius:20px;box-shadow:0 24px 64px rgba(10,11,41,0.24);display:flex;flex-direction:column;overflow:hidden;">
         <div style="flex:none;display:flex;align-items:center;gap:16px;padding:24px 30px 20px;border-bottom:1px solid var(--grey-5);">
           <div style="flex:1;min-width:0;display:flex;align-items:center;">
-            <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">Przepisz towar z dokumentu</span>
+            <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
+              <span style="font-size:20px;line-height:28px;font-weight:600;color:var(--black, #000000);">Towar z zamówienia</span>
+              <span style="font-size:14px;line-height:20px;color:var(--grey-2);">Zaznacz pozycje, które mają trafić do tej wyceny.</span>
+            </span>
           </div>
           <button type="button" onClick="{{ closeDocPicker }}" style="position:relative;width:32px;height:32px;flex:none;border:0;border-radius:999px;background:var(--grey-6);cursor:pointer;display:grid;place-items:center;color:var(--grey-1);" style-hover="background:var(--grey-5);" data-tt="Zamknij" aria-label="Zamknij" data-tt-pos="bottom">
             <svg viewBox="0 0 12 12" aria-hidden="true" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><path d="M2 2 L10 10 M10 2 L2 10"></path></svg>
@@ -342,15 +345,15 @@ window.__resources = {
                   </div>
                   <sc-if value="{{ doc.open }}" hint-placeholder-val="{{ true }}">
                     <div style="border-top:1px solid var(--grey-5);">
-                      <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;padding:10px 20px;background:var(--tk-surface);border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
+                      <div style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 90px 130px 130px 130px;gap:12px;padding:10px 20px;background:var(--tk-surface);border-bottom:1px solid var(--grey-5);font-size:13px;line-height:18px;color:var(--grey-2);">
                         <span onClick="{{ doc.toggleAll }}" style="width:20px;height:20px;flex:none;border:1.5px solid {{ doc.allBorder }};border-radius:4px;background: {{ doc.allBg }} ;display:grid;place-items:center;cursor:pointer;">
                           <sc-if value="{{ doc.someChecked }}" hint-placeholder-val="{{ false }}">
                             <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ doc.allIconPath }}" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                           </sc-if>
-                        </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Cena detaliczna</span><span style="text-align:right;">Wartość netto</span><span style="text-align:right;">Wartość brutto</span>
+                        </span><span>Nazwa</span><span>Indeks</span><span>Producent</span><span style="text-align:right;">Ilość</span><span style="text-align:right;">Wartość netto</span><span style="text-align:right;">Wartość brutto</span><span style="text-align:right;">Cena detaliczna</span>
                       </div>
                       <sc-for list="{{ doc.items }}" as="it" hint-placeholder-count="3">
-                        <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 130px 130px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
+                        <div onClick="{{ it.toggle }}" style="display:grid;grid-template-columns:20px minmax(0,1.5fr) minmax(0,1fr) minmax(0,0.85fr) 90px 130px 130px 130px;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--grey-6);cursor:pointer;background: {{ it.bg }} ;" style-hover="background:var(--grey-7);">
                           <span style="width:20px;height:20px;flex:none;border:1.5px solid {{ it.boxBorder }};border-radius:4px;background: {{ it.boxBg }} ;display:grid;place-items:center;">
                             <sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}">
                               <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4L16 6" stroke="var(--tk-on-fill)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -359,9 +362,10 @@ window.__resources = {
                           <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.name }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.indeks }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--grey-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ it.producent }}</span>
-                          <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.qty }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.netto }}</span>
                           <span style="font-size:15px;line-height:22px;color:var(--grey-1);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.brutto }}</span>
+                          <span style="font-size:15px;line-height:22px;color:var(--grey-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ it.msrp }}</span>
                         </div>
                       </sc-for>
                     </div>
@@ -386,7 +390,7 @@ window.__resources = {
               </button>
             </sc-if>
           </span>
-          <button type="button" onClick="{{ addDocument }}" style="flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary-5);color:var(--zilo-primary);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);">Wgraj dokument</button>
+          <button type="button" onClick="{{ addDocument }}" style="flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary-5);color:var(--zilo-primary);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor:pointer;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-4);">Wgraj nowy dokument</button>
           <button type="button" onClick="{{ addFromDocs }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:12px 20px;border:0;border-radius:8px;background:var(--zilo-primary, #222693);color:var(--tk-on-fill);font-family:var(--font-sans);font-weight:400;font-size:16px;line-height:22px;white-space:nowrap;cursor: {{ docPicker.ctaCursor }} ;opacity: {{ docPicker.ctaOpacity }} ;pointer-events: {{ docPicker.ctaEvents }} ;transition:background-color 200ms var(--ease-standard);" style-hover="background:var(--zilo-primary-hover, #1C2082);" style-active="background:var(--zilo-primary-press, #161A6E);">Dodaj do oferty</button>
         </div>
       </div>
@@ -1643,6 +1647,7 @@ static draftNet(state, draft) {
             name: it.name,
             indeks: it.indeks || '—',
             producent: it.producent || '—',
+            qty: it.qty || '1',
             netto: money(netto) + ' zł',
             brutto: money(netto * (1 + Component.num(it.vat || '23') / 100)) + ' zł',
             msrp: it.msrp ? money(it.msrp) + ' zł' : '—',
