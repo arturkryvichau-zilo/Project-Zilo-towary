@@ -1074,10 +1074,10 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </select>
                         <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:block;background-color:var(--tk-text-2);-webkit-mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;mask:url(assets/icons/chevron-down.svg) center / 20px 20px no-repeat;pointer-events:none"></span>
                       </label>
-                      <div style="display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface-2);border:1px solid var(--tk-border-2);border-radius:8px">
+                      <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
                         <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Wartość netto</span>
-                        <span style="font-size:16px;line-height:24px;color:var(--tk-text-3);white-space:nowrap">{{ r.netPlain }}</span>
-                      </div>
+                        <input value="{{ r.netPlain }}" onChange="{{ r.setNet }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
+                      </label>
                       <label style="position:relative;display:flex;flex-direction:column;justify-content:center;height:62px;box-sizing:border-box;padding:9px 13px;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:8px;cursor:text" style-hover="border-color:var(--tk-border-strong)" style-focus-within="border-color:var(--tk-brand-bd)">
                         <span style="font-size:12px;line-height:16px;color:var(--tk-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Wartość brutto</span>
                         <input value="{{ r.grossPlain }}" onChange="{{ r.setGross }}" style="width:100%;border:0;outline:0;padding:0;background:transparent;font-family:inherit;font-size:16px;line-height:24px;color:var(--tk-text)">
@@ -5125,6 +5125,16 @@ const DOC_FILE_POOL = [
   { name: 'pozycje-08-2026.csv', size: '18 KB', kind: 'CSV' },
   { name: 'skan-dokumentu.jpg', size: '1,2 MB', kind: 'JPG' },
 ];
+// Ręcznie wpisana Wartość netto / Wartość brutto wygrywa w swoim wierszu:
+// zmiana Ilości, Ceny netto albo VAT jej już nie nadpisuje. Nienadpisana
+// strona nadal wynika z drugiej, żeby wiersz nie pokazywał dwóch niezgodnych kwot.
+const DOC_NUM = (x) => parseFloat(String(x == null ? '' : x).replace(/\s/g, '').replace(',', '.')) || 0;
+const DOC_SET = (v) => v !== undefined && v !== null && String(v).trim() !== '';
+const docRowNet = (r) => (DOC_SET(r.netEdit) ? DOC_NUM(r.netEdit) : DOC_NUM(r.qty) * DOC_NUM(r.price));
+const docRowGross = (r) => (DOC_SET(r.grossEdit)
+  ? DOC_NUM(r.grossEdit)
+  : docRowNet(r) * (1 + (parseFloat(r.vat) || 0) / 100));
+
 const DOC_DRAFT = { supplier: 'Inter Cars', nr: 'ZM/2026/0218', ext: 'FV 88213/08/2026',
   date: TODAY.slice(8, 10) + '.' + TODAY.slice(5, 7) + '.' + TODAY.slice(0, 4) };
 
@@ -7835,9 +7845,13 @@ class Component extends DCLogic {
       date: d.date,
       // docRowsById nigdy nie było zapisywane, więc każdy dokument dostawał
       // ten sam zestaw z DOC_POSITIONS. Pozycje trzymane są w d.rows.
-      items: (d.rows || []).map((r) => ({
-        name: r.name, indeks: r.code, producent: r.producer || '', qty: r.qty || '1', cena: r.price, vat: r.vat || '23', msrp: r.msrp || '',
-      })),
+      items: (d.rows || []).map((r) => {
+        const q = DOC_NUM(r.qty) || 1;
+        return {
+          name: r.name, indeks: r.code, producent: r.producer || '', qty: r.qty || '1',
+          cena: (docRowNet(r) / q).toFixed(2).replace('.', ','), vat: r.vat || '23', msrp: r.msrp || '',
+        };
+      }),
     }));
   }
 
@@ -8187,10 +8201,10 @@ class Component extends DCLogic {
   }
 
   docTotals(rows) {
-    const net = (rows || []).reduce((a, r) => a + this.docNum(r.qty) * this.docNum(r.price), 0);
-    const vat = (rows || []).reduce((a, r) => a + this.docNum(r.qty) * this.docNum(r.price) * ((parseFloat(r.vat) || 0) / 100), 0);
+    const net = (rows || []).reduce((a, r) => a + docRowNet(r), 0);
+    const gross = (rows || []).reduce((a, r) => a + docRowGross(r), 0);
     const pieces = (rows || []).reduce((a, r) => a + (parseInt(r.qty, 10) || 1), 0);
-    return { net: net, vat: vat, gross: net + vat, pieces: pieces };
+    return { net: net, vat: gross - net, gross: gross, pieces: pieces };
   }
 
   moneyPl(n) {
@@ -8984,7 +8998,11 @@ class Component extends DCLogic {
         const rows = [];
         source.forEach((r) => {
           const q = parseInt(r.qty, 10) || 1;
-          for (let k = 0; k < q; k += 1) rows.push(Object.assign({}, r, { qty: '1' }));
+          const unitNet = docRowNet(r) / q;
+          const unitGross = docRowGross(r) / q;
+          for (let k = 0; k < q; k += 1) {
+            rows.push(Object.assign({}, r, { qty: '1', netEdit: unitNet.toFixed(2), grossEdit: unitGross.toFixed(2) }));
+          }
         });
         const num = (x) => this.docNum(x);
         const tot = this.docTotals(source);
@@ -9024,8 +9042,8 @@ class Component extends DCLogic {
             msrpLabel: r.msrp ? this.moneyPl(num(r.msrp)) : '—',
             msrpColor: r.msrp ? 'var(--black)' : 'var(--tk-text-3)',
             vatLabel: (r.vat || '23') + '%',
-            net: this.moneyPl(num(r.qty) * num(r.price)),
-            gross: this.moneyPl(num(r.qty) * num(r.price) * (1 + (parseFloat(r.vat) || 0) / 100)),
+            net: this.moneyPl(docRowNet(r)),
+            gross: this.moneyPl(docRowGross(r)),
             border: i === rows.length - 1 ? 'transparent' : 'var(--tk-border-2)',
             rowBg: sel.indexOf(i) !== -1 ? 'var(--tk-surface-2)' : 'var(--tk-surface)',
             boxBorder: sel.indexOf(i) !== -1 ? 'var(--tk-brand-bd)' : 'var(--tk-border-strong)',
@@ -9088,8 +9106,10 @@ class Component extends DCLogic {
         const rows = s.docRows || DOC_DRAFT_ROWS;
         const num = (t) => parseFloat(String(t).replace(/\s/g, '').replace(',', '.')) || 0;
         const vatOf = (r) => (parseFloat(String(r.vat || '23').replace(',', '.')) || 0) / 100;
-        const net = rows.reduce((a, r) => a + num(r.qty) * num(r.price), 0);
-        const vatSum = rows.reduce((a, r) => a + num(r.qty) * num(r.price) * vatOf(r), 0);
+        // sumy liczą się z tego, co widać w polach — razem z ręcznymi nadpisaniami
+        const net = rows.reduce((a, r) => a + docRowNet(r), 0);
+        const grossAll = rows.reduce((a, r) => a + docRowGross(r), 0);
+        const vatSum = grossAll - net;
         return {
           file: 'FV-88213-08-2026.pdf',
           supplier: d.supplier, nr: d.nr, ext: d.ext, date: d.date,
@@ -9102,42 +9122,29 @@ class Component extends DCLogic {
           countLabel: rows.length + (rows.length === 1 ? ' pozycja' : (rows.length < 5 ? ' pozycje' : ' pozycji')),
           totalNet: this.moneyPl(net),
           totalVat: this.moneyPl(vatSum),
-          totalGross: this.moneyPl(net + vatSum),
+          totalGross: this.moneyPl(grossAll),
           rows: rows.map((r, i) => ({
             name: r.name, code: r.code, producer: r.producer || '', qty: r.qty, price: r.price,
             unit: r.unit || 'Sztuka', vat: r.vat || '23', msrp: r.msrp || '',
-            netPlain: (num(r.qty) * num(r.price)).toFixed(2).replace('.', ','),
-            grossPlain: r.grossEdit !== undefined && r.grossEdit !== null
-              ? r.grossEdit
-              : (num(r.qty) * num(r.price) * (1 + vatOf(r))).toFixed(2).replace('.', ','),
+            netPlain: DOC_SET(r.netEdit) ? r.netEdit : docRowNet(r).toFixed(2).replace('.', ','),
+            grossPlain: DOC_SET(r.grossEdit) ? r.grossEdit : docRowGross(r).toFixed(2).replace('.', ','),
             msrpPlain: r.msrp ? r.msrp : '—',
             unitLabel: r.unit || 'Sztuka',
-            net: this.moneyPl(num(r.qty) * num(r.price)),
-            vatValue: this.moneyPl(num(r.qty) * num(r.price) * vatOf(r)),
-            gross: this.moneyPl(num(r.qty) * num(r.price) * (1 + vatOf(r))),
+            net: this.moneyPl(docRowNet(r)),
+            vatValue: this.moneyPl(docRowGross(r) - docRowNet(r)),
+            gross: this.moneyPl(docRowGross(r)),
             border: i === rows.length - 1 ? 'transparent' : 'var(--tk-border-2)',
             setName: (e) => this.patchDocRow(i, { name: e.target.value }),
             setCode: (e) => this.patchDocRow(i, { code: e.target.value }),
             setProducer: (e) => this.patchDocRow(i, { producer: e.target.value }),
             setUnit: (e) => this.patchDocRow(i, { unit: e.target.value }),
 
-            setVat: (e) => this.patchDocRow(i, { vat: e.target.value, grossEdit: null }),
-            setQty: (e) => this.patchDocRow(i, { qty: e.target.value, grossEdit: null }),
-            setPrice: (e) => this.patchDocRow(i, { price: e.target.value, grossEdit: null }),
-            setGross: (e) => {
-              const raw = e.target.value;
-              const g = parseFloat(String(raw).replace(/\s/g, '').replace(',', '.'));
-              const qty = num(r.qty) || 1;
-              const rate = 1 + vatOf(r);
-              if (isNaN(g)) {
-                this.patchDocRow(i, { grossEdit: raw });
-                return;
-              }
-              this.patchDocRow(i, {
-                grossEdit: raw,
-                price: (g / rate / qty).toFixed(2).replace('.', ','),
-              });
-            },
+            // ilość, cena i VAT nie czyszczą już ręcznych kwot — nadpisanie wygrywa
+            setVat: (e) => this.patchDocRow(i, { vat: e.target.value }),
+            setQty: (e) => this.patchDocRow(i, { qty: e.target.value }),
+            setPrice: (e) => this.patchDocRow(i, { price: e.target.value }),
+            setNet: (e) => this.patchDocRow(i, { netEdit: e.target.value }),
+            setGross: (e) => this.patchDocRow(i, { grossEdit: e.target.value }),
             remove: () => this.setState((st) => ({ docRows: (st.docRows || DOC_DRAFT_ROWS).filter((x, k) => k !== i) })),
           })),
         };
