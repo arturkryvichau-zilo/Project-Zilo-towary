@@ -342,10 +342,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:24px;align-items:start">
               <div style="background:var(--tk-surface);border:1px solid var(--tk-border-2);border-radius:12px;display:flex;flex-direction:column">
                 <div style="padding: 14px 20px; border-bottom: 1px solid var(--tk-border-2); font-size: 18px; line-height: 22px; font-weight: 600; color: var(--tk-text)">Hurtownia</div>
-                <div style="padding:16px 20px;display:flex;flex-direction:column;gap:2px">
+                <div style="padding:16px 20px;display:flex;align-items:flex-start;gap:16px">
+                  <sc-if value="{{ docDetail.hasSupplierLogo }}" hint-placeholder-val="{{ true }}">
+                    <img src="{{ docDetail.supplierLogo }}" alt="" style="width:84px;height:28px;flex:none;display:block;margin-top:-2px;object-fit:contain;object-position:left center">
+                  </sc-if>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
                   <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text)">{{ docDetail.supplierName }}</span>
                   <span style="font-size: 16px; line-height: 22px; color: var(--tk-text-2)">{{ docDetail.supplierClient }}</span>
                   <span style="font-size: 16px; line-height: 22px; color: var(--tk-text-2)">{{ docDetail.supplierNipLine }}</span>
+                  </div>
                 </div>
               </div>
 
@@ -5270,8 +5275,16 @@ const hurtIndex = (data) => {
   const dir = (data && data.logoKatalog) || 'assets/logos/hurtownie/';
   const sorted = src.slice().sort((a, b) => (a.kolejnosc || 0) - (b.kolejnosc || 0));
   const byName = {};
-  sorted.forEach((h) => { byName[h.nazwa] = { logo: h.logo ? dir + h.logo : '', aliasy: h.aliasy || [] }; });
+  // dokument sprzed rebrandingu niesie dawną nazwę („Elit Polska", „Gordon") —
+  // aliasy z JSON-a prowadzą ją do dzisiejszego wpisu
+  const alias = {};
+  sorted.forEach((h) => {
+    byName[h.nazwa] = { logo: h.logo ? dir + h.logo : '', aliasy: h.aliasy || [] };
+    alias[h.nazwa.toLowerCase()] = h.nazwa;
+    (h.aliasy || []).forEach((a) => { alias[String(a).toLowerCase()] = h.nazwa; });
+  });
   return {
+    alias: alias,
     top: sorted.filter((h) => h.grupa === 'top').map((h) => h.nazwa),
     reszta: sorted.filter((h) => h.grupa === 'alfa').map((h) => h.nazwa),
     koniec: (sorted.filter((h) => h.grupa === 'koniec')[0] || { nazwa: HURT_OTHER }).nazwa,
@@ -8491,7 +8504,9 @@ class Component extends DCLogic {
   }
 
   hurtLogo(name) {
-    const i = this.hurt().info[name];
+    const h = this.hurt();
+    const kanon = h.alias[String(name == null ? '' : name).toLowerCase()] || name;
+    const i = h.info[kanon];
     return (i && i.logo) || '';
   }
 
@@ -9319,6 +9334,8 @@ class Component extends DCLogic {
           date: doc.date,
           supplier: doc.supplier,
           source: (s.docsList && s.docsList.some((x) => x.nr === doc.nr && !DOC_SEED.some((y) => y.nr === x.nr))) ? 'Dodany ręcznie' : 'Integracja B2B',
+          supplierLogo: this.hurtLogo(doc.supplier),
+          hasSupplierLogo: !!this.hurtLogo(doc.supplier),
           supplierName: (SUPPLIER_INFO[doc.supplier] || {}).name || doc.supplier || '',
           supplierClient: [(SUPPLIER_INFO[doc.supplier] || {}).branchShort, (SUPPLIER_INFO[doc.supplier] || {}).client].filter(Boolean).join(' · ') || '—',
           supplierNipLine: 'NIP ' + ((SUPPLIER_INFO[doc.supplier] || {}).nip || '—'),
