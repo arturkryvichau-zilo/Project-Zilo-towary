@@ -1,5 +1,5 @@
 {
-  "opis": "Lista hurtowni części samochodowych do pola wyboru w Towarach. Jedyne źródło listy — artboardy wczytują ten plik w locie. Kolejność bierze się z pól grupa + kolejnosc, nie z porządku w tablicy.",
+  "opis": "Lista hurtowni części samochodowych do pola wyboru w Towarach. Grupy: top (Popularne), alfa (Pozostałe), koniec (pozycja Inne), zglos (zgłoszenie braku). Jedyne źródło listy — artboardy wczytują ten plik w locie. Kolejność bierze się z pól grupa + kolejnosc, nie z porządku w tablicy.",
   "zaktualizowano": "2026-10-05",
   "logoKatalog": "assets/logos/hurtownie/",
   "hurtownie": [
@@ -24,7 +24,8 @@
     { "id": "suder",          "nazwa": "Suder & Suder",           "grupa": "alfa",  "kolejnosc": 24, "domena": "suder.pl",           "logo": "suder.png",            "aliasy": ["Suder"], "uwaga": "logo to sam znak graficzny ze strony, bez sygnatury słownej" },
     { "id": "tip-topol",      "nazwa": "Tip-Topol",               "grupa": "alfa",  "kolejnosc": 25, "domena": "tiptopol.pl",        "logo": "tip-topol.jpg",        "uwaga": "materiały do wulkanizacji — istotne przy przechowalni opon" },
 
-    { "id": "inne",           "nazwa": "Inne",                    "grupa": "koniec","kolejnosc": 99, "domena": null,                 "logo": "inne.svg" }
+    { "id": "inne",           "nazwa": "Inne",                    "grupa": "koniec","kolejnosc": 99, "domena": null,                 "logo": "inne.svg" },
+    { "id": "zglos",          "nazwa": "Zgłoś brakującą hurtownię","grupa": "zglos", "kolejnosc": 100,"domena": null,                 "logo": "zglos.svg" }
   ],
   "dlugi_ogon": [
     "Auto Euro", "Auto-Zatoka", "Carex", "Darma", "M-Mot", "Mytnik",

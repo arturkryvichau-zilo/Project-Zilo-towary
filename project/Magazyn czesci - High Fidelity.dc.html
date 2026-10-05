@@ -945,11 +945,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-if value="{{ hurtSel.isOpen }}" hint-placeholder-val="{{ false }}">
                   <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
                     <sc-for list="{{ hurtSel.groups }}" as="g" hint-placeholder-count="2">
-                      <div>
+                      <div style="margin-top:{{ g.gap }};padding-top:{{ g.pad }};border-top:1px solid {{ g.line }}">
                         <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                            <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
+                            <span style="width:84px;height:28px;flex:none;display:block">
+                              <sc-if value="{{ o.hasLogo }}" hint-placeholder-val="{{ true }}">
+                                <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;display:block;object-fit:contain;object-position:left center">
+                              </sc-if>
+                            </span>
                             <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
                             <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
                               <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -959,13 +963,23 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inna hurtownia".</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
                       <img src="{{ hurtSel.other.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
                       <span style="flex:1;min-width:0">{{ hurtSel.other.label }}</span>
                       <sc-if value="{{ hurtSel.other.selected }}" hint-placeholder-val="{{ false }}">
+                        <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
+                      </sc-if>
+                    </div>
+                    <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
+                    <div onClick="{{ hurtSel.zglos.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtSel.zglos.bg }}" style-hover="background:var(--tk-surface-3)">
+                      <span style="width:84px;height:28px;flex:none;display:block">
+                        <img src="{{ hurtSel.zglos.logo }}" alt="" style="width:84px;height:28px;display:block;object-fit:contain;object-position:left center">
+                      </span>
+                      <span style="flex:1;min-width:0">{{ hurtSel.zglos.label }}</span>
+                      <sc-if value="{{ hurtSel.zglos.selected }}" hint-placeholder-val="{{ false }}">
                         <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
                       </sc-if>
                     </div>
@@ -1069,11 +1083,15 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <sc-if value="{{ hurtDocSel.isOpen }}" hint-placeholder-val="{{ false }}">
                   <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
                     <sc-for list="{{ hurtDocSel.groups }}" as="g" hint-placeholder-count="2">
-                      <div>
+                      <div style="margin-top:{{ g.gap }};padding-top:{{ g.pad }};border-top:1px solid {{ g.line }}">
                         <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
-                            <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;flex:none;display:block;object-fit:contain;object-position:left center">
+                            <span style="width:84px;height:28px;flex:none;display:block">
+                              <sc-if value="{{ o.hasLogo }}" hint-placeholder-val="{{ true }}">
+                                <img src="{{ o.logo }}" alt="" style="width:84px;height:28px;display:block;object-fit:contain;object-position:left center">
+                              </sc-if>
+                            </span>
                             <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.value }}</span>
                             <sc-if value="{{ o.selected }}" hint-placeholder-val="{{ false }}">
                               <span style="width:20px;height:20px;flex:none;display:block;background-color:var(--tk-brand-fg);-webkit-mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat;mask:url(assets/icons/i-checkmark.svg) center / 20px 20px no-repeat"></span>
@@ -1083,7 +1101,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtDocSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inna hurtownia".</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtDocSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtDocSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
@@ -5215,6 +5233,12 @@ const HURT_FALLBACK = {
   ],
 };
 const HURT_OTHER = 'Inne';
+const HURT_REPORT = 'Zgłoś brakującą hurtownię';
+// Kontakt do zgłoszenia braku — ten sam, co w belce prototypu
+const HURT_KONTAKT = { tel: '(61) 250 41 81', mail: 'kontakt@zilo.co' };
+// Prototyp: z wgranego dokumentu „odczytujemy" wystawcę spoza listy,
+// żeby było widać dopisanie hurtowni do wyboru.
+const HURT_Z_DOKUMENTU = 'Auto-Zatoka';
 // Ścieżki do pliku w panelu hurtowni. Wpisujemy tylko te, które znamy —
 // reszta nie dostaje podpowiedzi, dopóki jej nie zbierzemy.
 const HURT_HINT = {
@@ -5240,8 +5264,35 @@ const hurtIndex = (data) => {
     top: sorted.filter((h) => h.grupa === 'top').map((h) => h.nazwa),
     reszta: sorted.filter((h) => h.grupa === 'alfa').map((h) => h.nazwa),
     koniec: (sorted.filter((h) => h.grupa === 'koniec')[0] || { nazwa: HURT_OTHER }).nazwa,
+    zglos: (sorted.filter((h) => h.grupa === 'zglos')[0] || { nazwa: HURT_REPORT }).nazwa,
     info: byName,
   };
+};
+
+// Hurtownie dopisane z dokumentu — po odczycie pliku wiemy, kto go wystawił,
+// więc nazwa trafia do listy i zostaje w przeglądarce tego warsztatu.
+const HURT_ADDED_KEY = 'zilo-hurtownie-dodane';
+const loadDodane = () => {
+  try {
+    const v = JSON.parse(localStorage.getItem(HURT_ADDED_KEY) || '[]');
+    return Array.isArray(v) ? v.filter((h) => h && h.nazwa) : [];
+  } catch (e) { return []; }
+};
+const saveDodane = (list) => {
+  try { localStorage.setItem(HURT_ADDED_KEY, JSON.stringify(list)); } catch (e) {}
+  return list;
+};
+
+// Kolejnosc z JSON-a dalej rządzi porządkiem — nowej nazwie wyliczamy numer
+// pomiędzy sąsiadami, zamiast układać listę od nowa.
+const kolejnoscDla = (nazwa, lista) => {
+  const alfa = (lista || []).filter((h) => h.grupa === 'alfa')
+    .slice().sort((a, b) => (a.kolejnosc || 0) - (b.kolejnosc || 0));
+  const przed = alfa.filter((h) => h.nazwa.localeCompare(nazwa, 'pl') < 0).pop();
+  const po = alfa.filter((h) => h.nazwa.localeCompare(nazwa, 'pl') > 0)[0];
+  if (!przed) return (po ? po.kolejnosc : 10) - 0.5;
+  if (!po) return przed.kolejnosc + 0.5;
+  return (przed.kolejnosc + po.kolejnosc) / 2;
 };
 
 const DOC_FILE_POOL = [
@@ -8374,7 +8425,24 @@ class Component extends DCLogic {
   }
 
   hurt() {
-    return hurtIndex(this.state.hurtownie || HURT_FALLBACK);
+    const base = this.state.hurtownie || HURT_FALLBACK;
+    const dodane = this.state.hurtownieDodane || loadDodane();
+    if (!dodane.length) return hurtIndex(base);
+    const znane = (base.hurtownie || []).map((h) => h.nazwa);
+    const extra = dodane.filter((h) => znane.indexOf(h.nazwa) === -1);
+    return hurtIndex(Object.assign({}, base, { hurtownie: (base.hurtownie || []).concat(extra) }));
+  }
+
+  // nazwa odczytana z dokumentu dołącza do listy, w swoim miejscu alfabetycznie
+  dopiszHurtownie(nazwa) {
+    const base = this.state.hurtownie || HURT_FALLBACK;
+    const lista = base.hurtownie || [];
+    if (!nazwa || lista.some((h) => h.nazwa === nazwa)) return;
+    const dodane = (this.state.hurtownieDodane || loadDodane()).slice();
+    if (dodane.some((h) => h.nazwa === nazwa)) return;
+    dodane.push({ id: 'dod-' + dodane.length, nazwa: nazwa, grupa: 'alfa',
+      kolejnosc: kolejnoscDla(nazwa, lista), logo: null, zDokumentu: true });
+    this.setState({ hurtownieDodane: saveDodane(dodane) });
   }
 
   hurtLogo(name) {
@@ -8409,7 +8477,15 @@ class Component extends DCLogic {
     const groups = [
       { key: 'popularne', label: 'Popularne', items: h.top.filter(hit) },
       { key: 'pozostale', label: 'Pozostałe', items: reszta.filter(hit) },
-    ].filter((g) => g.items.length > 0).map((g) => ({ key: g.key, label: g.label, options: g.items.map(opt) }));
+    ].filter((g) => g.items.length > 0).map((g, i) => ({
+      key: g.key,
+      label: g.label,
+      // druga grupa odcina się kreską i oddycha, zamiast kleić się do pierwszej
+      gap: i === 0 ? '0' : '10px',
+      line: i === 0 ? 'transparent' : 'var(--tk-border-2)',
+      pad: i === 0 ? '0' : '10px',
+      options: g.items.map(opt),
+    }));
     return {
       text: query == null ? (cur || '') : query,
       logo: this.hurtLogo(cur),
@@ -8420,6 +8496,7 @@ class Component extends DCLogic {
       chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
       groups: groups,
       other: Object.assign(opt(h.koniec), { label: h.koniec }),
+      zglos: Object.assign(opt(h.zglos), { label: h.zglos }),
     };
   }
 
@@ -8468,7 +8545,15 @@ class Component extends DCLogic {
   finishDocRead() {
     const picked = this.state.docSupplier || this.defaultHurtownia();
     const draft = Object.assign({}, this.state.docDraft || DOC_DRAFT);
-    if (picked && picked !== this.hurt().koniec && picked !== 'Inna hurtownia') draft.supplier = picked;
+    const hh = this.hurt();
+    if (picked === hh.koniec || picked === hh.zglos) {
+      // z dokumentu wychodzi wystawca spoza listy — dopisujemy go i wybieramy
+      draft.supplier = HURT_Z_DOKUMENTU;
+      this.dopiszHurtownie(HURT_Z_DOKUMENTU);
+      this.pickHurtownia(HURT_Z_DOKUMENTU);
+    } else if (picked && picked !== 'Inna hurtownia') {
+      draft.supplier = picked;
+    }
     if (!this.state.docEditing) {
       draft.nr = this.nextDocNr();
       draft.ext = this.nextDocExt();
@@ -9269,6 +9354,14 @@ class Component extends DCLogic {
       docUpload: (() => {
         const files = s.docFiles || [];
         const hurt = s.docSupplier || this.defaultHurtownia();
+        const hh = this.hurt();
+        const special = hurt === hh.koniec || hurt === hh.zglos;
+        const wspolne = 'Wgraj plik ze swojej hurtowni, nawet jeśli nie ma jej na liście. '
+          + 'Odczytamy z dokumentu, kto go wystawił, i dopiszemy ją do wyboru.';
+        const hint = hurt === hh.zglos
+          ? wspolne + ' Chcesz, żeby została na stałe? Napisz: ' + HURT_KONTAKT.mail
+            + ' albo zadzwoń ' + HURT_KONTAKT.tel + '.'
+          : (hurt === hh.koniec ? wspolne : (HURT_HINT[hurt] || ''));
         const busy = files.some((f) => f.pct > 0);
         const ready = Component.docFilesReady(files);
         return {
@@ -9276,10 +9369,10 @@ class Component extends DCLogic {
           hasFiles: !!files.length,
           busy: busy,
           canAddMore: !busy,
-          hasHint: !!HURT_HINT[hurt],
-          hint: HURT_HINT[hurt] || '',
-          // przy „Innej hurtowni" nie zawężamy formatów — bierzemy, co przyjdzie
-          formats: hurt === this.hurt().koniec ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
+          hasHint: !!hint,
+          hint: hint,
+          // przy „Innych" i przy zgłoszeniu nie zawężamy formatów — bierzemy, co przyjdzie
+          formats: special ? 'Dowolny plik — PDF, CSV, XLS, JPG lub PNG' : 'PDF, CSV, JPG lub PNG',
           // trzy stany: brak gotowego pliku → nieaktywny, plik wgrany → aktywny,
           // wgrywanie → nieaktywny. Wygląd disabled z design systemu:
           // .button--primary:disabled { background:#D5D7F8; cursor:not-allowed }
