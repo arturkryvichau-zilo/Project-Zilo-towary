@@ -922,7 +922,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
           <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
             <div style="display:flex;flex-direction:column;gap:4px;text-align:center">
               <div style="font-size:24px;line-height:32px;font-weight:600;color:var(--tk-text-strong)">Dodaj dokument od hurtowni</div>
-              <div style="font-size:16px;line-height:24px;color:var(--tk-text-3);text-wrap:pretty">Odczytamy pozycje, indeksy i ceny — nie musisz nic przepisywać.</div>
+              <div style="font-size:16px;line-height:24px;color:var(--tk-text-2);text-wrap:pretty">Odczytamy pozycje, indeksy i ceny — nie musisz nic przepisywać.</div>
             </div>
 
             <div style="background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
@@ -946,7 +946,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
                     <sc-for list="{{ hurtSel.groups }}" as="g" hint-placeholder-count="2">
                       <div style="margin-top:{{ g.gap }};padding-top:{{ g.pad }};border-top:1px solid {{ g.line }}">
-                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
+                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-2)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
                             <span style="width:84px;height:28px;flex:none;display:block">
@@ -963,7 +963,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
@@ -995,8 +995,8 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                 <div onClick="{{ addDocFile }}" style="border:1px dashed var(--tk-border-strong);border-radius:12px;background:var(--tk-canvas);padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:border-color 200ms cubic-bezier(.2,0,0,1),background 200ms cubic-bezier(.2,0,0,1)" style-hover="border-color:var(--tk-brand-bd);background:var(--tk-surface-2)">
                   <img src="assets/icons/i-upload-doc.svg" alt="" style="width:40px;height:40px;flex:none;display:block;margin-bottom:6px">
                   <span style="font-size:17px;line-height:24px;font-weight:500;color:var(--tk-text)">Przeciągnij plik albo wybierz z dysku</span>
-                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">{{ docUpload.formats }}</span>
-                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-3)">Faktura, WZ-ka, zdjęcie albo zrzut ekranu</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-2)">{{ docUpload.formats }}</span>
+                  <span style="font-size:15px;line-height:22px;color:var(--tk-text-2)">Faktura, WZ-ka, zdjęcie albo zrzut ekranu</span>
                   <span style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:12px 20px;margin-top:10px;border-radius:8px;background:var(--tk-brand);color:var(--tk-on-fill);font-size:16px;line-height:22px">Wybierz z dysku</span>
                 </div>
               </sc-if>
@@ -1010,7 +1010,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         <sc-if value="{{ fl.uploading }}" hint-placeholder-val="{{ true }}">
                           <span style="display:flex;align-items:baseline;gap:12px;min-width:0">
                             <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
-                            <span style="font-size:14px;line-height:20px;color:var(--tk-text-3);white-space:nowrap;flex:none">Wgrywanie pliku…</span>
+                            <span style="font-size:14px;line-height:20px;color:var(--tk-text-2);white-space:nowrap;flex:none">Wgrywanie pliku…</span>
                           </span>
                           <span style="display:block;height:6px;border-radius:999px;background:var(--tk-border-2);overflow:hidden">
                             <span style="display:block;height:100%;width:{{ fl.percent }};background:var(--tk-brand);border-radius:999px;transition:width 200ms cubic-bezier(.2,0,0,1)"></span>
@@ -1018,7 +1018,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                         </sc-if>
                         <sc-if value="{{ fl.done }}" hint-placeholder-val="{{ false }}">
                           <span style="font-size:16px;line-height:22px;font-weight:500;color:var(--tk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ fl.name }}</span>
-                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-3)">{{ fl.size }}</span>
+                          <span style="font-size:14px;line-height:20px;color:var(--tk-text-2)">{{ fl.size }}</span>
                         </sc-if>
                       </span>
                       <sc-if value="{{ fl.uploading }}" hint-placeholder-val="{{ true }}">
@@ -1084,7 +1084,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                   <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:31;background:var(--tk-surface);border:1px solid var(--tk-border);border-radius:12px;box-shadow:0 12px 32px rgba(10,11,41,0.10), 0 2px 6px rgba(10,11,41,0.05);padding:4px 0;max-height:340px;overflow-y:auto">
                     <sc-for list="{{ hurtDocSel.groups }}" as="g" hint-placeholder-count="2">
                       <div style="margin-top:{{ g.gap }};padding-top:{{ g.pad }};border-top:1px solid {{ g.line }}">
-                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-3)">{{ g.label }}</div>
+                        <div style="padding:10px 20px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;color:var(--tk-text-2)">{{ g.label }}</div>
                         <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="3">
                           <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ o.bg }}" style-hover="background:var(--tk-surface-3)">
                             <span style="width:84px;height:28px;flex:none;display:block">
@@ -1101,7 +1101,7 @@ a:hover { color:var(--tk-brand-fg-strong); text-decoration:underline; }
                       </div>
                     </sc-for>
                     <sc-if value="{{ hurtDocSel.empty }}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-3)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
+                      <div style="padding:14px 20px;font-size:15px;line-height:22px;color:var(--tk-text-2)">Brak wyników — wybierz „Inne" albo zgłoś brakującą hurtownię.</div>
                     </sc-if>
                     <div style="height:1px;margin:4px 0;background:var(--tk-border-2)"></div>
                     <div onClick="{{ hurtDocSel.other.pick }}" style="display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:16px;line-height:24px;color:var(--tk-text);cursor:pointer;background:{{ hurtDocSel.other.bg }}" style-hover="background:var(--tk-surface-3)">
